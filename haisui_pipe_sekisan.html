@@ -1,0 +1,2688 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>排水管工 積算アプリ 008</title>
+  <style>
+    :root{
+      --blue:#0070C0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
+    header{background:linear-gradient(135deg,var(--blue),#2b8ae2);color:#fff;padding:18px 16px}
+    header .wrap{max-width:1500px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    h1{font-size:18px;margin:0}.sub{font-size:12px;opacity:.95}.pill{display:inline-block;padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.18);font-size:12px;font-weight:800;margin:2px}
+    main{max-width:1500px;margin:16px auto;padding:0 16px 28px}
+    .grid{display:grid;grid-template-columns:320px 320px minmax(0,1fr);gap:14px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .card h2{font-size:14px;margin:0;padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}.dot{width:8px;height:8px;border-radius:999px;background:var(--blue);display:inline-block}.body{padding:14px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;min-height:18px}
+    input{width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;outline:none;font-size:14px;background:#fff}
+    input:focus{border-color:rgba(0,112,192,.55);box-shadow:0 0 0 3px rgba(0,112,192,.15)}
+    input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield}
+    .btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}button{border:none;border-radius:10px;padding:8px 6px;cursor:pointer;font-size:13px;font-weight:700;width:100%}.primary{background:var(--blue);color:white}.ghost{background:#eef6ff;color:var(--blue)}.danger{background:#fff1f2;color:#b42318}.note{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.55}.hr{height:1px;background:var(--border);margin:12px 0}.sectionTitle{margin:10px 0 8px;font-size:12px;font-weight:900;color:#0f172a;display:flex;align-items:center;gap:8px}
+    table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--border);border-radius:14px;background:white}th,td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px}th{background:#f2f7ff;color:#0f172a;text-align:left;font-weight:800}tr:last-child td{border-bottom:none}.muted{color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:980px){.kpi{grid-template-columns:1fr}}.kpi .box{border:1px solid var(--border);border-radius:14px;padding:12px;background:#fbfdff}.kpi .t{font-size:12px;color:var(--muted)}.kpi .v{font-size:18px;font-weight:900;margin-top:4px}.kpi .u{font-size:12px;color:var(--muted);margin-left:6px}
+    .illust-box{border:1px solid var(--border);border-radius:12px;padding:10px;background:#fafafa;min-height:360px;display:flex;align-items:center;justify-content:center}.illust-svg{width:100%;height:340px;display:block;overflow:visible}.dim{fill:none;stroke:#111;stroke-width:2}.layerText{font-size:18px;fill:#111;font-weight:700}
+    .dimText{fill:#333!important;font-size:56px!important;font-weight:900!important;transition:fill .15s ease,font-size .15s ease;paint-order:stroke fill;stroke:#fff!important;stroke-width:4px!important}.dimText.active{fill:#d32f2f!important;font-size:74px!important;font-weight:900!important;stroke:#fff!important;stroke-width:8px!important}
+    /* 結果欄：L型017と統一（メモ列＋文字拡大） */
+    .table-wrap{margin-top:12px;overflow-x:hidden}
+    .result-table{table-layout:fixed;width:100%;min-width:0}
+    .result-table th{padding:10px 5px;font-size:14px;line-height:1.25;vertical-align:middle;word-break:break-word;font-weight:900}
+    .result-table td{padding:10px 5px;font-size:15px;line-height:1.28;vertical-align:middle;word-break:break-word}
+    .result-table th:nth-child(1),.result-table td:nth-child(1){width:14%;white-space:normal;text-align:left}
+    .result-table th:nth-child(2),.result-table td:nth-child(2){width:13%;text-align:right}
+    .result-table th:nth-child(3),.result-table td:nth-child(3){width:6%;text-align:center}
+    .result-table th:nth-child(4),.result-table td:nth-child(4){width:13%;text-align:right}
+    .result-table th:nth-child(5),.result-table td:nth-child(5){width:16%;text-align:right}
+    .result-table th:nth-child(6),.result-table td:nth-child(6){width:38%;text-align:left;color:var(--muted);font-size:13px}
+    .result-table td b{font-size:15px}
+    .result-table tbody tr:nth-last-child(-n+2) td{font-size:17px;font-weight:800;background:#fbfdff}
+    .result-table tbody tr:nth-last-child(-n+2) td b{font-size:18px;font-weight:900}
+    @media(max-width:980px){.result-table th{font-size:13px;padding:9px 4px}.result-table td{font-size:13px;padding:9px 4px}.result-table th:nth-child(6),.result-table td:nth-child(6){font-size:12px}.result-table tbody tr:nth-last-child(-n+2) td{font-size:15px}.result-table tbody tr:nth-last-child(-n+2) td b{font-size:16px}}
+  
+    .estimate-panel{border:1px solid var(--border);border-radius:14px;background:#fbfdff;padding:10px;margin:10px 0}
+    .control-block{border:1px solid var(--border);border-radius:14px;background:#fff;padding:10px;margin:10px 0;box-shadow:0 3px 10px rgba(0,0,0,.03)}
+    .estimate-block{border-color:#bad8f4;background:#f7fbff}
+    .price-block{border-color:#c5ead0;background:#f7fff9}
+    .operation-block{border-color:#fed7aa;background:#fffaf4}
+    .estimate-block .sectionTitle{color:#0647a5}
+    .price-block .sectionTitle{color:#087d10}
+    .operation-block .sectionTitle{color:#c2410c}
+    .sectionTitle::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--blue);display:inline-block}
+    .price-block .sectionTitle::before{background:#12a150}
+    .operation-block .sectionTitle::before{background:#f97316}
+    .estimate-panel .save-line{display:block;margin-bottom:8px}
+    .estimate-panel .save-line label{display:block;margin-bottom:4px;font-size:12px;color:var(--muted);min-height:0}
+    .estimate-panel .save-line input,.estimate-panel .save-line select{width:100%;height:36px;padding:7px 9px;font-size:13px;border-radius:10px}
+    .save-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+    .save-btns button{padding:8px 6px;font-size:13px;border-radius:10px}
+    .print-report{display:none}
+    .print-preview-mode header,.print-preview-mode main>.grid{display:none!important}
+    .print-preview-mode .print-report{display:block;width:200mm;min-height:282mm;margin:12px auto;background:#fff;color:#111;box-shadow:0 2px 18px rgba(0,0,0,.18);padding:5mm;border:1px solid #111;font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif}
+    .print-header{display:grid;grid-template-columns:1fr 1fr auto;gap:5mm;align-items:end;border-bottom:2px solid #111;padding-bottom:2.5mm;margin-bottom:4mm;font-size:12px;font-weight:400;line-height:1.1}
+    .print-header::after{content:"作成日：" attr(data-date);white-space:pre;font-size:10px;font-weight:700;text-align:right;line-height:1.55;align-self:start}
+    .print-main-table,.print-dim-table{width:100%;border-collapse:collapse;border-spacing:0;background:#fff;border:1.4px solid #222;table-layout:fixed}
+    .print-main-table th,.print-main-table td,.print-dim-table th,.print-dim-table td{border:1px solid #333;padding:0 4mm;height:8.8mm;font-size:12.5px;line-height:1.15}
+    .print-main-table th,.print-dim-table th{background:#eaf4ff!important;font-weight:900;text-align:center}
+    .print-main-table td:nth-child(2),.print-main-table td:nth-child(4),.print-main-table td:nth-child(5){text-align:right;font-family:ui-monospace,Menlo,Consolas,monospace}
+    .print-main-table td:nth-child(3){text-align:center}
+    .print-main-table tbody td:first-child{font-weight:400}
+    .print-main-table tfoot th,.print-main-table tfoot td{height:8.8mm;background:#fff!important;font-size:14px;border:1px solid #333;text-align:right}
+    .print-main-table tfoot tr:last-child th,.print-main-table tfoot tr:last-child td{background:#eaf4ff!important;color:#003b7a;font-weight:900;font-size:16px}
+    .print-notes{display:flex;justify-content:space-between;font-size:10px;margin:2mm 0 4mm;color:#111}
+    .print-bottom{display:grid;grid-template-columns:1.05fr .95fr;gap:3mm;margin-top:4mm;break-inside:avoid;page-break-inside:avoid}
+    .print-drawing-box,.print-dim-box{border:1.2px solid #333;background:white}
+    .print-title{background:#eaf4ff!important;border-bottom:1px solid #333;text-align:center;font-weight:900;padding:1.8mm;font-size:14px}
+    #printDiagram{width:100%;height:112mm;display:block;padding:2mm;box-sizing:border-box}
+    .print-dim-table th,.print-dim-table td{font-size:11px;height:7.2mm;padding:0.7mm 1.5mm}
+    .print-spec{margin:4mm;padding:4mm;border:1px solid #9bbce0;font-size:11px;line-height:1.75}
+    .print-spec b{display:inline-block;width:8.5em}
+    @media print{
+      @page{size:A4 portrait;margin:5mm}
+      html,body{width:210mm;min-height:297mm;background:#fff!important;margin:0!important}
+      *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+      header,main>.grid{display:none!important}
+      main{max-width:none!important;margin:0!important;padding:0!important}
+      .print-report{display:block!important;width:200mm!important;min-height:287mm!important;margin:0 auto!important;padding:4mm!important;border:1px solid #111!important;box-shadow:none!important;overflow:hidden!important}
+      .print-preview-actions{display:none!important}
+    }
+
+  
+
+/* ===== 014: L型帳票に合わせたA4 1ページ印刷レイアウト ===== */
+.print-preview-mode .print-report{
+  width:200mm;
+  min-height:287mm;
+  padding:4mm;
+  border:1px solid #111;
+  box-shadow:0 2px 18px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.print-header{
+  margin-bottom:3mm;
+  padding-bottom:2mm;
+  font-size:21px;
+}
+.print-main-table th,
+.print-main-table td{
+  height:6.6mm;
+  padding:0 3mm;
+  font-size:11px;
+  line-height:1.05;
+}
+.print-main-table th:nth-child(1),.print-main-table td:nth-child(1){width:30%;}
+.print-main-table th:nth-child(2),.print-main-table td:nth-child(2){width:18%;}
+.print-main-table th:nth-child(3),.print-main-table td:nth-child(3){width:13%;}
+.print-main-table th:nth-child(4),.print-main-table td:nth-child(4){width:19%;}
+.print-main-table th:nth-child(5),.print-main-table td:nth-child(5){width:20%;}
+.print-main-table tfoot th,
+.print-main-table tfoot td{
+  height:7mm;
+  font-size:12.5px;
+}
+.print-main-table tfoot tr:last-child th,
+.print-main-table tfoot tr:last-child td{
+  font-size:15px;
+}
+.print-notes{
+  margin:1.5mm 0 3mm;
+  font-size:9.5px;
+}
+.print-bottom{
+  grid-template-columns:1.1fr .9fr;
+  gap:3mm;
+  margin-top:3mm;
+  break-inside:auto;
+  page-break-inside:auto;
+}
+.print-title{
+  padding:1.4mm;
+  font-size:13px;
+}
+#printDiagram{
+  height:76mm;
+  padding:1.5mm 2mm 0;
+}
+.print-dim-table th,
+.print-dim-table td{
+  height:6.2mm;
+  padding:0.5mm 1.2mm;
+  font-size:10px;
+  line-height:1.05;
+}
+.print-spec{
+  margin:3mm;
+  padding:3mm;
+  font-size:10px;
+  line-height:1.45;
+}
+.print-spec b{width:7.8em;}
+@media print{
+  .print-report{
+    width:200mm!important;
+    height:287mm!important;
+    min-height:287mm!important;
+    padding:4mm!important;
+    border:1px solid #111!important;
+    overflow:hidden!important;
+  }
+  .print-header{font-size:21px!important;margin-bottom:3mm!important;padding-bottom:2mm!important;}
+  .print-header::after{font-size:9px!important;}
+  .print-main-table th,.print-main-table td{height:6.6mm!important;padding:0 3mm!important;font-size:11px!important;line-height:1.05!important;}
+  .print-main-table tfoot th,.print-main-table tfoot td{height:7mm!important;font-size:12.5px!important;}
+  .print-main-table tfoot tr:last-child th,.print-main-table tfoot tr:last-child td{font-size:15px!important;}
+  .print-notes{margin:1.5mm 0 3mm!important;font-size:9.5px!important;}
+  .print-bottom{margin-top:3mm!important;gap:3mm!important;break-inside:auto!important;page-break-inside:auto!important;}
+  .print-title{padding:1.4mm!important;font-size:13px!important;}
+  #printDiagram{height:76mm!important;padding:1.5mm 2mm 0!important;}
+  .print-dim-table th,.print-dim-table td{height:6.2mm!important;padding:0.5mm 1.2mm!important;font-size:10px!important;line-height:1.05!important;}
+  .print-spec{margin:3mm!important;padding:3mm!important;font-size:10px!important;line-height:1.45!important;}
+}
+
+
+
+/* ===== 015: L型擁壁帳票にフォーマット統一・戻るボタン追加 ===== */
+.print-preview-actions{
+  display:none;
+  max-width:200mm;
+  margin:12px auto 8px;
+  justify-content:flex-end;
+  gap:10px;
+}
+.print-preview-actions button{
+  width:auto;
+  min-width:110px;
+  padding:10px 16px;
+}
+.print-preview-mode .print-preview-actions{display:flex!important;}
+.print-preview-mode .print-report{
+  display:block!important;
+  width:200mm;
+  min-height:287mm;
+  margin:0 auto 12px;
+  padding:4mm;
+  border:none!important;
+  box-shadow:0 2px 18px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.print-header{
+  grid-template-columns:1fr 1fr auto!important;
+  gap:5mm!important;
+  align-items:end!important;
+  border-bottom:2px solid #111!important;
+  padding-bottom:2mm!important;
+  margin-bottom:3mm!important;
+  font-size:22px!important;
+  line-height:1.1!important;
+}
+.print-header::after{
+  font-size:9px!important;
+  line-height:1.55!important;
+}
+.print-main-table,
+.print-dim-table{
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+  border-radius:0!important;
+  overflow:visible!important;
+  border:1.4px solid #222!important;
+  table-layout:fixed!important;
+}
+.print-main-table th,
+.print-main-table td{
+  border:1px solid #333!important;
+  height:6.55mm!important;
+  padding:0 3mm!important;
+  font-size:11px!important;
+  line-height:1.05!important;
+  border-radius:0!important;
+}
+.print-main-table th{
+  background:#eaf4ff!important;
+  color:#111!important;
+  font-weight:900!important;
+  text-align:center!important;
+}
+.print-main-table td:nth-child(1){font-weight:400!important;}
+.print-main-table td:nth-child(2),
+.print-main-table td:nth-child(4),
+.print-main-table td:nth-child(5){text-align:right!important;font-family:ui-monospace,Menlo,Consolas,monospace!important;}
+.print-main-table td:nth-child(3){text-align:center!important;}
+.print-main-table th:nth-child(1),.print-main-table td:nth-child(1){width:30%!important;}
+.print-main-table th:nth-child(2),.print-main-table td:nth-child(2){width:18%!important;}
+.print-main-table th:nth-child(3),.print-main-table td:nth-child(3){width:13%!important;}
+.print-main-table th:nth-child(4),.print-main-table td:nth-child(4){width:19%!important;}
+.print-main-table th:nth-child(5),.print-main-table td:nth-child(5){width:20%!important;}
+.print-main-table tfoot th,
+.print-main-table tfoot td{
+  height:7mm!important;
+  font-size:12.5px!important;
+  text-align:right!important;
+  background:#fff!important;
+  border:1px solid #333!important;
+}
+.print-main-table tfoot tr:last-child th,
+.print-main-table tfoot tr:last-child td{
+  background:#eaf4ff!important;
+  color:#003b7a!important;
+  font-weight:900!important;
+  font-size:15px!important;
+}
+.print-notes{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  margin:1.6mm 0 3mm!important;
+  font-size:9.5px!important;
+  color:#111!important;
+}
+.print-bottom{
+  display:grid!important;
+  grid-template-columns:1.1fr .9fr!important;
+  gap:3mm!important;
+  margin-top:3mm!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+.print-drawing-box,
+.print-dim-box{
+  border:1.2px solid #333!important;
+  background:white!important;
+}
+.print-title{
+  background:#eaf4ff!important;
+  border-bottom:1px solid #333!important;
+  color:#111!important;
+  text-align:center!important;
+  font-weight:900!important;
+  padding:1.4mm!important;
+  font-size:13px!important;
+}
+#printDiagram{
+  width:100%!important;
+  height:76mm!important;
+  display:block!important;
+  padding:1.5mm 2mm 0!important;
+  box-sizing:border-box!important;
+}
+.print-dim-table th,
+.print-dim-table td{
+  border:1px solid #333!important;
+  height:6.2mm!important;
+  padding:0.5mm 1.2mm!important;
+  font-size:10px!important;
+  line-height:1.05!important;
+  border-radius:0!important;
+}
+.print-dim-table th{background:#eaf4ff!important;font-weight:900!important;text-align:center!important;}
+.print-dim-table td:nth-child(1),.print-dim-table td:nth-child(3){text-align:center!important;}
+.print-spec{
+  margin:3mm!important;
+  padding:3mm!important;
+  border:1px solid #9bbce0!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+}
+.print-spec b{display:inline-block!important;width:7.8em!important;}
+@media print{
+  .print-preview-actions{display:none!important;}
+  .print-report{
+    display:block!important;
+    width:200mm!important;
+    height:287mm!important;
+    min-height:287mm!important;
+    margin:0 auto!important;
+    padding:4mm!important;
+    border:none!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+  }
+}
+
+
+
+/* ===== 016: MSランドスケープ 標準帳票（A4縦・余白15mm・共通フォーマット） ===== */
+.print-report{
+  display:none;
+  font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif!important;
+  color:#111!important;
+  background:#fff!important;
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important;
+  box-sizing:border-box!important;
+}
+.print-preview-actions{
+  display:none;
+  width:210mm!important;
+  margin:12px auto 8px!important;
+  justify-content:flex-end!important;
+  gap:10px!important;
+}
+.print-preview-actions button{
+  width:auto!important;
+  min-width:110px!important;
+  height:36px!important;
+  padding:8px 16px!important;
+  border-radius:10px!important;
+  font-size:13px!important;
+  font-weight:800!important;
+}
+.print-preview-mode{background:#eef1f5!important;}
+.print-preview-mode header,
+.print-preview-mode main>.grid{display:none!important;}
+.print-preview-mode .print-preview-actions{display:flex!important;}
+.print-preview-mode .print-report{
+  display:block!important;
+  width:210mm!important;
+  height:297mm!important;
+  min-height:297mm!important;
+  margin:0 auto 12px!important;
+  padding:15mm!important;
+  border:1px solid #ddd!important;
+  box-shadow:0 2px 18px rgba(0,0,0,.18)!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.print-header{
+  display:grid!important;
+  grid-template-columns:1fr 1fr auto!important;
+  gap:5mm!important;
+  align-items:end!important;
+  border-bottom:2px solid #111!important;
+  padding-bottom:2.5mm!important;
+  margin-bottom:3mm!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.1!important;
+}
+.print-header::after{
+  content:"作成日：" attr(data-date)!important;
+  white-space:pre!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  text-align:right!important;
+  line-height:1.55!important;
+  align-self:start!important;
+}
+.print-main-table,
+.print-dim-table{
+  width:100%!important;
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+  border-radius:0!important;
+  overflow:visible!important;
+  background:#fff!important;
+  border:1.4px solid #222!important;
+  table-layout:fixed!important;
+}
+.print-main-table th,
+.print-main-table td{
+  border:1px solid #333!important;
+  height:7.0mm!important;
+  padding:0 3mm!important;
+  font-size:11.5px!important;
+  line-height:1.08!important;
+  vertical-align:middle!important;
+  border-radius:0!important;
+}
+.print-main-table th{
+  height:7.2mm!important;
+  background:#eaf4ff!important;
+  color:#111!important;
+  font-weight:900!important;
+  text-align:center!important;
+}
+.print-main-table td:nth-child(1){font-weight:400!important;white-space:nowrap!important;}
+.print-main-table td:nth-child(2),
+.print-main-table td:nth-child(4),
+.print-main-table td:nth-child(5){text-align:right!important;font-family:ui-monospace,Menlo,Consolas,monospace!important;}
+.print-main-table td:nth-child(3){text-align:center!important;}
+.print-main-table th:nth-child(1),.print-main-table td:nth-child(1){width:30%!important;}
+.print-main-table th:nth-child(2),.print-main-table td:nth-child(2){width:18%!important;}
+.print-main-table th:nth-child(3),.print-main-table td:nth-child(3){width:13%!important;}
+.print-main-table th:nth-child(4),.print-main-table td:nth-child(4){width:19%!important;}
+.print-main-table th:nth-child(5),.print-main-table td:nth-child(5){width:20%!important;}
+.print-main-table tfoot th,
+.print-main-table tfoot td{
+  height:7.4mm!important;
+  font-size:13px!important;
+  text-align:right!important;
+  background:#fff!important;
+  border:1px solid #333!important;
+  vertical-align:middle!important;
+  padding:0 3mm!important;
+}
+.print-main-table tfoot tr:last-child th,
+.print-main-table tfoot tr:last-child td{
+  background:#eaf4ff!important;
+  color:#003b7a!important;
+  font-weight:900!important;
+  font-size:15px!important;
+}
+.print-notes{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  margin:2.0mm 0 4mm!important;
+  font-size:9.5px!important;
+  line-height:1.2!important;
+  color:#111!important;
+}
+.print-bottom{
+  display:grid!important;
+  grid-template-columns:1.1fr .9fr!important;
+  gap:3mm!important;
+  margin-top:0!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+.print-drawing-box,
+.print-dim-box{
+  border:1.2px solid #333!important;
+  background:white!important;
+  min-height:0!important;
+}
+.print-title{
+  background:#eaf4ff!important;
+  border-bottom:1px solid #333!important;
+  color:#111!important;
+  text-align:center!important;
+  font-weight:900!important;
+  padding:1.6mm!important;
+  font-size:13px!important;
+  line-height:1.1!important;
+}
+#printDiagram{
+  width:100%!important;
+  height:76mm!important;
+  display:block!important;
+  padding:1.5mm 2mm 0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+.print-dim-table th,
+.print-dim-table td{
+  border:1px solid #333!important;
+  height:6.7mm!important;
+  padding:0.5mm 1.2mm!important;
+  font-size:10.5px!important;
+  line-height:1.08!important;
+  vertical-align:middle!important;
+  border-radius:0!important;
+}
+.print-dim-table th{background:#eaf4ff!important;font-weight:900!important;text-align:center!important;}
+.print-dim-table td:nth-child(1),.print-dim-table td:nth-child(3){text-align:center!important;}
+.print-spec{
+  margin:3mm!important;
+  padding:3mm!important;
+  border:1px solid #9bbce0!important;
+  font-size:10.5px!important;
+  line-height:1.55!important;
+  color:#111!important;
+}
+.print-spec b{display:inline-block!important;width:8.5em!important;}
+@media print{
+  @page{size:A4 portrait;margin:0!important;}
+  html,body{
+    width:210mm!important;
+    height:297mm!important;
+    min-height:297mm!important;
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+    overflow:hidden!important;
+  }
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  header,main>.grid,.print-preview-actions{display:none!important;}
+  main{max-width:none!important;margin:0!important;padding:0!important;}
+  .print-report{
+    display:block!important;
+    width:210mm!important;
+    height:297mm!important;
+    min-height:297mm!important;
+    margin:0!important;
+    padding:0!important;
+    border:none!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+    page-break-after:avoid!important;
+    page-break-before:avoid!important;
+  }
+}
+
+
+/* メイン画面に戻るボタン */
+.home-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:150px;
+  height:38px;
+  padding:0 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.18);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.55);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:900;
+  box-shadow:0 6px 14px rgba(0,0,0,.12);
+  white-space:nowrap;
+}
+.home-link:hover{background:rgba(255,255,255,.28)}
+@media(max-width:700px){.home-link{width:100%;margin-top:8px}}
+@media print{.home-link{display:none!important}}
+
+
+/* 029: 印刷 工事名・積算名称をmあたり単価程度に拡大・普通文字 */
+.print-header{font-size:15px!important;font-weight:400!important;}
+#printProject,#printEstimate{font-size:15px!important;font-weight:400!important;}
+@media print{#printProject,#printEstimate{font-size:15px!important;font-weight:400!important;}}
+
+/* ===== 製品単価マスター選択 ===== */
+.product-master-box{border:1px solid #bad8f4;border-radius:14px;background:#f7fbff;padding:10px;margin:0 0 12px}
+.product-master-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.product-master-title{font-size:13px;font-weight:900;color:#0647a5}
+.product-master-current{font-size:12px;color:#475569;line-height:1.55;background:#fff;border:1px solid #dbeafe;border-radius:10px;padding:8px 10px;min-height:38px}
+.product-master-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
+.product-master-actions button{min-width:120px}
+.pm-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.46);z-index:1000;align-items:center;justify-content:center;padding:18px}
+.pm-modal.show{display:flex}
+.pm-dialog{width:min(860px,100%);max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}
+.pm-dialog-head{padding:16px 18px;border-bottom:1px solid #dbeafe;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pm-dialog-head h3{margin:0;color:#0647a5;font-size:20px}
+.pm-close{width:auto!important;min-width:80px;background:#eef6ff;color:#0647a5}
+.pm-filter{padding:12px 18px;display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;border-bottom:1px solid #e5e7eb}
+.pm-filter select,.pm-filter input{height:38px;border:1px solid #d5e6f7;border-radius:10px;padding:7px 9px;width:100%;font-size:13px;background:#fff}
+.pm-list{padding:12px 18px;overflow:auto;display:grid;gap:8px}
+.pm-item{border:1px solid #d7e7f7;border-radius:12px;padding:10px;background:#fbfdff;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.pm-item:hover{border-color:#78b7ed;background:#f4f9ff}
+.pm-item-name{font-weight:900;color:#0647a5;font-size:14px}
+.pm-item-meta{font-size:12px;color:#60758d;line-height:1.55;margin-top:3px}
+.pm-select-btn{width:auto!important;min-width:86px;background:#0647a5;color:#fff}
+.pm-empty{padding:18px;text-align:center;color:#64748b;border:1px dashed #cfe3f7;border-radius:12px}
+@media(max-width:700px){.pm-filter{grid-template-columns:1fr}.pm-item{grid-template-columns:1fr}.pm-select-btn{width:100%!important}}
+.pm-register-actions{display:grid;grid-template-columns:1fr;margin-top:8px}
+.pm-register-actions button{width:100%}
+.pm-register-dialog{width:min(680px,100%)}
+.pm-register-body{padding:14px 18px;overflow:auto}
+.pm-register-grid{display:grid;grid-template-columns:130px 1fr;gap:10px 12px;align-items:center}
+.pm-register-grid label{margin:0;min-height:0;font-size:12px;font-weight:800;color:#475569}
+.pm-register-grid input,.pm-register-grid textarea{width:100%;border:1px solid #d5e6f7;border-radius:10px;padding:8px 10px;font-size:13px;background:#fff}
+.pm-register-grid textarea{min-height:70px;resize:vertical}
+.pm-price-summary{margin-top:14px;border:1px solid #dbeafe;border-radius:12px;background:#f8fbff;padding:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 14px;font-size:12px;color:#334155}
+.pm-price-summary b{color:#0647a5}
+.pm-register-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media(max-width:700px){.pm-register-grid{grid-template-columns:1fr}.pm-price-summary{grid-template-columns:1fr}.pm-register-buttons{grid-template-columns:1fr}}
+</style>
+<script src="ms_common.js"></script>
+
+<style id="estimate-columns-030">
+.result-table th,.result-table td{padding:9px 4px!important;font-size:13px!important;white-space:normal!important}
+.result-table th:nth-child(1),.result-table td:nth-child(1){width:18%!important;text-align:left!important}
+.result-table th:nth-child(2),.result-table td:nth-child(2){width:11%!important;text-align:right!important}
+.result-table th:nth-child(3),.result-table td:nth-child(3){width:6%!important;text-align:center!important}
+.result-table th:nth-child(4),.result-table td:nth-child(4){width:13%!important;text-align:right!important}
+.result-table th:nth-child(5),.result-table td:nth-child(5){width:14%!important;text-align:right!important}
+.result-table th:nth-child(6),.result-table td:nth-child(6){width:17%!important;text-align:right!important;color:#0647a5!important}
+.result-table th:nth-child(7),.result-table td:nth-child(7){width:21%!important;text-align:right!important;color:#0647a5!important;font-weight:800}
+.print-main-table th:nth-child(1),.print-main-table td:nth-child(1){width:25%!important}.print-main-table th:nth-child(2),.print-main-table td:nth-child(2){width:9%!important}.print-main-table th:nth-child(3),.print-main-table td:nth-child(3){width:7%!important}.print-main-table th:nth-child(4),.print-main-table td:nth-child(4){width:12%!important}.print-main-table th:nth-child(5),.print-main-table td:nth-child(5){width:13%!important}.print-main-table th:nth-child(6),.print-main-table td:nth-child(6){width:15%!important}.print-main-table th:nth-child(7),.print-main-table td:nth-child(7){width:19%!important}
+.print-main-table td:nth-child(n+4){text-align:right!important;font-family:ui-monospace,Menlo,Consolas,monospace!important}
+
+<style id="result-memo-031">
+.result-memo-box{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:#fbfdff;padding:12px 14px}
+.result-memo-title{font-size:13px;font-weight:900;color:#0f172a;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.result-memo-title::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--blue);display:inline-block}
+.result-memo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;font-size:12px;line-height:1.45;color:var(--muted)}
+.result-memo-item{display:grid;grid-template-columns:120px 1fr;gap:8px;border-bottom:1px dotted #dbe3ec;padding:4px 0}
+.result-memo-item b{color:#334155;font-weight:800}
+@media(max-width:700px){.result-memo-grid{grid-template-columns:1fr}.result-memo-item{grid-template-columns:105px 1fr}}
+</style>
+</style>
+
+<style id="print-preview-fix-032">
+/* 032: プレビュー時の最下段重なり防止 */
+.print-main-table tfoot .unit-price-row th,
+.print-main-table tfoot .unit-price-row td{
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  padding-left:1.2mm!important;
+  padding-right:1.2mm!important;
+  font-size:10.5px!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+}
+.print-main-table tfoot .unit-price-row td{font-size:11.5px!important;font-weight:900!important;}
+.print-main-table tfoot .unit-price-row th:nth-child(3){text-align:center!important;}
+.print-notes{position:relative!important;z-index:2!important;clear:both!important;margin-top:2.5mm!important;}
+.print-notes>div{white-space:nowrap!important;}
+.print-preview-mode .print-main-table tfoot .unit-price-row th,
+.print-preview-mode .print-main-table tfoot .unit-price-row td{height:6.8mm!important;}
+@media print{
+  .print-main-table tfoot .unit-price-row th,
+  .print-main-table tfoot .unit-price-row td{height:6.8mm!important;font-size:10.5px!important;}
+  .print-main-table tfoot .unit-price-row td{font-size:11.5px!important;}
+  .print-notes{margin-top:2.5mm!important;}
+}
+</style>
+<style id="preview-fix-033">
+/* 033: SVGプレビューの合計欄と注記の間隔確保 */
+.svg-preview-mode020 .svg-print-sheet-svg020{overflow:hidden!important;}
+</style>
+
+<style id="preview-print-unify-034">
+/* 034: 印刷プレビューと実印刷を同じ最終SVG帳票に統一 */
+.svg-preview-mode020 #svgPrintWrap020{
+  display:block!important;
+  width:210mm!important;
+  margin:0 auto!important;
+  padding:0!important;
+}
+.svg-preview-mode020 #svgPrintSheet020,
+.svg-preview-mode020 .svg-print-sheet-svg020{
+  display:block!important;
+  width:210mm!important;
+  height:297mm!important;
+  margin:0 auto!important;
+  padding:0!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.svg-preview-mode020 #svgPrintWrap,
+.svg-preview-mode020 #svgPrintSheet,
+.svg-preview-mode020 .svg-print-wrap,
+.svg-preview-mode020 .print-report{display:none!important;}
+@media print{
+  #svgPrintSheet020,.svg-print-sheet-svg020{
+    width:210mm!important;
+    height:297mm!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+}
+</style>
+
+<style id="preview-preview-match-print-044">
+/* 044: 「戻る・印刷」画面を実際の印刷位置と完全に一致させる */
+.svg-preview-mode020 .preview-lower-035{
+  transform:none!important;
+}
+</style>
+
+<style id="ankyo-final-print">
+#pipeSectionSvg .ground{stroke:#333;stroke-width:2;stroke-dasharray:18 7 3 7}
+#pipeSectionSvg .slope{stroke:#111;stroke-width:2;stroke-dasharray:16 7 3 7;fill:none}
+#pipeSectionSvg .line{stroke:#222;stroke-width:2;fill:none}
+#pipeSectionSvg .ext{stroke:#555;stroke-width:1.3;fill:none}
+#pipeSectionSvg .pipe{fill:#f3f6f8;stroke:#222;stroke-width:2.5}
+#pipeSectionSvg .boxfill{fill:#f7f7f7;stroke:#222;stroke-width:2}
+#pipeSectionSvg .gravel{fill:url(#gravel);stroke:#222;stroke-width:1.7}
+#pipeSectionSvg .level{fill:#d8dde3;stroke:#222;stroke-width:1.7}
+#pipeSectionSvg .mortar{fill:#efe2c5;stroke:#222;stroke-width:1.7}
+#pipeSectionSvg .sand{fill:#efd39c;stroke:#222;stroke-width:1.7}
+#pipeSectionSvg .concrete{fill:#c9ced4;stroke:#222;stroke-width:1.7}
+#pipeSectionSvg .form{stroke:#9a5a28;stroke-width:7;fill:none}
+#pipeSectionSvg .dimtxt{font-size:24px;font-weight:900;fill:#111}
+#pipeSectionSvg .w3small{font-size:24px;font-weight:900;fill:#111}
+#pipeSectionSvg .small{font-size:18px;font-weight:800;fill:#333}
+#pipeSectionSvg .mat{font-size:18px;font-weight:900;fill:#111}
+#pipeSectionSvg .leader{stroke:#222;stroke-width:1.5;fill:none}
+@media screen,print{
+.print-main-table thead th,.print-title,.print-dim-table th{background:#eaf4ff!important;color:#111!important}
+.print-main-table tfoot th,.print-main-table tfoot td{background:#fff!important;color:#111!important}
+.print-main-table tfoot tr:last-child th,.print-main-table tfoot tr:last-child td{background:#fff!important;color:#111!important}
+.print-notes{margin-bottom:8mm!important}
+}
+</style>
+
+<style id="pipe-diagram-zoom-fix-004">
+/* 004: 断面図の実形状に合わせて表示範囲を自動調整 */
+#pipeSectionSvg{width:100%!important;height:420px!important;display:block!important;overflow:visible!important}
+.illust-box{padding:4px 4px 4px 26px!important;overflow:hidden!important}
+</style>
+
+<style id="pipe-method-input-state-007">
+/* 工法別入力制御・寸法記号フォーカス表示 */
+.pipe-field-disabled label{color:#b5bdc8!important;}
+.pipe-field-disabled input{background:#f2f4f7!important;color:#aeb6c2!important;border-color:#e5e7eb!important;cursor:not-allowed!important;}
+.pipe-field-disabled input::placeholder{color:#c8ced6!important;}
+#pipeSectionSvg .pipe-dim-active{fill:#d32f2f!important;font-size:40px!important;font-weight:900!important;paint-order:stroke fill;stroke:#fff!important;stroke-width:6px!important;}
+#pipeSectionSvg .w3small.pipe-dim-active{font-size:40px!important;}
+#pipeSectionSvg .small.pipe-dim-active{font-size:36px!important;}
+</style>
+
+<style id="pipe-diagram-zoom-120-final">
+/* 断面図を約1.2倍に拡大。工法切替・赤色フォーカス表示は維持 */
+.illust-box{
+  min-height:500px!important;
+  padding:2px 2px 2px 24px!important;
+  overflow:hidden!important;
+}
+#pipeSectionSvg{
+  width:120%!important;
+  height:500px!important;
+  max-width:none!important;
+  margin-left:-2%!important;
+  display:block!important;
+  overflow:visible!important;
+}
+#pipeSectionSvg .dimtxt,
+#pipeSectionSvg .w3small{font-size:30px!important;}
+#pipeSectionSvg .small{font-size:22px!important;}
+#pipeSectionSvg .mat{font-size:22px!important;}
+#pipeSectionSvg .pipe-dim-active{font-size:48px!important;}
+#pipeSectionSvg .w3small.pipe-dim-active{font-size:48px!important;}
+#pipeSectionSvg .small.pipe-dim-active{font-size:43px!important;}
+@media(max-width:980px){
+  .illust-box{min-height:460px!important;}
+  #pipeSectionSvg{height:460px!important;}
+}
+</style>
+
+<style id="socket-display-font-fix-v5">
+/* v5: 継手ソケット必要数は数値表示、結果項目は通常文字 */
+.result-table tbody tr:nth-last-child(-n+2) td{font-weight:400!important;background:#fff!important;}
+.result-table tbody tr:nth-last-child(-n+2) td b{font-weight:400!important;font-size:13px!important;}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div><h1>排水管工 積算アプリ 008</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<main><div class="grid">
+<section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><div class="illust-box">
+<svg id="pipeSectionSvg" class="illust-svg" aria-label="排水管工断面図" viewBox="0 0 1180 780" preserveAspectRatio="xMidYMid meet">
+<defs>
+<pattern id="gravel" width="26" height="18" patternUnits="userSpaceOnUse">
+<circle cx="5" cy="6" r="3" fill="#8b8f94"/>
+<circle cx="16" cy="11" r="4" fill="#70757a"/>
+<circle cx="24" cy="4" r="2.5" fill="#a2a6aa"/>
+</pattern>
+<marker id="pipeArrow" markerWidth="4.5" markerHeight="4.5" refX="2.25" refY="2.25" orient="auto-start-reverse">
+<path d="M0,0 L4.5,2.25 L0,4.5 z" fill="#222"/>
+</marker>
+</defs>
+
+<line id="ground" class="ground"/>
+<path id="leftSlope" class="slope"/>
+<path id="rightSlope" class="slope"/>
+<line id="bottom" class="line"/>
+
+<g id="structure">
+<rect id="protectBox" class="boxfill"/>
+<rect id="gravelRect" class="gravel"/>
+<rect id="levelRect" class="level"/>
+<rect id="mortarRect" class="mortar"/>
+<path id="formwork" class="form"/>
+<circle id="pipe" class="pipe"/>
+</g>
+
+
+<g id="heightExts">
+<line id="h1extTop" class="ext"/><line id="h1extBottom" class="ext"/>
+<line id="h2extTop" class="ext"/><line id="h2extBottom" class="ext"/>
+<line id="h3extTop" class="ext"/><line id="h3extBottom" class="ext"/>
+<line id="h4extTop" class="ext"/><line id="h4extBottom" class="ext"/>
+<line id="h5extTop" class="ext"/><line id="h5extBottom" class="ext"/>
+</g>
+
+<g id="dims">
+<line id="h1dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="h1txt" class="dimtxt">H1</text>
+<line id="h2dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="h2txt" class="dimtxt">H2</text>
+<line id="h3dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="h3txt" class="dimtxt">H3</text>
+<line id="h4dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="h4txt" class="dimtxt">H4</text>
+<line id="h5dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="h5txt" class="dimtxt">H5</text>
+
+<line id="w1dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="w1txt" class="dimtxt">W1</text>
+<line id="w2dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="w2txt" class="dimtxt">W2</text>
+<line id="w3dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="w3txt" class="w3small">W3</text>
+
+<line id="eldim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="eltxt" class="dimtxt">e</text>
+<line id="erdim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
+<text id="ertxt" class="dimtxt">e</text>
+</g>
+
+<text id="slopeL" class="small">1:n</text>
+<text id="slopeR" class="small">1:n</text>
+
+<g id="labels">
+<path id="lead1" class="leader"/><text id="lab1" class="mat"></text>
+<path id="lead2" class="leader"/><text id="lab2" class="mat"></text>
+<path id="lead3" class="leader"/><text id="lab3" class="mat"></text>
+<path id="lead4" class="leader"/><text id="lab4" class="mat"></text>
+</g>
+</svg></div><div class="note" id="pipeMethodNote">※ 工法名を選択すると、排水管の断面図が切り替わります。</div>
+<div class="estimate-panel">
+  <div class="save-line">
+    <label>工事名</label>
+    <input id="projectName" type="text" placeholder="例：○○様邸 外構工事">
+  </div>
+
+  <div class="control-block estimate-block">
+    <div class="sectionTitle">積算データ保存</div>
+    <div class="save-line">
+      <label>積算名称</label>
+      <input id="estimateName" type="text" placeholder="例：東側 排水管工 L10m">
+    </div>
+    <div class="save-line">
+      <label>保存済み</label>
+      <select id="savedEstimateList"><option value="">保存データなし</option></select>
+    </div>
+    <div class="save-btns">
+      <button class="primary" id="saveEstimateBtn" type="button">保存</button>
+      <button class="ghost" id="loadEstimateBtn" type="button">呼出</button>
+      <button class="danger" id="deleteEstimateBtn" type="button">削除</button>
+    </div>
+    <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+  </div>
+
+  <div class="product-master-box">
+    <div class="product-master-head">
+      <div class="product-master-title">製品単価マスター</div>
+    </div>
+    <div id="selectedProductMaster" class="product-master-current">製品は選択されていません。</div>
+    <div class="product-master-actions">
+      <button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
+      <button class="ghost" id="clearProductMasterBtn" type="button">選択解除</button>
+    </div>
+    <div class="pm-register-actions">
+      <button class="ghost" id="registerCurrentProductBtn" type="button">現在の入力内容をマスター登録</button>
+    </div>
+    <input id="ProductMasterId" type="hidden">
+    <input id="ProductMasterUpdatedAt" type="hidden">
+    <input id="ProductName" type="hidden">
+    <input id="ProductManufacturer" type="hidden">
+    <input id="ProductSpecification" type="hidden">
+  </div>
+
+  <div class="control-block price-block">
+    <div class="sectionTitle">単価マスター</div>
+    <div class="save-line">
+      <label>単価名</label>
+      <input id="pricePresetName" type="text" placeholder="例：標準 / U300 静岡県 / U240 民間">
+    </div>
+    <div class="save-line">
+      <label>保存済み単価</label>
+      <select id="savedPriceList"><option value="">保存単価なし</option></select>
+    </div>
+    <div class="save-btns">
+      <button class="ghost" id="savePriceBtn" type="button">保存</button>
+      <button class="ghost" id="loadPriceBtn" type="button">呼出</button>
+      <button class="danger" id="deletePriceBtn" type="button">削除</button>
+    </div>
+    <div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div>
+  </div>
+
+  <div class="control-block operation-block">
+    <div class="sectionTitle">基本操作</div>
+    <div class="save-btns" style="grid-template-columns:1fr 1fr">
+      <button class="primary" id="calcBtn" type="button">計算</button>
+      <button class="danger" id="resetBtn" type="button">入力リセット</button>
+    </div>
+  </div>
+</div></div></section>
+<section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
+  <div class="sectionTitle">工法選択</div>
+  <div class="row"><div><label>工法名</label><select id="method" style="width:100%;height:40px;border:1px solid var(--border);border-radius:12px;padding:8px;background:#fff;font-size:14px"><option value="pipe">管のみ</option><option value="base">砕石＋均しコンクリート</option><option value="sand">保護砂</option><option value="concrete">保護コンクリート</option></select></div><div><label>W3（管径・m）</label><input id="w3" type="number" step="0.001" value="0.300" data-dim="dim-w3"></div></div>
+  <div class="hr"></div><div class="sectionTitle">断面寸法（m）</div>
+  <div class="row"><div><label>W1（保護幅）</label><input id="W1" type="number" step="0.001" value="0.600" data-dim="dim-w1"></div><div><label>W2（基礎幅）</label><input id="W2" type="number" step="0.001" value="0.800" data-dim="dim-w2"></div></div>
+  <div class="row"><div><label>H1（土被り厚）</label><input id="H1" type="number" step="0.001" value="0.500" data-dim="dim-h1"></div><div><label>H2（保護部高さ）</label><input id="H2" type="number" step="0.001" value="0.600" data-dim="dim-h2"></div></div>
+  <div class="row"><div><label>H3（未使用）</label><input id="H3" type="number" step="0.001" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコンクリート厚）</label><input id="H4" type="number" step="0.001" value="0.050" data-dim="dim-h4"></div></div>
+  <div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="number" step="0.001" value="0.100" data-dim="dim-h5"></div><div></div></div>
+  <div class="hr"></div><div class="sectionTitle">共通条件</div>
+  <div class="row"><div><label>延長 L（m）</label><input id="L" type="number" step="0.001" value="10.000"></div><div><label>掘削余裕 e（左右・m）</label><input id="E" type="number" step="0.001" value="0.200" data-dim="dim-e"></div></div>
+  <div class="row"><div><label>法面勾配 n（1：n）</label><input id="N" type="number" step="0.01" min="0" value="0.50" data-dim="dim-n"></div><div><label>利益率（％）</label><input id="ProfitRate" type="number" step="0.1" min="0" max="99.9" value="20"></div></div>
+  <div class="row"><div><label>見積単価の丸め</label><input type="text" value="1,000円未満：10円／以上：100円" readonly></div><div></div></div>
+  <div class="note">掘削深さ＝H1＋H2＋H3＋H4＋H5。掘削底幅＝W2＋2e、掘削上幅＝掘削底幅＋2×n×掘削深さです。</div>
+  <div class="hr"></div>
+  <div class="sectionTitle">単価（任意・円）</div>
+  <div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" step="1" value="4500"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" step="1" value="250"></div></div>
+  <div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="number" step="1" value="8500"></div><div><label>均し型枠 単価/m²</label><input id="PleanForm" type="number" step="1" value="5500"></div></div>
+  <div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" type="number" step="1" value="22000"></div><div><label>保護砂 単価/m³</label><input id="Pmortar" type="number" step="1" value="6000"></div></div>
+  <div class="row"><div><label>保護コンクリート 単価/m³</label><input id="PprotectConcrete" type="number" step="1" value="24000"></div><div><label>保護コンクリート型枠 単価/m²</label><input id="PprotectForm" type="number" step="1" value="5500"></div></div>
+  <div class="row"><div><label>据付 単価/m</label><input id="Pset" type="number" step="1" value="2500"></div><div></div></div>
+  <div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" step="1" value="4000"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" step="1" value="3000"></div></div>
+  <div class="row"><div><label>製品長さ（m/本）</label><input id="ProdLen" type="number" step="0.1" value="2"></div><div><label>配管材価格（円/本）</label><input id="ProdPrice" type="number" step="1" value="20000"></div></div>
+  <div class="row"><div><label>継手ソケット 単価（円/個）</label><input id="Psocket" type="number" step="1" value="0"></div><div><label>継手ソケット 必要数</label><input id="SocketQtyDisplay" type="text" value="0" readonly></div></div>
+<input type="hidden" id="Pgrating" value="0"><input type="hidden" id="Ngrating" value="0"><input type="hidden" id="Pconcllid" value="0"><input type="hidden" id="Nconcllid" value="0"><input type="hidden" id="PcoverSet" value="0"><input type="hidden" id="NcoverSet" value="0"></div></section>
+<section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
+  <div class="btns" style="grid-template-columns:1fr;margin:0 0 12px;max-width:140px"><button class="primary" id="printReportBtn" type="button">印刷</button></div>
+  <div class="kpi"><div class="box"><div class="t">掘削</div><div class="v"><span id="k_exc">0.000</span><span class="u">m³</span></div><div class="t mono">台形断面積×L</div></div><div class="box"><div class="t">均しコンクリート</div><div class="v"><span id="k_lean">0.000</span><span class="u">m³</span></div><div class="t mono">W2×H5×L</div></div><div class="box"><div class="t">合計金額</div><div class="v"><span id="k_total">0</span><span class="u">円</span></div><div class="t mono">数量×単価</div></div><div class="box"><div class="t">mあたり単価</div><div class="v"><span id="k_unitm">0</span><span class="u">円/m</span></div><div class="t mono">合計金額÷L</div></div></div>
+  <div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultRowsBody"></tbody>
+  <tfoot>
+    <tr><td><b>合計</b></td><td></td><td></td><td></td><td class="mono" id="a_total"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_total"><b>0</b></td></tr>
+    <tr><td><b>mあたり単価</b></td><td></td><td></td><td></td><td class="mono" id="a_unitm"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_unitm"><b>0</b></td></tr>
+  </tfoot></table></div>
+  <div class="result-memo-box" aria-label="計算メモ">
+    <div class="result-memo-title">計算メモ</div>
+    <div class="result-memo-grid">
+<div class="result-memo-item"><b>掘削</b><span>台形断面積×L</span></div>
+<div class="result-memo-item"><b>掘削深さ</b><span>H1＋H2＋H3＋H4＋H5</span></div>
+<div class="result-memo-item"><b>掘削底幅</b><span>W2＋2e</span></div>
+<div class="result-memo-item"><b>掘削上幅</b><span>掘削底幅＋2×n×掘削深さ</span></div>
+<div class="result-memo-item"><b>残土処理</b><span>砕石＋均し＋敷モルタル＋カルバート体積</span></div>
+<div class="result-memo-item"><b>埋戻し</b><span>掘削－残土処理</span></div>
+<div class="result-memo-item"><b>砕石</b><span>W2×H5×L</span></div>
+<div class="result-memo-item"><b>均し型枠</b><span>H4×2×L</span></div>
+<div class="result-memo-item"><b>均しコンクリート</b><span>W2×H5×L</span></div>
+<div class="result-memo-item"><b>敷モルタル</b><span>W1×H3×L</span></div>
+<div class="result-memo-item"><b>床付け</b><span>W2×L</span></div>
+<div class="result-memo-item"><b>配管材</b><span>必要本数＝L÷製品長さ（端数切上げ）</span></div>
+<div class="result-memo-item"><b>継手ソケット</b><span>必要個数＝配管材の本数</span></div>
+</div></div>
+</div></section>
+</div></main>
+
+<div id="printPreviewActions" class="print-preview-actions">
+  <button class="ghost" id="backFromPrintPreviewBtn" type="button">戻る</button>
+  <button class="primary" id="printFromPreviewBtn" type="button">印刷</button>
+</div>
+
+<section id="printReport" class="print-report" aria-label="排水管工 積算印刷帳票">
+  <div id="printHeader" class="print-header">
+    <div id="printProject">工事名：-</div>
+    <div id="printEstimate">積算名称：-</div>
+  </div>
+
+  <table class="print-main-table">
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th>数量</th>
+        <th>単位</th>
+        <th>単価</th>
+        <th>金額</th>
+        <th>見積単価</th>
+        <th>見積金額</th>
+      </tr>
+    </thead>
+    <tbody id="printRows"></tbody>
+    <tfoot>
+      <tr>
+        <th colspan="4">合計</th>
+        <td id="printTotal">0</td>
+        <td></td>
+        <td id="printEstimateTotal">0</td>
+      </tr>
+      <tr class="unit-price-row">
+        <th colspan="3">mあたり単価（原価）</th>
+        <td colspan="2" id="printUnitm">0 円/m</td>
+        <th>mあたり単価（見積）</th>
+        <td id="printEstimateUnitm">0 円/m</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="print-notes">
+    <div>※ 数量は入力延長Lに対する数量です。</div>
+    <div>単位：mm（特記なき場合）</div>
+  </div>
+
+  <div class="print-bottom">
+    <div class="print-drawing-box">
+      <div class="print-title">断面図（寸法図）</div>
+      <div id="printDiagram"></div>
+      <div class="print-spec">
+        <b>H1</b>：土被り厚<br><b>H2</b>：保護部高さ<br>
+        <b>H3</b>：敷モルタル厚<br>
+        <b>H4</b>：均しコンクリート厚<br>
+        <b>H5</b>：砕石厚<br>
+        <b>W1</b>：保護幅<br>
+        <b>W2</b>：床付け・砕石幅
+      </div>
+    </div>
+    <div class="print-dim-box">
+      <div class="print-title">寸法一覧</div>
+      <table class="print-dim-table">
+        <thead>
+          <tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr>
+        </thead>
+        <tbody id="printDims"></tbody>
+      </table>
+      <div class="print-spec">
+<b>掘削深さ</b>：H1＋H2＋H3＋H4＋H5<br>
+<b>掘削底幅</b>：W2＋2e<br>
+<b>掘削上幅</b>：底幅＋2×n×掘削深さ<br>
+<b>床付け</b>：W2×L<br>
+<b>均しコンクリート</b>：W2×H5×L<br>
+<b>砕石</b>：W2×H5×L
+</div>
+    </div>
+  </div>
+</section>
+
+<div id="productMasterModal" class="pm-modal" aria-hidden="true">
+  <div class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="productMasterModalTitle">
+    <div class="pm-dialog-head">
+      <h3 id="productMasterModalTitle">排水管工 製品単価マスター</h3>
+      <button id="closeProductMasterBtn" class="pm-close" type="button">閉じる</button>
+    </div>
+    <div class="pm-filter">
+      <select id="pmManufacturerFilter"><option value="">すべてのメーカー</option></select>
+      <input id="pmKeywordFilter" type="search" placeholder="製品名・規格・型番で検索">
+      <button id="pmSearchBtn" class="primary" type="button">検索</button>
+    </div>
+    <div id="pmProductList" class="pm-list"></div>
+  </div>
+</div>
+
+<div id="productRegisterModal" class="pm-modal" aria-hidden="true">
+  <div class="pm-dialog pm-register-dialog" role="dialog" aria-modal="true" aria-labelledby="productRegisterModalTitle">
+    <div class="pm-dialog-head">
+      <h3 id="productRegisterModalTitle">現在の単価を製品マスターへ登録</h3>
+      <button id="closeProductRegisterBtn" class="pm-close" type="button">閉じる</button>
+    </div>
+    <div class="pm-register-body">
+      <div class="pm-register-grid">
+        <label>カテゴリ</label><input id="registerCategory" type="text" value="排水管工工" readonly>
+        <label>登録日</label><input id="registerDate" type="text" readonly>
+        <label>メーカー</label><input id="registerManufacturer" type="text" placeholder="例：○○コンクリート">
+        <label>製品名</label><input id="registerProductName" type="text" placeholder="例：PU-300A">
+        <label>規格</label><input id="registerSpecification" type="text" placeholder="例：300×300×2000">
+        <label>型番</label><input id="registerModelCode" type="text" placeholder="例：PU300A">
+        <label>備考</label><textarea id="registerNote" placeholder="仕入先、価格条件、地域など"></textarea>
+      </div>
+      <div id="registerPriceSummary" class="pm-price-summary"></div>
+      <div class="pm-register-buttons">
+        <button id="cancelProductRegisterBtn" class="ghost" type="button">キャンセル</button>
+        <button id="saveProductRegisterBtn" class="primary" type="button">マスターに登録</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function todayYmd(){
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}/${m}/${day}`;
+}const num=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0};const fmt=(x,d=3)=>(Number.isFinite(x)?Number(x).toFixed(d):Number(0).toFixed(d));const yen=x=>(Number.isFinite(x)?Math.round(x).toLocaleString('ja-JP'):'0');
+function roundEstimateUnit(x){if(!Number.isFinite(x)||x<=0)return 0;const step=x<1000?10:100;return Math.round(x/step)*step;}
+function calc(){
+ if(typeof syncPipeDiagramInputs==='function') syncPipeDiagramInputs();
+ const method=$('method')?.value||'pipe';
+ const W1=num('W1'),W2=num('W2'),W3=num('w3'),H1=num('H1'),H2=num('H2'),H4=num('H4'),H5=num('H5'),L=num('L'),E=num('E'),slopeN=Math.max(0,num('N'));
+ const profit=Math.min(99.9,Math.max(0,num('ProfitRate')))/100;
+ const pipeArea=Math.PI*W3*W3/4;
+ let depth=H1+W3,structWidth=W3;
+ if(method==='base'){depth=H1+W3+H4+H5;structWidth=W2;}
+ if(method==='sand'||method==='concrete'){depth=H1+H2+H5;structWidth=W1;}
+ const bottomWidth=structWidth+2*E;
+ const topWidth=bottomWidth+2*slopeN*depth;
+ const Vexc=((bottomWidth+topWidth)*depth/2)*L;
+ const Abed=structWidth*L;
+ let Vstone=0,Vlean=0,AleanForm=0,Vsand=0,VprotectConcrete=0,AprotectForm=0;
+ if(method==='base'){Vstone=W2*H5*L;Vlean=W2*H4*L;AleanForm=H4*2*L;}
+ if(method==='sand'){Vstone=W1*H5*L;Vsand=Math.max(0,(W1*H2-pipeArea)*L);}
+ if(method==='concrete'){Vstone=W1*H5*L;VprotectConcrete=Math.max(0,(W1*H2-pipeArea)*L);AprotectForm=H2*2*L;}
+ const Vpipe=pipeArea*L;
+ let Vspoil=Vpipe;
+ if(method==='base')Vspoil=Vpipe+Vstone+Vlean;
+ if(method==='sand'||method==='concrete')Vspoil=(W1*H2+W1*H5)*L;
+ const Vback=Math.max(0,Vexc-Vspoil);
+ const prodLen=num('ProdLen'),prodPrice=num('ProdPrice'),prodQty=prodLen>0?Math.ceil((L/prodLen)-1e-10):0;
+ const units={exc:num('Pexc'),spoil:num('Pspoil'),back:num('Pback'),bed:num('Pbed'),stone:num('Pstone'),leanForm:num('PleanForm'),lean:num('Plean'),sand:num('Pmortar'),protectConcrete:num('PprotectConcrete'),protectForm:num('PprotectForm'),prod:prodPrice,socket:num('Psocket'),set:num('Pset')};
+ const qty={exc:Vexc,spoil:Vspoil,back:Vback,bed:Abed,stone:Vstone,leanForm:AleanForm,lean:Vlean,sand:Vsand,protectConcrete:VprotectConcrete,protectForm:AprotectForm,prod:prodQty,socket:prodQty,set:L};
+ const active=window.getPipeActiveRows?window.getPipeActiveRows(method):[];
+ const socketDisplay=$('SocketQtyDisplay');if(socketDisplay)socketDisplay.value=prodQty.toLocaleString('ja-JP');
+ const amounts={},estimateUnits={},estimateAmounts={};
+ Object.keys(qty).forEach(k=>{amounts[k]=qty[k]*units[k];estimateUnits[k]=roundEstimateUnit(profit<1?units[k]/(1-profit):0);estimateAmounts[k]=qty[k]*estimateUnits[k];});
+ const activeKeys=active.map(r=>r.key);
+ const total=activeKeys.reduce((a,k)=>a+(amounts[k]||0),0),estimateTotal=activeKeys.reduce((a,k)=>a+(estimateAmounts[k]||0),0),unitm=L>0?total/L:0,estimateUnitm=L>0?estimateTotal/L:0;
+ if(window.renderPipeResultRows)window.renderPipeResultRows(active,qty,units,amounts,estimateUnits,estimateAmounts);
+ $('k_exc').textContent=fmt(Vexc);$('k_lean').textContent=fmt(method==='base'?Vlean:(method==='sand'?Vsand:(method==='concrete'?VprotectConcrete:0)));
+ const kt=$('k_lean')?.closest('.box')?.querySelector('.t');if(kt)kt.textContent=method==='base'?'均しコンクリート':method==='sand'?'保護砂':method==='concrete'?'保護コンクリート':'排水管';
+ $('k_total').textContent=yen(total);$('k_unitm').textContent=yen(unitm);
+ $('a_total').innerHTML='<b>'+yen(total)+'</b>';$('a_unitm').innerHTML='<b>'+yen(unitm)+' 円/m</b>';$('ea_total').innerHTML='<b>'+yen(estimateTotal)+'</b>';$('ea_unitm').innerHTML='<b>'+yen(estimateUnitm)+' 円/m</b>';
+ window.pipeCalcData={method,depth,bottomWidth,topWidth,pipeArea,qty,units,amounts,estimateUnits,estimateAmounts,active,total,estimateTotal,unitm,estimateUnitm};
+ if(window.updatePipeCalcMemo)window.updatePipeCalcMemo(window.pipeCalcData);
+}
+function savePrices(){const name=(($('pricePresetName')&&$('pricePresetName').value)||'').trim()||'排水管工 標準単価';const list=getPriceStore();const data={name,createdAt:new Date().toISOString(),values:collectPriceValues()};const idx=list.findIndex(x=>x.name===name);if(idx>=0)list[idx]=data;else list.push(data);setPriceStore(list);localStorage.setItem(lastPricePresetKey,name);refreshPriceList();const sel=$('savedPriceList');if(sel){const hit=getPriceStore().findIndex(x=>x.name===name);if(hit>=0)sel.value=String(hit);}calc();}
+function loadPrices(){const list=getPriceStore();const sel=$('savedPriceList');let item=null;if(sel&&sel.value!=='')item=list[parseInt(sel.value,10)];if(!item&&list.length)item=list[0];if(item){if($('pricePresetName'))$('pricePresetName').value=item.name||'';localStorage.setItem(lastPricePresetKey,item.name||'');applyPriceValues(item.values||{});}else{try{applyPriceValues(JSON.parse(localStorage.getItem(oldPriceKey)||'{}'));}catch(e){calc();}}}
+function deletePricePreset(){const list=getPriceStore();const sel=$('savedPriceList');const idx=sel?parseInt(sel.value,10):NaN;if(!Number.isFinite(idx)||!list[idx])return alert('削除する保存単価を選んでください');if(list[idx].name==='標準')return alert('標準マスターは削除できません。内容を変更したい場合は、単価を入力して「標準」の名前で保存してください。');if(!confirm('選択中の保存単価を削除しますか？'))return;list.splice(idx,1);setPriceStore(list);localStorage.setItem(lastPricePresetKey,'標準');refreshPriceList();loadPrices();calc();}
+function setDefaultPrices(){priceIds.forEach(id=>$(id).value=defaultPrices[id]);calc();}
+$('calcBtn').addEventListener('click',calc);$('savePriceBtn').addEventListener('click',()=>{savePrices();alert('単価を保存しました');});$('loadPriceBtn').addEventListener('click',loadPrices);const deletePriceBtn=$('deletePriceBtn');if(deletePriceBtn)deletePriceBtn.addEventListener('click',deletePricePreset);$('resetBtn').addEventListener('click',()=>{['W1','W2','H1','H2','H3','H4','H5','E','N'].forEach(id=>$(id).value='');$('w3').value='0.300';$('method').value='pipe';$('L').value=10;$('ProfitRate').value=20;calc();});const priceSel=$('savedPriceList');if(priceSel)priceSel.addEventListener('change',()=>{const list=getPriceStore();const item=list[parseInt(priceSel.value,10)];if(item&&$('pricePresetName'))$('pricePresetName').value=item.name||'';});
+$('saveEstimateBtn').addEventListener('click',saveEstimate);$('loadEstimateBtn').addEventListener('click',loadEstimate);$('deleteEstimateBtn').addEventListener('click',deleteEstimate);$('projectName').addEventListener('input',refreshEstimateList);$('printReportBtn').addEventListener('click',()=>{makePrintReport();window.print();});
+(function(){let raf=0;const schedule=()=>{if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{raf=0;calc();});};document.querySelectorAll('input').forEach(el=>{el.addEventListener('input',schedule);el.addEventListener('change',schedule);});})();
+(function(){const clear=()=>document.querySelectorAll('.dimText.active').forEach(el=>el.classList.remove('active'));const activate=cls=>{clear();if(!cls)return;document.querySelectorAll('.'+cls).forEach(el=>el.classList.add('active'));};document.querySelectorAll('input[data-dim]').forEach(inp=>{inp.addEventListener('focus',()=>activate(inp.dataset.dim));inp.addEventListener('click',()=>activate(inp.dataset.dim));inp.addEventListener('blur',clear);});})();
+(function(){const f=Array.from(document.querySelectorAll('input:not([readonly]):not([disabled])'));f.forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const n=f[i+1];if(n){n.focus();n.select&&n.select();}}}));})();
+
+
+/* ===== 製品単価マスター連携 ===== */
+let selectedProductMasterSnapshot=null;
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function updateSelectedProductDisplay(){
+  const box=$('selectedProductMaster');
+  if(!box)return;
+  const name=($('ProductName')?.value||'').trim();
+  if(!name){box.textContent='製品は選択されていません。';return;}
+  const maker=($('ProductManufacturer')?.value||'').trim();
+  const spec=($('ProductSpecification')?.value||'').trim();
+  box.innerHTML='<b>'+escapeHtml(name)+'</b>'+(maker?' ／ '+escapeHtml(maker):'')+(spec?'<br>'+escapeHtml(spec):'');
+}
+async function loadProductMasterManufacturers(){
+  const sel=$('pmManufacturerFilter');if(!sel||!window.MS?.ProductMaster)return;
+  const current=sel.value;
+  const makers=await MS.ProductMaster.getManufacturers({category:'drainage_pipe'});
+  sel.innerHTML='<option value="">すべてのメーカー</option>'+makers.map(m=>'<option value="'+escapeHtml(m)+'">'+escapeHtml(m)+'</option>').join('');
+  if(makers.includes(current))sel.value=current;
+}
+async function renderProductMasterList(){
+  const listBox=$('pmProductList');if(!listBox)return;
+  if(!window.MS?.ProductMaster){listBox.innerHTML='<div class="pm-empty">ms_common.js の製品マスター機能を読み込めません。</div>';return;}
+  listBox.innerHTML='<div class="pm-empty">読み込み中です…</div>';
+  try{
+    const rows=await MS.ProductMaster.search({
+      category:'drainage_pipe',
+    registeredDate: ($('registerDate')?.value || todayYmd()),
+      manufacturer:$('pmManufacturerFilter')?.value||'',
+      keyword:$('pmKeywordFilter')?.value||''
+    });
+    if(!rows.length){listBox.innerHTML='<div class="pm-empty">該当する排水管製品がありません。</div>';return;}
+    listBox.innerHTML=rows.map(row=>{
+      const productUnit=row.productUnit||'本';
+      const price=Number(row.productPrice||0).toLocaleString('ja-JP');
+      const len=Number(row.unitLength||0);
+      const set=Number(row.installationPrice||0).toLocaleString('ja-JP');
+      const socket=Number(row.socketPrice||0).toLocaleString('ja-JP');
+      return '<div class="pm-item"><div><div class="pm-item-name">'+escapeHtml(row.productName||'名称未設定')+'</div><div class="pm-item-meta">'
+        +(row.manufacturer?'メーカー：'+escapeHtml(row.manufacturer)+'　':'')
+        +(row.specification?'規格：'+escapeHtml(row.specification)+'<br>':'')
+        +'製品：'+price+'円/'+escapeHtml(productUnit)+(len?'（'+len+'m）':'')+'　据付：'+set+'円/'+escapeHtml(row.installationUnit||'m')+'　継手ソケット：'+socket+'円/'+escapeHtml(row.socketUnit||'個')
+        +'</div></div><button class="pm-select-btn" type="button" data-product-id="'+escapeHtml(row.id)+'">選択</button></div>';
+    }).join('');
+    listBox.querySelectorAll('[data-product-id]').forEach(btn=>btn.addEventListener('click',()=>selectProductMaster(btn.dataset.productId)));
+  }catch(error){
+    console.error(error);listBox.innerHTML='<div class="pm-empty">製品マスターの読み込みに失敗しました。</div>';
+  }
+}
+async function openProductMaster(){
+  const modal=$('productMasterModal');if(!modal)return;
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+  await loadProductMasterManufacturers();
+  await renderProductMasterList();
+}
+function closeProductMaster(){
+  const modal=$('productMasterModal');if(!modal)return;
+  modal.classList.remove('show');modal.setAttribute('aria-hidden','true');
+}
+async function selectProductMaster(id){
+  try{
+    const row=await MS.ProductMaster.get(id);
+    if(!row)return alert('選択した製品が見つかりません。');
+    const v=MS.ProductMaster.toAppValues(row,'drainage_pipe');
+    selectedProductMasterSnapshot=v.productMasterSnapshot||row;
+    $('ProductMasterId').value=v.productMasterId||'';
+    $('ProductMasterUpdatedAt').value=v.productMasterUpdatedAt||'';
+    $('ProductName').value=v.productName||'';
+    $('ProductManufacturer').value=v.productManufacturer||'';
+    $('ProductSpecification').value=v.productSpecification||'';
+    if(Number(v.productUnitLength)>0)$('ProdLen').value=v.productUnitLength;
+    $('ProdPrice').value=Number(v.productPrice||0);
+    $('Pset').value=Number(v.installationPrice||0);
+    $('Psocket').value=Number(v.socketPrice||0);
+    $('Pconcllid').value=Number(v.concreteCoverPrice||0);
+    $('Pgrating').value=Number(v.gratingCoverPrice||0);
+    $('PcoverSet').value=Number(v.coverInstallationPrice||0);
+    updateSelectedProductDisplay();calc();closeProductMaster();
+  }catch(error){console.error(error);alert('製品の読込に失敗しました。');}
+}
+function clearProductMaster(){
+  ['ProductMasterId','ProductMasterUpdatedAt','ProductName','ProductManufacturer','ProductSpecification'].forEach(id=>{if($(id))$(id).value='';});
+  selectedProductMasterSnapshot=null;updateSelectedProductDisplay();
+}
+$('openProductMasterBtn')?.addEventListener('click',openProductMaster);
+$('clearProductMasterBtn')?.addEventListener('click',clearProductMaster);
+$('closeProductMasterBtn')?.addEventListener('click',closeProductMaster);
+$('pmSearchBtn')?.addEventListener('click',renderProductMasterList);
+$('pmManufacturerFilter')?.addEventListener('change',renderProductMasterList);
+$('pmKeywordFilter')?.addEventListener('input',renderProductMasterList);
+$('productMasterModal')?.addEventListener('click',e=>{if(e.target===$('productMasterModal'))closeProductMaster();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProductMaster();});
+
+
+
+/* ===== 現在の入力内容を製品マスターへ登録 ===== */
+function currentProductMasterInput(){
+  return {
+    category:'drainage_pipe',
+    manufacturer:($('registerManufacturer')?.value||'').trim(),
+    productName:($('registerProductName')?.value||'').trim(),
+    specification:($('registerSpecification')?.value||'').trim(),
+    modelCode:($('registerModelCode')?.value||'').trim(),
+    productUnit:'本',
+    unitLength:num('ProdLen'),
+    productPrice:num('ProdPrice'),
+    installationPrice:num('Pset'),
+    installationUnit:'m',
+    socketPrice:num('Psocket'),
+    socketUnit:'個',
+    concreteCoverPrice:num('Pconcllid'),
+    concreteCoverUnit:'枚',
+    gratingCoverPrice:num('Pgrating'),
+    gratingCoverUnit:'枚',
+    coverInstallationPrice:num('PcoverSet'),
+    coverInstallationUnit:'枚',
+    note:($('registerNote')?.value||'').trim(),
+    enabled:true
+  };
+}
+function updateRegisterPriceSummary(){
+  const box=$('registerPriceSummary');if(!box)return;
+  box.innerHTML=[
+    ['製品長さ',num('ProdLen')+' m/個'],
+    ['配管材価格',yen(num('ProdPrice'))+' 円/本'],
+    ['継手ソケット',yen(num('Psocket'))+' 円/個'],
+    ['据付手間',yen(num('Pset'))+' 円/m']
+  ].map(v=>'<div><b>'+v[0]+'</b>：'+v[1]+'</div>').join('');
+}
+function openProductRegister(){
+  if($('registerDate')) $('registerDate').value=todayYmd();
+  if(!window.MS?.ProductMaster?.saveFromApp){
+    alert('ms_common.js を最新版に差し替えてください。');return;
+  }
+  $('registerManufacturer').value=($('ProductManufacturer')?.value||'').trim();
+  $('registerProductName').value=($('ProductName')?.value||'').trim();
+  $('registerSpecification').value=($('ProductSpecification')?.value||'').trim();
+  $('registerModelCode').value='';
+  $('registerNote').value='';
+  updateRegisterPriceSummary();
+  const modal=$('productRegisterModal');modal?.classList.add('show');modal?.setAttribute('aria-hidden','false');
+  setTimeout(()=>{($('registerProductName')||$('registerManufacturer'))?.focus();},0);
+}
+function closeProductRegister(){
+  const modal=$('productRegisterModal');modal?.classList.remove('show');modal?.setAttribute('aria-hidden','true');
+}
+async function saveCurrentProductToMaster(){
+  const input=currentProductMasterInput();
+  if(!input.productName){alert('製品名を入力してください。');$('registerProductName')?.focus();return;}
+  try{
+    let result=await MS.ProductMaster.saveFromApp(input);
+    if(!result.saved&&result.duplicate){
+      const d=result.duplicate;
+      const ok=confirm('同じ製品がすでに登録されています。\n\n'+(d.manufacturer?d.manufacturer+' ／ ':'')+(d.productName||'')+(d.specification?' ／ '+d.specification:'')+'\n\n現在の入力単価で上書き更新しますか？');
+      if(!ok)return;
+      result=await MS.ProductMaster.saveFromApp(input,{overwrite:true});
+    }
+    const row=result.row;
+    if(!row)throw new Error('登録結果を取得できませんでした。');
+    const v=MS.ProductMaster.toAppValues(row,'drainage_pipe');
+    selectedProductMasterSnapshot=v.productMasterSnapshot||row;
+    $('ProductMasterId').value=v.productMasterId||'';
+    $('ProductMasterUpdatedAt').value=v.productMasterUpdatedAt||'';
+    $('ProductName').value=v.productName||'';
+    $('ProductManufacturer').value=v.productManufacturer||'';
+    $('ProductSpecification').value=v.productSpecification||'';
+    updateSelectedProductDisplay();
+    closeProductRegister();
+    alert('現在の入力内容を製品単価マスターへ登録しました。');
+  }catch(error){console.error(error);alert(error?.message||'製品マスターへの登録に失敗しました。');}
+}
+$('registerCurrentProductBtn')?.addEventListener('click',openProductRegister);
+$('closeProductRegisterBtn')?.addEventListener('click',closeProductRegister);
+$('cancelProductRegisterBtn')?.addEventListener('click',closeProductRegister);
+$('saveProductRegisterBtn')?.addEventListener('click',saveCurrentProductToMaster);
+$('productRegisterModal')?.addEventListener('click',e=>{if(e.target===$('productRegisterModal'))closeProductRegister();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProductRegister();});
+
+const estimateFieldIds=['projectName','estimateName','method','w3','W1','W2','H1','H2','H3','H4','H5','L','E','ProfitRate','Pexc','Pbed','Pstone','PleanForm','Plean','Pmortar','PprotectConcrete','PprotectForm','Pset','Pspoil','Pback','ProdLen','ProdPrice','Psocket','Pgrating','Ngrating','Pconcllid','Nconcllid','PcoverSet','ProductMasterId','ProductMasterUpdatedAt','ProductName','ProductManufacturer','ProductSpecification'];
+const estimateKey='drainage_pipe_estimates_v1';
+function getEstimateStore(){try{return JSON.parse(localStorage.getItem(estimateKey)||'{}')||{};}catch(e){return {};}}
+function setEstimateStore(d){localStorage.setItem(estimateKey,JSON.stringify(d));}
+function projectKey(){return ($('projectName')?.value||'未設定工事').trim()||'未設定工事';}
+function refreshEstimateList(){const sel=$('savedEstimateList');if(!sel)return;const store=getEstimateStore();const pk=projectKey();const list=store[pk]||[];sel.innerHTML='';if(!list.length){sel.innerHTML='<option value="">保存データなし</option>';return;}list.forEach((item,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=item.name||('保存データ '+(i+1));sel.appendChild(opt);});}
+function saveEstimate(){const name=($('estimateName').value||'排水管工 積算').trim();const data={name,createdAt:new Date().toISOString(),values:{}};estimateFieldIds.forEach(id=>{const el=$(id);if(el)data.values[id]=el.value;});const store=getEstimateStore();const pk=projectKey();store[pk]=store[pk]||[];const idx=store[pk].findIndex(x=>x.name===name);if(idx>=0)store[pk][idx]=data;else store[pk].push(data);setEstimateStore(store);refreshEstimateList();calc();alert('積算データを保存しました');}
+function loadEstimate(){const sel=$('savedEstimateList');const store=getEstimateStore();const list=store[projectKey()]||[];const item=list[parseInt(sel.value,10)];if(!item)return;Object.entries(item.values||{}).forEach(([id,v])=>{const el=$(id);if(el)el.value=v;});refreshEstimateList();updateSelectedProductDisplay();calc();}
+function deleteEstimate(){const sel=$('savedEstimateList');const store=getEstimateStore();const pk=projectKey();const list=store[pk]||[];const idx=parseInt(sel.value,10);if(!Number.isFinite(idx)||!list[idx])return;if(!confirm('選択中の積算データを削除しますか？'))return;list.splice(idx,1);store[pk]=list;setEstimateStore(store);refreshEstimateList();}
+function makePrintReport(){
+ calc();
+ const today=new Date().toLocaleDateString('ja-JP');$('printHeader').setAttribute('data-date',today);
+ $('printProject').textContent='工事名：'+(($('projectName').value||'').trim()||'-');$('printEstimate').textContent='積算名称：'+(($('estimateName').value||'').trim()||'-');
+ const rows=[['掘削','r_exc','m³','u_exc','a_exc'],['埋戻し','r_back','m³','u_back','a_back'],['残土処理','r_spoil','m³','u_spoil','a_spoil'],['床付け','r_bed','m²','u_bed','a_bed'],['砕石','r_stone','m³','u_stone','a_stone'],['均し型枠','r_leanForm','m²','u_leanForm','a_leanForm'],['均しコンクリート','r_lean','m³','u_lean','a_lean'],['敷モルタル','r_mortar','m³','u_mortar','a_mortar'],['配管材','r_prod','本','u_prod','a_prod'],['継手ソケット','r_socket','個','u_socket','a_socket'],['排水管布設','r_set','m','u_set','a_set']];
+ $('printRows').innerHTML=rows.map((r,i)=>`<tr><td>${i+1}. ${r[0]}</td><td>${$(r[1]).textContent}</td><td>${r[2]}</td><td>${$(r[3]).textContent}</td><td>${$(r[4]).textContent}</td><td>${$('eu_'+r[1].replace('r_','')).textContent}</td><td>${$('ea_'+r[1].replace('r_','')).textContent}</td></tr>`).join('');
+ $('printTotal').textContent=$('a_total').innerText.replace(/\s/g,'');$('printUnitm').textContent=$('a_unitm').innerText.replace(/\s/g,'');$('printEstimateTotal').textContent=$('ea_total').innerText.replace(/\s/g,'');$('printEstimateUnitm').textContent=$('ea_unitm').innerText.replace(/\s/g,'');
+ const dims=[['W1','保護幅'],['W2','床付け・砕石幅'],['H1','土被り厚'],['H2','保護部高さ'],['H3','敷モルタル厚'],['H4','均しコンクリート厚'],['H5','砕石厚'],['E','掘削余裕 e'],['N','法面勾配 n']];
+ $('printDims').innerHTML=dims.map(([id,name])=>`<tr><td>${id}</td><td>${name}</td><td>${id==='N'?num(id).toFixed(2):yen(num(id)*1000)}</td></tr>`).join('');
+ const src=document.querySelector('.illust-svg');$('printDiagram').innerHTML='';if(src){const clone=src.cloneNode(true);clone.removeAttribute('class');clone.style.width='100%';clone.style.height='100%';$('printDiagram').appendChild(clone);}
+}
+function enterPrintPreview(){makePrintReport();document.body.classList.add('print-preview-mode');$('closePrintPreviewBtn').style.display='block';window.scrollTo(0,0);}
+function exitPrintPreview(){document.body.classList.remove('print-preview-mode');const b=$('closePrintPreviewBtn');if(b)b.style.display='none';}
+
+window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList();loadPrices();refreshEstimateList();calc();});
+</script>
+
+
+<!-- ===== 018: L型擁壁と同じSVG標準帳票 ===== -->
+<style>
+.svg-print-wrap{display:none;}
+.svg-print-actions{display:flex;gap:10px;max-width:210mm;margin:12px auto;justify-content:flex-end;padding-right:0;}
+.svg-print-actions button{width:auto;min-width:110px;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;}
+.svg-print-sheet-svg{display:block;width:210mm;height:297mm;margin:0 auto;background:#fff;box-shadow:0 0 0 1px #ddd;}
+.svg-preview-mode{background:#eef1f5!important;}
+.svg-preview-mode header,
+.svg-preview-mode main>.grid,
+.svg-preview-mode #printReport,
+.svg-preview-mode .print-report{display:none!important;}
+.svg-preview-mode #svgPrintWrap{display:block!important;}
+@media print{
+  @page{size:A4 portrait;margin:0;}
+  html,body{margin:0!important;padding:0!important;width:210mm!important;height:297mm!important;background:#fff!important;overflow:hidden!important;}
+  body *{visibility:hidden!important;}
+  #svgPrintWrap,#svgPrintWrap *{visibility:visible!important;}
+  #svgPrintWrap{display:block!important;position:absolute!important;left:0!important;top:0!important;width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;background:#fff!important;}
+  .svg-print-actions{display:none!important;}
+  #svgPrintSheet{width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;}
+  .svg-print-sheet-svg{width:210mm!important;height:297mm!important;margin:0!important;box-shadow:none!important;}
+}
+</style>
+<section id="svgPrintWrap" class="svg-print-wrap" aria-label="SVG印刷帳票">
+  <div class="svg-print-actions">
+    <button class="ghost" id="closeSvgPreviewBtn" type="button">戻る</button>
+    <button class="primary" id="svgPrintNowBtn" type="button">印刷</button>
+  </div>
+  <div id="svgPrintSheet"></div>
+</section>
+<script>
+(function(){
+  function el(id){ return document.getElementById(id); }
+  function val(id){ var e=el(id); return e ? e.value : ''; }
+  function text(id){ var e=el(id); return e ? (e.innerText || e.textContent || '') : ''; }
+  function n(id){ var v=parseFloat(val(id)); return isFinite(v)?v:0; }
+  function yen2(x){ return (isFinite(x)?Math.round(x):0).toLocaleString('ja-JP'); }
+  function mm(id){ return yen2(n(id)*1000); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function t(x,y,txt,size,weight,anchor){ return '<text x="'+x+'" y="'+y+'" font-size="'+size+'" font-weight="'+(weight||400)+'" text-anchor="'+(anchor||'start')+'">'+esc(txt)+'</text>'; }
+  function line(x1,y1,x2,y2,w){ return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#111" stroke-width="'+(w||0.2)+'"/>'; }
+  function rect(x,y,w,h,fill,sw,stroke){ return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+(fill||'none')+'" stroke="'+(stroke||'#111')+'" stroke-width="'+(sw==null?0.2:sw)+'"/>'; }
+  function arrow(x1,y1,x2,y2){ return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#111" stroke-width="0.18" marker-start="url(#arrBack)" marker-end="url(#arr)"/>'; }
+
+  function buildMainTable(){
+    var rows=(window.getPipePrintRows?window.getPipePrintRows():[]);
+    var x=15,y=29,w=180,h=119,col=[0,45,61,72,94,117,144,180],s='';
+    s+=rect(x,y,w,h,'white',0.25);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="8" fill="url(#headGrad)" stroke="#111" stroke-width="0.25"/>';
+    for(var i=1;i<col.length-1;i++)s+=line(x+col[i],y,x+col[i],y+h,0.2);
+    ['項目','数量','単位','単価','金額','見積単価','見積金額'].forEach(function(hd,i){
+      s+=t(x+(col[i]+col[i+1])/2,y+5.5,hd,3.25,700,'middle');
+    });
+    var cy=y+8,rh=7.35;
+    rows.forEach(function(r,i){
+      s+=line(x,cy,x+w,cy,0.17);
+      if(r[1]){
+        var k=r[1].replace('r_','');
+        var get=typeof txt==='function'?txt:text;
+        s+=t(x+2,cy+5.7,(i+1)+'. '+r[0],3.15,400);
+        s+=t(x+col[2]-1.5,cy+5.7,get(r[1]),3.1,400,'end');
+        s+=t(x+(col[2]+col[3])/2,cy+5.7,r[2],3.1,400,'middle');
+        s+=t(x+col[4]-1.2,cy+5.7,get('u_'+k),3.0,400,'end');
+        s+=t(x+col[5]-1.2,cy+5.7,get('a_'+k),3.0,400,'end');
+        s+=t(x+col[6]-1.2,cy+5.7,get('eu_'+k),3.0,400,'end');
+        s+=t(x+col[7]-1.2,cy+5.7,get('ea_'+k),3.0,700,'end');
+      }
+      cy+=rh;
+    });
+    var get=typeof txt==='function'?txt:text;
+    s+=line(x,cy,x+w,cy,0.24);
+    s+=t(x+col[4]-2,cy+5.9,'合計',3.5,400,'end');
+    s+=t(x+col[5]-1.2,cy+5.9,get('a_total'),3.5,400,'end');
+    s+=t(x+col[7]-1.2,cy+5.9,get('ea_total'),3.7,700,'end');
+    cy+=7.5;
+    s+=line(x,cy,x+w,cy,0.22);
+    s+=t(x+col[4]-2,cy+5.9,'mあたり単価',3.2,400,'end');
+    s+=t(x+col[5]-1.2,cy+5.9,get('a_unitm'),3.3,400,'end');
+    s+=t(x+col[7]-1.2,cy+5.9,get('ea_unitm'),3.5,700,'end');
+    s+=line(x,cy+7.5,x+w,cy+7.5,0.25);
+    return s;
+  }
+
+  function buildDiagram(){
+    var x=15,y=158,w=96,h=111,s='';
+    s+=rect(x,y,w,h,'white',0.25);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="8" fill="url(#headGrad)" stroke="#111" stroke-width="0.25"/>';
+    s+=t(x+w/2,y+5.5,'断面図（寸法図）',4.0,700,'middle');
+
+    // 排水管工断面図（画面SVGと同じ構成）
+    // W2は砕石幅、eはその左右外側、掘削法面はe外端から立ち上げる
+    var ox=x+5.5, oy=y+11.5, sc=0.071;
+    function X(v){ return ox+v*sc; }
+    function Y(v){ return oy+v*sc; }
+
+    // 現況地盤
+    s+=line(X(80),Y(100),X(205),Y(100),0.22);
+    s+=line(X(995),Y(100),X(1120),Y(100),0.22);
+
+    // 掘削線（オレンジ・鎖線）
+    s+='<path d="M '+X(205)+' '+Y(100)+' L '+X(300)+' '+Y(770)+' L '+X(390)+' '+Y(770)+'" fill="none" stroke="#f57c00" stroke-width="0.35" stroke-dasharray="1.5 0.7 0.25 0.7"/>';
+    s+='<path d="M '+X(995)+' '+Y(100)+' L '+X(900)+' '+Y(770)+' L '+X(810)+' '+Y(770)+'" fill="none" stroke="#f57c00" stroke-width="0.35" stroke-dasharray="1.5 0.7 0.25 0.7"/>';
+
+    // カルバート本体
+    s+='<path d="M '+X(435)+' '+Y(320)+' H '+X(765)+' V '+Y(650)+' H '+X(435)+' Z '
+      +'M '+X(500)+' '+Y(385)+' H '+X(700)+' V '+Y(585)+' H '+X(500)+' Z" '
+      +'fill="#e3e3e0" fill-rule="evenodd" stroke="#222" stroke-width="0.28"/>';
+
+    // 敷モルタル・均しコンクリート・砕石
+    s+='<rect x="'+X(420)+'" y="'+Y(650)+'" width="'+((780-420)*sc)+'" height="'+(22*sc)+'" fill="#ead7b0" stroke="#222" stroke-width="0.24"/>';
+    s+='<rect x="'+X(390)+'" y="'+Y(672)+'" width="'+((810-390)*sc)+'" height="'+(38*sc)+'" fill="#ececec" stroke="#222" stroke-width="0.24"/>';
+    s+='<rect x="'+X(390)+'" y="'+Y(710)+'" width="'+((810-390)*sc)+'" height="'+(60*sc)+'" fill="url(#stone)" stroke="#222" stroke-width="0.24"/>';
+
+    // 材料名
+    s+=line(X(780),Y(661),X(980),Y(661),0.15);
+    s+=t(X(990),Y(668),'敷モルタル',2.0,700);
+    s+=line(X(810),Y(691),X(980),Y(691),0.15);
+    s+=t(X(990),Y(698),'均しコンクリート',2.0,700);
+    s+=line(X(810),Y(742),X(980),Y(742),0.15);
+    s+=t(X(990),Y(749),'砕石',2.0,700);
+
+    // W1
+    s+=arrow(X(435),Y(265),X(765),Y(265));
+    s+=line(X(435),Y(265),X(435),Y(312),0.14);
+    s+=line(X(765),Y(265),X(765),Y(312),0.14);
+    s+=t((X(435)+X(765))/2,Y(245),'W1',3.0,700,'middle');
+
+    // W2（砕石幅のみ）
+    s+=arrow(X(390),Y(825),X(810),Y(825));
+    s+=line(X(390),Y(778),X(390),Y(836),0.14);
+    s+=line(X(810),Y(778),X(810),Y(836),0.14);
+    s+=t((X(390)+X(810))/2,Y(805),'W2',3.0,700,'middle');
+
+    // e（W2左右外側）
+    s+=arrow(X(300),Y(825),X(390),Y(825));
+    s+=line(X(300),Y(778),X(300),Y(836),0.14);
+    s+=t((X(300)+X(390))/2,Y(805),'e',2.8,700,'middle');
+    s+=arrow(X(810),Y(825),X(900),Y(825));
+    s+=line(X(900),Y(778),X(900),Y(836),0.14);
+    s+=t((X(810)+X(900))/2,Y(805),'e',2.8,700,'middle');
+
+    // 高さ寸法 H1～H5（掘削法面の外側）
+    var dx=X(80);
+    s+=arrow(dx,Y(100),dx,Y(320));
+    s+=line(dx,Y(100),X(135),Y(100),0.14);
+    s+=line(dx,Y(320),X(255),Y(320),0.14);
+    s+=t(X(35),Y(220),'H1',2.8,700,'middle');
+
+    s+=arrow(dx,Y(320),dx,Y(650));
+    s+=line(dx,Y(650),X(245),Y(650),0.14);
+    s+=t(X(35),Y(490),'H2',2.8,700,'middle');
+
+    s+=arrow(dx,Y(650),dx,Y(672));
+    s+=line(dx,Y(672),X(230),Y(672),0.14);
+    s+=t(X(35),Y(668),'H3',2.55,700,'middle');
+
+    s+=arrow(dx,Y(672),dx,Y(710));
+    s+=line(dx,Y(710),X(230),Y(710),0.14);
+    s+=t(X(35),Y(704),'H4',2.55,700,'middle');
+
+    s+=arrow(dx,Y(710),dx,Y(770));
+    s+=line(dx,Y(770),X(185),Y(770),0.14);
+    s+=t(X(35),Y(756),'H5',2.55,700,'middle');
+
+    // 法面勾配
+    s+='<text x="'+X(265)+'" y="'+Y(430)+'" font-size="2.55" font-weight="700" transform="rotate(81 '+X(265)+' '+Y(430)+')">1:n</text>';
+    s+='<text x="'+X(935)+'" y="'+Y(430)+'" font-size="2.55" font-weight="700" transform="rotate(-81 '+X(935)+' '+Y(430)+')">1:n</text>';
+
+    // 説明枠
+    var lx=x+3, ly=y+90, lw=w-6, lh=18;
+    s+=rect(lx,ly,lw,lh,'white',0.18,'#7ca7d8');
+    [['H1：土被り厚','W1：排水管工 外幅'],
+     ['H2：排水管工 高さ','W2：砕石幅'],
+     ['H3：敷モルタル厚','e：掘削余裕'],
+     ['H4：均しコンクリート厚','n：法面勾配（1:n）'],
+     ['H5：砕石厚','']].forEach(function(r,i){
+      s+=t(lx+2.2,ly+3.6+i*3.45,r[0],2.35,400);
+      if(r[1]) s+=t(lx+51,ly+3.6+i*3.45,r[1],2.35,400);
+    });
+    return s;
+  }
+
+  function buildDims(){
+    var x=114,y=158,w=81,h=111,s='';
+    s+=rect(x,y,w,h,'white',0.25);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="8" fill="url(#headGrad)" stroke="#111" stroke-width="0.25"/>';
+    s+=t(x+w/2,y+5.5,'寸法一覧',4.0,700,'middle');
+
+    var rows=[
+      ['W1','保護幅','W1','m'],
+      ['W2','床付け・砕石幅','W2','m'],
+      ['H1','土被り厚','H1','m'],
+      ['H2','保護部高さ','H2','m'],
+      ['H3','敷モルタル厚','H3','m'],
+      ['H4','均しコンクリート厚','H4','m'],
+      ['H5','砕石厚','H5','m'],
+      ['e','掘削余裕（左右）','E','m'],
+      ['n','法面勾配','N','']
+    ];
+
+    var top=y+8;
+    var headerH=7;
+    var rowH=7.15;
+    var cols=[0,13,50,68,81];
+
+    // 列見出し
+    s+=line(x,top,x+w,top,0.2);
+    s+=line(x,top+headerH,x+w,top+headerH,0.2);
+    for(var c=1;c<cols.length-1;c++){
+      s+=line(x+cols[c],top,x+cols[c],top+headerH+rows.length*rowH,0.18);
+    }
+    s+=t(x+(cols[0]+cols[1])/2,top+4.9,'記号',2.8,700,'middle');
+    s+=t(x+(cols[1]+cols[2])/2,top+4.9,'名称',2.8,700,'middle');
+    s+=t(x+(cols[2]+cols[3])/2,top+4.9,'寸法',2.8,700,'middle');
+    s+=t(x+(cols[3]+cols[4])/2,top+4.9,'単位',2.8,700,'middle');
+
+    var cy=top+headerH;
+    rows.forEach(function(r){
+      s+=line(x,cy,x+w,cy,0.16);
+      s+=t(x+(cols[0]+cols[1])/2,cy+5.1,r[0],2.75,400,'middle');
+      s+=t(x+cols[1]+1.5,cy+5.1,r[1],2.55,400,'start');
+      var val=document.getElementById(r[2]);
+      s+=t(x+cols[3]-1.5,cy+5.1,val?val.value:'',2.75,400,'end');
+      s+=t(x+(cols[3]+cols[4])/2,cy+5.1,r[3],2.65,400,'middle');
+      cy+=rowH;
+    });
+    s+=line(x,cy,x+w,cy,0.22);
+
+    // 表の外側縦線を最終行まで確実に描画
+    s+=line(x,top,x,cy,0.25);
+    s+=line(x+w,top,x+w,cy,0.25);
+    return s;
+  }
+
+
+  function buildSvgReport(){
+    if(window.calc) window.calc();
+    var project=val('projectName')||'-';
+    var estimate=val('estimateName')||'-';
+    var today=new Date().toLocaleDateString('ja-JP');
+    var s='<svg class="svg-print-sheet-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 297">';
+    s+='<defs><linearGradient id="headGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef7ff"/><stop offset="1" stop-color="#dcecff"/></linearGradient><pattern id="stone" patternUnits="userSpaceOnUse" width="4" height="4"><circle cx="1" cy="1" r="0.75" fill="none" stroke="#111" stroke-width="0.16"/><circle cx="3" cy="2.8" r="0.75" fill="none" stroke="#111" stroke-width="0.16"/></pattern><marker id="arr" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L5,2.5 L0,5 Z" fill="#111"/></marker><marker id="arrBack" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto-start-reverse" markerUnits="strokeWidth"><path d="M0,0 L5,2.5 L0,5 Z" fill="#111"/></marker></defs>';
+    s+='<rect x="0" y="0" width="210" height="297" fill="#fff"/>';
+    s+='<g font-family="Noto Sans JP, Yu Gothic, Meiryo, sans-serif" fill="#111">';
+    s+=t(15,22,'工事名：'+project,4.2,400);
+    s+=t(93,22,'積算名称：'+estimate,4.2,400);
+    s+=t(195,18.5,'作成日：'+today,2.6,400,'end');
+    s+=line(15,26,195,26,0.5);
+    s+=buildMainTable();
+    s+=t(15,138,'※ 数量は入力延長Lに対する数量です。',2.8,400);
+    s+=t(195,138,'単位：mm（特記なき場合）',2.8,400,'end');
+    s+=buildDiagram();
+    s+=buildDims();
+    s+='</g></svg>';
+    return s;
+  }
+  function updateSvgReport(){ var box=el('svgPrintSheet'); if(box) box.innerHTML=buildSvgReport(); }
+  function printSvgReport(){ updateSvgReport(); document.body.classList.add('svg-preview-mode'); setTimeout(function(){ window.print(); },150); }
+  function previewSvgReport(){ updateSvgReport(); document.body.classList.add('svg-preview-mode'); window.scrollTo(0,0); }
+  function closeSvgPreview(){ document.body.classList.remove('svg-preview-mode'); }
+  function replaceButton(id,handler){ var old=el(id); if(old){ var n=old.cloneNode(true); old.parentNode.replaceChild(n,old); n.addEventListener('click',handler); } }
+  function initSvgPrint(){
+    replaceButton('printReportBtn',printSvgReport);
+    replaceButton('previewPrintBtn',previewSvgReport);
+    var close=el('closeSvgPreviewBtn'); if(close) close.addEventListener('click',closeSvgPreview);
+    var now=el('svgPrintNowBtn'); if(now) now.addEventListener('click',printSvgReport);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initSvgPrint); else initSvgPrint();
+  window.addEventListener('beforeprint',function(){ if(document.body.classList.contains('svg-preview-mode')) updateSvgReport(); });
+})();
+</script>
+
+
+
+<!-- ===== 020: L型と同じSVG帳票（表フォーマット固定＋下段を圧縮） ===== -->
+<section id="svgPrintWrap020" class="svg-print-wrap020" aria-label="排水管工 SVG印刷帳票">
+  <div class="svg-print-actions020">
+    <button class="ghost" id="closeSvgPreviewBtn020" type="button">戻る</button>
+    <button class="primary" id="svgPrintNowBtn020" type="button">印刷</button>
+  </div>
+  <div id="svgPrintSheet020"></div>
+</section>
+
+<style>
+.svg-print-wrap020{display:none;}
+.svg-print-actions020{display:flex;gap:10px;max-width:210mm;margin:12px auto;justify-content:flex-end;}
+.svg-print-actions020 button{width:auto;min-width:110px;padding:10px 16px;}
+.svg-print-sheet-svg020{display:block;width:210mm;height:297mm;margin:0 auto;background:#fff;box-shadow:0 0 0 1px #ddd;}
+.svg-preview-mode020 header,
+.svg-preview-mode020 main > .grid,
+.svg-preview-mode020 #printReport{display:none!important;}
+.svg-preview-mode020 #svgPrintWrap020{display:block!important;}
+@media print{
+  @page{size:A4 portrait;margin:0;}
+  html,body{margin:0!important;padding:0!important;width:210mm!important;height:297mm!important;background:#fff!important;}
+  body *{visibility:hidden!important;}
+  #svgPrintWrap020,#svgPrintWrap020 *{visibility:visible!important;}
+  #svgPrintWrap020{display:block!important;position:absolute!important;left:0!important;top:0!important;width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;background:#fff!important;}
+  .svg-print-actions020{display:none!important;}
+  #svgPrintSheet020{width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;}
+  .svg-print-sheet-svg020{width:210mm!important;height:297mm!important;margin:0!important;box-shadow:none!important;}
+}
+
+
+/* 023: プレビューと実際の印刷を同じSVG帳票に固定 */
+.svg-preview-mode020 #svgPrintWrap,
+.svg-preview-mode020 .print-report,
+.svg-preview-mode020 #printReport{display:none!important;}
+.svg-preview-mode020 .svg-print-sheet-svg020{width:210mm!important;height:297mm!important;margin:0 auto!important;}
+@media print{
+  .svg-preview-mode020 .svg-print-sheet-svg020{width:210mm!important;height:297mm!important;margin:0!important;box-shadow:none!important;}
+}
+
+/* 021: 印刷余白を二重にしない（用紙余白0 + 帳票内15mm） */
+@media print{
+  @page{size:A4 portrait;margin:0!important;}
+  .svg-print-sheet-svg020{width:210mm!important;height:297mm!important;margin:0!important;}
+}
+</style>
+
+<script>
+(function(){
+  function el(id){ return document.getElementById(id); }
+  function val(id){ var e=el(id); return e ? (e.value||'').trim() : ''; }
+  function txt(id){ var e=el(id); return e ? (e.innerText||e.textContent||'').trim() : ''; }
+  function nval(id){ var e=el(id); var v=e?parseFloat(e.value):0; return isFinite(v)?v:0; }
+  function mm(id){ return Math.round(nval(id)*1000).toLocaleString('ja-JP'); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function t(x,y,str,size,weight,anchor){ return '<text x="'+x+'" y="'+y+'" font-size="'+size+'" font-weight="'+(weight||400)+'" text-anchor="'+(anchor||'start')+'">'+esc(str)+'</text>'; }
+  function line(x1,y1,x2,y2,w){ return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#111" stroke-width="'+(w||0.2)+'"/>'; }
+  function rect(x,y,w,h,fill,sw,stroke){ return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+(fill||'none')+'" stroke="'+(stroke||'#111')+'" stroke-width="'+(sw||0.25)+'"/>'; }
+  function arrow(x1,y1,x2,y2){ return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#111" stroke-width="0.16" marker-start="url(#arr)" marker-end="url(#arr)"/>'; }
+
+  function buildMainTable(){
+    var rows=(window.getPipePrintRows?window.getPipePrintRows():[]);
+    var x=15,y=29,w=180,h=119,col=[0,45,61,72,94,117,144,180],s='';
+    s+=rect(x,y,w,h,'white',0.25);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="8" fill="url(#headGrad)" stroke="#111" stroke-width="0.25"/>';
+    for(var i=1;i<col.length-1;i++)s+=line(x+col[i],y,x+col[i],y+h,0.2);
+    ['項目','数量','単位','単価','金額','見積単価','見積金額'].forEach(function(hd,i){
+      s+=t(x+(col[i]+col[i+1])/2,y+5.5,hd,3.25,700,'middle');
+    });
+    var cy=y+8,rh=7.35;
+    rows.forEach(function(r,i){
+      s+=line(x,cy,x+w,cy,0.17);
+      if(r[1]){
+        var k=r[1].replace('r_','');
+        var get=typeof txt==='function'?txt:text;
+        s+=t(x+2,cy+5.7,(i+1)+'. '+r[0],3.15,400);
+        s+=t(x+col[2]-1.5,cy+5.7,get(r[1]),3.1,400,'end');
+        s+=t(x+(col[2]+col[3])/2,cy+5.7,r[2],3.1,400,'middle');
+        s+=t(x+col[4]-1.2,cy+5.7,get('u_'+k),3.0,400,'end');
+        s+=t(x+col[5]-1.2,cy+5.7,get('a_'+k),3.0,400,'end');
+        s+=t(x+col[6]-1.2,cy+5.7,get('eu_'+k),3.0,400,'end');
+        s+=t(x+col[7]-1.2,cy+5.7,get('ea_'+k),3.0,700,'end');
+      }
+      cy+=rh;
+    });
+    var get=typeof txt==='function'?txt:text;
+    s+=line(x,cy,x+w,cy,0.24);
+    s+=t(x+col[4]-2,cy+5.9,'合計',3.5,400,'end');
+    s+=t(x+col[5]-1.2,cy+5.9,get('a_total'),3.5,400,'end');
+    s+=t(x+col[7]-1.2,cy+5.9,get('ea_total'),3.7,700,'end');
+    cy+=7.5;
+    s+=line(x,cy,x+w,cy,0.22);
+    s+=t(x+col[4]-2,cy+5.9,'mあたり単価',3.2,400,'end');
+    s+=t(x+col[5]-1.2,cy+5.9,get('a_unitm'),3.3,400,'end');
+    s+=t(x+col[7]-1.2,cy+5.9,get('ea_unitm'),3.5,700,'end');
+    s+=line(x,cy+7.5,x+w,cy+7.5,0.25);
+    return s;
+  }
+
+  function buildDiagram(){
+    var x=15,y=158,w=96,h=111,s='';
+    s+=rect(x,y,w,h,'white',0.25);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="8" fill="url(#headGrad)" stroke="#111" stroke-width="0.25"/>';
+    s+=t(x+w/2,y+5.5,'断面図（寸法図）',4.0,700,'middle');
+
+    /*
+      画面上で drawPipeDiagram() が作成した工法別SVGを、そのまま
+      最終印刷SVGへ入れる。これにより管のみ／基礎付き／保護砂／
+      保護コンクリートの表示条件が、画面・プレビュー・実印刷で一致する。
+    */
+    if(typeof window.syncPipeDiagramInputs==='function'){
+      try{ window.syncPipeDiagramInputs(); }catch(e){}
+    }else if(typeof window.drawPipeDiagram==='function'){
+      try{ window.drawPipeDiagram(); }catch(e){}
+    }
+
+    var source=el('pipeSectionSvg');
+    if(source){
+      var clone=source.cloneNode(true);
+      clone.setAttribute('id','printPipeSectionSvg020');
+      clone.setAttribute('x',String(x+2));
+      clone.setAttribute('y',String(y+10));
+      clone.setAttribute('width',String(w-4));
+      clone.setAttribute('height',String(h-22));
+      clone.setAttribute('preserveAspectRatio','xMidYMid meet');
+      clone.removeAttribute('class');
+      clone.removeAttribute('style');
+      clone.querySelectorAll('.pipe-dim-active').forEach(function(node){
+        node.classList.remove('pipe-dim-active');
+      });
+
+      var defs=clone.querySelector('defs');
+      if(!defs){
+        defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+        clone.insertBefore(defs,clone.firstChild);
+      }
+      var style=document.createElementNS('http://www.w3.org/2000/svg','style');
+      style.textContent=[
+        '.ground{stroke:#333;stroke-width:2;stroke-dasharray:18 7 3 7}',
+        '.slope{stroke:#111;stroke-width:2;stroke-dasharray:16 7 3 7;fill:none}',
+        '.line{stroke:#222;stroke-width:2;fill:none}',
+        '.ext{stroke:#555;stroke-width:1.3;fill:none}',
+        '.pipe{fill:#f3f6f8;stroke:#222;stroke-width:2.5}',
+        '.boxfill{fill:#f7f7f7;stroke:#222;stroke-width:2}',
+        '.gravel{fill:url(#gravel);stroke:#222;stroke-width:1.7}',
+        '.level{fill:#d8dde3;stroke:#222;stroke-width:1.7}',
+        '.mortar{fill:#efe2c5;stroke:#222;stroke-width:1.7}',
+        '.sand{fill:#efd39c;stroke:#222;stroke-width:1.7}',
+        '.concrete{fill:#c9ced4;stroke:#222;stroke-width:1.7}',
+        '.form{stroke:#9a5a28;stroke-width:7;fill:none}',
+        '.dimtxt,.w3small{font-size:30px;font-weight:900;fill:#111}',
+        '.small{font-size:22px;font-weight:800;fill:#333}',
+        '.mat{font-size:22px;font-weight:900;fill:#111}',
+        '.leader{stroke:#222;stroke-width:1.5;fill:none}'
+      ].join('');
+      defs.appendChild(style);
+      s+=new XMLSerializer().serializeToString(clone);
+    }else{
+      s+=t(x+w/2,y+52,'断面図を表示できません',3.2,700,'middle');
+    }
+
+    var method=val('method')||'pipe';
+    var methodName={
+      pipe:'管のみ',
+      base:'砕石＋均しコンクリート',
+      sand:'保護砂',
+      concrete:'保護コンクリート'
+    }[method]||'管のみ';
+    s+=t(x+w/2,y+h-3.3,'工法名：'+methodName,2.8,700,'middle');
+    return s;
+  }
+
+  function buildDims(){
+    var x=114,y=158,w=81,h=111,s='';
+    s+=rect(x,y,w,h,'white',0.25);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="8" fill="url(#headGrad)" stroke="#111" stroke-width="0.25"/>';
+    s+=t(x+w/2,y+5.5,'寸法一覧',4.0,700,'middle');
+
+    var rows=[
+      ['W1','保護幅','W1','m'],
+      ['W2','床付け・砕石幅','W2','m'],
+      ['H1','土被り厚','H1','m'],
+      ['H2','保護部高さ','H2','m'],
+      ['H3','敷モルタル厚','H3','m'],
+      ['H4','均しコンクリート厚','H4','m'],
+      ['H5','砕石厚','H5','m'],
+      ['e','掘削余裕（左右）','E','m'],
+      ['n','法面勾配','N','']
+    ];
+
+    var top=y+8;
+    var headerH=7;
+    var rowH=7.15;
+    var cols=[0,13,50,68,81];
+
+    // 列見出し
+    s+=line(x,top,x+w,top,0.2);
+    s+=line(x,top+headerH,x+w,top+headerH,0.2);
+    for(var c=1;c<cols.length-1;c++){
+      s+=line(x+cols[c],top,x+cols[c],top+headerH+rows.length*rowH,0.18);
+    }
+    s+=t(x+(cols[0]+cols[1])/2,top+4.9,'記号',2.8,700,'middle');
+    s+=t(x+(cols[1]+cols[2])/2,top+4.9,'名称',2.8,700,'middle');
+    s+=t(x+(cols[2]+cols[3])/2,top+4.9,'寸法',2.8,700,'middle');
+    s+=t(x+(cols[3]+cols[4])/2,top+4.9,'単位',2.8,700,'middle');
+
+    var cy=top+headerH;
+    rows.forEach(function(r){
+      s+=line(x,cy,x+w,cy,0.16);
+      s+=t(x+(cols[0]+cols[1])/2,cy+5.1,r[0],2.75,400,'middle');
+      s+=t(x+cols[1]+1.5,cy+5.1,r[1],2.55,400,'start');
+      var val=document.getElementById(r[2]);
+      s+=t(x+cols[3]-1.5,cy+5.1,val?val.value:'',2.75,400,'end');
+      s+=t(x+(cols[3]+cols[4])/2,cy+5.1,r[3],2.65,400,'middle');
+      cy+=rowH;
+    });
+    s+=line(x,cy,x+w,cy,0.22);
+
+    // 表の外側縦線を最終行まで確実に描画
+    s+=line(x,top,x,cy,0.25);
+    s+=line(x+w,top,x+w,cy,0.25);
+    return s;
+  }
+
+
+  function buildSvgReport(){
+    if(window.calc) window.calc();
+    var project=val('projectName')||'-';
+    var estimate=val('estimateName')||'-';
+    var today=new Date().toLocaleDateString('ja-JP');
+    var s='<svg class="svg-print-sheet-svg020" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 297">';
+    s+='<defs><linearGradient id="headGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef7ff"/><stop offset="1" stop-color="#dcecff"/></linearGradient><pattern id="stone" patternUnits="userSpaceOnUse" width="4" height="4"><circle cx="1" cy="1" r="0.75" fill="none" stroke="#111" stroke-width="0.16"/><circle cx="3" cy="2.8" r="0.75" fill="none" stroke="#111" stroke-width="0.16"/></pattern><marker id="arr" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L5,2.5 L0,5 Z" fill="#111"/></marker></defs>';
+    s+='<rect x="0" y="0" width="210" height="297" fill="#fff"/>';
+    s+='<g font-family="Noto Sans JP, Yu Gothic, Meiryo, sans-serif" fill="#111">';
+    s+=t(15,22,'工事名：'+project,4.2,400);
+    s+=t(93,22,'積算名称：'+estimate,4.2,400);
+    s+=t(195,18.5,'作成日：'+today,2.6,400,'end');
+    s+=line(15,26,195,26,0.5);
+    s+=buildMainTable();
+    s+='<g class="preview-lower-035">';
+    s+=t(15,153.5,'※ 数量は入力延長Lに対する数量です。',2.8,400);
+    s+=t(195,153.5,'単位：mm（特記なき場合）',2.8,400,'end');
+    s+=buildDiagram();
+    s+=buildDims();
+    s+='</g>';
+    s+='</g></svg>';
+    return s;
+  }
+  function updateSvgReport(){ var box=el('svgPrintSheet020'); if(box) box.innerHTML=buildSvgReport(); }
+  function closeSvgPreview(){
+    document.body.classList.remove('svg-preview-mode020');
+    document.body.classList.remove('svg-preview-mode');
+    document.body.classList.remove('print-preview-mode');
+    window.scrollTo(0,0);
+  }
+  function printSvgReport(){
+    updateSvgReport();
+    document.body.classList.add('svg-preview-mode020');
+    setTimeout(function(){
+      window.print();
+      closeSvgPreview();
+      setTimeout(closeSvgPreview,100);
+      setTimeout(closeSvgPreview,500);
+    },150);
+  }
+  function previewSvgReport(){ updateSvgReport(); document.body.classList.add('svg-preview-mode020'); window.scrollTo(0,0); }
+  function replaceListener(id, fn){ var old=el(id); if(old){ var n=old.cloneNode(true); old.parentNode.replaceChild(n,old); n.addEventListener('click', fn); } }
+  replaceListener('printReportBtn', printSvgReport);
+  replaceListener('previewPrintBtn', previewSvgReport);
+  var closeBtn=el('closeSvgPreviewBtn020'); if(closeBtn) closeBtn.addEventListener('click', closeSvgPreview);
+  var svgPrintNow=el('svgPrintNowBtn020'); if(svgPrintNow) svgPrintNow.addEventListener('click', printSvgReport);
+  window.addEventListener('beforeprint', updateSvgReport);
+  window.addEventListener('afterprint', closeSvgPreview);
+  if(window.matchMedia){
+    var printMedia=window.matchMedia('print');
+    var mediaHandler=function(e){ if(!e.matches) closeSvgPreview(); };
+    if(printMedia.addEventListener) printMedia.addEventListener('change',mediaHandler);
+    else if(printMedia.addListener) printMedia.addListener(mediaHandler);
+  }
+
+  /*
+    印刷ダイアログを閉じた直後、ブラウザーが印刷前の古いSVG描画を
+    再表示する場合があるため、現在選択中の工法で断面図と帳票を再生成する。
+    戻る・印刷ボタンのある画面と実印刷を常に同じ内容に保つ。
+  */
+  function refreshPipePreviewAfterPrint(){
+    if(!document.body.classList.contains('svg-preview-mode020')) return;
+    try{
+      if(typeof window.syncPipeDiagramInputs==='function') window.syncPipeDiagramInputs();
+      else if(typeof window.drawPipeDiagram==='function') window.drawPipeDiagram();
+    }catch(e){}
+    updateSvgReport();
+  }
+  window.addEventListener('afterprint', function(){
+    requestAnimationFrame(function(){
+      refreshPipePreviewAfterPrint();
+      setTimeout(refreshPipePreviewAfterPrint, 120);
+    });
+  });
+
+  var methodForPreview=el('method');
+  if(methodForPreview){
+    methodForPreview.addEventListener('change',function(){
+      if(document.body.classList.contains('svg-preview-mode020')){
+        requestAnimationFrame(refreshPipePreviewAfterPrint);
+      }
+    });
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  const COMMON_KEY='msSekisanCommon_v1';
+  function getCommon(){try{return JSON.parse(localStorage.getItem(COMMON_KEY)||'{}')||{};}catch(e){return {};}}
+  function setVal(id,v){const el=document.getElementById(id); if(el && v!==undefined && v!==null && String(v)!=='') el.value=v;}
+  function applyCommon(){
+    const data=getCommon();
+    if(data.projectName){setVal('projectName',data.projectName); localStorage.setItem('currentProjectName',data.projectName); localStorage.setItem('koujiName',data.projectName);}
+    setVal('ProfitRate',data.profitRate??data.marginRate??data.profitPercent);
+    const p=data.prices||{};
+    const map={Pexc:'Pexc',Pspoil:'Pspoil',Pback:'Pback',Pbed:'Pbed',Pstone:'Pstone',Plean:'Plean',PleanForm:'PleanForm',Pmortar:'Pmortar',Pconc:'Pconc',Pform:'Pform',Prebar:'Prebar',Pset:'Pset',ProdLen:'ProdLen',ProdPrice:'ProdPrice',Pgrating:'Pgrating',Pconcllid:'Pconcllid',Plidwork:'Plidwork',Pblnd:'Plean',Pnform:'PleanForm'};
+    Object.entries(map).forEach(([target,src])=>setVal(target,p[src]));
+    if(typeof refreshEstimateList==='function') refreshEstimateList();
+    if(typeof calc==='function') calc();
+  }
+  window.addEventListener('load',applyCommon);
+})();
+</script>
+
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  function setVal(id,v){const el=$(id); if(el && v!==undefined && v!==null && String(v)!=='') el.value=v;}
+  function autoLoadEstimateFromMain(){
+    const params=new URLSearchParams(location.search);
+    if(params.get('loadEstimate')!=='1')return;
+    const project=params.get('projectName')||'';
+    const name=params.get('estimateName')||'';
+    const idx=params.get('estimateIndex');
+    if(project){setVal('projectName',project);localStorage.setItem('currentProjectName',project);localStorage.setItem('koujiName',project);}
+    if(typeof refreshEstimateList==='function') refreshEstimateList();
+    if($('savedEstimateList')){
+      if(idx!==null&&idx!=='') $('savedEstimateList').value=idx;
+      else if(name){
+        const opts=[...$('savedEstimateList').options];
+        const found=opts.find(o=>o.textContent===name||o.textContent.startsWith(name));
+        if(found)$('savedEstimateList').value=found.value;
+      }
+    }
+    if(name&&$('estimateName'))$('estimateName').value=name;
+    if(typeof loadEstimate==='function') setTimeout(loadEstimate,80);
+  }
+  window.addEventListener('load',autoLoadEstimateFromMain);
+})();
+</script>
+
+
+<script id="ms-common-app-adapter">
+(function(){
+  "use strict";
+  const APP_TYPE = "drainage_pipe";
+  const DEFAULT_NAME = "排水管工 積算";
+  const FIELD_IDS = ["projectName","estimateName","method","w3","W1","W2","H1","H2","H3","H4","H5","L","E","N","ProfitRate","Pexc","Pbed","Pstone","PleanForm","Plean","Pmortar","PprotectConcrete","PprotectForm","Pset","Pspoil","Pback","ProdLen","ProdPrice"];
+  const PRICE_MAP = {"Pexc":["Pexc","excavation"],"Pspoil":["Pspoil","spoil"],"Pback":["Pback","backfill"],"Pbed":["Pbed","bed"],"Pstone":["Pstone","stone"],"Plean":["Plean","blindingConcrete"],"PleanForm":["PleanForm","nform"],"Pmortar":["Pmortar","mortar"],"Pset":["Pset"],"ProdLen":["ProdLen"],"ProdPrice":["ProdPrice"]};
+  const $ = id => document.getElementById(id);
+  function hasMS(){ return window.MS && typeof MS.init === "function"; }
+  function nFromText(id){ const el=$(id); if(!el) return 0; return Number(String(el.textContent||el.innerText||'0').replace(/[^0-9.-]/g,''))||0; }
+  function getFieldIds(){
+    const ids = new Set(FIELD_IDS);
+    document.querySelectorAll('input[id],select[id],textarea[id]').forEach(el=>ids.add(el.id));
+    return Array.from(ids).filter(id => $(id));
+  }
+  function collectValues(){
+    const values = {};
+    getFieldIds().forEach(id=>{
+      const el=$(id); if(!el) return;
+      values[id] = el.type === 'checkbox' ? !!el.checked : el.value;
+    });
+    return values;
+  }
+  function applyValues(values){
+    Object.entries(values||{}).forEach(([id,v])=>{
+      const el=$(id); if(!el) return;
+      if(el.type === 'checkbox'){
+        el.checked = !!v;
+        el.dispatchEvent(new Event('change',{bubbles:true}));
+      }else{
+        el.value = v;
+      }
+    });
+    if(typeof calc === 'function') calc();
+  }
+  async function ensureProject(){
+    if(!hasMS()) throw new Error('ms_common.js が読み込まれていません');
+    await MS.init();
+    let p = await MS.getCurrentProject();
+    const pname = ($('projectName')?.value || '').trim();
+    if(!p){
+      p = await MS.saveProject({ name: pname || '名称未設定の工事', prices: {} });
+    }else if(pname && p.name !== pname){
+      p.name = pname;
+      await MS.saveProject(p);
+    }
+    if($('projectName')) $('projectName').value = p.name || pname || '';
+    localStorage.setItem('currentProjectName', p.name || '');
+    localStorage.setItem('koujiName', p.name || '');
+    return p;
+  }
+  async function applyProjectPrices(){
+    if(!hasMS()) return;
+    try{
+      await MS.init();
+
+      // v62: index.htmlで選択中の工事に登録された利益率を先に反映する
+      const currentProject = await MS.getCurrentProject();
+      if(currentProject && $('ProfitRate')){
+        const rate = currentProject.profitRate !== undefined
+          ? currentProject.profitRate
+          : (currentProject.marginRate !== undefined
+              ? currentProject.marginRate
+              : currentProject.profitPercent);
+        if(rate !== undefined && rate !== null && rate !== ''){
+          $('ProfitRate').value = Math.max(0, Math.min(99.9, Number(rate) || 0));
+        }
+        if(currentProject.name && $('projectName')){
+          $('projectName').value = currentProject.name;
+        }
+      }
+
+      // v61: index.htmlで選択した「使用中の共通単価」を最優先で読む
+      // 以前は工事別単価／標準単価を読んでいたため、indexで単価Aを選んでも
+      // 排水管工を開くと標準に戻ることがありました。
+      if(window.MSPriceMaster){
+        MSPriceMaster.ensureMasters();
+        const active = MSPriceMaster.getActive();
+        if(active && active.prices){
+          MSPriceMaster.applyFields(active.prices);
+          const nameEl = $('pricePresetName');
+          if(nameEl) nameEl.value = active.name || '標準';
+          if(typeof calc === 'function') calc();
+          return;
+        }
+      }
+
+      const p = await MS.getCurrentProject();
+      const prices = (p && p.prices) || await MS.getDefaultPrices();
+      Object.entries(PRICE_MAP).forEach(([inputId, keys])=>{
+        const el=$(inputId); if(!el) return;
+        keys = Array.isArray(keys) ? keys : [keys];
+        for(const k of keys){
+          if(prices && prices[k] !== undefined && prices[k] !== ''){ el.value = prices[k]; break; }
+        }
+      });
+      if(typeof calc === 'function') calc();
+    }catch(e){ console.warn('共通単価読込エラー', e); }
+  }
+  async function msRefreshEstimateList(selectedId){
+    const sel=$('savedEstimateList'); if(!sel || !hasMS()) return;
+    try{
+      await ensureProject();
+      const project = await ensureProject();
+      const list = (MS.Estimate && typeof MS.Estimate.listByProjectAndApp === 'function')
+        ? await MS.Estimate.listByProjectAndApp(project.id, APP_TYPE)
+        : await MS.listEstimates(project.id, APP_TYPE);
+      sel.innerHTML='';
+      if(!list.length){ sel.innerHTML='<option value="">保存データなし</option>'; return; }
+      list.forEach(item=>{
+        const opt=document.createElement('option');
+        opt.value=item.id;
+        const t=item.updatedAt ? new Date(item.updatedAt).toLocaleString('ja-JP') : '';
+        opt.textContent=t ? `${item.name}（${t}）` : item.name;
+        sel.appendChild(opt);
+      });
+      if(selectedId) sel.value=selectedId;
+    }catch(e){ console.error(e); }
+  }
+  async function msSaveEstimate(){
+    try{
+      await ensureProject();
+      if(typeof calc === 'function') calc();
+      const sel=$('savedEstimateList');
+      const name=($('estimateName')?.value || DEFAULT_NAME).trim() || DEFAULT_NAME;
+      const values=collectValues();
+      const existingId = sel && sel.value ? sel.value : '';
+      const item={ id: existingId || undefined, name, data:{ values: values }, values: values, amount:nFromText('a_total') || nFromText('k_total'), totalAmount:nFromText('a_total') || nFromText('k_total') };
+      const saved = (MS.Estimate && typeof MS.Estimate.save === 'function')
+        ? await MS.Estimate.save(APP_TYPE, item)
+        : await MS.saveEstimate(APP_TYPE, name, item);
+      await msRefreshEstimateList(saved.id);
+      if(window.MS && MS.toast) MS.toast('積算データを保存しました'); else alert('積算データを保存しました');
+    }catch(e){ alert(e.message || '保存できませんでした'); }
+  }
+  function applyCommonPriceForEstimate(item){
+    if(!window.MSPriceMaster) return;
+    try{
+      MSPriceMaster.ensureMasters();
+      const snapshot = (item && item.priceSnapshot) || (item && item.data && item.data.priceSnapshot) || null;
+      const active = MSPriceMaster.getActive();
+      const prices = snapshot || (active && active.prices) || {};
+      MSPriceMaster.applyFields(prices);
+      const nameEl = $('pricePresetName');
+      if(nameEl) nameEl.value = snapshot ? ((item.priceMasterName || (item.data && item.data.priceMasterName) || '保存時単価')) : ((active && active.name) || '標準');
+      const ugSel = $('ugCommonPriceList');
+      if(ugSel && active) ugSel.value = active.id;
+      const note=$('ugCommonPriceNote');
+      if(note){
+        note.textContent = snapshot
+          ? '保存時単価を復元：' + (item.priceMasterName || (item.data && item.data.priceMasterName) || '保存時単価')
+          : '現在使用中：' + ((active && active.name) || '標準') + '（既存データのため、使用中単価を反映）';
+      }
+      if(typeof calc === 'function') calc();
+    }catch(e){ console.warn('共通単価反映エラー', e); }
+  }
+  async function msLoadEstimate(){
+    try{
+      const sel=$('savedEstimateList'); if(!sel || !sel.value){ alert('呼び出す積算データを選んでください'); return; }
+      const item = (MS.Estimate && typeof MS.Estimate.get === 'function')
+        ? await MS.Estimate.get(sel.value)
+        : await MS.getEstimate(sel.value);
+      if(!item){ alert('積算データが見つかりません'); await msRefreshEstimateList(); return; }
+      if($('estimateName')) $('estimateName').value=item.name||'';
+      applyValues(item.values || (item.data && item.data.values) || {});
+      // v62: 既存保存データ読込後も共通単価を正しく反映
+      // 保存時単価スナップショットがあるデータは保存時単価を復元。
+      // 旧データ（スナップショットなし）は、indexで選択中の使用中単価を反映。
+      applyCommonPriceForEstimate(item);
+      if(window.MS && MS.toast) MS.toast('積算データを呼び出しました');
+    }catch(e){ alert(e.message || '呼び出しできませんでした'); }
+  }
+  async function msDeleteEstimate(){
+    try{
+      const sel=$('savedEstimateList'); if(!sel || !sel.value){ alert('削除する積算データを選んでください'); return; }
+      if(!confirm('選択中の積算データを削除しますか？')) return;
+      if(MS.Estimate && typeof MS.Estimate.delete === 'function') await MS.Estimate.delete(sel.value);
+      else await MS.deleteEstimate(sel.value);
+      await msRefreshEstimateList();
+      if(window.MS && MS.toast) MS.toast('削除しました');
+    }catch(e){ alert(e.message || '削除できませんでした'); }
+  }
+  function bindCapture(id, fn){
+    const el=$(id); if(!el) return;
+    el.addEventListener('click', function(e){ e.preventDefault(); e.stopImmediatePropagation(); fn(); }, true);
+  }
+  window.msRefreshEstimateList = msRefreshEstimateList;
+  window.msSaveEstimate = msSaveEstimate;
+  window.msLoadEstimate = msLoadEstimate;
+  window.msDeleteEstimate = msDeleteEstimate;
+  window.addEventListener('load', async ()=>{
+    try{
+      if(!hasMS()) return;
+      await MS.init();
+      const p=await MS.getCurrentProject();
+      if(p && $('projectName')) $('projectName').value=p.name||'';
+      await applyProjectPrices();
+      await msRefreshEstimateList();
+      bindCapture('saveEstimateBtn', msSaveEstimate);
+      bindCapture('loadEstimateBtn', msLoadEstimate);
+      bindCapture('deleteEstimateBtn', msDeleteEstimate);
+      const pn=$('projectName'); if(pn) pn.addEventListener('change', ()=>ensureProject().then(()=>msRefreshEstimateList()).catch(()=>{}));
+      const sel=$('savedEstimateList'); if(sel) sel.addEventListener('change', async()=>{ const item=sel.value ? ((MS.Estimate && typeof MS.Estimate.get === 'function') ? await MS.Estimate.get(sel.value) : await MS.getEstimate(sel.value)) : null; if(item && $('estimateName')) $('estimateName').value=item.name||''; });
+      const openId=localStorage.getItem('ms_open_estimate_id');
+      if(openId){ localStorage.removeItem('ms_open_estimate_id'); const item=(MS.Estimate && typeof MS.Estimate.get === 'function') ? await MS.Estimate.get(openId) : await MS.getEstimate(openId); if(item && item.appType===APP_TYPE){ if($('estimateName')) $('estimateName').value=item.name||''; applyValues(item.values || (item.data && item.data.values) || {}); applyCommonPriceForEstimate(item); await msRefreshEstimateList(openId); } }
+    }catch(e){ console.warn('MS共通アダプター初期化エラー', e); }
+  });
+})();
+</script>
+
+
+<script id="u-gutter-common-price-master-ui">
+(function(window, document){
+  'use strict';
+  const PRICE_IDS=['Pexc','Pspoil','Pback','Pbed','Pstone','Plean','PleanForm','Pmortar','PprotectConcrete','PprotectForm','Pset','ProdLen','ProdPrice','Pgrating','Ngrating','Pconcllid','Nconcllid','PcoverSet'];
+  function $(id){return document.getElementById(id)}
+  function collect(){const p={}; PRICE_IDS.forEach(id=>{const el=$(id); if(el && el.value!=='') p[id]=Number(el.value);}); return p;}
+  function apply(prices){ if(!window.MSPriceMaster) return; MSPriceMaster.applyFields(prices||MSPriceMaster.getActive().prices||{}); if(typeof calc==='function') calc(); }
+  function renderSelect(){const sel=$('ugCommonPriceList'); if(!sel||!window.MSPriceMaster) return; const cur=sel.value||MSPriceMaster.activeId(); sel.innerHTML=MSPriceMaster.list().map(x=>'<option value="'+x.id+'">'+x.name+'</option>').join(''); sel.value=cur; if(!sel.value) sel.value=MSPriceMaster.activeId(); const note=$('ugCommonPriceNote'); if(note){const m=MSPriceMaster.getActive(); note.textContent='現在使用中：'+(m.name||'標準')+'（積算保存時に単価も固定保存します）';}}
+  function rebuildPanel(){
+    const old=$('savedPriceList'); const block=old ? old.closest('.price-block') : null; if(!block||block.dataset.commonDone) return; block.dataset.commonDone='1';
+    block.innerHTML='<div class="sectionTitle">共通単価マスター</div>'+
+      '<div class="save-line"><label>使用する単価</label><select id="ugCommonPriceList"></select></div>'+
+      '<div class="save-btns" style="grid-template-columns:1fr 1fr">'+
+      '<button class="ghost" id="ugApplyCommonPriceBtn" type="button">読込</button>'+
+      '<button class="primary" id="ugSaveToCommonPriceBtn" type="button">保存</button>'+
+      '<button class="ghost" id="ugSaveAsCommonPriceBtn" type="button">名前を付けて保存</button>'+
+      '<button class="ghost" id="ugRenameCommonPriceBtn" type="button">名前変更</button>'+
+      '<button class="danger" id="ugDeleteCommonPriceBtn" type="button">削除</button>'+
+      '</div>'+
+      '<div class="note" id="ugCommonPriceNote">保存＝選択中の単価を上書き。名前を付けて保存＝新しい単価セットを追加します。</div>';
+    renderSelect();
+    $('ugCommonPriceList').addEventListener('change',function(){
+      const item=MSPriceMaster.list().find(x=>x.id===this.value);
+      const note=$('ugCommonPriceNote');
+      if(note&&item) note.textContent='選択中：'+(item.name||'単価')+'　※まだ読み込んでいません。「読込」を押すと使用中単価として確定します。';
+    });
+    $('ugApplyCommonPriceBtn').addEventListener('click',function(){
+      const sel=$('ugCommonPriceList');
+      const item=MSPriceMaster.list().find(x=>x.id===(sel&&sel.value)) || MSPriceMaster.getActive();
+      if(item){ MSPriceMaster.setActive(item.id); apply(item.prices); }
+      renderSelect();
+      alert('共通単価「'+((item&&item.name)||'標準')+'」を読み込みました');
+    });
+    $('ugSaveToCommonPriceBtn').addEventListener('click',function(){const m=MSPriceMaster.getActive(); MSPriceMaster.update({id:m.id,name:m.name,prices:collect()}); renderSelect(); alert('「'+m.name+'」へ上書き保存しました');});
+    $('ugSaveAsCommonPriceBtn').addEventListener('click',function(){const base=(MSPriceMaster.getActive().name||'標準')+' コピー'; const name=prompt('新しい単価名を入力してください',base); if(!name) return; const item=MSPriceMaster.create(name,collect()); renderSelect(); const sel=$('ugCommonPriceList'); if(sel)sel.value=item.id; MSPriceMaster.setActive(item.id); renderSelect(); alert('「'+item.name+'」を新しく保存しました');});
+    $('ugRenameCommonPriceBtn').addEventListener('click',function(){const m=MSPriceMaster.getActive(); const name=prompt('新しい単価名を入力してください',m.name||'標準'); if(!name) return; MSPriceMaster.update({id:m.id,name:name,prices:m.prices||collect()}); renderSelect(); alert('単価名を「'+name+'」に変更しました');});
+    $('ugDeleteCommonPriceBtn').addEventListener('click',function(){const m=MSPriceMaster.getActive(); if(!m) return; if(!confirm('「'+(m.name||'単価')+'」を削除しますか？')) return; MSPriceMaster.remove(m.id); renderSelect(); apply(MSPriceMaster.getActive().prices); alert('削除しました');});
+  }
+  window.addEventListener('load',function(){
+    if(!window.MSPriceMaster) return;
+    MSPriceMaster.ensureMasters();
+    rebuildPanel();
+    apply(MSPriceMaster.getActive().prices);
+    renderSelect();
+  });
+  window.addEventListener('ms-price-master-changed',function(){renderSelect();apply(MSPriceMaster.getActive().prices);});
+})(window, document);
+</script>
+
+
+<script id="u-gutter-active-price-autoload-v62">
+(function(window, document){
+  'use strict';
+  function applyActive(){
+    if(!window.MSPriceMaster) return;
+    try{
+      MSPriceMaster.ensureMasters();
+      var active=MSPriceMaster.getActive();
+      if((!active || !active.prices) && localStorage.getItem('msSekisanActivePriceMasterName_v1')){
+        var nm=localStorage.getItem('msSekisanActivePriceMasterName_v1');
+        active=MSPriceMaster.list().find(function(x){return x.name===nm;}) || active;
+      }
+      var prices=(active&&active.prices)||{};
+      if(!Object.keys(prices).length){ try{prices=JSON.parse(localStorage.getItem('msSekisanActivePriceMasterSnapshot_v1')||'{}');}catch(e){prices={};} }
+      if(!active || !prices) return;
+      MSPriceMaster.applyFields(prices);
+      var nameEl=document.getElementById('pricePresetName');
+      if(nameEl) nameEl.value=active.name||'標準';
+      var sel=document.getElementById('ugCommonPriceList');
+      if(sel){ sel.value=active.id; }
+      var note=document.getElementById('ugCommonPriceNote');
+      if(note) note.textContent='現在使用中：'+(active.name||'標準')+'（起動時に自動読込済み）';
+      if(typeof window.calc==='function') window.calc();
+    }catch(e){ console.warn('使用中単価の自動読込エラー', e); }
+  }
+  function shouldAutoApply(){
+    var params=new URLSearchParams(location.search);
+    if(params.get('loadEstimate')==='1') return false;
+    if(localStorage.getItem('ms_open_estimate_id')) return false;
+    return true;
+  }
+  window.applyActiveCommonPriceToUGutter = applyActive;
+  window.addEventListener('load', function(){
+    if(!shouldAutoApply()) return;
+    setTimeout(applyActive, 0);
+    setTimeout(applyActive, 150);
+    setTimeout(applyActive, 500);
+  });
+  window.addEventListener('ms-price-master-changed', function(){ setTimeout(applyActive, 0); });
+})(window, document);
+
+updateSelectedProductDisplay();
+</script>
+
+
+<style id="remove-custom-preview-036">
+/* 036: 自作の印刷プレビューボタンを廃止。印刷ボタンからブラウザーの印刷プレビューを開く */
+#previewPrintBtn,#closePrintPreviewBtn,#printPreviewActions,.svg-print-actions020{display:none!important;}
+</style>
+
+<script id="register-date-init-045">
+document.addEventListener('DOMContentLoaded',function(){
+  const el=document.getElementById('registerDate');
+  if(el) el.value=todayYmd();
+});
+</script>
+
+
+<div style="display:none" aria-hidden="true"><input id="h1"><input id="h2"><input id="h3"><input id="h4"><input id="h5"><input id="w1"><input id="w2"><input id="e"><input id="n"></div>
+<script id="pipe-diagram-script">
+const pd$=id=>document.getElementById(id);
+function pdv(id,d){const n=Number(pd$(id).value);return Number.isFinite(n)&&n>=0?n:d}
+function pdline(el,x1,y1,x2,y2){el.setAttribute("x1",x1);el.setAttribute("y1",y1);el.setAttribute("x2",x2);el.setAttribute("y2",y2)}
+function pdrect(el,x,y,w,h){el.setAttribute("x",x);el.setAttribute("y",y);el.setAttribute("width",Math.max(0,w));el.setAttribute("height",Math.max(0,h))}
+function pdshow(el,on){el.style.display=on?"":"none"}
+function extPair(prefix,y1,y2,x2,on=true){
+  const shortX=158+(x2-158)/2;
+  pdline(pd$(prefix+"Top"),158,y1,shortX,y1);
+  pdline(pd$(prefix+"Bottom"),158,y2,shortX,y2);
+  pdshow(pd$(prefix+"Top"),on);pdshow(pd$(prefix+"Bottom"),on);
+}
+function label(path,text,x1,y1,tx,ty,s){
+  path.setAttribute("d",`M${x1} ${y1} L${tx-12} ${ty-6}`);
+  text.setAttribute("x",tx);text.setAttribute("y",ty);text.textContent=s;
+  pdshow(path,!!s);pdshow(text,!!s);
+}
+function pdDirectLabel(path,text,x,y,s){
+  path.setAttribute("d","");
+  text.setAttribute("x",x);text.setAttribute("y",y);text.textContent=s;
+  pdshow(path,false);pdshow(text,!!s);
+}
+function drawPipeDiagram(){
+  const method=pd$("method").value;
+  const h1=pdv("h1",600),h2=pdv("h2",600),h3=pdv("h3",30),h4=pdv("h4",100),h5=pdv("h5",150);
+  const w1=pdv("w1",700),w2=pdv("w2",900),w3=pdv("w3",0.3)*1000,e=pdv("e",300),n=pdv("n",0.5);
+
+  let useH2=true,useH3=false,useH4=false,useH5=false;
+  if(method==="pipe"){useH2=false;}
+  if(method==="base"){useH2=false;useH4=useH5=true;}
+  if(method==="sand"){useH2=true;}
+  if(method==="concrete"){useH2=true;useH5=true;}
+
+  const layerDepth=(useH2?h2:w3)+(useH3?h3:0)+(useH4?h4:0)+(useH5?h5:0);
+  const totalDepth=h1+layerDepth;
+  const bottomStructWidth=(useH5||useH4)?w2:(useH2?w1:w3);
+  const scale=Math.min(0.47,500/Math.max(1,totalDepth),520/Math.max(1,bottomStructWidth+2*e+2*totalDepth*n));
+
+  const cx=555,bottomY=690;
+  const groundY=bottomY-totalDepth*scale;
+  const structBottomWidth=bottomStructWidth*scale;
+  const trenchBottomWidth=structBottomWidth+2*e*scale;
+  const bL=cx-trenchBottomWidth/2,bR=cx+trenchBottomWidth/2;
+  const tL=bL-totalDepth*n*scale,tR=bR+totalDepth*n*scale;
+
+  pdline(pd$("ground"),Math.max(25,tL-70),groundY,Math.min(1155,tR+70),groundY);
+  pd$("leftSlope").setAttribute("d",`M${tL} ${groundY} L${bL} ${bottomY}`);
+  pd$("rightSlope").setAttribute("d",`M${tR} ${groundY} L${bR} ${bottomY}`);
+  pdline(pd$("bottom"),bL,bottomY,bR,bottomY);
+  pd$("slopeL").setAttribute("x",(tL+bL)/2-35);pd$("slopeL").setAttribute("y",(groundY+bottomY)/2);
+  pd$("slopeR").setAttribute("x",(tR+bR)/2+12);pd$("slopeR").setAttribute("y",(groundY+bottomY)/2);
+
+  let y=bottomY;
+  pdshow(pd$("gravelRect"),false);pdshow(pd$("levelRect"),false);pdshow(pd$("mortarRect"),false);pdshow(pd$("protectBox"),false);pdshow(pd$("formwork"),false);
+
+  if(useH5){
+    const hh=h5*scale;pdrect(pd$("gravelRect"),cx-w2*scale/2,y-hh,w2*scale,hh);y-=hh;pdshow(pd$("gravelRect"),true);
+  }
+  if(useH4){
+    const hh=h4*scale;pdrect(pd$("levelRect"),cx-w2*scale/2,y-hh,w2*scale,hh);y-=hh;pdshow(pd$("levelRect"),true);
+  }
+  if(useH3){
+    const hh=h3*scale;pdrect(pd$("mortarRect"),cx-w1*scale/2,y-hh,w1*scale,hh);y-=hh;pdshow(pd$("mortarRect"),true);
+  }
+
+  let protectTop=y;
+  if(useH2){
+    const hh=h2*scale;
+    pdrect(pd$("protectBox"),cx-w1*scale/2,y-hh,w1*scale,hh);
+    pd$("protectBox").setAttribute("class",method==="sand"?"sand":method==="concrete"?"concrete":"boxfill");
+    protectTop=y-hh;pdshow(pd$("protectBox"),true);
+
+  }
+
+  const pipeR=w3*scale/2;
+  let pipeCy;
+  if(useH2) pipeCy=protectTop+h2*scale/2;
+  else pipeCy=y-pipeR;
+  pd$("pipe").setAttribute("cx",cx);pd$("pipe").setAttribute("cy",pipeCy);pd$("pipe").setAttribute("r",pipeR);
+
+  // 左側高さ寸法
+  const hx=150;
+  const h1bottom=useH2?protectTop:pipeCy-pipeR;
+  pdline(pd$("h1dim"),hx,groundY,hx,h1bottom);
+  pd$("h1txt").setAttribute("x",95);pd$("h1txt").setAttribute("y",(groundY+h1bottom)/2+8);
+  extPair("h1ext",groundY,h1bottom,useH2?cx-w1*scale/2:cx-pipeR,true);
+
+  const h2top=useH2?protectTop:pipeCy-pipeR,h2bottom=useH2?protectTop+h2*scale:pipeCy+pipeR;
+  pdline(pd$("h2dim"),hx,h2top,hx,h2bottom);
+  pd$("h2txt").setAttribute("x",95);pd$("h2txt").setAttribute("y",(h2top+h2bottom)/2+8);
+  pdshow(pd$("h2dim"),useH2);pdshow(pd$("h2txt"),useH2);
+  extPair("h2ext",h2top,h2bottom,cx-w1*scale/2,useH2);
+
+  let yy=h2bottom;
+  if(useH3){pdline(pd$("h3dim"),hx,yy,hx,yy+h3*scale);pd$("h3txt").setAttribute("x",95);pd$("h3txt").setAttribute("y",yy+h3*scale/2+8);yy+=h3*scale}
+  pdshow(pd$("h3dim"),useH3);pdshow(pd$("h3txt"),useH3);
+  extPair("h3ext",h2bottom,h2bottom+h3*scale,cx-w1*scale/2,useH3);
+  if(useH4){pdline(pd$("h4dim"),hx,yy,hx,yy+h4*scale);pd$("h4txt").setAttribute("x",95);pd$("h4txt").setAttribute("y",yy+h4*scale/2+8);yy+=h4*scale}
+  pdshow(pd$("h4dim"),useH4);pdshow(pd$("h4txt"),useH4);
+  extPair("h4ext",h2bottom+(useH3?h3*scale:0),h2bottom+(useH3?h3*scale:0)+h4*scale,cx-w2*scale/2,useH4);
+  if(useH5){pdline(pd$("h5dim"),hx,yy,hx,yy+h5*scale);pd$("h5txt").setAttribute("x",95);pd$("h5txt").setAttribute("y",yy+h5*scale/2+8)}
+  pdshow(pd$("h5dim"),useH5);pdshow(pd$("h5txt"),useH5);
+  const h5top=h2bottom+(useH3?h3*scale:0)+(useH4?h4*scale:0);
+  extPair("h5ext",h5top,h5top+h5*scale,cx-w2*scale/2,useH5);
+
+  // 幅寸法
+  const w1y=Math.max(groundY+70,protectTop-40);
+  pdline(pd$("w1dim"),cx-w1*scale/2,w1y,cx+w1*scale/2,w1y);
+  pd$("w1txt").setAttribute("x",cx-22);pd$("w1txt").setAttribute("y",w1y-12);
+  pdshow(pd$("w1dim"),useH2||useH3);pdshow(pd$("w1txt"),useH2||useH3);
+
+  const w2y=bottomY+40;
+  pdline(pd$("w2dim"),cx-w2*scale/2,w2y,cx+w2*scale/2,w2y);
+  pd$("w2txt").setAttribute("x",cx-22);pd$("w2txt").setAttribute("y",w2y+32);
+  pdshow(pd$("w2dim"),useH4||useH5);pdshow(pd$("w2txt"),useH4||useH5);
+
+  pdline(pd$("w3dim"),cx-pipeR,pipeCy,cx+pipeR,pipeCy);
+  pd$("w3txt").setAttribute("x",cx-18);
+  pd$("w3txt").setAttribute("y",method==="pipe"?pipeCy-pipeR-12:pipeCy-10);
+
+  const structHalf=structBottomWidth/2,ey=bottomY-16;
+  pdline(pd$("eldim"),bL,ey,cx-structHalf,ey);pd$("eltxt").setAttribute("x",(bL+cx-structHalf)/2-8);pd$("eltxt").setAttribute("y",ey-12);
+  pdline(pd$("erdim"),cx+structHalf,ey,bR,ey);pd$("ertxt").setAttribute("x",(cx+structHalf+bR)/2-8);pd$("ertxt").setAttribute("y",ey-12);
+
+  // 断面図の実形状に合わせて表示範囲を自動調整
+  const svg=pd$("pipeSectionSvg");
+  const minX=Math.max(20,Math.min(70,tL-85));
+  const maxX=Math.min(1160,Math.max(tR+85,bR+70));
+  const minY=Math.max(0,groundY-55);
+  const maxY=Math.min(780,bottomY+92);
+  svg.setAttribute("viewBox",`${minX} ${minY} ${Math.max(520,maxX-minX)} ${Math.max(330,maxY-minY)}`);
+
+  // 右側の材料名は表示しない
+  pdDirectLabel(pd$("lead1"),pd$("lab1"),0,0,"");
+  pdDirectLabel(pd$("lead2"),pd$("lab2"),0,0,"");
+  pdDirectLabel(pd$("lead3"),pd$("lab3"),0,0,"");
+  pdDirectLabel(pd$("lead4"),pd$("lab4"),0,0,"");
+
+  if(method==="pipe"){
+    pd$("pipeMethodNote").textContent="管のみ：管を掘削底に直接布設します。H3・H4・H5、保護砂、保護コンクリート、型枠はありません。";
+  }else if(method==="base"){
+    pd$("pipeMethodNote").textContent="砕石＋均しコンクリート：保護コンクリートは設けず、均しコンクリートの上に排水管を直接設置します。";
+  }else if(method==="sand"){
+    pd$("pipeMethodNote").textContent="保護砂：W1×H2の矩形断面を保護砂で施工します。型枠はありません。";
+  }else{
+    pd$("pipeMethodNote").textContent="保護コンクリート：保護砂と同じW1×H2断面です。茶色の型枠線は表示しません。";
+  }}
+
+function syncPipeDiagramInputs(){
+  // m入力をSVG用のmmへ変換（法面勾配nだけは無次元なので変換しない）
+  const mmPairs={h1:'H1',h2:'H2',h3:'H3',h4:'H4',h5:'H5',w1:'W1',w2:'W2',e:'E'};
+  Object.entries(mmPairs).forEach(([to,from])=>{
+    const a=document.getElementById(to),b=document.getElementById(from);
+    if(a&&b) a.value=String(Number(b.value||0)*1000);
+  });
+  const nHidden=document.getElementById('n'),nInput=document.getElementById('N');
+  if(nHidden&&nInput) nHidden.value=String(Number(nInput.value||0));
+  drawPipeDiagram();
+}
+
+function clearPipeDimActive(){
+  document.querySelectorAll('#pipeSectionSvg .pipe-dim-active').forEach(el=>el.classList.remove('pipe-dim-active'));
+}
+function activatePipeDim(key){
+  clearPipeDimActive();
+  const map={
+    'dim-w1':['w1txt'],'dim-w2':['w2txt'],'dim-w3':['w3txt'],
+    'dim-h1':['h1txt'],'dim-h2':['h2txt'],'dim-h3':['h3txt'],'dim-h4':['h4txt'],'dim-h5':['h5txt'],
+    'dim-e':['eltxt','ertxt'],'dim-n':['slopeL','slopeR']
+  };
+  (map[key]||[]).forEach(id=>{const el=document.getElementById(id);if(el&&el.style.display!=='none')el.classList.add('pipe-dim-active');});
+}
+function setPipeFieldEnabled(id,enabled){
+  const el=document.getElementById(id); if(!el)return;
+  el.disabled=!enabled;
+  const box=el.closest('.row > div')||el.parentElement;
+  if(box)box.classList.toggle('pipe-field-disabled',!enabled);
+  el.setAttribute('aria-disabled',String(!enabled));
+}
+function updatePipeMethodFields(){
+  const method=(document.getElementById('method')||{}).value||'pipe';
+  const enabledByMethod={
+    pipe:new Set(['w3','H1','E','N']),
+    base:new Set(['w3','W2','H1','H4','H5','E','N']),
+    sand:new Set(['w3','W1','H1','H2','E','N']),
+    concrete:new Set(['w3','W1','W2','H1','H2','H5','E','N'])
+  };
+  const active=enabledByMethod[method]||enabledByMethod.pipe;
+  ['w3','W1','W2','H1','H2','H3','H4','H5','E','N'].forEach(id=>setPipeFieldEnabled(id,active.has(id)));
+  clearPipeDimActive();
+}
+function bindPipeDimensionFocus(){
+  document.querySelectorAll('#method, #w3, #W1, #W2, #H1, #H2, #H3, #H4, #H5, #E, #N').forEach(el=>{
+    if(!el||el.id==='method')return;
+    const key=el.dataset.dim;
+    if(!key)return;
+    el.addEventListener('focus',()=>{if(!el.disabled)activatePipeDim(key)});
+    el.addEventListener('click',()=>{if(!el.disabled)activatePipeDim(key)});
+    el.addEventListener('blur',clearPipeDimActive);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  ['method','w3','W1','W2','H1','H2','H3','H4','H5','E','N'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',syncPipeDiagramInputs);el.addEventListener('change',syncPipeDiagramInputs);}});
+  const methodEl=document.getElementById('method');
+  if(methodEl)methodEl.addEventListener('change',()=>{updatePipeMethodFields();syncPipeDiagramInputs();});
+  bindPipeDimensionFocus();
+  updatePipeMethodFields();
+  syncPipeDiagramInputs();
+});
+</script>
+<style id="pipe-calc-008">
+.result-table tfoot td{background:#fff;font-weight:400}.result-table tfoot tr:last-child td{background:#fbfdff}
+.price-disabled{opacity:.38}.price-disabled input{background:#f1f3f5!important;color:#9aa0a6!important}
+</style>
+<script id="pipe-calc-008-script">
+(function(){
+ const defs={
+  exc:{name:'掘削',unit:'m³'},spoil:{name:'残土処理',unit:'m³'},back:{name:'埋戻し',unit:'m³'},bed:{name:'床付け',unit:'m²'},
+  stone:{name:'砕石',unit:'m³'},leanForm:{name:'均し型枠',unit:'m²'},lean:{name:'均しコンクリート',unit:'m³'},
+  sand:{name:'保護砂',unit:'m³'},protectConcrete:{name:'保護コンクリート',unit:'m³'},protectForm:{name:'型枠',unit:'m²'},
+  prod:{name:'配管材',unit:'本'},socket:{name:'継手ソケット',unit:'個'},set:{name:'排水管布設',unit:'m'}
+ };
+ window.getPipeActiveRows=function(method){
+  const keys={
+   pipe:['exc','spoil','back','bed','prod','socket','set'],
+   base:['exc','spoil','back','bed','stone','leanForm','lean','prod','socket','set'],
+   sand:['exc','spoil','back','bed','stone','sand','prod','socket','set'],
+   concrete:['exc','spoil','back','bed','stone','protectConcrete','protectForm','prod','socket','set']
+  }[method]||[];
+  return keys.map(k=>({key:k,name:defs[k].name,unit:defs[k].unit}));
+ };
+ window.renderPipeResultRows=function(rows,qty,units,amounts,eu,ea){
+  const body=document.getElementById('resultRowsBody');if(!body)return;
+  body.innerHTML=rows.map(r=>'<tr><td>'+r.name+'</td><td class="mono" id="r_'+r.key+'">'+((r.key==='prod'||r.key==='socket')?Math.round(qty[r.key]||0).toLocaleString('ja-JP'):(qty[r.key]||0).toFixed(3))+'</td><td>'+r.unit+'</td><td class="mono" id="u_'+r.key+'">'+Math.round(units[r.key]||0).toLocaleString('ja-JP')+'</td><td class="mono" id="a_'+r.key+'">'+Math.round(amounts[r.key]||0).toLocaleString('ja-JP')+'</td><td class="mono estimate-value" id="eu_'+r.key+'">'+Math.round(eu[r.key]||0).toLocaleString('ja-JP')+'</td><td class="mono estimate-value" id="ea_'+r.key+'">'+Math.round(ea[r.key]||0).toLocaleString('ja-JP')+'</td></tr>').join('');
+ };
+ window.getPipePrintRows=function(){
+  const method=document.getElementById('method')?.value||'pipe';
+  const active=window.getPipeActiveRows(method).map(r=>[r.name,'r_'+r.key,r.unit]);
+  while(active.length<11)active.push(['',null,'']);
+  return active.slice(0,11).concat([['',null,''],['',null,''],['',null,'']]);
+ };
+ window.updatePipeCalcMemo=function(d){
+  const box=document.querySelector('.result-memo-grid');if(!box)return;
+  const m=d.method, f=[];
+  f.push(['掘削深さ',m==='pipe'?'H1＋W3':m==='base'?'H1＋W3＋H4＋H5':'H1＋H2＋H5']);
+  f.push(['掘削底幅',(m==='pipe'?'W3':m==='base'?'W2':'W1')+'＋2e']);
+  f.push(['掘削上幅','掘削底幅＋2×n×掘削深さ']);
+  f.push(['掘削','（掘削底幅＋掘削上幅）÷2×掘削深さ×L']);
+  if(m==='pipe')f.push(['残土処理','π×W3²÷4×L']);
+  if(m==='base'){f.push(['砕石','W2×H5×L']);f.push(['均し型枠','H4×2×L']);f.push(['均しコンクリート','W2×H4×L']);f.push(['残土処理','排水管＋砕石＋均しコンクリート']);}
+  if(m==='sand'){f.push(['砕石','W1×H5×L']);f.push(['保護砂','（W1×H2－管断面）×L']);f.push(['残土処理','（W1×H2＋W1×H5）×L']);}
+  if(m==='concrete'){f.push(['砕石','W1×H5×L']);f.push(['保護コンクリート','（W1×H2－管断面）×L']);f.push(['型枠','H2×2×L']);f.push(['残土処理','（W1×H2＋W1×H5）×L']);}
+  f.push(['埋戻し','掘削－残土処理']);f.push(['床付け',(m==='pipe'?'W3':m==='base'?'W2':'W1')+'×L']);f.push(['配管材','L÷製品長さ（端数切上げ）']);f.push(['継手ソケット','配管材の本数と同数']);
+  box.innerHTML=f.map(x=>'<div class="result-memo-item"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('');
+ };
+ function setPriceAvailability(){
+  const m=document.getElementById('method')?.value||'pipe';
+  const enabled={pipe:['Pexc','Pspoil','Pback','Pbed','Pset','ProdLen','ProdPrice'],base:['Pexc','Pspoil','Pback','Pbed','Pstone','PleanForm','Plean','Pset','ProdLen','ProdPrice'],sand:['Pexc','Pspoil','Pback','Pbed','Pstone','Pmortar','Pset','ProdLen','ProdPrice'],concrete:['Pexc','Pspoil','Pback','Pbed','Pstone','PprotectConcrete','PprotectForm','Pset','ProdLen','ProdPrice']}[m];
+  ['Pstone','PleanForm','Plean','Pmortar','PprotectConcrete','PprotectForm'].forEach(id=>{const e=document.getElementById(id);if(!e)return;const on=enabled.includes(id);e.disabled=!on;e.closest('div')?.classList.toggle('price-disabled',!on);});
+ }
+ const oldMake=window.makePrintReport;
+ window.makePrintReport=function(){
+  calc();
+  const today=new Date().toLocaleDateString('ja-JP');document.getElementById('printHeader')?.setAttribute('data-date',today);
+  document.getElementById('printProject').textContent='工事名：'+((document.getElementById('projectName').value||'').trim()||'-');
+  document.getElementById('printEstimate').textContent='積算名称：'+((document.getElementById('estimateName').value||'').trim()||'-');
+  const rows=window.getPipePrintRows().slice(0,11);let no=0;
+  document.getElementById('printRows').innerHTML=rows.map(r=>{if(!r[1])return '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';no++;const k=r[1].replace('r_','');const tx=id=>document.getElementById(id)?.textContent||'';return '<tr><td>'+no+'. '+r[0]+'</td><td>'+tx(r[1])+'</td><td>'+r[2]+'</td><td>'+tx('u_'+k)+'</td><td>'+tx('a_'+k)+'</td><td>'+tx('eu_'+k)+'</td><td>'+tx('ea_'+k)+'</td></tr>';}).join('');
+  document.getElementById('printTotal').textContent=(document.getElementById('a_total')?.innerText||'').replace(/\s/g,'');
+  document.getElementById('printUnitm').textContent=(document.getElementById('a_unitm')?.innerText||'').replace(/\s/g,'');
+  document.getElementById('printEstimateTotal').textContent=(document.getElementById('ea_total')?.innerText||'').replace(/\s/g,'');
+  document.getElementById('printEstimateUnitm').textContent=(document.getElementById('ea_unitm')?.innerText||'').replace(/\s/g,'');
+  const dims=[['W1','保護幅'],['W2','基礎幅'],['w3','管径'],['H1','土被り厚'],['H2','保護部高さ'],['H4','均しコンクリート厚'],['H5','砕石厚'],['E','掘削余裕 e'],['N','法面勾配 n']];
+  document.getElementById('printDims').innerHTML=dims.map(([id,name])=>'<tr><td>'+(id==='w3'?'W3':id)+'</td><td>'+name+'</td><td>'+(id==='N'?num(id).toFixed(2):Math.round(num(id)*1000).toLocaleString('ja-JP'))+'</td></tr>').join('');
+  const src=document.querySelector('.illust-svg'),dst=document.getElementById('printDiagram');dst.innerHTML='';if(src){const clone=src.cloneNode(true);clone.removeAttribute('class');clone.style.width='100%';clone.style.height='100%';dst.appendChild(clone);}
+ };
+ const method=document.getElementById('method');method?.addEventListener('change',()=>{setPriceAvailability();calc();});
+ window.addEventListener('load',()=>{setPriceAvailability();calc();});
+ setPriceAvailability();setTimeout(()=>calc(),0);
+})();
+</script>
+
+
+
+<!-- ===== 046: 排水管工の最終印刷プレビューを020版へ完全統一 ===== -->
+<style id="pipe-final-preview-authority-046">
+/* 古い暗渠・カルバート工用SVGプレビューは常に非表示 */
+#svgPrintWrap{display:none!important;}
+body.svg-preview-mode #svgPrintWrap{display:none!important;}
+/* 排水管工用プレビューでは戻る・印刷ボタンを表示 */
+body.svg-preview-mode020 #svgPrintWrap020{display:block!important;}
+body.svg-preview-mode020 .svg-print-actions020{display:flex!important;}
+@media print{
+  body.svg-preview-mode020 .svg-print-actions020{display:none!important;}
+  #svgPrintWrap{display:none!important;visibility:hidden!important;}
+}
+</style>
+<script id="pipe-final-preview-authority-046-script">
+(function(){
+  function bindFinalPipePrint(){
+    var oldWrap=document.getElementById('svgPrintWrap');
+    if(oldWrap) oldWrap.setAttribute('aria-hidden','true');
+
+    var mainBtn=document.getElementById('printReportBtn');
+    var pipePrintBtn=document.getElementById('svgPrintNowBtn020');
+    if(mainBtn && pipePrintBtn){
+      var fresh=mainBtn.cloneNode(true);
+      mainBtn.parentNode.replaceChild(fresh,mainBtn);
+      fresh.addEventListener('click',function(){
+        document.body.classList.remove('svg-preview-mode','print-preview-mode');
+        pipePrintBtn.click();
+      });
+    }
+
+    var close=document.getElementById('closeSvgPreviewBtn020');
+    if(close){
+      var freshClose=close.cloneNode(true);
+      close.parentNode.replaceChild(freshClose,close);
+      freshClose.addEventListener('click',function(){
+        document.body.classList.remove('svg-preview-mode020','svg-preview-mode','print-preview-mode');
+        window.scrollTo(0,0);
+      });
+    }
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){
+      /* 古い018版がDOMContentLoadedで再度ボタンを上書きした後に、020版へ戻す */
+      setTimeout(bindFinalPipePrint,0);
+    });
+  }else{
+    setTimeout(bindFinalPipePrint,0);
+  }
+
+  window.addEventListener('beforeprint',function(){
+    document.body.classList.remove('svg-preview-mode');
+  });
+  window.addEventListener('afterprint',function(){
+    document.body.classList.remove('svg-preview-mode');
+    if(document.body.classList.contains('svg-preview-mode020')){
+      var method=document.getElementById('method');
+      if(method) method.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+  });
+})();
+</script>
+
+<script id="pipe-socket-final-009">
+/* 継手ソケット：配管材の本数と同数。全工法・画面・印刷で共通。 */
+(function(){
+  function refreshSocket(){
+    const L=parseFloat(document.getElementById('L')?.value)||0;
+    const len=parseFloat(document.getElementById('ProdLen')?.value)||0;
+    const q=len>0?Math.max(0,Math.ceil((L/len)-1e-10)):0;
+    const d=document.getElementById('SocketQtyDisplay');
+    if(d)d.value=q.toLocaleString('ja-JP');
+  }
+  ['L','ProdLen','Psocket'].forEach(id=>{const e=document.getElementById(id);if(e){e.addEventListener('input',refreshSocket);e.addEventListener('change',refreshSocket);}});
+  window.addEventListener('load',refreshSocket);
+  refreshSocket();
+})();
+</script>
+</body>
+</html>

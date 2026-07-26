@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>重力式擁壁 積算アプリ 018 完成版</title>
+<style>
+:root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,var(--blue),#2b8ae2);color:#fff;padding:18px 16px}
+header .wrap{max-width:1500px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+h1{font-size:18px;margin:0}.sub{font-size:12px;opacity:.95}.home-link{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:900}
+main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;grid-template-columns:340px 340px minmax(0,1fr);gap:14px}@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.card h2{font-size:14px;margin:0;padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}.dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}.body{padding:12px}
+.illust-box{border:1px solid var(--border);border-radius:12px;padding:8px;background:#fafafa}.illust-svg{width:100%;height:auto;display:block;overflow:visible}
+.sectionTitle{margin:9px 0 7px;font-size:12px;font-weight:900;color:#0f172a;display:flex;align-items:center;gap:8px}.sectionTitle:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+label{display:block;font-size:11px;color:var(--muted);margin:0 0 4px;min-height:16px}input,select{width:100%;height:34px;padding:6px 8px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:#fff}input:focus,select:focus{outline:none;border-color:#78b7ed;box-shadow:0 0 0 3px rgba(0,112,192,.12)}
+.hr{height:1px;background:var(--border);margin:9px 0}.note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:7px}
+button{border:0;border-radius:9px;padding:8px 5px;font-size:12px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.ghost{background:#eef6ff;color:#0647a5}.danger{background:#fff1f2;color:#b42318}
+.estimate-panel{border:1px solid var(--border);border-radius:14px;background:#fbfdff;padding:10px;margin:10px 0}.save-line{margin-bottom:8px}.control-block{border:1px solid var(--border);border-radius:13px;background:#fff;padding:9px;margin-top:9px}.estimate-block{border-color:#bad8f4;background:#f7fbff}.price-block{border-color:#c5ead0;background:#f7fff9}.operation-block{border-color:#fed7aa;background:#fffaf4}.save-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}@media(max-width:700px){.kpi{grid-template-columns:1fr 1fr}}.kpi .box{border:1px solid var(--border);border-radius:12px;padding:10px;background:#fbfdff}.kpi .t{font-size:11px;color:var(--muted)}.kpi .v{font-size:17px;font-weight:900;margin-top:3px}
+.table-wrap{overflow-x:auto}.result-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);table-layout:fixed}.result-table th,.result-table td{border-bottom:1px solid var(--border);padding:9px 5px;font-size:12px}.result-table th{background:#f2f7ff;font-weight:900;text-align:center}.result-table td:first-child{text-align:left}.result-table td:nth-child(2),.result-table td:nth-child(4),.result-table td:nth-child(5),.result-table td:nth-child(6),.result-table td:nth-child(7){text-align:right}.unit{text-align:center!important}.total-row td{background:#fbfdff;font-size:14px}.memo-box{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:#fbfdff;padding:12px 14px}
+.memo-title{font-size:13px;font-weight:900;color:#0f172a;margin-bottom:8px;display:flex;align-items:center;gap:8px}.memo-title:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.memo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 18px;font-size:11px;line-height:1.4;color:var(--muted)}
+.memo-item{display:grid;grid-template-columns:125px 1fr;gap:8px;border-bottom:1px dotted #dbe3ec;padding:3px 0}.memo-label{color:#334155;font-weight:700}@media(max-width:700px){.memo-grid{grid-template-columns:1fr}}
+.dimText{fill:#333;font-size:46px;font-weight:800;paint-order:stroke fill;stroke:#fff;stroke-width:4px}.dimText.active{fill:#d32f2f;font-size:58px}
+.excLine{fill:none;stroke:#0070c0;stroke-width:5;stroke-dasharray:14 10;stroke-linejoin:round}
+.excText{fill:#0070c0;font-size:36px;font-weight:700;paint-order:stroke fill;stroke:#fff;stroke-width:4px}
+.excDim{fill:none;stroke:#0070c0;stroke-width:2}
+.outline{stroke:#343434;stroke-width:2.6;stroke-linejoin:round}.subline{stroke:#555;stroke-width:1.9}.dimline{stroke:#111;stroke-width:2;fill:none}.groundline{stroke:#555;stroke-width:2.2}.matText{fill:#111;font-size:28px;font-weight:700;text-anchor:middle;dominant-baseline:middle}
+.print-wrap{display:none}.print-main-table{width:100%;border-collapse:collapse}.print-lower{display:grid}
+@media print{
+@page{size:A4 portrait;margin:0}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+html,body{margin:0!important;padding:0!important;width:210mm!important;height:297mm!important;background:#fff!important}
+body>*:not(.print-wrap){display:none!important}
+.print-wrap{display:block!important;width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;background:#fff!important}
+.print-sheet{
+  width:210mm;height:297mm;padding:15mm;overflow:hidden;
+  font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
+  color:#111;background:#fff
+}
+.print-top{
+  display:grid;grid-template-columns:1.15fr 1.15fr .7fr;
+  align-items:end;height:11mm;border-bottom:1.2px solid #222;
+  padding:0 0 2.2mm;font-size:10.5pt;font-weight:700
+}
+.print-top .date{text-align:right;font-size:7.5pt;font-weight:400}
+.print-main-table{
+  width:100%;border-collapse:collapse;table-layout:fixed;margin-top:3mm
+}
+.print-main-table th,.print-main-table td{
+  border:1px solid #222;padding:.8mm 1mm;font-size:7.6pt;height:6.6mm
+}
+.print-main-table th{background:#dceeff!important;text-align:center;font-weight:700}
+.print-main-table td:first-child{text-align:left}
+.print-main-table td:not(:first-child){text-align:right}
+.print-main-table td:nth-child(3){text-align:center}
+.print-main-table th:nth-child(1){width:25%}
+.print-main-table th:nth-child(2){width:9%}
+.print-main-table th:nth-child(3){width:7%}
+.print-main-table th:nth-child(4){width:12%}
+.print-main-table th:nth-child(5){width:13%}
+.print-main-table th:nth-child(6){width:15%}
+.print-main-table th:nth-child(7){width:19%}
+.print-main-table .blank-print td{height:6.6mm}
+.print-main-table .total-print td{font-size:8pt}
+.print-main-table .estimate-amount{font-weight:700}
+.print-info-line{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:2mm;font-size:7pt
+}
+.print-lower-spacer{height:6mm}
+.print-lower{
+  display:grid;grid-template-columns:1.15fr .85fr;
+  gap:3.5mm;margin-top:0
+}
+.print-diagram-box,.print-dimension-box{
+  border:1px solid #222;height:132mm;overflow:hidden;background:#fff
+}
+.print-section-title{
+  height:8.5mm;background:#dceeff!important;border-bottom:1px solid #222;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10.5pt;font-weight:700
+}
+#printWall{
+  height:92mm;display:flex;align-items:center;justify-content:center;
+  padding:1.5mm 2mm 0
+}
+#printWall svg{width:90%!important;height:90%!important;display:block;margin:0 auto}
+#printWall svg #gravityDrawingScale{transform-box:fill-box;transform-origin:center;}
+#printWall svg #wallShape{fill:#e3d2b8!important}
+#printWall svg #leanShape{fill:#e6e6e6!important}
+#printWall svg #stoneShape{fill:#d2b58a!important}
+#printWall svg text{fill:#111}
+#printWall svg .excLine{fill:none!important;stroke:#0070c0!important;stroke-width:5!important;stroke-dasharray:14 10!important}
+#printWall svg .excText{fill:#0070c0!important;stroke:#fff!important;stroke-width:4px!important}
+#printWall svg .excDim{fill:none!important;stroke:#0070c0!important;stroke-width:2!important}
+
+.print-symbol-note{
+  height:28mm;margin:0 3mm 2.5mm;border:1px solid #9fc2df;
+  padding:2mm 2.5mm;display:grid;grid-template-columns:1fr 1fr;
+  gap:.8mm 4mm;font-size:6.7pt;line-height:1.35
+}
+.dimension-table{
+  width:calc(100% - 6mm);margin:2.5mm 3mm 0;
+  border-collapse:collapse;table-layout:fixed
+}
+.dimension-table th,.dimension-table td{
+  border:1px solid #222;padding:.8mm 1.2mm;font-size:6.8pt;height:5.6mm
+}
+.dimension-table th{background:#fff;font-weight:700;text-align:center}
+.dimension-table th:first-child,.dimension-table td:first-child{width:20%;text-align:center}
+.dimension-table th:nth-child(2),.dimension-table td:nth-child(2){width:51%;text-align:left}
+.dimension-table th:last-child,.dimension-table td:last-child{text-align:right}
+.print-formula-box{
+  margin:4mm 5mm 0;border:1px solid #9fc2df;
+  padding:3mm 4mm;font-size:7pt;line-height:1.75
+}
+.print-formula-row{
+  display:grid;grid-template-columns:31mm 4mm 1fr;gap:1mm
+}
+}
+
+.accessory-choice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:7px}
+.accessory-choice label{display:flex;align-items:center;gap:7px;min-height:36px;padding:7px 9px;border:1px solid var(--border);border-radius:10px;background:#fbfdff;color:#1b1f24;font-weight:700}
+.accessory-choice input{width:16px;height:16px;margin:0;box-shadow:none}
+.accessory-note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:7px;padding:8px 9px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)}
+@media(max-width:700px){.accessory-choice{grid-template-columns:1fr}}
+</style>
+<script src="ms_common.js"></script>
+</head>
+<body>
+<header><div class="wrap"><div><h1>重力式擁壁 積算アプリ</h1><div class="sub">土工／地業／擁壁／止水・水抜き・裏込め工を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<main><div class="grid">
+<section class="card"><h2><span class="dot"></span>断面</h2><div class="body">
+<div class="illust-box"><svg id="wallSvg" class="illust-svg" viewBox="0 0 1100 1000" xmlns="http://www.w3.org/2000/svg">
+<defs><pattern id="filterHatch" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M-4 16 L16 -4 M4 20 L20 4" stroke="#777" stroke-width="2"/></pattern><linearGradient id="gc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efe6d6"/><stop offset="1" stop-color="#d8c8ae"/></linearGradient><linearGradient id="lc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f4f4"/><stop offset="1" stop-color="#d9d9d9"/></linearGradient><pattern id="sp" width="34" height="26" patternUnits="userSpaceOnUse"><rect width="34" height="26" fill="#d7c09e"/><circle cx="6" cy="6" r="2.4" fill="#7a5a32"/><circle cx="17" cy="4" r="1.8" fill="#92744b"/><circle cx="28" cy="8" r="2.5" fill="#6e512c"/><circle cx="10" cy="17" r="2.8" fill="#87683e"/><circle cx="23" cy="16" r="2.2" fill="#74562f"/></pattern></defs>
+<g id="gravityDrawingScale" transform="translate(-55 -50) scale(1.10)">
+<path id="wallShape" d="M510 160 L640 160 L640 620 L360 620 Z" fill="url(#gc)" class="outline"/>
+<line id="backGroundLine" x1="640" y1="160" x2="880" y2="160" class="groundline"/>
+<!-- 掘削線：前面はeから垂直、背面はeから1:n -->
+<g id="excavationGuide">
+  <path id="excavationPath" class="excLine" d="M220 460 L220 760 L780 760 L980 160"/>
+  <line id="frontGroundGuide" class="groundline" x1="120" y1="460" x2="270" y2="460"/>
+  <text id="slopeLabel" class="excText" x="885" y="405">1：n</text>
+
+  <line id="frontEDim" class="excDim" x1="220" y1="805" x2="270" y2="805"/>
+  <line id="frontETick1" class="excDim" x1="220" y1="785" x2="220" y2="825"/>
+  <line id="frontETick2" class="excDim" x1="270" y1="785" x2="270" y2="825"/>
+  <text id="frontELabel" class="excText" x="245" y="865" text-anchor="middle">e</text>
+
+  <line id="rearEDim" class="excDim" x1="730" y1="805" x2="780" y2="805"/>
+  <line id="rearETick1" class="excDim" x1="730" y1="785" x2="730" y2="825"/>
+  <line id="rearETick2" class="excDim" x1="780" y1="785" x2="780" y2="825"/>
+  <text id="rearELabel" class="excText" x="755" y="865" text-anchor="middle">e</text>
+</g>
+<rect id="leanShape" x="270" y="620" width="460" height="58" fill="url(#lc)" class="subline"/><text x="500" y="649" class="matText">均しコンクリート</text>
+<rect id="stoneShape" x="270" y="678" width="460" height="82" fill="url(#sp)" class="subline"/><text x="500" y="719" class="matText">砕石</text>
+
+<!-- 付帯工表示 -->
+<g id="waterstopGroup">
+  <rect x="640" y="590" width="90" height="30" fill="#c8d7e8" stroke="#555" stroke-width="2"/>
+  <text x="685" y="580" class="matText" style="font-size:22px">止水Co</text>
+</g>
+<g id="backfillStoneGroup">
+  <rect x="640" y="250" width="48" height="340" fill="url(#sp)" stroke="#555" stroke-width="2"/>
+</g>
+<g id="filterSheetGroup" style="display:none">
+  <rect x="642" y="250" width="12" height="340" fill="url(#filterHatch)" stroke="#555" stroke-width="2"/>
+</g>
+<line x1="510" y1="90" x2="640" y2="90" class="dimline"/>
+<!-- 付帯工表示 -->
+<g id="waterstopGroup">
+  <rect x="640" y="590" width="90" height="30" fill="#c8d7e8" stroke="#555" stroke-width="2"/>
+  <text x="685" y="580" class="matText" style="font-size:22px">止水Co</text>
+</g>
+<g id="backfillStoneGroup">
+  <rect x="640" y="250" width="48" height="340" fill="url(#sp)" stroke="#555" stroke-width="2"/>
+</g>
+<g id="filterSheetGroup" style="display:none">
+  <rect x="642" y="250" width="12" height="340" fill="url(#filterHatch)" stroke="#555" stroke-width="2"/>
+</g>
+<line x1="510" y1="90" x2="510" y2="135" class="dimline"/><line x1="640" y1="90" x2="640" y2="135" class="dimline"/><text x="575" y="52" text-anchor="middle" class="dimText dim-w1">W1</text>
+<line x1="360" y1="815" x2="640" y2="815" class="dimline"/><line x1="360" y1="770" x2="360" y2="815" class="dimline"/><line x1="640" y1="770" x2="640" y2="815" class="dimline"/><text x="500" y="860" text-anchor="middle" class="dimText dim-w2">W2</text>
+<line x1="270" y1="925" x2="730" y2="925" class="dimline"/><line x1="270" y1="835" x2="270" y2="925" class="dimline"/><line x1="730" y1="835" x2="730" y2="925" class="dimline"/><text x="500" y="975" text-anchor="middle" class="dimText dim-w3">W3</text>
+<line x1="120" y1="160" x2="120" y2="620" class="dimline"/><line x1="120" y1="160" x2="170" y2="160" class="dimline"/><line x1="120" y1="620" x2="170" y2="620" class="dimline"/><text id="h1Text" x="50" y="405" text-anchor="middle" class="dimText dim-h1">H1</text>
+<line x1="120" y1="620" x2="120" y2="678" class="dimline"/><line x1="120" y1="678" x2="170" y2="678" class="dimline"/><text id="h2Text" x="50" y="658" text-anchor="middle" class="dimText dim-h2">H2</text>
+<line x1="120" y1="678" x2="120" y2="760" class="dimline"/><line x1="120" y1="760" x2="170" y2="760" class="dimline"/><text id="h3Text" x="50" y="735" text-anchor="middle" class="dimText dim-h3">H3</text>
+<line id="h4Main" x1="260.5" y1="460" x2="260.5" y2="620" class="dimline"/>
+<line id="h4Top" x1="260.5" y1="460" x2="310.5" y2="460" class="dimline"/>
+<line id="h4Bottom" x1="260.5" y1="620" x2="310.5" y2="620" class="dimline"/>
+<text id="h4Text" x="213" y="555" text-anchor="middle" class="dimText dim-h4">H4</text>
+</g>
+</svg></div>
+<div class="estimate-panel"><div class="save-line"><label>工事名</label><input id="projectName" placeholder="例：○○造成工事"></div>
+<div class="control-block estimate-block"><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：北側 重力式擁壁 H1.5m L20m"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="save-btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div><div class="note">工事名ごとに保存済み一覧を分けて表示します。</div></div>
+<div class="control-block price-block">
+<div class="sectionTitle">共有単価マスター</div>
+<div class="save-line"><label>使用する単価</label><select id="gwCommonPriceList"></select></div>
+<div class="save-btns" style="grid-template-columns:80px 80px 1fr;align-items:center">
+<button class="ghost" id="gwApplyCommonPriceBtn" type="button" style="width:80px!important;min-width:80px!important">呼出</button>
+<button class="primary" id="gwSaveCommonPriceBtn" type="button" style="width:80px!important;min-width:80px!important">保存</button>
+<button class="ghost" id="gwSaveAsCommonPriceBtn" type="button">名前を付けて保存</button>
+<button class="ghost" id="gwRenameCommonPriceBtn" type="button">名前変更</button>
+<button class="danger" id="gwDeleteCommonPriceBtn" type="button">削除</button>
+</div>
+<div class="note" id="gwCommonPriceNote">保存＝選択中の単価を上書き。名前を付けて保存＝新しい単価セットを追加します。</div>
+</div>
+<div class="control-block operation-block"><div class="sectionTitle">基本操作</div><div class="save-btns" style="grid-template-columns:1fr 1fr"><button class="primary" id="calcBtn">計算</button><button class="danger" id="resetBtn">入力リセット</button></div></div></div>
+</div></section>
+
+<section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
+<div class="sectionTitle">断面寸法（m）</div>
+<div class="row"><div><label>W1（天端幅）</label><input id="W1" data-dim="dim-w1" type="number" step="0.001" value="0.400"></div><div><label>W2（擁壁底幅）</label><input id="W2" data-dim="dim-w2" type="number" step="0.001" value="1.200"></div></div>
+<div class="row"><div><label>W3（均し・砕石幅）</label><input id="W3" data-dim="dim-w3" type="number" step="0.001" value="1.400"></div><div></div></div>
+<div class="row3"><div><label>H1（擁壁高さ）</label><input id="H1" data-dim="dim-h1" type="number" step="0.001" value="1.500"></div><div><label>H2（均しコン厚）</label><input id="H2" data-dim="dim-h2" type="number" step="0.001" value="0.050"></div><div><label>H3（砕石厚）</label><input id="H3" data-dim="dim-h3" type="number" step="0.001" value="0.150"></div></div>
+<div class="row"><div><label>H4（土被り）</label><input id="H4" data-dim="dim-h4" type="number" step="0.001" value="0.500"></div><div></div></div>
+<div class="hr"></div><div class="sectionTitle">共通条件</div>
+<div class="row"><div><label>延長 L（m）</label><input id="L" type="number" step="0.001" value="10.000"></div><div><label>掘削余裕 e（m）</label><input id="e" type="number" step="0.001" value="0.250"></div></div>
+<div class="row"><div><label>背面法面勾配 1:n</label><input id="n" type="number" step="0.01" value="0.50"></div><div><label>利益率（％）</label><input id="profit" type="number" step="0.1" min="0" max="99.9" value="20"></div></div>
+<div class="row"><div><label>見積単価の丸め</label><input type="text" value="1,000円未満：10円／以上：100円" readonly></div><div></div></div>
+<div class="note">見積単価＝原価単価÷（1－利益率）。利益率はメイン画面の工事登録から引き継ぎます。</div>
+<div class="note">前面側は e×H4、背面側は底面幅（W3＋e）から1:nの法面で掘削量を計算します。</div>
+
+<div class="hr"></div><div class="sectionTitle">止水・水抜き・裏込め工</div>
+<div class="accessory-choice">
+<label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠含む）</label>
+</div>
+<div class="accessory-choice">
+<label><input id="backfillNone" name="backfillType" type="radio" value="none">なし</label>
+<label><input id="backfillStone" name="backfillType" type="radio" value="stone" checked>裏込め砕石</label>
+<label><input id="backfillSheet" name="backfillType" type="radio" value="sheet">吸出し防止材</label>
+</div>
+<div class="accessory-note">
+止水コンクリートは型枠とセットでON／OFFします。吸出し防止材＝（H1－H4－0.30）×L、
+裏込め砕石＝吸出し防止材面積×0.30、水抜きパイプ＝吸出し防止材面積÷3.3を切り上げた本数です。
+</div>
+<div class="hr"></div><div class="sectionTitle">単価（円）</div>
+<div class="row"><div><label>掘削 / m³</label><input id="Pexc" type="number" value="2500"></div><div><label>残土処理 / m³</label><input id="Pspoil" type="number" value="5000"></div></div>
+<div class="row"><div><label>埋戻し / m³</label><input id="Pback" type="number" value="3000"></div><div><label>床付け / m²</label><input id="Pbed" type="number" value="500"></div></div>
+<div class="row"><div><label>砕石 / m³</label><input id="Pstone" type="number" value="6000"></div><div><label>均しCo / m³</label><input id="Plean" type="number" value="18000"></div></div>
+<div class="row"><div><label>均し型枠 / m²</label><input id="PleanForm" type="number" value="3500"></div><div><label>擁壁Co / m³</label><input id="Pconc" type="number" value="22000"></div></div>
+<div class="row"><div><label>擁壁型枠 / m²</label><input id="Pform" type="number" value="4500"></div><div><label>水抜きパイプ / 本</label><input id="Pdrain" type="number" value="1500"></div></div>
+<div class="row"><div><label>吸出し防止材 / m²</label><input id="Pfilter" type="number" value="1000"></div><div></div></div>
+<div class="note">止水コンクリート型枠は均し型枠単価、止水コンクリートは均しコンクリート単価、裏込め砕石は砕石単価を使用します。</div>
+</div></section>
+
+<section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
+<div class="btns" style="display:grid;grid-template-columns:1fr;margin:0 0 12px;max-width:140px"><button class="primary" id="printReportBtn" type="button">印刷</button></div>
+<div class="kpi"><div class="box"><div class="t">掘削断面積</div><div class="v" id="kExc">0.000 m²</div></div><div class="box"><div class="t">擁壁断面積</div><div class="v" id="kWall">0.000 m²</div></div><div class="box"><div class="t">工事費合計</div><div class="v" id="kTotal">¥0</div></div><div class="box"><div class="t">mあたり見積</div><div class="v" id="kPerM">¥0</div></div></div>
+<div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultBody"></tbody></table></div>
+<div class="memo-box" id="memoBox"></div>
+</div></section>
+</div></main>
+
+<section class="print-wrap" id="printWrap">
+  <div class="print-sheet">
+    <div class="print-top">
+      <div id="printProject">工事名：</div>
+      <div id="printEstimate">積算名称：</div>
+      <div class="date" id="printDate">作成日：</div>
+    </div>
+
+    <table class="print-main-table">
+      <thead>
+        <tr>
+          <th>項目</th><th>数量</th><th>単位</th><th>単価</th>
+          <th>金額</th><th>見積単価</th><th>見積金額</th>
+        </tr>
+      </thead>
+      <tbody id="printBody"></tbody>
+    </table>
+
+    <div class="print-info-line">
+      <span>※ 数量は入力延長Lに対する数量です。</span>
+      <span>単位：mm（特記なき場合）</span>
+    </div>
+
+    <div class="print-lower-spacer"></div>
+    <div class="print-lower">
+      <div class="print-diagram-box">
+        <div class="print-section-title">断面図（寸法図）</div>
+        <div id="printWall"></div>
+        <div class="print-symbol-note" id="printSymbolNote"></div>
+      </div>
+
+      <div class="print-dimension-box">
+        <div class="print-section-title">寸法一覧</div>
+        <table class="dimension-table">
+          <thead><tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr></thead>
+          <tbody id="printDimensions"></tbody>
+        </table>
+        <div class="print-formula-box" id="printFormulaBox"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const APP_TYPE='gravity_wall';
+const inputIds=['W1','W2','W3','H1','H2','H3','H4','L','e','n','Pexc','Pspoil','Pback','Pbed','Pstone','Plean','PleanForm','Pconc','Pform','Pdrain','Pfilter','profit','useWaterstop','backfillNone','backfillStone','backfillSheet'];
+const num=id=>Math.max(0,parseFloat($(id).value)||0);
+const fmt=(v,d=3)=>Number(v||0).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
+const yen=v=>'¥'+Math.round(v||0).toLocaleString('ja-JP');
+const roundEstimate=v=>v<1000?Math.round(v/10)*10:Math.round(v/100)*100;
+let lastRows=[],lastTotal=0,lastEstimateTotal=0;
+
+function values(){const o={};inputIds.forEach(id=>{const el=$(id);if(!el)return;o[id]=(el.type==='checkbox'||el.type==='radio')?el.checked:num(id)});o.projectName=$('projectName').value;o.estimateName=$('estimateName').value;return o}
+function applyValues(v){if(!v)return;inputIds.forEach(id=>{const el=$(id);if(!el||v[id]==null)return;if(el.type==='checkbox'||el.type==='radio')el.checked=!!v[id];else el.value=v[id]});if(v.projectName!=null)$('projectName').value=v.projectName;if(v.estimateName!=null)$('estimateName').value=v.estimateName;calc()}
+function calc(){
+ const W1=num('W1'),W2=num('W2'),W3=num('W3'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),L=num('L'),e=num('e'),n=num('n');
+ const D=H1+H2+H3;
+ const bottom=W3+e;
+ const frontExc=e*(H4+H2+H3);
+ const rearExc=bottom*D+0.5*n*D*D;
+ const excArea=frontExc+rearExc;
+ const excavation=excArea*L;
+ const wallArea=(W1+W2)*H1/2;
+ const wall=wallArea*L;
+ const lean=W3*H2*L;
+ const stone=W3*H3*L;
+ const occupied=wall+lean+stone;
+ const waste=occupied;
+ const back=Math.max(0,excavation-occupied);
+ const bed=(W3+2*e)*L;
+ const leanForm=2*H2*L;
+ const slopeLen=Math.sqrt(H1*H1+(W2-W1)*(W2-W1));
+ const form=(H1+slopeLen)*L;
+
+ const accessoryHeight=Math.max(0,H1-H4-0.30);
+ const filterBase=accessoryHeight*L;
+ const drainCount=Math.ceil(filterBase/3.3);
+ const useWaterstop=!!($('useWaterstop')&&$('useWaterstop').checked);
+ const useNone=!!($('backfillNone')&&$('backfillNone').checked);
+ const useStone=!!($('backfillStone')&&$('backfillStone').checked);
+ const useSheet=!!($('backfillSheet')&&$('backfillSheet').checked);
+ const waterstopForm=useWaterstop?L*0.05:0;
+ const waterstopConc=useWaterstop?L*0.30*0.05:0;
+ const drain=useNone?0:drainCount;
+ const backStone=useStone?filterBase*0.30:0;
+ const filter=useSheet?filterBase:0;
+
+ const q=[
+  ['掘削',excavation,'m³',num('Pexc'),'前面 e×H4・背面1:'+fmt(n,2)],
+  ['埋戻し',back,'m³',num('Pback'),'掘削－残土処理'],
+  ['残土処理',waste,'m³',num('Pspoil'),'擁壁＋均しCo＋砕石'],
+  ['床付け',bed,'m²',num('Pbed'),'（W3＋2e）×L'],
+  ['砕石',stone,'m³',num('Pstone'),'W3×H3×L'],
+  ['均し型枠',leanForm,'m²',num('PleanForm'),'H2×2面×L'],
+  ['均しコンクリート',lean,'m³',num('Plean'),'W3×H2×L'],
+  ['擁壁型枠',form,'m²',num('Pform'),'前面斜面＋背面鉛直'],
+  ['擁壁コンクリート',wall,'m³',num('Pconc'),'台形断面×L'],
+  ['止水コンクリート型枠',waterstopForm,'m²',num('PleanForm'),'L×0.05'],
+  ['止水コンクリート',waterstopConc,'m³',num('Plean'),'L×0.30×0.05'],
+  ['水抜きパイプ',drain,'本',num('Pdrain'),'ceil{吸出し防止材面積÷3.3}'],
+  [useNone?'裏込め材なし':(useSheet?'吸出し防止材':'裏込め砕石'),useNone?0:(useSheet?filter:backStone),useSheet?'m²':(useNone?'': 'm³'),useNone?0:(useSheet?num('Pfilter'):num('Pstone')),useNone?'なし':(useSheet?'（H1－H4－0.30）×L':'吸出し防止材面積×0.30')]
+ ];
+
+ const profit=num('profit')/100;
+ lastRows=q.map((r,i)=>{const amount=r[1]*r[3];const estUnit=roundEstimate(r[3]/Math.max(0.0001,1-profit));const estAmount=r[1]*estUnit;return {no:i+1,name:r[0],qty:r[1],unit:r[2],unitPrice:r[3],amount,estUnit,estAmount,memo:r[4]}});
+ lastTotal=lastRows.reduce((s,r)=>s+r.amount,0);lastEstimateTotal=lastRows.reduce((s,r)=>s+r.estAmount,0);
+ $('resultBody').innerHTML=lastRows.map(r=>`<tr><td>${r.name}</td><td>${r.unit==='本'?Math.round(r.qty).toLocaleString('ja-JP'):fmt(r.qty)}</td><td class="unit">${r.unit}</td><td>${yen(r.unitPrice)}</td><td>${yen(r.amount)}</td><td>${yen(r.estUnit)}</td><td>${yen(r.estAmount)}</td></tr>`).join('')+`<tr class="total-row"><td colspan="4">合計</td><td>${yen(lastTotal)}</td><td></td><td>${yen(lastEstimateTotal)}</td></tr><tr class="total-row"><td colspan="4">mあたり単価</td><td>${yen(L?lastTotal/L:0)}</td><td></td><td>${yen(L?lastEstimateTotal/L:0)}</td></tr>`;
+ $('kExc').textContent=fmt(excArea)+' m²';$('kWall').textContent=fmt(wallArea)+' m²';$('kTotal').textContent=yen(lastTotal);$('kPerM').textContent=yen(L?lastEstimateTotal/L:0);
+ $('memoBox').innerHTML=`<div class="memo-title">計算メモ</div><div class="memo-grid">
+ <div class="memo-item"><span class="memo-label">掘削</span><span>{e×（H4＋H2＋H3）＋（W3＋e）×D＋0.5×n×D²}×L＝${fmt(excavation)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">埋戻し</span><span>掘削－残土処理＝${fmt(back)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">残土処理</span><span>擁壁Co＋均しCo＋砕石＝${fmt(waste)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">床付け</span><span>（W3＋2e）×L＝${fmt(bed)} m²</span></div>
+ <div class="memo-item"><span class="memo-label">砕石</span><span>W3×H3×L＝${fmt(stone)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">均し型枠</span><span>H2×2面×L＝${fmt(leanForm)} m²</span></div>
+ <div class="memo-item"><span class="memo-label">均しコンクリート</span><span>W3×H2×L＝${fmt(lean)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">擁壁型枠</span><span>{H1＋√(H1²＋(W2－W1)²)}×L＝${fmt(form)} m²</span></div>
+ <div class="memo-item"><span class="memo-label">擁壁コンクリート</span><span>（W1＋W2）×H1÷2×L＝${fmt(wall)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">止水コンクリート型枠</span><span>L×0.05＝${fmt(waterstopForm)} m²</span></div>
+ <div class="memo-item"><span class="memo-label">止水コンクリート</span><span>L×0.30×0.05＝${fmt(waterstopConc)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">水抜きパイプ</span><span>ceil｛${fmt(filterBase)}÷3.3｝＝${drain} 本</span></div>
+ <div class="memo-item"><span class="memo-label">吸出し防止材</span><span>（H1－H4－0.30）×L＝${fmt(filterBase)} m²</span></div>
+ <div class="memo-item"><span class="memo-label">裏込め砕石</span><span>吸出し防止材面積×0.30＝${fmt(filterBase*0.30)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">掘削深さ D</span><span>H1＋H2＋H3＝${fmt(D)} m</span></div></div>`;
+ updateDrawing();preparePrint();
+}
+function updateDrawing(){
+ const useWaterstop=!!($('useWaterstop')&&$('useWaterstop').checked);
+ const useNone=!!($('backfillNone')&&$('backfillNone').checked);
+ const useStone=!!($('backfillStone')&&$('backfillStone').checked);
+ const useSheet=!!($('backfillSheet')&&$('backfillSheet').checked);
+ if($('waterstopGroup'))$('waterstopGroup').style.display=useWaterstop?'':'none';
+ if($('backfillStoneGroup'))$('backfillStoneGroup').style.display=useStone?'':'none';
+ if($('filterSheetGroup'))$('filterSheetGroup').style.display=useSheet?'':'none';
+ const H1=Math.max(.001,num('H1')),H2=num('H2'),H3=num('H3');
+ const H4=Math.min(H1,Math.max(0,num('H4')));
+ const W3=Math.max(.001,num('W3')),e=num('e'),n=num('n');
+ const baseY=620,topY=160,bottomY=760;
+ const h4TopY=baseY-(H4/H1)*(baseY-topY);
+
+ if(document.getElementById('h4Main')){
+   $('h4Main').setAttribute('y1',h4TopY);
+   $('h4Top').setAttribute('y1',h4TopY);
+   $('h4Top').setAttribute('y2',h4TopY);
+   $('h4Text').setAttribute('y',(h4TopY+baseY)/2+15);
+ }
+
+ // W3=460pxを基準として、eと1:nを図面へ反映
+ const pxPerM=460/W3;
+ const frontX=270-e*pxPerM;
+ const rearBaseX=730+e*pxPerM;
+ const D=H1+H2+H3;
+ const slopeTopX=rearBaseX+n*D*pxPerM;
+
+ const path=$('excavationPath');
+ if(path) path.setAttribute('d',`M${frontX} ${h4TopY} L${frontX} ${bottomY} L${rearBaseX} ${bottomY} L${slopeTopX} ${topY}`);
+
+ const fg=$('frontGroundGuide');
+ if(fg){
+   fg.setAttribute('y1',h4TopY);fg.setAttribute('y2',h4TopY);
+   fg.setAttribute('x2',270);
+   fg.setAttribute('x1',Math.max(40,frontX-120));
+ }
+
+ const slopeLabel=$('slopeLabel');
+ if(slopeLabel){
+   slopeLabel.textContent='1：n';
+   slopeLabel.setAttribute('x',(rearBaseX+slopeTopX)/2+18);
+   slopeLabel.setAttribute('y',(bottomY+topY)/2-18);
+ }
+
+ const setLine=(id,x1,x2,y)=>{const el=$(id);if(el){el.setAttribute('x1',x1);el.setAttribute('x2',x2);el.setAttribute('y1',y);el.setAttribute('y2',y)}};
+ const setTick=(id,x)=>{const el=$(id);if(el){el.setAttribute('x1',x);el.setAttribute('x2',x);el.setAttribute('y1',785);el.setAttribute('y2',825)}};
+
+ setLine('frontEDim',frontX,270,805);setTick('frontETick1',frontX);setTick('frontETick2',270);
+ setLine('rearEDim',730,rearBaseX,805);setTick('rearETick1',730);setTick('rearETick2',rearBaseX);
+
+ if($('frontELabel')) $('frontELabel').setAttribute('x',(frontX+270)/2);
+ if($('rearELabel')) $('rearELabel').setAttribute('x',(730+rearBaseX)/2);
+
+ // H1～H3は補助線の左側、H4はその内側へ固定配置
+ const h123X=50;
+ const h4X=213;
+ ['h1Text','h2Text','h3Text'].forEach(id=>{
+   const el=$(id);
+   if(el) el.setAttribute('x',h123X);
+ });
+ if($('h4Text')) $('h4Text').setAttribute('x',h4X);
+}
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
+['useWaterstop','backfillNone','backfillStone','backfillSheet'].forEach(id=>{const el=$(id);if(el)el.addEventListener('change',calc)});
+document.querySelectorAll('[data-dim]').forEach(el=>{el.addEventListener('focus',()=>document.querySelectorAll('.'+el.dataset.dim).forEach(x=>x.classList.add('active')));el.addEventListener('blur',()=>document.querySelectorAll('.'+el.dataset.dim).forEach(x=>x.classList.remove('active')))});
+$('calcBtn').onclick=calc;
+$('printReportBtn').onclick=()=>{calc();preparePrint();window.print()};
+$('resetBtn').onclick=()=>{if(confirm('入力内容を初期値に戻しますか？'))location.reload()};
+
+const localKey='gravity_wall_estimates_v1';
+const getLocal=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}};
+const setLocal=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+function refreshLocalEstimates(){
+ const a=getLocal(localKey);
+ $('savedEstimateList').innerHTML='<option value="">保存データなし</option>'+a.map((x,i)=>`<option value="${i}">${x.name}</option>`).join('');
+}
+function initLocalEstimateFallback(){
+ refreshLocalEstimates();
+ $('saveEstimateBtn').onclick=()=>{
+  const name=$('estimateName').value.trim()||'重力式擁壁';
+  const a=getLocal(localKey);a.push({name,values:values()});setLocal(localKey,a);
+  refreshLocalEstimates();alert('保存しました');
+ };
+ $('loadEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;applyValues(getLocal(localKey)[Number(i)]?.values)};
+ $('deleteEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;const a=getLocal(localKey);a.splice(Number(i),1);setLocal(localKey,a);refreshLocalEstimates()};
+}
+async function initCommonEstimateStorage(){
+ if(!window.MSAppAdapter || !window.MS){
+  console.warn('ms_common.js の共通保存機能を読み込めないため、端末内保存を使用します。');
+  initLocalEstimateFallback();
+  return;
+ }
+ await MSAppAdapter.init({
+  appType:APP_TYPE,
+  defaultName:'重力式擁壁 積算',
+  projectNameId:'projectName',
+  estimateNameId:'estimateName',
+  estimateSelectId:'savedEstimateList',
+  saveEstimateBtnId:'saveEstimateBtn',
+  loadEstimateBtnId:'loadEstimateBtn',
+  deleteEstimateBtnId:'deleteEstimateBtn',
+  prefix:'gravityWall',
+  fieldIds:inputIds,
+  priceIds:gwPriceIds,
+  calc:calc,
+  collectValues:values,
+  applyValues:applyValues,
+  collectPrices:gwCollectPrices,
+  applyPrices:applyCommonPriceFields
+ });
+}
+
+// 共有単価マスター（L型擁壁と同じ共通処理）
+const gwPriceIds=['Pexc','Pspoil','Pback','Pbed','Pstone','PleanForm','Plean','Pconc','Pform','Pdrain','Pfilter'];
+
+function gwCollectPrices(){
+ const prices={};
+ gwPriceIds.forEach(id=>{
+  const el=$(id);
+  if(el && el.value!=='') prices[id]=Number(el.value);
+ });
+ return prices;
+}
+
+function applyCommonPriceFields(prices){
+ if(!window.MSPriceMaster)return;
+ MSPriceMaster.applyFields(prices||{});
+ calc();
+}
+
+function gwRenderCommonPrices(){
+ const select=$('gwCommonPriceList');
+ const note=$('gwCommonPriceNote');
+ if(!select)return;
+
+ if(!window.MSPriceMaster){
+  select.innerHTML='<option value="">共有単価を利用できません</option>';
+  select.disabled=true;
+  if(note)note.textContent='ms_common.jsの共有単価マスター機能を読み込めませんでした。';
+  return;
+ }
+
+ MSPriceMaster.ensureMasters();
+ const current=select.value||MSPriceMaster.activeId();
+ select.innerHTML=MSPriceMaster.list()
+  .map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
+ select.value=current;
+ if(!select.value)select.value=MSPriceMaster.activeId();
+
+ const active=MSPriceMaster.getActive();
+ if(note){
+  note.textContent='現在使用中：'+((active&&active.name)||'標準')+
+   '（積算保存時に単価も固定保存します）';
+ }
+}
+
+function gwSelectedCommonPrice(){
+ if(!window.MSPriceMaster)return null;
+ const select=$('gwCommonPriceList');
+ return MSPriceMaster.list().find(x=>x.id===(select&&select.value))
+  || MSPriceMaster.getActive();
+}
+
+$('gwCommonPriceList').addEventListener('change',function(){
+ const item=window.MSPriceMaster
+  ? MSPriceMaster.list().find(x=>x.id===this.value)
+  : null;
+ const note=$('gwCommonPriceNote');
+ if(note&&item){
+  note.textContent='選択中：'+(item.name||'単価')+
+   '　※まだ読み込んでいません。「呼出」を押すと使用中単価として確定します。';
+ }
+});
+
+$('gwApplyCommonPriceBtn').addEventListener('click',function(){
+ const item=gwSelectedCommonPrice();
+ if(!item)return alert('共有単価を読み込めません。');
+ MSPriceMaster.setActive(item.id);
+ applyCommonPriceFields(item.prices||{});
+ gwRenderCommonPrices();
+ alert('共通単価「'+(item.name||'標準')+'」を読み込みました');
+});
+
+$('gwSaveCommonPriceBtn').addEventListener('click',function(){
+ if(!window.MSPriceMaster)return alert('共有単価マスターを利用できません。');
+ const item=gwSelectedCommonPrice();
+ if(!item)return;
+ MSPriceMaster.update({id:item.id,name:item.name,prices:gwCollectPrices()});
+ MSPriceMaster.setActive(item.id);
+ gwRenderCommonPrices();
+ alert('「'+item.name+'」へ上書き保存しました');
+});
+
+$('gwSaveAsCommonPriceBtn').addEventListener('click',function(){
+ if(!window.MSPriceMaster)return alert('共有単価マスターを利用できません。');
+ const active=MSPriceMaster.getActive();
+ const name=prompt('新しい単価名を入力してください',((active&&active.name)||'標準')+' コピー');
+ if(!name||!name.trim())return;
+ const item=MSPriceMaster.create(name.trim(),gwCollectPrices());
+ MSPriceMaster.setActive(item.id);
+ gwRenderCommonPrices();
+ $('gwCommonPriceList').value=item.id;
+ alert('「'+item.name+'」を保存しました');
+});
+
+$('gwRenameCommonPriceBtn').addEventListener('click',function(){
+ if(!window.MSPriceMaster)return alert('共有単価マスターを利用できません。');
+ const item=gwSelectedCommonPrice();
+ if(!item)return;
+ const name=prompt('新しい単価名を入力してください',item.name||'');
+ if(!name||!name.trim()||name.trim()===item.name)return;
+ MSPriceMaster.update({id:item.id,name:name.trim(),prices:item.prices||{}});
+ gwRenderCommonPrices();
+ $('gwCommonPriceList').value=item.id;
+ alert('単価名を「'+name.trim()+'」へ変更しました');
+});
+
+$('gwDeleteCommonPriceBtn').addEventListener('click',function(){
+ if(!window.MSPriceMaster)return alert('共有単価マスターを利用できません。');
+ const item=gwSelectedCommonPrice();
+ if(!item)return;
+ if((item.name||'')==='標準')return alert('標準単価は削除できません。');
+ if(!confirm('共有単価「'+item.name+'」を削除しますか？'))return;
+ MSPriceMaster.remove(item.id);
+ gwRenderCommonPrices();
+ calc();
+});
+
+function preparePrint(){
+ $('printProject').textContent='工事名：'+($('projectName').value||'');
+ $('printEstimate').textContent='積算名称：'+($('estimateName').value||'-');
+ const now=new Date();
+ $('printDate').textContent='作成日：'+now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+
+ $('printBody').innerHTML=lastRows.map((r,i)=>`<tr>
+   <td>${i+1}. ${r.name}</td>
+   <td>${r.unit==='本'?Math.round(r.qty).toLocaleString('ja-JP'):fmt(r.qty)}</td>
+   <td>${r.unit}</td>
+   <td>${Math.round(r.unitPrice).toLocaleString('ja-JP')}</td>
+   <td>${Math.round(r.amount).toLocaleString('ja-JP')}</td>
+   <td>${Math.round(r.estUnit).toLocaleString('ja-JP')}</td>
+   <td class="estimate-amount">${Math.round(r.estAmount).toLocaleString('ja-JP')}</td>
+ </tr>`).join('')+
+ `<tr class="total-print">
+   <td colspan="4" style="text-align:right">合計</td>
+   <td>${Math.round(lastTotal).toLocaleString('ja-JP')}</td>
+   <td></td>
+   <td class="estimate-amount">${Math.round(lastEstimateTotal).toLocaleString('ja-JP')}</td>
+ </tr>`+
+ `<tr class="total-print">
+   <td colspan="4" style="text-align:right">mあたり単価</td>
+   <td>${Math.round(num('L')?lastTotal/num('L'):0).toLocaleString('ja-JP')} 円/m</td>
+   <td></td>
+   <td class="estimate-amount">${Math.round(num('L')?lastEstimateTotal/num('L'):0).toLocaleString('ja-JP')} 円/m</td>
+ </tr>`;
+
+ $('printWall').innerHTML=$('wallSvg').outerHTML;
+ const printSvg=$('printWall').querySelector('svg');
+ if(printSvg){
+   const pWall=printSvg.querySelector('#wallShape');
+   const pLean=printSvg.querySelector('#leanShape');
+   const pStone=printSvg.querySelector('#stoneShape');
+   if(pWall) pWall.setAttribute('fill','#e3d2b8');
+   if(pLean) pLean.setAttribute('fill','#e6e6e6');
+   if(pStone) pStone.setAttribute('fill','#d2b58a');
+ }
+
+ const mm=v=>Math.round(v*1000).toLocaleString('ja-JP');
+ const dims=[
+   ['W1','天端幅',mm(num('W1'))],
+   ['W2','擁壁底幅',mm(num('W2'))],
+   ['W3','均し・砕石幅',mm(num('W3'))],
+   ['H1','擁壁高さ',mm(num('H1'))],
+   ['H2','均しコン厚',mm(num('H2'))],
+   ['H3','砕石厚',mm(num('H3'))],
+   ['H4','土被り',mm(num('H4'))],
+   ['e','掘削余裕',mm(num('e'))],
+   ['n','背面法面勾配','1：'+fmt(num('n'),2)]
+ ];
+ $('printDimensions').innerHTML=dims.map(d=>`<tr><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td></tr>`).join('');
+
+ $('printSymbolNote').innerHTML=`
+   <div>H1：擁壁高さ</div><div>W1：天端幅</div>
+   <div>H2：均しコン厚</div><div>W2：擁壁底幅</div>
+   <div>H3：砕石厚</div><div>W3：均し・砕石幅</div>
+   <div>H4：土被り</div><div>e：掘削余裕</div>`;
+
+ $('printFormulaBox').innerHTML=`
+   <div class="print-formula-row"><b>掘削</b><span>：</span><span>{e×(H4＋H2＋H3)＋(W3＋e)×D＋0.5×n×D²}×L</span></div>
+   <div class="print-formula-row"><b>床付け</b><span>：</span><span>(W3＋2e)×L</span></div>
+   <div class="print-formula-row"><b>砕石</b><span>：</span><span>W3×H3×L</span></div>
+   <div class="print-formula-row"><b>均し型枠</b><span>：</span><span>H2×2×L</span></div>
+   <div class="print-formula-row"><b>均しコンクリート</b><span>：</span><span>W3×H2×L</span></div>
+   <div class="print-formula-row"><b>擁壁コンクリート</b><span>：</span><span>(W1＋W2)×H1÷2×L</span></div>
+    <div class="print-formula-row"><b>止水Co</b><span>：</span><span>L×0.30×0.05</span></div>
+    <div class="print-formula-row"><b>水抜き</b><span>：</span><span>ceil｛吸出し防止材÷3.3｝</span></div>
+    <div class="print-formula-row"><b>吸出し防止材</b><span>：</span><span>(H1－H4－0.30)×L</span></div>
+    <div class="print-formula-row"><b>裏込め砕石</b><span>：</span><span>吸出し防止材×0.30</span></div>`;
+}
+async function loadCurrentProjectName(){try{if(window.MS?.ready?.then)await MS.ready;if(window.MS?.init)await MS.init();if(window.MS?.Project?.getCurrent){const p=await MS.Project.getCurrent();if(p?.name)$('projectName').value=p.name}}catch(e){}}
+window.addEventListener('load',async function(){
+ await loadCurrentProjectName();
+ try{
+  await initCommonEstimateStorage();
+ }catch(error){
+  console.error(error);
+  initLocalEstimateFallback();
+ }
+
+ if(window.MSPriceMaster){
+  MSPriceMaster.ensureMasters();
+  const active=MSPriceMaster.getActive();
+  if(active&&active.prices){
+   applyCommonPriceFields(active.prices);
+  }
+ }
+
+ gwRenderCommonPrices();
+ calc();
+});
+
+window.addEventListener('ms-price-master-changed',function(){
+ if(!window.MSPriceMaster)return;
+ const active=MSPriceMaster.getActive();
+ if(active&&active.prices){
+  applyCommonPriceFields(active.prices);
+ }
+ gwRenderCommonPrices();
+});
+</script>
+</body></html>
