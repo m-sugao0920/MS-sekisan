@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>プレキャスト集水桝 積算アプリ 003</title>
+<title>プレキャスト集水桝 積算アプリ 004</title>
 <style>
 :root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
@@ -68,7 +68,7 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 </style>
 
 </head><body>
-<header><div class="wrap"><div><h1>プレキャスト集水桝 積算アプリ 003</h1><div class="sub">内寸法・外寸法・基数から、土工／地業／製品代／据付け費／蓋を自動算出</div></div><a class="home" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<header><div class="wrap"><div><h1>プレキャスト集水桝 積算アプリ 004</h1><div class="sub">内寸法・外寸法・基数から、土工／地業／製品代／据付け費／蓋を自動算出</div></div><a class="home" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><svg id="sectionSvg" class="section-svg"
   xmlns="http://www.w3.org/2000/svg"
@@ -171,14 +171,19 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
     fill="url(#pcConcrete)" class="outline"/>
   <text x="600" y="694" text-anchor="middle" class="txt" style="font-size:25px">インバート</text>
 
+  <!-- 敷モルタル -->
+  <rect x="350" y="720" width="500" height="20"
+    fill="#d8c3a5" class="outline"/>
+  <text x="920" y="738" class="txt" style="font-size:24px">敷モルタル</text>
+
   <!-- 均しコンクリート -->
-  <rect x="300" y="720" width="600" height="45"
+  <rect x="300" y="740" width="600" height="45"
     fill="url(#pcLean)" class="outline"/>
 
   <!-- 砕石 -->
-  <rect x="300" y="765" width="600" height="95"
+  <rect x="300" y="785" width="600" height="95"
     fill="url(#pcStone)" class="outline"/>
-  <text x="600" y="825" text-anchor="middle" class="txt">砕石</text>
+  <text x="600" y="845" text-anchor="middle" class="txt">砕石</text>
 
   <!-- W1 -->
   <line x1="350" y1="120" x2="510" y2="120" class="dim"/>
@@ -212,23 +217,29 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
   <text x="160" y="695" text-anchor="middle"
     class="dimText dim-h2">H2</text>
 
-  <!-- H3 -->
-  <line x1="220" y1="720" x2="220" y2="765" class="dim"/>
-  <line x1="220" y1="765" x2="290" y2="765" class="ext"/>
-  <text x="160" y="753" text-anchor="middle"
-    class="dimText dim-h3">H3</text>
+  <!-- H3（敷モルタル厚） -->
+  <line x1="220" y1="720" x2="220" y2="740" class="dim"/>
+  <line x1="220" y1="740" x2="290" y2="740" class="ext"/>
+  <text x="160" y="738" text-anchor="middle"
+    class="dimText dim-h3" style="font-size:28px">H3</text>
 
-  <!-- H4 -->
-  <line x1="220" y1="765" x2="220" y2="860" class="dim"/>
-  <line x1="220" y1="860" x2="290" y2="860" class="ext"/>
-  <text x="160" y="825" text-anchor="middle"
+  <!-- H4（均しコンクリート厚） -->
+  <line x1="220" y1="740" x2="220" y2="785" class="dim"/>
+  <line x1="220" y1="785" x2="290" y2="785" class="ext"/>
+  <text x="160" y="777" text-anchor="middle"
     class="dimText dim-h4">H4</text>
 
+  <!-- H5（砕石厚） -->
+  <line x1="220" y1="785" x2="220" y2="880" class="dim"/>
+  <line x1="220" y1="880" x2="290" y2="880" class="ext"/>
+  <text x="160" y="845" text-anchor="middle"
+    class="dimText dim-h5">H5</text>
+
   <!-- W5×W6 -->
-  <line x1="300" y1="930" x2="900" y2="930" class="dim"/>
-  <line x1="300" y1="870" x2="300" y2="940" class="ext"/>
-  <line x1="900" y1="870" x2="900" y2="940" class="ext"/>
-  <text x="600" y="908" text-anchor="middle"
+  <line x1="300" y1="950" x2="900" y2="950" class="dim"/>
+  <line x1="300" y1="890" x2="300" y2="960" class="ext"/>
+  <line x1="900" y1="890" x2="900" y2="960" class="ext"/>
+  <text x="600" y="928" text-anchor="middle"
     class="dimText dim-w5 dim-w6">W5×W6</text>
 </svg><div class="note">W2×W3＝内寸法、W5×W6＝床付け・均し・砕石の外寸法です。製品の外寸法はW1＋W2＋W4、W1＋W3＋W4として計算します。</div>
 <div class="panel blue"><div class="save-line"><label>現場名</label><input id="projectName" placeholder="例：○○様邸 外構工事"></div><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：プレキャスト集水桝 600×600 1基"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div></div>
@@ -242,14 +253,16 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 <div class="row"><div><label>W2（内幅）</label><input id="W2" type="number" step="0.001" value="0.600" data-dim="dim-w2"></div><div><label>W3（内奥行）</label><input id="W3" type="number" step="0.001" value="0.600" data-dim="dim-w3"></div></div>
 <div class="row"><div><label>W5（地業外幅）</label><input id="W5" type="number" step="0.001" value="1.000" data-dim="dim-w5"></div><div><label>W6（地業外奥行）</label><input id="W6" type="number" step="0.001" value="1.000" data-dim="dim-w6"></div></div>
 <div class="row"><div><label>H1（内空高さ）</label><input id="H1" type="number" step="0.001" value="0.800" data-dim="dim-h1"></div><div><label>H2（インバート厚）</label><input id="H2" type="number" step="0.001" value="0.150" data-dim="dim-h2"></div></div>
-<div class="row"><div><label>H3（均しコン厚）</label><input id="H3" type="number" step="0.001" value="0.050" data-dim="dim-h3"></div><div><label>H4（砕石厚）</label><input id="H4" type="number" step="0.001" value="0.100" data-dim="dim-h4"></div></div>
+<div class="row"><div><label>H3（敷モルタル厚）</label><input id="H3" type="number" step="0.001" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコン厚）</label><input id="H4" type="number" step="0.001" value="0.050" data-dim="dim-h4"></div></div>
+<div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="number" step="0.001" value="0.100" data-dim="dim-h5"></div><div></div></div>
 <div class="hr"></div><div class="sectionTitle">共通条件</div><div class="row"><div><label>基数（基）</label><input id="N" type="number" step="1" value="1"></div><div><label>掘削余裕（四周・m）</label><input id="E" type="number" step="0.001" value="0.100"></div></div><div class="row"><div><label>利益率（%）</label><input id="ProfitRate" type="number" step="0.1" min="0" max="99.9" value="20"></div><div><label>見積単価の丸め</label><input type="text" value="1,000円未満：10円／以上：100円" readonly></div></div>
-<div class="note">躯体外幅＝W1＋W2＋W4、躯体外奥行＝W1＋W3＋W4。インバートコンクリート＝W2×W3×H2×基数、埋戻し＝掘削－残土処理です。</div>
+<div class="note">躯体外幅＝W1＋W2＋W4、躯体外奥行＝W1＋W3＋W4。インバートコンクリート＝W2×W3×H2×基数、敷モルタル＝W5×W6×H3×基数、埋戻し＝掘削－残土処理です。</div>
 <div class="hr"></div><div class="sectionTitle">単価（円）</div>
 <div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" value="4500"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" value="3000"></div></div>
 <div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" value="4000"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" value="250"></div></div>
 <div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="number" value="8500"></div><div><label>均し型枠 単価/m²</label><input id="Pnform" type="number" value="5500"></div></div>
-<div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" type="number" value="22000"></div><div><label>インバートコンクリート 単価/m³</label><input id="Pinvert" type="number" value="22000"></div></div>
+<div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" type="number" value="22000"></div><div><label>敷モルタル 単価/m³</label><input id="Pmortar" type="number" value="34000"></div></div>
+<div class="row"><div><label>インバートコンクリート 単価/m³</label><input id="Pinvert" type="number" value="22000"></div><div></div></div>
 <div class="row"><div><label>製品代 単価/基</label><input id="Pproduct" type="number" value="0"></div><div><label>据付け費 単価/基</label><input id="Pinstall" type="number" value="0"></div></div>
 <div class="row"><div><label>グレーチング蓋 単価/枚</label><input id="Pgrating" type="number" value="0"></div><div><label>必要枚数</label><input id="Ngrating" type="number" value="0"></div></div>
 <div class="row"><div><label>コンクリート蓋 単価/枚</label><input id="Pconcllid" type="number" value="0"></div><div><label>必要枚数</label><input id="Nconcllid" type="number" value="0"></div></div>
@@ -260,12 +273,13 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 <table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultBody"></tbody><tfoot><tr class="total-row"><td colspan="4">合計</td><td id="a_total">0</td><td></td><td id="a_est_total">0</td></tr><tr class="total-row"><td colspan="3">1基あたり単価（原価）</td><td colspan="2" id="a_unit">0 円/基</td><td>1基あたり単価（見積）</td><td id="a_est_unit">0 円/基</td></tr></tfoot></table>
 <div class="result-memo-box" aria-label="計算メモ"><div class="result-memo-title">計算メモ</div><div class="result-memo-grid">
 <div class="result-memo-item"><b>掘削</b><span>(W5＋2E)×(W6＋2E)×総深さ×基数</span></div>
-<div class="result-memo-item"><b>残土処理</b><span>砕石＋均しコンクリート＋製品占有体積</span></div>
+<div class="result-memo-item"><b>残土処理</b><span>砕石＋均しコンクリート＋敷モルタル＋製品占有体積</span></div>
 <div class="result-memo-item"><b>埋戻し</b><span>掘削－残土処理</span></div>
 <div class="result-memo-item"><b>床付け</b><span>W5×W6×基数</span></div>
-<div class="result-memo-item"><b>砕石地業</b><span>W5×W6×H4×基数</span></div>
-<div class="result-memo-item"><b>均し型枠</b><span>2×(W5＋W6)×H3×基数</span></div>
-<div class="result-memo-item"><b>均しコンクリート</b><span>W5×W6×H3×基数</span></div>
+<div class="result-memo-item"><b>砕石地業</b><span>W5×W6×H5×基数</span></div>
+<div class="result-memo-item"><b>均し型枠</b><span>2×(W5＋W6)×H4×基数</span></div>
+<div class="result-memo-item"><b>均しコンクリート</b><span>W5×W6×H4×基数</span></div>
+<div class="result-memo-item"><b>敷モルタル</b><span>W5×W6×H3×基数</span></div>
 <div class="result-memo-item"><b>インバート</b><span>W2×W3×H2×基数</span></div>
 <div class="result-memo-item"><b>製品代</b><span>基数×製品単価</span></div>
 <div class="result-memo-item"><b>据付け費</b><span>基数×据付け単価</span></div>
@@ -274,24 +288,24 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 </div></div>
 <div class="memo-box"><label for="Memo">メモ</label><textarea id="Memo" placeholder="積算に関するメモを入力してください"></textarea></div></div></section>
 </div>
-<div class="print-wrap" id="printWrap"><div class="print-actions"><button class="primary" onclick="window.print()">印刷</button><button class="ghost" onclick="closePreview()">終了</button></div><div class="print-sheet"><div class="print-head"><div id="printProject">現場名：</div><div id="printEstimate">積算名称：</div><div id="printDate"></div></div><table class="print-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="printRows"></tbody><tfoot><tr><th colspan="4">合計</th><td id="printTotal"></td><td></td><td id="printEstimateTotal"></td></tr><tr class="unit-price-row"><th colspan="3">1基あたり単価（原価）</th><td colspan="2" id="printUnit"></td><th>1基あたり単価（見積）</th><td id="printEstimateUnit"></td></tr></tfoot></table><div class="print-note"><div>※ 数量は入力基数に対する数量です。<span id="printMemo"></span></div><div>単位：mm（特記なき場合）</div></div><div style="height:4mm"></div><div class="print-bottom"><div class="print-box"><div class="print-title">断面図（寸法図）</div><div id="printSvg"></div></div><div class="print-box"><div class="print-title">寸法一覧</div><table class="dim-table"><thead><tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr></thead><tbody id="dimRows"></tbody></table><div class="spec">プレキャスト集水桝：製品規格による<br>インバートコンクリート：18-8-25 BB<br>均しコンクリート：18-8-25 BB<br>砕石地業：RC-40</div></div></div></div></div>
+<div class="print-wrap" id="printWrap"><div class="print-actions"><button class="primary" onclick="window.print()">印刷</button><button class="ghost" onclick="closePreview()">終了</button></div><div class="print-sheet"><div class="print-head"><div id="printProject">現場名：</div><div id="printEstimate">積算名称：</div><div id="printDate"></div></div><table class="print-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="printRows"></tbody><tfoot><tr><th colspan="4">合計</th><td id="printTotal"></td><td></td><td id="printEstimateTotal"></td></tr><tr class="unit-price-row"><th colspan="3">1基あたり単価（原価）</th><td colspan="2" id="printUnit"></td><th>1基あたり単価（見積）</th><td id="printEstimateUnit"></td></tr></tfoot></table><div class="print-note"><div>※ 数量は入力基数に対する数量です。<span id="printMemo"></span></div><div>単位：mm（特記なき場合）</div></div><div style="height:4mm"></div><div class="print-bottom"><div class="print-box"><div class="print-title">断面図（寸法図）</div><div id="printSvg"></div></div><div class="print-box"><div class="print-title">寸法一覧</div><table class="dim-table"><thead><tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr></thead><tbody id="dimRows"></tbody></table><div class="spec">プレキャスト集水桝：製品規格による<br>インバートコンクリート：18-8-25 BB<br>敷モルタル：1：3<br>均しコンクリート：18-8-25 BB<br>砕石地業：RC-40</div></div></div></div></div>
 </main>
 <div class="modal" id="productModal"><div class="modalbox"><h3>プレキャスト集水桝 製品単価マスター</h3><div class="row"><div><label>メーカー</label><select id="pmMaker"><option value="">すべて</option></select></div><div><label>検索</label><input id="pmKeyword"></div></div><div class="product-list" id="pmList"></div><div class="modalactions"><button class="ghost" id="pmClose">閉じる</button></div></div></div>
 <div class="modal" id="registerModal"><div class="modalbox"><h3>現在の製品単価を登録</h3><div class="row"><div><label>メーカー</label><input id="regMaker"></div><div><label>登録名</label><input id="regName"></div></div><div class="row"><div><label>規格</label><input id="regSpec"></div><div><label>登録日</label><input id="regRegisteredDate" type="date"></div></div><div class="row"><div><label>備考</label><input id="regNote"></div><div></div></div><div class="note" id="regSummary"></div><div class="modalactions"><button class="ghost" id="regCancel">取消</button><button class="primary" id="regSave">登録</button></div></div></div>
 <script>
 const $=id=>document.getElementById(id), num=id=>Number($(id)?.value||0), fmt=n=>Number(n||0).toLocaleString('ja-JP',{minimumFractionDigits:3,maximumFractionDigits:3}), yen=n=>Math.round(Number(n||0)).toLocaleString('ja-JP');
 function roundEstimateUnit(x){if(!Number.isFinite(x)||x<=0)return 0;const step=x<1000?10:100;return Math.round(x/step)*step;}
-const items=[['exc','掘削','m³'],['back','埋戻し','m³'],['spoil','残土処理','m³'],['bed','床付け','m²'],['stone','砕石地業','m³'],['nform','均し型枠','m²'],['lean','均しコンクリート','m³'],['invert','インバートコンクリート','m³'],['product','プレキャスト集水桝 製品代','基'],['install','据付け費','基'],['grating','グレーチング蓋','枚'],['concllid','コンクリート蓋','枚'],['lidwork','蓋掛け手間','枚']];
+const items=[['exc','掘削','m³'],['back','埋戻し','m³'],['spoil','残土処理','m³'],['bed','床付け','m²'],['stone','砕石地業','m³'],['nform','均し型枠','m²'],['lean','均しコンクリート','m³'],['mortar','敷モルタル','m³'],['invert','インバートコンクリート','m³'],['product','プレキャスト集水桝 製品代','基'],['install','据付け費','基'],['grating','グレーチング蓋','枚'],['concllid','コンクリート蓋','枚'],['lidwork','蓋掛け手間','枚']];
 let last={};
 function calc(){
- const W1=num('W1'),W2=num('W2'),W3=num('W3'),W4=num('W4'),W5=num('W5'),W6=num('W6'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),N=Math.max(0,num('N')),E=num('E');
- const ow=W1+W2+W4, od=W1+W3+W4, productDepth=H1+H2, depth=productDepth+H3+H4;
+ const W1=num('W1'),W2=num('W2'),W3=num('W3'),W4=num('W4'),W5=num('W5'),W6=num('W6'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),H5=num('H5'),N=Math.max(0,num('N')),E=num('E');
+ const ow=W1+W2+W4, od=W1+W3+W4, productDepth=H1+H2, depth=productDepth+H3+H4+H5;
  const exc=(W5+2*E)*(W6+2*E)*depth*N;
  const productVolume=ow*od*productDepth*N;
- const stone=W5*W6*H4*N, lean=W5*W6*H3*N, invert=W2*W3*H2*N, spoil=stone+lean+productVolume, back=Math.max(0,exc-spoil), bed=W5*W6*N, nform=2*(W5+W6)*H3*N;
+ const stone=W5*W6*H5*N, lean=W5*W6*H4*N, mortar=W5*W6*H3*N, invert=W2*W3*H2*N, spoil=stone+lean+mortar+productVolume, back=Math.max(0,exc-spoil), bed=W5*W6*N, nform=2*(W5+W6)*H4*N;
  const product=N, install=N, grating=num('Ngrating'), concllid=num('Nconcllid'), lidwork=grating+concllid; $('Nlidwork').value=lidwork;
- const qty={exc,back,spoil,bed,stone,nform,lean,invert,product,install,grating,concllid,lidwork};
- const price={exc:num('Pexc'),back:num('Pback'),spoil:num('Pspoil'),bed:num('Pbed'),stone:num('Pstone'),nform:num('Pnform'),lean:num('Plean'),invert:num('Pinvert'),product:num('Pproduct'),install:num('Pinstall'),grating:num('Pgrating'),concllid:num('Pconcllid'),lidwork:num('Plidwork')};
+ const qty={exc,back,spoil,bed,stone,nform,lean,mortar,invert,product,install,grating,concllid,lidwork};
+ const price={exc:num('Pexc'),back:num('Pback'),spoil:num('Pspoil'),bed:num('Pbed'),stone:num('Pstone'),nform:num('Pnform'),lean:num('Plean'),mortar:num('Pmortar'),invert:num('Pinvert'),product:num('Pproduct'),install:num('Pinstall'),grating:num('Pgrating'),concllid:num('Pconcllid'),lidwork:num('Plidwork')};
  const profitRate=Math.min(99.9,Math.max(0,num('ProfitRate'))), divisor=Math.max(.001,1-profitRate/100);
  const amount={},estimatePrice={},estimateAmount={};let total=0,estimateTotal=0;
  items.forEach(([k])=>{amount[k]=qty[k]*price[k];estimatePrice[k]=roundEstimateUnit(price[k]/divisor);estimateAmount[k]=qty[k]*estimatePrice[k];total+=amount[k];estimateTotal+=estimateAmount[k]});
@@ -305,7 +319,7 @@ function buildPrint(){if(!last.qty)return;$('printProject').textContent='現場�
  printClone.id='printSectionSvg';printClone.setAttribute('viewBox','80 45 1040 900');printClone.setAttribute('preserveAspectRatio','xMidYMid meet');printClone.style.width='100%';printClone.style.height='100%';printClone.style.overflow='visible';
  const idMap={pcConcrete:'printPcConcrete',pcLean:'printPcLean',pcStone:'printPcStone',pcShadow:'printPcShadow'};Object.entries(idMap).forEach(([oldId,newId])=>{const node=printClone.querySelector('#'+oldId);if(node)node.id=newId});
  printClone.querySelectorAll('[fill]').forEach(el=>{const v=el.getAttribute('fill');if(v&&v.includes('url(#pcConcrete)'))el.setAttribute('fill','url(#printPcConcrete)');if(v&&v.includes('url(#pcLean)'))el.setAttribute('fill','url(#printPcLean)');if(v&&v.includes('url(#pcStone)'))el.setAttribute('fill','url(#printPcStone)')});printClone.querySelectorAll('[filter]').forEach(el=>el.removeAttribute('filter'));$('printSvg').replaceChildren(printClone);
- const dims=[['W1','左・前壁厚'],['W2','内幅'],['W3','内奥行'],['W4','右・後壁厚'],['W5','地業外幅'],['W6','地業外奥行'],['H1','内空高さ'],['H2','インバート厚'],['H3','均しコンクリート厚'],['H4','砕石厚']];$('dimRows').innerHTML=dims.map(([id,n])=>`<tr><td>${id}</td><td>${n}</td><td>${yen(num(id)*1000)}</td></tr>`).join('')}
+ const dims=[['W1','左・前壁厚'],['W2','内幅'],['W3','内奥行'],['W4','右・後壁厚'],['W5','地業外幅'],['W6','地業外奥行'],['H1','内空高さ'],['H2','インバート厚'],['H3','敷モルタル厚'],['H4','均しコンクリート厚'],['H5','砕石厚']];$('dimRows').innerHTML=dims.map(([id,n])=>`<tr><td>${id}</td><td>${n}</td><td>${yen(num(id)*1000)}</td></tr>`).join('')}
 function closePreview(){document.body.classList.remove('preview')}window.closePreview=closePreview;window.addEventListener('afterprint',closePreview);
 $('calcBtn').onclick=calc;$('printBtn').onclick=()=>{calc();window.print()};$('resetBtn').onclick=()=>{if(confirm('入力を初期値に戻しますか？'))location.reload()};
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));document.querySelectorAll('[data-dim]').forEach(el=>{const cls=el.dataset.dim;el.addEventListener('focus',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.add('active')));el.addEventListener('blur',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.remove('active')))});
@@ -315,7 +329,7 @@ async function ensureProject(){if(!window.MS)return null;await MS.init();let p=a
 async function refreshSaved(selected){if(!window.MS)return;const p=await ensureProject(),list=await MS.Estimate.listByProjectAndApp(p.id,APP_TYPE),s=$('savedEstimateList');s.innerHTML=list.length?list.map(x=>`<option value="${x.id}">${x.name}</option>`).join(''):'<option value="">保存データなし</option>';if(selected)s.value=selected}
 $('saveEstimateBtn').onclick=async()=>{try{await ensureProject();calc();const s=$('savedEstimateList'),name=$('estimateName').value.trim()||'プレキャスト集水桝 積算';const item={id:s.value||undefined,name,values:values(),data:{values:values()},amount:last.total,totalAmount:last.total};const saved=await MS.Estimate.save(APP_TYPE,item);await refreshSaved(saved.id);alert('保存しました')}catch(e){alert(e.message||'保存できませんでした')}};
 $('loadEstimateBtn').onclick=async()=>{const id=$('savedEstimateList').value;if(!id)return alert('呼び出すデータを選択してください');const x=await MS.Estimate.get(id);if(x){$('estimateName').value=x.name||'';applyValues(x.values||(x.data&&x.data.values)||{})}};$('deleteEstimateBtn').onclick=async()=>{const id=$('savedEstimateList').value;if(!id)return;if(confirm('削除しますか？')){await MS.Estimate.delete(id);await refreshSaved()}};
-const priceIds=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pinvert','Pproduct','Pinstall','Pgrating','Pconcllid','Plidwork'];function collectPrices(){const o={};priceIds.forEach(id=>o[id]=num(id));return o}function applyPrices(p){const aliases={Pexc:['Pexc','excavation'],Pback:['Pback','backfill'],Pspoil:['Pspoil','spoil'],Pbed:['Pbed','bed'],Pstone:['Pstone','stone'],Pnform:['Pnform','levelingForm'],Plean:['Plean','blindingConcrete'],Pinvert:['Pinvert','invertConcrete'],Pproduct:['Pproduct','productPrice'],Pinstall:['Pinstall','installationPrice'],Pgrating:['Pgrating','gratingCover'],Pconcllid:['Pconcllid','concreteCover'],Plidwork:['Plidwork','coverLabor']};Object.entries(aliases).forEach(([id,ks])=>{for(const k of ks)if(p&&p[k]!==undefined){$(id).value=p[k];break}});calc()}
+const priceIds=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pmortar','Pinvert','Pproduct','Pinstall','Pgrating','Pconcllid','Plidwork'];function collectPrices(){const o={};priceIds.forEach(id=>o[id]=num(id));return o}function applyPrices(p){const aliases={Pexc:['Pexc','excavation'],Pback:['Pback','backfill'],Pspoil:['Pspoil','spoil'],Pbed:['Pbed','bed'],Pstone:['Pstone','stone'],Pnform:['Pnform','levelingForm'],Plean:['Plean','blindingConcrete'],Pmortar:['Pmortar','mortar'],Pinvert:['Pinvert','invertConcrete'],Pproduct:['Pproduct','productPrice'],Pinstall:['Pinstall','installationPrice'],Pgrating:['Pgrating','gratingCover'],Pconcllid:['Pconcllid','concreteCover'],Plidwork:['Plidwork','coverLabor']};Object.entries(aliases).forEach(([id,ks])=>{for(const k of ks)if(p&&p[k]!==undefined){$(id).value=p[k];break}});calc()}
 function renderPrices(){if(!window.MSPriceMaster)return;MSPriceMaster.ensureMasters();const s=$('commonPriceList');s.innerHTML=MSPriceMaster.list().map(x=>`<option value="${x.id}">${x.name}</option>`).join('');s.value=MSPriceMaster.activeId();const a=MSPriceMaster.getActive();$('commonPriceNote').textContent='現在使用中：'+(a.name||'標準')}
 $('applyCommonPriceBtn').onclick=()=>{const x=MSPriceMaster.list().find(x=>x.id===$('commonPriceList').value);if(x){MSPriceMaster.setActive(x.id);applyPrices(x.prices)}};$('saveCommonPriceBtn').onclick=()=>{const id=$('commonPriceList').value;MSPriceMaster.update(id,collectPrices());renderPrices();alert('共有単価を上書きしました')};$('saveAsCommonPriceBtn').onclick=()=>{const n=prompt('登録名を入力してください');if(n){const x=MSPriceMaster.create(n,collectPrices());MSPriceMaster.setActive(x.id);renderPrices()}};
 function showSelected(){const n=$('ProductName').value;$('selectedProductMaster').textContent=n?`${n}${$('ProductManufacturer').value?' ／ '+$('ProductManufacturer').value:''}`:'製品は選択されていません。'}
