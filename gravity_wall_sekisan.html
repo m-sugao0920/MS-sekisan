@@ -683,9 +683,90 @@ function preparePrint(){
     <div class="print-formula-row"><b>吸出し防止材</b><span>：</span><span>(H1－H4－0.30)×L</span></div>
     <div class="print-formula-row"><b>裏込め砕石</b><span>：</span><span>吸出し防止材×0.30</span></div>`;
 }
+function extractProfitRate(value){
+ if(value===undefined||value===null||value==='')return null;
+ if(typeof value==='number')return Number.isFinite(value)?value:null;
+ if(typeof value==='string'){
+  const n=parseFloat(value.replace('%','').trim());
+  return Number.isFinite(n)?n:null;
+ }
+ if(typeof value==='object'){
+  const keys=['profitRate','ProfitRate','profit_rate','marginRate','margin_rate','profitPercent','profit_percent','profit','利益率'];
+  for(const key of keys){
+   if(Object.prototype.hasOwnProperty.call(value,key)){
+    const found=extractProfitRate(value[key]);
+    if(found!==null)return found;
+   }
+  }
+  const nestedKeys=['currentProject','project','selectedProject','data','values','settings','estimateConditions'];
+  for(const key of nestedKeys){
+   if(value[key]){
+    const found=extractProfitRate(value[key]);
+    if(found!==null)return found;
+   }
+  }
+ }
+ return null;
+}
+function findProfitRateInLocalStorage(){
+ const directKeys=['currentProfitRate','profitRate','ProfitRate','marginRate','profitPercent','ms_profit_rate','MS_PROFIT_RATE','currentProjectProfitRate'];
+ for(const key of directKeys){
+  const found=extractProfitRate(localStorage.getItem(key));
+  if(found!==null)return found;
+ }
+ const likelyKeys=['currentProject','MS_CURRENT_PROJECT','ms_current_project','selectedProject','current_project','projectData','koujiData','currentKouji','MS_PROJECTS'];
+ for(const key of likelyKeys){
+  const raw=localStorage.getItem(key);
+  if(!raw)continue;
+  try{
+   const found=extractProfitRate(JSON.parse(raw));
+   if(found!==null)return found;
+  }catch(e){}
+ }
+ for(let i=0;i<localStorage.length;i++){
+  const key=localStorage.key(i)||'';
+  if(!/(project|kouji|工事|profit|margin)/i.test(key))continue;
+  const raw=localStorage.getItem(key);
+  if(!raw)continue;
+  try{
+   const found=extractProfitRate(JSON.parse(raw));
+   if(found!==null)return found;
+  }catch(e){
+   const found=extractProfitRate(raw);
+   if(found!==null)return found;
+  }
+ }
+ return null;
+}
+async function applyMainMenuProfitRate(){
+ let rate=null;
+ try{
+  if(window.MS?.Project?.getCurrent){
+   const current=await MS.Project.getCurrent();
+   rate=extractProfitRate(current);
+  }
+ }catch(e){console.warn('工事利益率の共通取得に失敗:',e);}
+ if(rate===null){
+  try{
+   if(window.MSAppAdapter?.getCurrentProject){
+    const current=await MSAppAdapter.getCurrentProject();
+    rate=extractProfitRate(current);
+   }
+  }catch(e){}
+ }
+ if(rate===null)rate=findProfitRateInLocalStorage();
+ if(rate!==null&&$('profit')){
+  $('profit').value=Math.min(99.9,Math.max(0,rate));
+  localStorage.setItem('currentProfitRate',String(rate));
+  calc();
+  return true;
+ }
+ return false;
+}
 async function loadCurrentProjectName(){try{if(window.MS?.ready?.then)await MS.ready;if(window.MS?.init)await MS.init();if(window.MS?.Project?.getCurrent){const p=await MS.Project.getCurrent();if(p?.name)$('projectName').value=p.name}}catch(e){}}
 window.addEventListener('load',async function(){
  await loadCurrentProjectName();
+ await applyMainMenuProfitRate();
  try{
   await initCommonEstimateStorage();
  }catch(error){
