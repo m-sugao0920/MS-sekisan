@@ -425,36 +425,5 @@ $('regSave').onclick=async()=>{const name=$('regName').value.trim();if(!name)ret
 function extractProfitRate(obj){if(!obj||typeof obj!=='object')return null;for(const k of ['profitRate','ProfitRate','marginRate','profitPercent']){const v=Number(obj[k]);if(Number.isFinite(v)&&v>=0&&v<100)return v}for(const k of ['project','currentProject','settings','common']){const v=extractProfitRate(obj[k]);if(v!==null)return v}return null}
 async function applyMainMenuProfitRate(){let rate=null;try{if(window.MS?.Project?.getCurrent)rate=extractProfitRate(await MS.Project.getCurrent());if(rate===null&&window.MS?.getCurrentProject)rate=extractProfitRate(await MS.getCurrentProject())}catch(e){}if(rate===null){for(const key of ['currentProfitRate','profitRate','ProfitRate','marginRate','profitPercent']){const v=Number(localStorage.getItem(key));if(Number.isFinite(v)&&v>=0&&v<100){rate=v;break}}}if(rate!==null&&$('ProfitRate')){$('ProfitRate').value=rate;localStorage.setItem('currentProfitRate',String(rate))}}
 
-async function openEstimateFromMainMenu(){
-  const openId=localStorage.getItem('ms_open_estimate_id')||localStorage.getItem('msOpenEstimateId')||localStorage.getItem('openEstimateId');
-  if(!openId||!window.MS)return false;
-  try{
-    let item=null;
-    if(MS.Estimate&&typeof MS.Estimate.get==='function')item=await MS.Estimate.get(openId);
-    else if(typeof MS.getEstimate==='function')item=await MS.getEstimate(openId);
-    if(!item)return false;
-    const itemType=String(item.appType||item.app||item.applicationType||'').trim();
-    const allowedTypes=['precast_drainage_basin','precast_drage','precast_drainage_pit','precast_shusui_masu','precast_shusui_masusekisan'];
-    if(itemType&&!allowedTypes.includes(itemType))return false;
-    ['ms_open_estimate_id','msOpenEstimateId','openEstimateId'].forEach(k=>localStorage.removeItem(k));
-    if($('estimateName'))$('estimateName').value=item.name||item.estimateName||'';
-    const savedValues=item.values||(item.data&&item.data.values)||(item.data&&item.data.data&&item.data.data.values)||{};
-    applyValues(savedValues);
-    const snapshot=item.priceSnapshot||(item.data&&item.data.priceSnapshot)||(item.prices)||null;
-    if(snapshot)applyPrices(snapshot);
-    await refreshSaved(item.id||openId);
-    calc();
-    return true;
-  }catch(e){
-    console.warn('メイン画面からの積算読込に失敗しました',e);
-    return false;
-  }
-}
-window.addEventListener('load',async()=>{try{
-  if(window.MS){await ensureProject();await refreshSaved()}
-  const opened=await openEstimateFromMainMenu();
-  if(!opened&&window.MSPriceMaster){renderPrices();const a=MSPriceMaster.getActive();if(a)applyPrices(a.prices)}
-  else if(window.MSPriceMaster){renderPrices()}
-  await applyMainMenuProfitRate();showSelected();calc()
-}catch(e){console.warn(e);calc()}});
+window.addEventListener('load',async()=>{try{if(window.MS){await ensureProject();await refreshSaved()}if(window.MSPriceMaster){renderPrices();const a=MSPriceMaster.getActive();if(a)applyPrices(a.prices)}await applyMainMenuProfitRate();showSelected();calc()}catch(e){console.warn(e);calc()}});
 </script></body></html>

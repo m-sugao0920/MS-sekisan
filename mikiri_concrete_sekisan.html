@@ -88,6 +88,8 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 
 </style>
 <script src="ms_common.js"></script>
+
+
 </head>
 <body>
 <header><div class="wrap"><div><h1>見切コンクリート積算アプリ</h1><div class="sub">土工／砕石／コンクリート／型枠／鉄筋（縦筋＋横筋）を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -136,12 +138,12 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 <section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
 <div class="sectionTitle">断面寸法（m）</div><div class="row"><div><label>W1（コンクリート幅）</label><input id="W1" data-dim="dim-w1" type="number" step="0.001" value="0.15"></div><div><label>W2（砕石幅）</label><input id="W2" data-dim="dim-w2" type="number" step="0.001" value="0.30"></div></div><div class="row3"><div><label>H1（Co高さ）</label><input id="H1" data-dim="dim-h1" type="number" step="0.001" value="0.50"></div><div><label>H2（砕石厚）</label><input id="H2" data-dim="dim-h2" type="number" step="0.001" value="0.10"></div><div><label>H3（土被り）</label><input id="H3" data-dim="dim-h3" type="number" step="0.001" value="0.20"></div></div><div class="row"><div><label>L（延長）</label><input id="L" type="number" step="0.01" value="10"></div><div><label>掘削余裕 e（m・片側）</label><input id="e" type="number" step="0.01" value="0.20"></div></div><div class="row"><div><label>かぶり（m）</label><input id="cover" type="number" step="0.001" value="0.04"></div><div></div></div>
 <div class="hr"></div><div class="sectionTitle">鉄筋</div><div class="no-rebar-toggle"><label><input id="noRebar" type="checkbox"> 無筋コンクリート</label></div><div id="rebarInputArea"><div class="row"><div><label>縦筋 径</label><select id="Dv" data-rebar="rebarVertical"><option>10</option><option selected>13</option><option>16</option><option>19</option><option>22</option><option>25</option></select></div><div><label>縦筋ピッチ（m）</label><input id="Pv" data-rebar="rebarVertical" type="number" step="0.01" value="0.20"></div></div><div class="row"><div><label>横筋 径</label><select id="Dh" data-rebar="rebarHorizontal"><option selected>10</option><option>13</option><option>16</option><option>19</option><option>22</option><option>25</option></select></div><div><label>横筋ピッチ（m）</label><input id="Ph" data-rebar="rebarHorizontal" type="number" step="0.01" value="0.20"></div></div></div><div class="note">縦筋本数＝ceil(L÷ピッチ)+1。横筋本数＝ceil((H1−上下かぶり)÷ピッチ)+1。無筋ON時は鉄筋数量を0kgにします。</div>
-<div class="hr"></div><div class="sectionTitle">単価</div><div class="row"><div><label>掘削 円/m³</label><input id="Pexc" type="number" value="4000"></div><div><label>残土処理 円/m³</label><input id="Pwaste" type="number" value="5000"></div></div><div class="row"><div><label>埋戻し 円/m³</label><input id="Pback" type="number" value="3000"></div><div><label>床付け 円/m²</label><input id="Pbed" type="number" value="700"></div></div><div class="row"><div><label>砕石 円/m³</label><input id="Pstone" type="number" value="6500"></div><div><label>コンクリート 円/m³</label><input id="Pconc" type="number" value="22000"></div></div><div class="row"><div><label>型枠 円/m²</label><input id="Pform" type="number" value="6500"></div><div><label>鉄筋 円/kg</label><input id="Prebar" type="number" value="220"></div></div><div class="row"><div><label>利益率（%）</label><input id="profit" type="number" step="0.1" value="20"></div><div><label>見積丸め</label><input type="text" value="1,000円未満：10円／1,000円以上：100円" readonly></div></div>
+<div class="hr"></div><div class="sectionTitle">単価</div><div class="row"><div><label>掘削 円/m³</label><input id="Pexc" type="number" value="4000"></div><div><label>残土処理 円/m³</label><input id="Pwaste" type="number" value="5000"></div></div><div class="row"><div><label>埋戻し 円/m³</label><input id="Pback" type="number" value="3000"></div><div><label>床付け 円/m²</label><input id="Pbed" type="number" value="700"></div></div><div class="row"><div><label>砕石 円/m³</label><input id="Pstone" type="number" value="6500"></div><div><label>コンクリート（FC21） 円/m³</label><input id="Pconc" type="number" value="22000"></div></div><div class="row"><div><label>型枠 円/m²</label><input id="Pform" type="number" value="6500"></div><div><label>鉄筋 円/kg</label><input id="Prebar" type="number" value="220"></div></div><div class="row"><div><label>利益率（%）</label><input id="profit" type="number" step="0.1" value="20"></div><div><label>見積丸め</label><input type="text" value="1,000円未満：10円／1,000円以上：100円" readonly></div></div>
 </div></section>
 <section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
 <div class="btns" style="grid-template-columns:repeat(3,1fr);margin:0 0 12px;max-width:420px">
 <button class="primary" id="printBtn" type="button">印刷</button>
-</div><div class="kpi"><div class="box"><div class="t">掘削量</div><div class="v"><span id="kExc">0.000</span> m³</div></div><div class="box"><div class="t">コンクリート</div><div class="v"><span id="kConc">0.000</span> m³</div></div><div class="box"><div class="t">鉄筋合計</div><div class="v"><span id="kRebar">0.00</span> kg</div></div><div class="box"><div class="t">mあたり見積</div><div class="v"><span id="kPer">0</span> 円</div></div></div>
+</div><div class="kpi"><div class="box"><div class="t">掘削量</div><div class="v"><span id="kExc">0.000</span> m³</div></div><div class="box"><div class="t">コンクリート（FC21）</div><div class="v"><span id="kConc">0.000</span> m³</div></div><div class="box"><div class="t">鉄筋</div><div class="v"><span id="kRebar">0.00</span> kg</div></div><div class="box"><div class="t">mあたり見積</div><div class="v"><span id="kPer">0</span> 円</div></div></div>
 <div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>原価単価</th><th>原価金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultBody"></tbody><tfoot><tr class="total-row"><td>合計</td><td colspan="3"></td><td id="totalCost">0</td><td></td><td id="totalEstimate">0</td></tr><tr class="total-row"><td>mあたり</td><td colspan="3"></td><td id="perCost">0</td><td></td><td id="perEstimate">0</td></tr></tfoot></table></div>
 <div class="result-memo-box">
 <div class="result-memo-title">計算メモ</div>
@@ -157,7 +159,7 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 <div class="result-memo-item"><span class="result-memo-label">横筋</span><span>本数×（L−両端かぶり）×単位重量</span></div>
 <div class="result-memo-item"><span class="result-memo-label">縦筋数量</span><span id="memoVerticalRebar">－</span></div>
 <div class="result-memo-item"><span class="result-memo-label">横筋数量</span><span id="memoHorizontalRebar">－</span></div>
-<div class="result-memo-item"><span class="result-memo-label">鉄筋合計</span><span>縦筋＋横筋</span></div>
+<div class="result-memo-item"><span class="result-memo-label">鉄筋</span><span>縦筋＋横筋</span></div>
 <div class="result-memo-item"><span class="result-memo-label">合計</span><span>数量×原価単価の合計</span></div>
 <div class="result-memo-item"><span class="result-memo-label">mあたり単価</span><span>合計金額÷L</span></div>
 </div>
@@ -178,7 +180,7 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 const $=id=>document.getElementById(id); const APP_TYPE='mikiri_concrete';
 const ids=['W1','W2','H1','H2','H3','L','e','cover','Dv','Pv','Dh','Ph','Pexc','Pwaste','Pback','Pbed','Pstone','Pconc','Pform','Prebar','profit'];
 const weights={10:0.560,13:0.995,16:1.560,19:2.250,22:3.040,25:3.980};
-const num=id=>Math.max(0,parseFloat($(id).value)||0), fmt=(v,d=3)=>Number(v||0).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d}), yen=v=>Math.round(v||0).toLocaleString('ja-JP');
+const num=id=>Math.max(0,parseFloat($(id).value)||0), fmt=(v,d=3)=>Number.isFinite(Number(v))?Number(v).toFixed(d):Number(0).toFixed(d), yen=v=>Math.round(v||0).toLocaleString('ja-JP');
 function roundTo(v,u){u=Math.max(1,u||1);return Math.round(v/u)*u}
 function estimateUnit(cost){
   const p=num('profit')/100;
@@ -201,7 +203,7 @@ function calc(){
  const lenH=noRebar?0:Math.max(0,L-2*cover);
  const kgH=noRebar?0:nh*lenH*(weights[dh]||0);
  const rebar=Number((kgV+kgH).toFixed(3));
- const rows=[['掘削',excavation,'m³','Pexc'],['残土処理',waste,'m³','Pwaste'],['埋戻し',back,'m³','Pback'],['床付け',bed,'m²','Pbed'],['砕石地業',stone,'m³','Pstone'],['見切コンクリート',conc,'m³','Pconc'],['型枠',form,'m²','Pform'],['鉄筋合計',rebar,'kg','Prebar']];
+ const rows=[['掘削',excavation,'m³','Pexc'],['残土処理',waste,'m³','Pwaste'],['埋戻し',back,'m³','Pback'],['床付け',bed,'m²','Pbed'],['砕石地業',stone,'m³','Pstone'],['見切コンクリート',conc,'m³','Pconc'],['型枠',form,'m²','Pform'],['鉄筋',rebar,'kg','Prebar']];
  let tc=0,te=0;const body=$('resultBody');body.innerHTML='';rows.forEach(r=>{const u=num(r[3]),a=r[1]*u,eu=estimateUnit(u),ea=r[1]*eu;tc+=a;te+=ea;const tr=document.createElement('tr');tr.innerHTML=`<td>${r[0]}</td><td>${fmt(r[1],r[2]==='kg'?2:3)}</td><td class="unit">${r[2]}</td><td>${yen(u)}</td><td>${yen(a)}</td><td>${yen(eu)}</td><td>${yen(ea)}</td>`;body.appendChild(tr)});
  $('memoVerticalRebar').textContent=noRebar?'無筋':`${nv}本 × ${fmt(lenV,3)}m ＝ ${fmt(kgV,2)}kg`;
  $('memoHorizontalRebar').textContent=noRebar?'無筋':`${nh}本 × ${fmt(lenH,3)}m ＝ ${fmt(kgH,2)}kg`;
@@ -329,11 +331,11 @@ function buildSvgDims(){
  const sy=ty+64;
  s+=sxRect(x+5,sy,w-10,39,'#fff',.2,'#7ca7d8');
  const specs=[
- ['コンクリート','入力単価による'],
+ ['コンクリート','FC21N/mm²'],
  ['鉄筋',window.__last?.noRebar?'無筋':'縦筋 D'+num('Dv')+' @'+fmt(num('Pv'),2)+'m'],
  ['',window.__last?.noRebar?'':'横筋 D'+num('Dh')+' @'+fmt(num('Ph'),2)+'m'],
  ['砕石地業','RC-40'],
- ['鉄筋合計',fmt((window.__last?.kgV||0)+(window.__last?.kgH||0),2)+' kg']
+ ['鉄筋',fmt((window.__last?.kgV||0)+(window.__last?.kgH||0),2)+' kg']
  ];
  specs.forEach((r,i)=>{s+=sxText(x+9,sy+6.5+i*6.5,r[0],2.8,400);s+=sxText(x+37,sy+6.5+i*6.5,r[1],2.7,400)});
  return s;
@@ -462,6 +464,48 @@ calc();
     if(selectedId) sel.value=selectedId;
   }
 
+  function msCsvUnit(unit){
+    return ({'m³':'m3','m²':'m2','㎥':'m3','㎡':'m2'}[unit]||unit||'');
+  }
+
+  function msBuildMitsumoroRows(){
+    /* 建築みつも郎互換CSV用。計算済みの数量・原価単価・見積単価を保存する。 */
+    const d=window.__last||calc();
+    const savedName=(($('estimateName')?.value||'').trim()||DEFAULT_NAME);
+    const specs={
+      '砕石地業':'RC-40',
+      '見切コンクリート':'FC21N/mm2',
+      '型枠':'普通型枠',
+      '鉄筋':$('noRebar')?.checked?'無筋':`縦筋 D${num('Dv')} @${fmt(num('Pv'),2)}m・横筋 D${num('Dh')} @${fmt(num('Ph'),2)}m`
+    };
+    return (d?.rows||[]).map(function(r){
+      const unitPrice=num(r[3]);
+      const itemName=r[0]==='見切コンクリート'?savedName:r[0];
+      return {
+        itemName:itemName,
+        specification:specs[r[0]]||'',
+        quantity:Number(r[1])||0,
+        unit:msCsvUnit(r[2]),
+        executionUnitPrice:unitPrice,
+        estimateUnitPrice:estimateUnit(unitPrice)
+      };
+    }).filter(function(r){
+      return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0);
+    });
+  }
+
+  function msApplySavedPriceSnapshot(item){
+    if(!window.MSPriceMaster)return;
+    try{
+      const snapshot=(item&&item.priceSnapshot)||(item&&item.data&&item.data.priceSnapshot)||null;
+      if(snapshot && typeof MSPriceMaster.applyFields==='function'){
+        MSPriceMaster.applyFields(snapshot);
+        const nameEl=$('pricePresetName');
+        if(nameEl)nameEl.value=item.priceMasterName||(item.data&&item.data.priceMasterName)||'保存時単価';
+      }
+    }catch(e){console.warn('保存時単価の復元に失敗しました',e);}
+  }
+
   async function saveSharedEstimate(){
     if(!hasMS()){
       const name=$('estimateName').value.trim()||DEFAULT_NAME;
@@ -474,11 +518,23 @@ calc();
       const sel=$('savedEstimateList');
       const name=($('estimateName')?.value||DEFAULT_NAME).trim()||DEFAULT_NAME;
       const v=values();
+      const csvRows=msBuildMitsumoroRows();
+      const priceInfo=window.MSPriceMaster?.getSnapshot?.()||{};
       const item={
         id:sel?.value||undefined,
         name,
-        data:{values:v},
+        data:{
+          values:v,
+          csvRows:csvRows,
+          priceMasterId:priceInfo.priceMasterId,
+          priceMasterName:priceInfo.priceMasterName,
+          priceSnapshot:priceInfo.priceSnapshot
+        },
         values:v,
+        csvRows:csvRows,
+        priceMasterId:priceInfo.priceMasterId,
+        priceMasterName:priceInfo.priceMasterName,
+        priceSnapshot:priceInfo.priceSnapshot,
         amount:result?.te||0,
         totalAmount:result?.te||0
       };
@@ -501,6 +557,8 @@ calc();
       if(!item){alert('積算データが見つかりません');await refreshSharedEstimates();return;}
       if($('estimateName')) $('estimateName').value=item.name||'';
       applyValues(item.values||(item.data&&item.data.values)||{});
+      msApplySavedPriceSnapshot(item);
+      calc();
       if(MS.toast) MS.toast('積算データを呼び出しました');
     }catch(e){alert(e.message||'呼び出しできませんでした');}
   }
@@ -537,6 +595,8 @@ calc();
           if(item && item.appType===APP_TYPE){
             if($('estimateName')) $('estimateName').value=item.name||'';
             applyValues(item.values||(item.data&&item.data.values)||{});
+            msApplySavedPriceSnapshot(item);
+            calc();
             await refreshSharedEstimates(openId);
           }
         }

@@ -386,8 +386,98 @@ const APP_TYPE='genbau_drainage_pit';const FIELD_IDS=[...document.querySelectorA
 function values(){const o={};FIELD_IDS.forEach(id=>{const e=$(id);if(e)o[id]=e.value});return o}function applyValues(o){Object.entries(o||{}).forEach(([id,v])=>{if($(id))$(id).value=v});calc()}
 async function ensureProject(){if(!window.MS)return null;await MS.init();let p=await MS.getCurrentProject();if(!p){const name=$('projectName').value.trim()||'未名称工事';p=await MS.createProject({name});MS.setCurrentProjectId(p.id)}if($('projectName'))$('projectName').value=p.name||'';return p}
 async function refreshSaved(selected){if(!window.MS)return;const p=await ensureProject(),list=await MS.Estimate.listByProjectAndApp(p.id,APP_TYPE),s=$('savedEstimateList');s.innerHTML=list.length?list.map(x=>`<option value="${x.id}">${x.name}</option>`).join(''):'<option value="">保存データなし</option>';if(selected)s.value=selected}
-$('saveEstimateBtn').onclick=async()=>{try{const p=await ensureProject();calc();const s=$('savedEstimateList'),name=$('estimateName').value.trim()||'現場打排水桝 積算';const item={id:s.value||undefined,name,values:values(),data:{values:values()},amount:last.total,totalAmount:last.total};const saved=await MS.Estimate.save(APP_TYPE,item);await refreshSaved(saved.id);alert('保存しました')}catch(e){alert(e.message||'保存できませんでした')}};
-$('loadEstimateBtn').onclick=async()=>{const id=$('savedEstimateList').value;if(!id)return alert('呼び出すデータを選択してください');const x=await MS.Estimate.get(id);if(x){$('estimateName').value=x.name||'';applyValues(x.values||(x.data&&x.data.values)||{})}};$('deleteEstimateBtn').onclick=async()=>{const id=$('savedEstimateList').value;if(!id)return;if(confirm('削除しますか？')){await MS.Estimate.delete(id);await refreshSaved()}};
+function msCsvUnit(unit){return ({'m³':'m3','m²':'m2','㎥':'m3','㎡':'m2'}[unit]||unit||'')}
+
+function msBuildMitsumoroRows(){
+  calc();
+  const savedName=(($('estimateName')?.value||'').trim()||'現場打排水桝 積算');
+  const lidSpec=[
+    ($('ProductManufacturer')?.value||'').trim(),
+    ($('ProductName')?.value||'').trim(),
+    ($('ProductSpecification')?.value||'').trim()
+  ].filter(Boolean).join(' ');
+  const names={
+    conc:savedName,
+    form:savedName+' 型枠',
+    grating:savedName+' グレーチング蓋',
+    concllid:savedName+' コンクリート蓋',
+    lidwork:savedName+' 蓋掛け手間'
+  };
+  const specs={
+    stone:'RC-40',
+    nform:'普通型枠',
+    lean:'FC18N/mm2',
+    conc:'FC21N/mm2',
+    form:'普通型枠',
+    grating:lidSpec,
+    concllid:lidSpec,
+    lidwork:lidSpec
+  };
+  return items.map(function(row){
+    const k=row[0],n=row[1],u=row[2];
+    return {
+      itemName:names[k]||n,
+      specification:specs[k]||'',
+      quantity:Number(last.qty?.[k]||0),
+      unit:msCsvUnit(u),
+      executionUnitPrice:Number(last.price?.[k]||0),
+      estimateUnitPrice:Number(last.estimatePrice?.[k]||0)
+    };
+  }).filter(function(r){
+    return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0);
+  });
+}
+
+$('saveEstimateBtn').onclick=async()=>{
+  try{
+    const project=await ensureProject();
+    calc();
+    const s=$('savedEstimateList');
+    const name=$('estimateName').value.trim()||'現場打排水桝 積算';
+    const existingId=s.value||'';
+    const list=await MS.Estimate.listByProjectAndApp(project.id,APP_TYPE);
+    const duplicate=(list||[]).find(x=>String(x?.name||'').trim()===name && String(x?.id||'')!==String(existingId));
+    if(duplicate){
+      alert('同じ積算名称「'+name+'」はすでに保存されています。\n別の積算名称に変更してください。');
+      $('estimateName').focus();
+      return;
+    }
+    const vals=values();
+    const csvRows=msBuildMitsumoroRows();
+    const priceInfo=window.MSPriceMaster?.getSnapshot?.()||{};
+    const item={
+      id:existingId||undefined,
+      name,
+      values:vals,
+      data:{
+        values:vals,
+        csvRows,
+        priceMasterId:priceInfo.priceMasterId,
+        priceMasterName:priceInfo.priceMasterName,
+        priceSnapshot:priceInfo.priceSnapshot
+      },
+      csvRows,
+      priceMasterId:priceInfo.priceMasterId,
+      priceMasterName:priceInfo.priceMasterName,
+      priceSnapshot:priceInfo.priceSnapshot,
+      amount:last.total,
+      totalAmount:last.total
+    };
+    const saved=await MS.Estimate.save(APP_TYPE,item);
+    await refreshSaved(saved.id);
+    alert('保存しました');
+  }catch(e){alert(e.message||'保存できませんでした')}
+};
+function applySavedPriceSnapshot(item){
+  try{
+    const snapshot=(item&&item.priceSnapshot)||(item&&item.data&&item.data.priceSnapshot)||null;
+    if(snapshot&&window.MSPriceMaster){
+      if(typeof MSPriceMaster.applyFields==='function')MSPriceMaster.applyFields(snapshot);
+      else applyPrices(snapshot);
+    }
+  }catch(e){console.warn('保存時単価の復元に失敗しました',e)}
+}
+$('loadEstimateBtn').onclick=async()=>{const id=$('savedEstimateList').value;if(!id)return alert('呼び出すデータを選択してください');const x=await MS.Estimate.get(id);if(x){$('estimateName').value=x.name||'';applyValues(x.values||(x.data&&x.data.values)||{});applySavedPriceSnapshot(x);calc()}};$('deleteEstimateBtn').onclick=async()=>{const id=$('savedEstimateList').value;if(!id)return;if(confirm('削除しますか？')){await MS.Estimate.delete(id);await refreshSaved()}};
 // 共有単価
 const priceIds=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pconc','Pform','Pgrating','Pconcllid','Plidwork'];function collectPrices(){const o={};priceIds.forEach(id=>o[id]=num(id));return o}function applyPrices(p){const aliases={Pexc:['Pexc','excavation'],Pback:['Pback','backfill'],Pspoil:['Pspoil','spoil'],Pbed:['Pbed','bed'],Pstone:['Pstone','stone'],Pnform:['Pnform','levelingForm'],Plean:['Plean','blindingConcrete'],Pconc:['Pconc','concrete'],Pform:['Pform','form'],Pgrating:['Pgrating','gratingCover'],Pconcllid:['Pconcllid','concreteCover'],Plidwork:['Plidwork','coverLabor']};Object.entries(aliases).forEach(([id,ks])=>{for(const k of ks)if(p&&p[k]!==undefined){$ (id).value=p[k];break}});calc()}
 function renderPrices(){if(!window.MSPriceMaster)return;MSPriceMaster.ensureMasters();const s=$('commonPriceList');s.innerHTML=MSPriceMaster.list().map(x=>`<option value="${x.id}">${x.name}</option>`).join('');s.value=MSPriceMaster.activeId();const a=MSPriceMaster.getActive();$('commonPriceNote').textContent='現在使用中：'+(a.name||'標準')}
@@ -440,5 +530,33 @@ async function applyMainMenuProfitRate(){
   }
 }
 
-window.addEventListener('load',async()=>{try{if(window.MS){await ensureProject();await refreshSaved()}if(window.MSPriceMaster){renderPrices();const a=MSPriceMaster.getActive();if(a)applyPrices(a.prices)}await applyMainMenuProfitRate();calc()}catch(e){console.warn(e);calc()}});
+async function openEstimateFromMainMenu(){
+  const openId=localStorage.getItem('ms_open_estimate_id')||localStorage.getItem('msOpenEstimateId')||localStorage.getItem('openEstimateId');
+  if(!openId||!window.MS)return false;
+  try{
+    let item=null;
+    if(MS.Estimate&&typeof MS.Estimate.get==='function')item=await MS.Estimate.get(openId);
+    else if(typeof MS.getEstimate==='function')item=await MS.getEstimate(openId);
+    if(!item)return false;
+    const itemType=String(item.appType||item.app||item.applicationType||'').trim();
+    const allowedTypes=['genbau_drainage_pit','genbau_haisui_masu','cast_in_place_drainage_pit'];
+    if(itemType&&!allowedTypes.includes(itemType))return false;
+    ['ms_open_estimate_id','msOpenEstimateId','openEstimateId'].forEach(k=>localStorage.removeItem(k));
+    if($('estimateName'))$('estimateName').value=item.name||item.estimateName||'';
+    const savedValues=item.values||(item.data&&item.data.values)||(item.data&&item.data.data&&item.data.data.values)||{};
+    applyValues(savedValues);
+    applySavedPriceSnapshot(item);
+    await refreshSaved(item.id||openId);
+    calc();
+    return true;
+  }catch(e){console.warn('メイン画面からの明細読込に失敗しました',e);return false}
+}
+
+window.addEventListener('load',async()=>{try{
+  if(window.MS){await ensureProject();await refreshSaved()}
+  if(window.MSPriceMaster){renderPrices();const a=MSPriceMaster.getActive();if(a)applyPrices(a.prices)}
+  await applyMainMenuProfitRate();
+  await openEstimateFromMainMenu();
+  calc();
+}catch(e){console.warn(e);calc()}});
 </script></body></html>

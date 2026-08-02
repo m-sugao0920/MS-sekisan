@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>擁壁 数量計算（L型擁壁積算 046 付帯工追加版）</title>
+<title>擁壁 数量計算（L型擁壁積算 048 結果表文字拡大版）</title>
 <style>
     :root{
       --blue:#0070C0;
@@ -767,12 +767,56 @@
 .accessory-note{font-size:10px;color:var(--muted);line-height:1.45;margin-top:4px}
 @media(max-width:700px){.backfill-choice{grid-template-columns:1fr}}
 </style>
+
+<style id="lwall-result-table-readable-048">
+/* 048: 結果表の項目・数字を普通文字のまま拡大（印刷には影響させない） */
+@media screen {
+  .result-table th{
+    padding:10px 5px!important;
+    font-size:13px!important;
+  }
+  .result-table td{
+    padding:10px 5px!important;
+    font-size:14px!important;
+    line-height:1.35!important;
+    font-weight:400!important;
+  }
+  .result-table th:nth-child(1),
+  .result-table td:nth-child(1){width:21%!important;}
+  .result-table td:nth-child(1){
+    font-size:14px!important;
+    font-weight:400!important;
+  }
+  .result-table th:nth-child(2),
+  .result-table td:nth-child(2){width:10%!important;}
+  .result-table th:nth-child(3),
+  .result-table td:nth-child(3){width:6%!important;}
+  .result-table th:nth-child(4),
+  .result-table td:nth-child(4){width:12%!important;}
+  .result-table th:nth-child(5),
+  .result-table td:nth-child(5){width:13%!important;}
+  .result-table th:nth-child(6),
+  .result-table td:nth-child(6){width:16%!important;font-size:14px!important;}
+  .result-table th:nth-child(7),
+  .result-table td:nth-child(7){width:22%!important;font-size:14px!important;}
+
+  /* 合計・m当たり単価だけは従来どおり強調 */
+  .result-table tbody tr:nth-last-child(-n+2) td{
+    font-size:17px!important;
+    font-weight:800!important;
+  }
+  .result-table tbody tr:nth-last-child(-n+2) td b{
+    font-size:18px!important;
+    font-weight:900!important;
+  }
+}
+</style>
 </head>
 <body>
 <header>
 <div class="wrap">
 <div>
-<h1>擁壁 数量計算（L型擁壁積算 046 付帯工追加版）</h1>
+<h1>擁壁 数量計算（L型擁壁積算 048 結果表文字拡大版）</h1>
 <div class="sub">土工／地業／コンクリ／止水・裏込め工／型枠／鉄筋（8系統）を自動算出</div>
 </div>
 <div class="sub">
@@ -2853,6 +2897,38 @@ section.card:nth-of-type(2) .btns button{
       if(selectedId) sel.value=selectedId;
     }catch(e){ console.error(e); }
   }
+  function msCsvNumberFromText(id){
+    const el=$(id);
+    if(!el) return 0;
+    const raw=String(el.textContent||el.value||'').replace(/,/g,'').replace(/[^0-9.\-]/g,'');
+    const n=Number(raw);
+    return Number.isFinite(n)?n:0;
+  }
+  function msBuildMitsumoroRows(){
+    /* 建築みつも郎CSV用。画面に表示済みの数量・実行単価・見積単価を保存する。 */
+    /* 建築みつも郎CSV専用の固定出力順 */
+    const defs=[
+      ['掘削','',       'r_exc','m3','u_exc','eu_exc'],
+      ['埋戻し','',     'r_back','m3','u_back','eu_back'],
+      ['残土処理','',   'r_spoil','m3','u_spoil','eu_spoil'],
+      ['床付け','',     'r_bed','m2','u_bed','eu_bed'],
+      ['砕石地業','RC-40','r_stone','m3','u_stone','eu_stone'],
+      ['均し型枠','普通型枠','r_nform','m2','u_nform','eu_nform'],
+      ['均しコンクリート','FC18N/mm2','r_blnd','m3','u_blnd','eu_blnd'],
+      ['鉄筋','SD345','kg_total','kg','u_rebar','eu_rebar'],
+      ['型枠（擁壁）','普通型枠','r_form','m2','u_form','eu_form'],
+      ['擁壁コンクリート','FC21N/mm2','r_conc','m3','u_conc','eu_conc'],
+      ['水抜きパイプ','VPφ75','r_drain','本','u_drain','eu_drain'],
+      ['裏込め砕石','RC-40','r_backstone','m3','u_backstone','eu_backstone']
+    ];
+    return defs.map(function(d){
+      return {
+        itemName:d[0], specification:d[1], quantity:msCsvNumberFromText(d[2]), unit:d[3],
+        executionUnitPrice:msCsvNumberFromText(d[4]), estimateUnitPrice:msCsvNumberFromText(d[5])
+      };
+    }).filter(function(r){ return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0); });
+  }
+
   async function msSaveEstimate(){
     try{
       await ensureProject();
@@ -2862,11 +2938,13 @@ section.card:nth-of-type(2) .btns button{
       const values=collectValues();
       const existingId = sel && sel.value ? sel.value : '';
       const priceInfo = window.MSPriceMaster ? MSPriceMaster.getSnapshot() : {};
+      const csvRows=msBuildMitsumoroRows();
       const item={
         id: existingId || undefined,
         name,
-        data:{ values: values, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot },
+        data:{ values: values, csvRows:csvRows, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot },
         values: values,
+        csvRows: csvRows,
         priceMasterId:priceInfo.priceMasterId,
         priceMasterName:priceInfo.priceMasterName,
         priceSnapshot:priceInfo.priceSnapshot,

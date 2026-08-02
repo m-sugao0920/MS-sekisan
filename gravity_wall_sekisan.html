@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>重力式擁壁 積算アプリ 018 完成版</title>
+<title>重力式擁壁 積算アプリ 019 互換CSV対応版</title>
 <style>
 :root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
@@ -128,6 +128,22 @@ body>*:not(.print-wrap){display:none!important}
 .accessory-choice input{width:16px;height:16px;margin:0;box-shadow:none}
 .accessory-note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:7px;padding:8px 9px;border-radius:10px;background:#f8fafc;border:1px solid var(--border)}
 @media(max-width:700px){.accessory-choice{grid-template-columns:1fr}}
+
+/* 結果表：プレキャストL型擁壁と同じ文字サイズ・行間に統一 */
+.result-table th,
+.result-table td{
+  padding:9px 4px!important;
+  font-size:13px!important;
+  line-height:normal!important;
+  white-space:normal!important;
+}
+.result-table thead th{
+  font-size:13px!important;
+}
+.result-table tbody tr:nth-last-child(-n+2) td{
+  font-size:13px!important;
+  font-weight:normal!important;
+}
 </style>
 <script src="ms_common.js"></script>
 </head>
@@ -470,6 +486,63 @@ function initLocalEstimateFallback(){
  $('loadEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;applyValues(getLocal(localKey)[Number(i)]?.values)};
  $('deleteEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;const a=getLocal(localKey);a.splice(Number(i),1);setLocal(localKey,a);refreshLocalEstimates()};
 }
+
+
+/* ===== 建築みつも郎互換CSV対応 ===== */
+function msGravityCsvUnit(unit){
+  return String(unit||'').replace('m³','m3').replace('m²','m2');
+}
+function msBuildMitsumoroRows(){
+  const estimateSpec=(($('estimateName')?.value||'').trim())
+    .replace(/^重力式擁壁(?:工)?[\s　・:：_-]*/,'').trim();
+  const specs={
+    '砕石':'RC-40',
+    '均し型枠':'普通型枠',
+    '均しコンクリート':'FC18N/mm2',
+    '擁壁型枠':'普通型枠',
+    '擁壁コンクリート':'FC18N/mm2',
+    '止水コンクリート型枠':'普通型枠',
+    '止水コンクリート':'FC18N/mm2',
+    '裏込め砕石':'RC-40',
+    '水抜きパイプ':estimateSpec
+  };
+  return (lastRows||[]).map(function(r){
+    return {
+      itemName:r.name,
+      specification:specs[r.name]||'',
+      quantity:Number(r.qty)||0,
+      unit:msGravityCsvUnit(r.unit),
+      executionUnitPrice:Number(r.unitPrice)||0,
+      estimateUnitPrice:Number(r.estUnit)||0
+    };
+  }).filter(function(r){
+    return r.quantity>0 && r.itemName!=='裏込め材なし' &&
+      (r.executionUnitPrice>0 || r.estimateUnitPrice>0);
+  });
+}
+function msInstallCsvSaveHook(){
+  if(!window.MS?.Estimate || typeof MS.Estimate.save!=='function' || MS.Estimate.__gravityWallCsvHooked)return;
+  const originalSave=MS.Estimate.save.bind(MS.Estimate);
+  MS.Estimate.save=async function(appType,item){
+    if(appType===APP_TYPE && item && typeof item==='object'){
+      if(typeof calc==='function')calc();
+      const csvRows=msBuildMitsumoroRows();
+      item.csvRows=csvRows;
+      item.data=(item.data&&typeof item.data==='object')?item.data:{};
+      item.data.csvRows=csvRows;
+      const priceInfo=window.MSPriceMaster?.getSnapshot?.()||{};
+      item.priceMasterId=priceInfo.priceMasterId;
+      item.priceMasterName=priceInfo.priceMasterName;
+      item.priceSnapshot=priceInfo.priceSnapshot;
+      item.data.priceMasterId=priceInfo.priceMasterId;
+      item.data.priceMasterName=priceInfo.priceMasterName;
+      item.data.priceSnapshot=priceInfo.priceSnapshot;
+    }
+    return originalSave(appType,item);
+  };
+  MS.Estimate.__gravityWallCsvHooked=true;
+}
+
 async function initCommonEstimateStorage(){
  if(!window.MSAppAdapter || !window.MS){
   console.warn('ms_common.js の共通保存機能を読み込めないため、端末内保存を使用します。');
@@ -768,6 +841,7 @@ window.addEventListener('load',async function(){
  await loadCurrentProjectName();
  await applyMainMenuProfitRate();
  try{
+  msInstallCsvSaveHook();
   await initCommonEstimateStorage();
  }catch(error){
   console.error(error);

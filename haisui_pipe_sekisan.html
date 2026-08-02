@@ -2011,6 +2011,50 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   const $ = id => document.getElementById(id);
   function hasMS(){ return window.MS && typeof MS.init === "function"; }
   function nFromText(id){ const el=$(id); if(!el) return 0; return Number(String(el.textContent||el.innerText||'0').replace(/[^0-9.-]/g,''))||0; }
+  function msCsvUnit(unit){
+    return ({'m³':'m3','m²':'m2','㎥':'m3','㎡':'m2'}[unit]||unit||'');
+  }
+  function msBuildMitsumoroRows(){
+    /* 建築みつも郎互換CSV用。計算済みの数量・原価単価・見積単価を保存する。 */
+    if(typeof calc === 'function') calc();
+    const d=window.pipeCalcData||{};
+    const savedName=(($('estimateName')?.value||'').trim()||DEFAULT_NAME);
+    const productSpec=[
+      ($('ProductManufacturer')?.value||'').trim(),
+      ($('ProductName')?.value||'').trim(),
+      ($('ProductSpecification')?.value||'').trim()
+    ].filter(Boolean).join(' ');
+    const specs={
+      exc:'',spoil:'',back:'',bed:'',
+      stone:'RC-40',
+      leanForm:'普通型枠',
+      lean:'FC18N/mm2',
+      sand:'保護砂',
+      protectConcrete:'FC18N/mm2',
+      protectForm:'普通型枠',
+      prod:productSpec,
+      socket:productSpec,
+      set:productSpec
+    };
+    const names={
+      prod:savedName,
+      socket:savedName+' 継手ソケット',
+      set:savedName+' 布設'
+    };
+    return (d.active||[]).map(function(r){
+      const key=r.key;
+      return {
+        itemName:names[key]||r.name,
+        specification:specs[key]||'',
+        quantity:Number(d.qty?.[key]||0),
+        unit:msCsvUnit(r.unit),
+        executionUnitPrice:Number(d.units?.[key]||0),
+        estimateUnitPrice:Number(d.estimateUnits?.[key]||0)
+      };
+    }).filter(function(r){
+      return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0);
+    });
+  }
   function getFieldIds(){
     const ids = new Set(FIELD_IDS);
     document.querySelectorAll('input[id],select[id],textarea[id]').forEach(el=>ids.add(el.id));
@@ -2127,8 +2171,42 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       const sel=$('savedEstimateList');
       const name=($('estimateName')?.value || DEFAULT_NAME).trim() || DEFAULT_NAME;
       const values=collectValues();
+      const csvRows=msBuildMitsumoroRows();
+      const priceInfo=window.MSPriceMaster?.getSnapshot?.()||{};
       const existingId = sel && sel.value ? sel.value : '';
-      const item={ id: existingId || undefined, name, data:{ values: values }, values: values, amount:nFromText('a_total') || nFromText('k_total'), totalAmount:nFromText('a_total') || nFromText('k_total') };
+
+      /* 同一工事・同一アプリ内では、同じ積算名称の重複保存を禁止する。 */
+      const project=await ensureProject();
+      const existingList=(MS.Estimate && typeof MS.Estimate.listByProjectAndApp === 'function')
+        ? await MS.Estimate.listByProjectAndApp(project.id, APP_TYPE)
+        : await MS.listEstimates(project.id, APP_TYPE);
+      const duplicate=(existingList||[]).find(function(x){
+        return String(x?.name||'').trim()===name && String(x?.id||'')!==String(existingId||'');
+      });
+      if(duplicate){
+        alert('同じ積算名称「'+name+'」はすでに保存されています。\n別の積算名称に変更してください。');
+        $('estimateName')?.focus();
+        return;
+      }
+
+      const item={
+        id: existingId || undefined,
+        name,
+        data:{
+          values:values,
+          csvRows:csvRows,
+          priceMasterId:priceInfo.priceMasterId,
+          priceMasterName:priceInfo.priceMasterName,
+          priceSnapshot:priceInfo.priceSnapshot
+        },
+        values:values,
+        csvRows:csvRows,
+        priceMasterId:priceInfo.priceMasterId,
+        priceMasterName:priceInfo.priceMasterName,
+        priceSnapshot:priceInfo.priceSnapshot,
+        amount:nFromText('a_total') || nFromText('k_total'),
+        totalAmount:nFromText('a_total') || nFromText('k_total')
+      };
       const saved = (MS.Estimate && typeof MS.Estimate.save === 'function')
         ? await MS.Estimate.save(APP_TYPE, item)
         : await MS.saveEstimate(APP_TYPE, name, item);

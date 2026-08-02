@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>U型側溝 積算アプリ 046</title>
+  <title>U型側溝 積算アプリ 047 互換CSV対応版</title>
   <style>
     :root{
       --blue:#0070C0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px;
@@ -1767,6 +1767,43 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       if(selectedId) sel.value=selectedId;
     }catch(e){ console.error(e); }
   }
+  function msCsvNumberFromText(id){
+    const el=$(id);
+    if(!el) return 0;
+    const raw=String(el.textContent||el.value||'').replace(/,/g,'').replace(/[^0-9.\-]/g,'');
+    const n=Number(raw);
+    return Number.isFinite(n)?n:0;
+  }
+  function msBuildMitsumoroRows(){
+    /* 建築みつも郎互換CSV用。画面に表示済みの数量・実行単価・見積単価を保存する。 */
+    /* U型側溝CSV専用の固定出力順 */
+    /* 製品と据付の品名は「積算保存名称」を使用する。 */
+    const savedName=(($('estimateName')?.value||'').trim()||'U型側溝');
+    const productCsvName=savedName;
+    const installationCsvName=savedName+'据付';
+    const defs=[
+      ['掘削','',                    'r_exc','m3','u_exc','eu_exc'],
+      ['残土処理','',                'r_spoil','m3','u_spoil','eu_spoil'],
+      ['埋戻し','',                  'r_back','m3','u_back','eu_back'],
+      ['砕石地業','RC-40',           'r_stone','m3','u_stone','eu_stone'],
+      ['均し型枠','普通型枠',         'r_leanForm','m2','u_leanForm','eu_leanForm'],
+      ['均しコンクリート','FC18N/mm2','r_lean','m3','u_lean','eu_lean'],
+      ['敷モルタル','1:3',           'r_mortar','m3','u_mortar','eu_mortar'],
+      ['床付け','',                  'r_bed','m2','u_bed','eu_bed'],
+      [productCsvName,'',            'r_prod','個','u_prod','eu_prod'],
+      [installationCsvName,'',       'r_set','m','u_set','eu_set'],
+      ['グレーチング蓋','',          'r_grating','枚','u_grating','eu_grating'],
+      ['コンクリート蓋','',          'r_concllid','枚','u_concllid','eu_concllid'],
+      ['蓋設置費','',                'r_coverSet','枚','u_coverSet','eu_coverSet']
+    ];
+    return defs.map(function(d){
+      return {
+        itemName:d[0], specification:d[1], quantity:msCsvNumberFromText(d[2]), unit:d[3],
+        executionUnitPrice:msCsvNumberFromText(d[4]), estimateUnitPrice:msCsvNumberFromText(d[5])
+      };
+    }).filter(function(r){ return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0); });
+  }
+
   async function msSaveEstimate(){
     try{
       await ensureProject();
@@ -1775,7 +1812,20 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       const name=($('estimateName')?.value || DEFAULT_NAME).trim() || DEFAULT_NAME;
       const values=collectValues();
       const existingId = sel && sel.value ? sel.value : '';
-      const item={ id: existingId || undefined, name, data:{ values: values }, values: values, amount:nFromText('a_total') || nFromText('k_total'), totalAmount:nFromText('a_total') || nFromText('k_total') };
+      const priceInfo = window.MSPriceMaster ? MSPriceMaster.getSnapshot() : {};
+      const csvRows=msBuildMitsumoroRows();
+      const item={
+        id: existingId || undefined,
+        name,
+        data:{ values:values, csvRows:csvRows, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot },
+        values:values,
+        csvRows:csvRows,
+        priceMasterId:priceInfo.priceMasterId,
+        priceMasterName:priceInfo.priceMasterName,
+        priceSnapshot:priceInfo.priceSnapshot,
+        amount:nFromText('a_total') || nFromText('k_total'),
+        totalAmount:nFromText('a_total') || nFromText('k_total')
+      };
       const saved = (MS.Estimate && typeof MS.Estimate.save === 'function')
         ? await MS.Estimate.save(APP_TYPE, item)
         : await MS.saveEstimate(APP_TYPE, name, item);

@@ -867,7 +867,67 @@ window.addEventListener('load',()=>{ensureStandardPrice();refreshPriceList();ref
   async function ensureProject(){ if(!hasMS()) throw new Error('ms_common.js が読み込まれていません'); await MS.init(); let p=await MS.getCurrentProject(); const pname=($('projectName')?.value||'').trim(); if(!p){ p=await MS.saveProject({name:pname||'名称未設定の工事', prices:{}}); }else if(pname && p.name!==pname){ p.name=pname; await MS.saveProject(p); } if($('projectName')) $('projectName').value=p.name||pname||''; localStorage.setItem('currentProjectName',p.name||''); localStorage.setItem('koujiName',p.name||''); return p; }
   async function applyProjectPrices(){ try{ if(!hasMS()) return; await MS.init(); if(window.MSPriceMaster){ MSPriceMaster.ensureMasters(); const active=MSPriceMaster.getActive(); if(active&&active.prices){ applyCommonPriceFields(active.prices); const nameEl=$('pricePresetName'); if(nameEl) nameEl.value=active.name||'標準'; return; } } const p=await MS.getCurrentProject(); const prices=(p&&p.prices)||await MS.getDefaultPrices(); applyCommonPriceFields(prices); }catch(e){ console.warn('可変側溝 共通単価読込エラー',e); } }
   async function msRefreshEstimateList(selectedId){ const sel=$('savedEstimateList'); if(!sel||!hasMS()) return; try{ const project=await ensureProject(); const list=(MS.Estimate&&typeof MS.Estimate.listByProjectAndApp==='function') ? await MS.Estimate.listByProjectAndApp(project.id,APP_TYPE) : await MS.listEstimates(project.id,APP_TYPE); sel.innerHTML=''; if(!list.length){ sel.innerHTML='<option value="">保存データなし</option>'; return; } list.forEach(item=>{ const opt=document.createElement('option'); opt.value=item.id; const t=item.updatedAt?new Date(item.updatedAt).toLocaleString('ja-JP'):''; opt.textContent=t ? `${item.name}（${t}）` : item.name; sel.appendChild(opt); }); if(selectedId) sel.value=selectedId; }catch(e){ console.error(e); } }
-  async function msSaveEstimate(){ try{ await ensureProject(); if(typeof calc==='function') calc(); const sel=$('savedEstimateList'); const name=($('estimateName')?.value||DEFAULT_NAME).trim()||DEFAULT_NAME; const values=collectValues(); const existingId=sel&&sel.value?sel.value:''; const priceInfo=window.MSPriceMaster?MSPriceMaster.getSnapshot():{}; const item={ id:existingId||undefined, name, data:{values, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot}, values, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot, amount:nFromText('a_total')||nFromText('k_total'), totalAmount:nFromText('a_total')||nFromText('k_total') }; const saved=(MS.Estimate&&typeof MS.Estimate.save==='function') ? await MS.Estimate.save(APP_TYPE,item) : await MS.saveEstimate(APP_TYPE,name,item); await msRefreshEstimateList(saved.id); alert('積算データを保存しました'); }catch(e){ alert(e.message||'保存できませんでした'); } }
+  function msBuildMitsumoroRows(){
+    /* 建築みつも郎互換CSV用。画面で計算済みの数量・実行単価・見積単価を保存する。 */
+    /* 製品名は積算保存名称、据付は「積算保存名称＋据付」とする。 */
+    const rawSavedName=(($('estimateName')?.value||'').trim());
+    /* 保存名称が「可変側溝 W300H400」でも「W300H400」でも、CSV品名は必ず1回だけ「可変側溝」を付ける。 */
+    const specificationName=rawSavedName
+      .replace(/^可変側溝(?:製品)?[\s　・:：_-]*/,'')
+      .trim();
+    const savedSpecification=specificationName;
+    const rows=Array.isArray(window.lastRows)?window.lastRows:[];
+    const defs=[
+      [0,'掘削','', 'm3'],
+      [1,'残土処理','', 'm3'],
+      [2,'埋戻し','', 'm3'],
+      [4,'砕石地業','RC-40', 'm3'],
+      [5,'均し型枠','普通型枠', 'm2'],
+      [6,'均しコンクリート','FC18N/mm2', 'm3'],
+      [7,'敷モルタル','1:3', 'm3'],
+      [3,'床付け','', 'm2'],
+      [8,'インバートコンクリート','FC18N/mm2', 'm3'],
+      [9,'可変側溝',savedSpecification, '個'],
+      [10,'可変側溝据付',savedSpecification, 'm'],
+      [11,'グレーチング蓋','', '枚'],
+      [12,'コンクリート蓋','', '枚'],
+      [13,'蓋設置費','', '枚']
+    ];
+    return defs.map(function(d){
+      const r=rows[d[0]]||[];
+      return {
+        itemName:d[1], specification:d[2], quantity:Number(r[1])||0, unit:d[3],
+        executionUnitPrice:Number(r[3])||0, estimateUnitPrice:Number(r[6])||0
+      };
+    }).filter(function(r){ return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0); });
+  }
+  async function msSaveEstimate(){
+    try{
+      await ensureProject();
+      if(typeof calc==='function') calc();
+      const sel=$('savedEstimateList');
+      const name=($('estimateName')?.value||DEFAULT_NAME).trim()||DEFAULT_NAME;
+      const values=collectValues();
+      const existingId=sel&&sel.value?sel.value:'';
+      const priceInfo=window.MSPriceMaster?MSPriceMaster.getSnapshot():{};
+      const csvRows=msBuildMitsumoroRows();
+      const item={
+        id:existingId||undefined,
+        name,
+        data:{values, csvRows, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot},
+        values,
+        csvRows,
+        priceMasterId:priceInfo.priceMasterId,
+        priceMasterName:priceInfo.priceMasterName,
+        priceSnapshot:priceInfo.priceSnapshot,
+        amount:nFromText('a_total')||nFromText('k_total'),
+        totalAmount:nFromText('a_total')||nFromText('k_total')
+      };
+      const saved=(MS.Estimate&&typeof MS.Estimate.save==='function') ? await MS.Estimate.save(APP_TYPE,item) : await MS.saveEstimate(APP_TYPE,name,item);
+      await msRefreshEstimateList(saved.id);
+      alert('積算データを保存しました');
+    }catch(e){ alert(e.message||'保存できませんでした'); }
+  }
   function applyCommonPriceForEstimate(item){ try{ if(!window.MSPriceMaster) return; MSPriceMaster.ensureMasters(); const snapshot=(item&&item.priceSnapshot)||(item&&item.data&&item.data.priceSnapshot)||null; const active=MSPriceMaster.getActive(); const prices=snapshot||(active&&active.prices)||{}; applyCommonPriceFields(prices); const nameEl=$('pricePresetName'); if(nameEl) nameEl.value=snapshot ? (item.priceMasterName||(item.data&&item.data.priceMasterName)||'保存時単価') : ((active&&active.name)||'標準'); const sel=$('khCommonPriceList'); if(sel&&active) sel.value=active.id; const note=$('khCommonPriceNote'); if(note){ note.textContent=snapshot ? '保存時単価を復元：'+(item.priceMasterName||(item.data&&item.data.priceMasterName)||'保存時単価') : '現在使用中：'+((active&&active.name)||'標準')+'（既存データのため、使用中単価を反映）'; } }catch(e){ console.warn('可変側溝 共通単価反映エラー',e); } }
   async function msLoadEstimate(){ try{ const sel=$('savedEstimateList'); if(!sel||!sel.value){ alert('呼び出す積算データを選んでください'); return; } const item=(MS.Estimate&&typeof MS.Estimate.get==='function') ? await MS.Estimate.get(sel.value) : await MS.getEstimate(sel.value); if(!item){ alert('積算データが見つかりません'); await msRefreshEstimateList(); return; } if($('estimateName')) $('estimateName').value=item.name||''; applyValues(item.values||(item.data&&item.data.values)||{}); applyCommonPriceForEstimate(item); alert('積算データを呼び出しました'); }catch(e){ alert(e.message||'呼び出しできませんでした'); } }
   async function msDeleteEstimate(){ try{ const sel=$('savedEstimateList'); if(!sel||!sel.value){ alert('削除する積算データを選んでください'); return; } if(!confirm('選択中の積算データを削除しますか？')) return; if(MS.Estimate&&typeof MS.Estimate.delete==='function') await MS.Estimate.delete(sel.value); else await MS.deleteEstimate(sel.value); await msRefreshEstimateList(); alert('削除しました'); }catch(e){ alert(e.message||'削除できませんでした'); } }

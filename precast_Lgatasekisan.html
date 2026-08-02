@@ -327,6 +327,22 @@ table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(
 .backfill-choice input{width:16px!important;height:16px!important;margin:0!important}
 .accessory-note{font-size:10px;color:var(--muted);line-height:1.45;margin-top:4px}
 @media(max-width:700px){.backfill-choice{grid-template-columns:1fr}}
+
+
+/* 017: 結果表の文字をL型擁壁と同程度に拡大（画面表示のみ） */
+.result-table th,
+.result-table td{
+  padding:10px 4px!important;
+  font-size:14px!important;
+  line-height:1.35!important;
+}
+.result-table thead th{
+  font-size:14px!important;
+}
+.result-table tbody tr:nth-last-child(-n+2) td,
+.result-table tbody tr:nth-last-child(-n+2) td b{
+  font-size:16px!important;
+}
 </style><script src="ms_common.js"></script></head><body>
 <header><div class="wrap"><div><h1>プレキャストL型擁壁 積算アプリ 016 付帯工対応完成版</h1><div class="sub">土工・地業・製品代・据え付け費を自動算出</div></div><div><span class="pill">土工計算はL型擁壁と共通</span><span class="pill">鉄筋計算なし</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
@@ -773,6 +789,72 @@ $('printBtn').onclick=()=>{
   setTimeout(cleanupAfterPrint,300);
 };
 window.addEventListener('afterprint',cleanupAfterPrint);
+
+/* ===== 建築みつも郎互換CSV対応 ===== */
+function msCsvNumberFromText(id){
+  const el=$(id);
+  if(!el) return 0;
+  return Number(String(el.textContent||el.innerText||'0').replace(/[^0-9.-]/g,''))||0;
+}
+function msBuildMitsumoroRows(){
+  const rawSavedName=(($('estimateName')?.value||'').trim());
+  const savedSpecification=rawSavedName
+    .replace(/^プレキャスト[ＬL]型擁壁(?:製品)?[\s　・:：_-]*/i,'')
+    .trim();
+  const productSpec=[
+    ($('ProductManufacturer')?.value||'').trim(),
+    ($('ProductName')?.value||'').trim(),
+    ($('ProductSpecification')?.value||'').trim(),
+    savedSpecification
+  ].filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i;}).join(' ');
+  const backfillName=($('backfillResultName')?.textContent||'裏込め材').trim();
+  const backfillUnit=($('backfillUnit')?.textContent||'').trim();
+  const defs=[
+    ['掘削','', 'm3','r_exc','u_exc','eu_exc'],
+    ['残土処理','', 'm3','r_spoil','u_spoil','eu_spoil'],
+    ['埋戻し','', 'm3','r_back','u_back','eu_back'],
+    ['床付け','', 'm2','r_bed','u_bed','eu_bed'],
+    ['砕石地業','RC-40', 'm3','r_stone','u_stone','eu_stone'],
+    ['均し型枠','普通型枠', 'm2','r_nform','u_nform','eu_nform'],
+    ['均しコンクリート','FC18N/mm2', 'm3','r_blnd','u_blnd','eu_blnd'],
+    ['プレキャストL型擁壁',productSpec, '本','r_product','u_product','eu_product'],
+    ['プレキャストL型擁壁据付',savedSpecification||productSpec, 'm','r_set','u_set','eu_set'],
+    ['止水コンクリート型枠','普通型枠', 'm2','r_wstopForm','u_wstopForm','eu_wstopForm'],
+    ['止水コンクリート','FC18N/mm2', 'm3','r_wstopConc','u_wstopConc','eu_wstopConc'],
+    [backfillName,backfillName==='裏込め砕石'?'RC-40':'',backfillUnit==='m²'?'m2':(backfillUnit==='m³'?'m3':backfillUnit),'r_backfill','u_backfill','eu_backfill']
+  ];
+  return defs.map(function(d){
+    return {
+      itemName:d[0], specification:d[1], quantity:msCsvNumberFromText(d[3]), unit:d[2],
+      executionUnitPrice:msCsvNumberFromText(d[4]), estimateUnitPrice:msCsvNumberFromText(d[5])
+    };
+  }).filter(function(r){
+    return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0);
+  });
+}
+function msInstallCsvSaveHook(){
+  if(!window.MS?.Estimate || typeof MS.Estimate.save!=='function' || MS.Estimate.__precastLCsvHooked) return;
+  const originalSave=MS.Estimate.save.bind(MS.Estimate);
+  MS.Estimate.save=async function(appType,item){
+    if(appType==='precast_l_wall' && item && typeof item==='object'){
+      if(typeof calc==='function') calc();
+      const csvRows=msBuildMitsumoroRows();
+      item.csvRows=csvRows;
+      item.data=(item.data && typeof item.data==='object')?item.data:{};
+      item.data.csvRows=csvRows;
+      const priceInfo=window.MSPriceMaster?.getSnapshot?.()||{};
+      item.priceMasterId=priceInfo.priceMasterId;
+      item.priceMasterName=priceInfo.priceMasterName;
+      item.priceSnapshot=priceInfo.priceSnapshot;
+      item.data.priceMasterId=priceInfo.priceMasterId;
+      item.data.priceMasterName=priceInfo.priceMasterName;
+      item.data.priceSnapshot=priceInfo.priceSnapshot;
+    }
+    return originalSave(appType,item);
+  };
+  MS.Estimate.__precastLCsvHooked=true;
+}
+
 window.addEventListener('load',async()=>{
   updateSelected();calc();
   if(!window.MSAppAdapter || !window.MS){
@@ -786,6 +868,7 @@ window.addEventListener('load',async()=>{
       const rate=currentProject.profitRate??currentProject.marginRate??currentProject.profitPercent;
       if(rate!==undefined&&rate!==null&&$('ProfitRate'))$('ProfitRate').value=rate;
     }
+    msInstallCsvSaveHook();
     await MSAppAdapter.init({
       appType:'precast_l_wall',
       defaultName:'プレキャストL型擁壁 積算',

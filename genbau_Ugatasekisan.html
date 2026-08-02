@@ -1344,6 +1344,34 @@ window.addEventListener('load',async()=>{ensureDefaultPricePreset();refreshPrice
       if(selectedId) sel.value=selectedId;
     }catch(e){ console.error(e); }
   }
+  function msBuildMitsumoroRows(){
+    /* 建築みつも郎互換CSV用。計算済みの数量・実行単価・見積単価を保存する。 */
+    const defs=[
+      ['掘削','', 'm3','r_exc','u_exc','eu_exc'],
+      ['残土処理','', 'm3','r_spoil','u_spoil','eu_spoil'],
+      ['埋戻し','', 'm3','r_back','u_back','eu_back'],
+      ['砕石地業','RC-40', 'm3','r_stone','u_stone','eu_stone'],
+      ['均しコンクリート','FC18N/mm2', 'm3','r_lean','u_lean','eu_lean'],
+      ['現場打コンクリート','FC18N/mm2', 'm3','r_conc','u_conc','eu_conc'],
+      ['型枠','普通型枠', 'm2','r_form','u_form','eu_form'],
+      ['床付け','', 'm2','r_bed','u_bed','eu_bed'],
+      ['グレーチング蓋','', '枚','r_grating','u_grating','eu_grating'],
+      ['コンクリート蓋','', '枚','r_concllid','u_concllid','eu_concllid'],
+      ['蓋掛け手間','', '枚','r_lidwork','u_lidwork','eu_lidwork']
+    ];
+    return defs.map(function(d){
+      return {
+        itemName:d[0],
+        specification:d[1],
+        quantity:nFromText(d[3]),
+        unit:d[2],
+        executionUnitPrice:nFromText(d[4]),
+        estimateUnitPrice:nFromText(d[5])
+      };
+    }).filter(function(r){
+      return r.quantity>0 && (r.executionUnitPrice>0 || r.estimateUnitPrice>0);
+    });
+  }
   async function msSaveEstimate(){
     try{
       await ensureProject();
@@ -1353,11 +1381,13 @@ window.addEventListener('load',async()=>{ensureDefaultPricePreset();refreshPrice
       const values=collectValues();
       const existingId = sel && sel.value ? sel.value : '';
       const priceInfo = window.MSPriceMaster ? MSPriceMaster.getSnapshot() : {};
+      const csvRows = msBuildMitsumoroRows();
       const item={
         id: existingId || undefined,
         name,
-        data:{ values: values, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot },
+        data:{ values: values, csvRows:csvRows, priceMasterId:priceInfo.priceMasterId, priceMasterName:priceInfo.priceMasterName, priceSnapshot:priceInfo.priceSnapshot },
         values: values,
+        csvRows:csvRows,
         priceMasterId:priceInfo.priceMasterId,
         priceMasterName:priceInfo.priceMasterName,
         priceSnapshot:priceInfo.priceSnapshot,
