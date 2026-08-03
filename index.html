@@ -377,13 +377,12 @@
 <div class="settings-row"><label>型枠 単価/m²</label><input id="def_Pform" step="1" type="number"/></div>
 <div class="settings-row"><label>鉄筋 単価/kg</label><input id="def_Prebar" step="1" type="number"/></div>
 </div><div class="settings-actions"><button class="settings-danger" onclick="resetDefaultSettings()" type="button">初期値に戻す</button><button class="settings-secondary" onclick="closeDefaultSettings()" type="button">閉じる</button><button class="settings-primary" onclick="saveDefaultSettings(true)" type="button">保存して反映</button></div></div></div><div class="select-title v47-title">◆ メインメニュー ◆</div><section class="home-dashboard"><aside class="home-panel">
-<div class="home-panel-head"><div><div class="home-panel-title">📂 保存データ</div><div class="home-panel-sub">工事を選び、上のボタンで操作します</div></div><button class="mini-btn mini-light" onclick="openSystemSettingsModal()" type="button">⚙ 設定</button></div>
+<div class="home-panel-head"><div><div class="home-panel-title">📂 保存データ</div><div class="home-panel-sub">新規現場は作成後すぐ選択され、変更内容は自動保存されます</div></div><button class="mini-btn mini-light" onclick="openSystemSettingsModal()" type="button">⚙ 設定</button></div>
 <div class="home-panel-body">
 <div class="current-project-box"><span>選択中の現場</span><strong id="homeSelectedProjectName">未選択</strong><small id="homeCurrentProjectNote">現在開いている現場：未選択</small></div>
 <div class="home-actions home-file-actions">
 <button class="primary" onclick="openSelectedProjectFromHome()" type="button">開く</button>
-<button class="primary" onclick="saveSelectedProjectFromHome()" type="button">保存</button>
-<button class="light" onclick="saveSelectedProjectAsFromHome()" type="button">名前を付けて保存</button>
+<button class="light" onclick="duplicateSelectedProjectFromHome()" type="button">現場を複製</button>
 <button class="light" onclick="openEditSelectedProjectModal()" type="button">工事情報変更</button>
 <button class="warn" onclick="deleteSelectedProjectFromHome()" type="button">削除</button>
 <button class="safe" onclick="openNewProjectModal()" type="button">新規現場</button>
@@ -577,9 +576,12 @@
     if(!Number.isFinite(profitRate)) profitRate = 20;
     profitRate = Math.max(0, Math.min(99.9, profitRate));
     const p = await MS.createProject({name, projectName:name, client:val('newClientName'), clientName:val('newClientName'), site:val('newSiteName'), siteName:val('newSiteName'), profitRate:profitRate, prices:collectPrices('cp_')});
+    const newId = p && p.id ? p.id : (MS.getCurrentProjectId ? MS.getCurrentProjectId() : '');
+    if(newId && MS.setCurrentProjectId) MS.setCurrentProjectId(newId);
     window.closeNewProjectModal();
     await window.loadCommonToMain();
     await window.renderProjectList();
+    if(newId && window.selectHomeProject) await window.selectHomeProject(newId);
     return p;
   };
 
@@ -1267,17 +1269,78 @@
     await updateSelectionHeader();
     alert('選択した現場を保存しました。');
   };
-  window.saveSelectedProjectAsFromHome=async function(){
-    if(!selectedProjectId)return alert('コピー元の現場を保存一覧から選択してください。');
-    var A=await ready(), p=await getProject(selectedProjectId);if(!p)return;
-    var nn=prompt('新しい工事名を入力してください',pname(p)+' コピー');if(!nn)return;
-    var copy=Object.assign({},p);delete copy.id;copy.name=nn;copy.projectName=nn;copy.createdAt=new Date().toISOString();copy.updatedAt=copy.createdAt;
-    var made=await A.createProject(copy);
-    selectedProjectId=(made&&made.id)||A.getCurrentProjectId&&A.getCurrentProjectId()||'';
+  function cloneJson(value){
+    try{return JSON.parse(JSON.stringify(value));}catch(_){return Object.assign({},value)}
+  }
+  function makeCloneId(prefix){
+    if(window.crypto&&typeof window.crypto.randomUUID==='function')return prefix+'_'+window.crypto.randomUUID();
+    return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,10);
+  }
+  window.duplicateSelectedProjectFromHome=async function(){
+    if(!selectedProjectId)return alert('複製する現場を保存一覧から選択してください。');
+    var A=await ready(),p=await getProject(selectedProjectId);if(!p)return alert('現場データを読み込めませんでした。');
+    var nn=prompt('複製後の工事名を入力してください',pname(p)+'（コピー）');
+    if(!nn||!String(nn).trim())return;nn=String(nn).trim();
+
+    var backup=null, sourceEstimates=[];
+    if(typeof A.exportAllData==='function'){
+      backup=await A.exportAllData();
+      var allEstimates=backup&&backup.data&&Array.isArray(backup.data.estimates)?backup.data.estimates:[];
+      sourceEstimates=allEstimates.filter(function(e){return e&&e.projectId===selectedProjectId});
+    }else{
+      sourceEstimates=A.listEstimates?await A.listEstimates(selectedProjectId):[];
+    }
+
+    if(!confirm('「'+pname(p)+'」を「'+nn+'」として複製します。\n\n工事情報・共通単価・保存済み積算 '+sourceEstimates.length+'件をコピーします。'))return;
+
+    var projectCopy=cloneJson(p);
+    delete projectCopy.id;delete projectCopy._id;delete projectCopy.key;
+    projectCopy.name=nn;projectCopy.projectName=nn;
+    projectCopy.createdAt=new Date().toISOString();projectCopy.updatedAt=projectCopy.createdAt;
+    var made=await A.createProject(projectCopy);
+    var newId=(made&&typeof made==='object'&&made.id)?made.id:(typeof made==='string'?made:'');
+    if(!newId&&A.getCurrentProjectId)newId=A.getCurrentProjectId();
+    if(!newId)throw new Error('複製先の現場IDを取得できませんでした。');
+
+    var copied=0;
+    try{
+      if(sourceEstimates.length){
+        if(backup&&typeof A.importAllData==='function'){
+          var clonedEstimates=sourceEstimates.map(function(src){
+            var e=cloneJson(src);
+            e.id=makeCloneId('estimate');
+            delete e._id;delete e.key;
+            e.projectId=newId;
+            if('projectName' in e)e.projectName=nn;
+            var now=new Date().toISOString();e.createdAt=now;e.updatedAt=now;
+            return e;
+          });
+          var packet=cloneJson(backup);
+          if(!packet||typeof packet!=='object')packet={};
+          if(!packet.data||typeof packet.data!=='object')packet.data={};
+          packet.data.projects=[];
+          packet.data.estimates=clonedEstimates;
+          if(Array.isArray(packet.data.priceMasters))packet.data.priceMasters=[];
+          if(Array.isArray(packet.data.productMasters))packet.data.productMasters=[];
+          await A.importAllData(packet,{replace:false});
+          copied=clonedEstimates.length;
+        }else{
+          throw new Error('安全に積算を複製する機能が見つかりません。ms_common.jsを最新版にしてください。');
+        }
+      }
+    }catch(err){
+      console.error('現場複製中の積算コピーエラー',err);
+      alert('現場は作成しましたが、積算データのコピー中にエラーが発生しました。\n\n'+copied+'件までコピー済みです。\n'+(err&&err.message?err.message:err));
+    }
+
+    if(A.setCurrentProjectId)A.setCurrentProjectId(newId);
+    selectedProjectId=newId;
     if(window.loadCommonToMain)await window.loadCommonToMain();
     if(window.renderProjectList)await window.renderProjectList();else if(window.renderHomeSavedData)await window.renderHomeSavedData();
-    await updateSelectionHeader();alert('「'+nn+'」として保存しました。');
+    await updateSelectionHeader();
+    alert('現場を複製しました。\n\n新しい現場：'+nn+'\n複製した積算：'+copied+'件');
   };
+  window.saveSelectedProjectAsFromHome=window.duplicateSelectedProjectFromHome;
   window.openEditSelectedProjectModal=async function(){
     if(!selectedProjectId)return alert('変更する現場を保存一覧から選択してください。');
     var p=await getProject(selectedProjectId);if(!p)return alert('工事データを読み込めませんでした。');
@@ -2332,6 +2395,48 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMsNotic
 })();
 </script>
 
+
+<script id="v115ProjectAutoSaveScript">
+/* ===== v115: 新規現場の自動選択＋現場情報の自動保存 ===== */
+(function(window,document){
+  'use strict';
+  var timer=null;
+  var saving=false;
+  var pending=false;
+  function isTarget(el){
+    if(!el || !el.id) return false;
+    return ['commonProjectName','commonClientName','commonSiteName','commonMemo'].indexOf(el.id)>=0 || el.id.indexOf('cp_')===0;
+  }
+  async function saveNow(){
+    if(saving){ pending=true; return; }
+    var MS=window.MSSekisan||window.MS;
+    if(!MS || !window.saveCommonFromMain) return;
+    if(MS.ready && MS.ready.then) await MS.ready;
+    if(MS.init) await MS.init();
+    var currentId=MS.getCurrentProjectId ? MS.getCurrentProjectId() : '';
+    if(!currentId) return;
+    saving=true;
+    try{
+      await window.saveCommonFromMain();
+    }catch(err){
+      console.error('現場の自動保存に失敗しました。',err);
+    }finally{
+      saving=false;
+      if(pending){ pending=false; schedule(); }
+    }
+  }
+  function schedule(){
+    clearTimeout(timer);
+    timer=setTimeout(saveNow,600);
+  }
+  document.addEventListener('input',function(ev){ if(isTarget(ev.target)) schedule(); });
+  document.addEventListener('change',function(ev){ if(isTarget(ev.target)) schedule(); });
+  window.addEventListener('beforeunload',function(){
+    clearTimeout(timer);
+    if(!saving && window.saveCommonFromMain) window.saveCommonFromMain();
+  });
+})(window,document);
+</script>
 </body></html>
 <!-- v44: 工事を開くボタン対応・各アプリ複数保存対応 -->
 <style>
