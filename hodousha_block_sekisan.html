@@ -1994,5 +1994,85 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 </script>
 
+
+<style id="pedestrian-block-common-price-readonly-style">
+/* ===== 歩車道ブロック：共有単価マスターは呼び出し専用 ===== */
+#ugSaveToCommonPriceBtn,
+#ugSaveAsCommonPriceBtn,
+#ugRenameCommonPriceBtn,
+#ugDeleteCommonPriceBtn{
+  display:none!important;
+}
+#ugApplyCommonPriceBtn{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  height:36px!important;
+}
+#ugCommonPriceList{width:100%!important}
+#ugCommonPriceNote{
+  margin-top:8px!important;
+  padding:8px 9px!important;
+  border:1px solid #cfe3f7!important;
+  border-radius:9px!important;
+  background:#f7fbff!important;
+  color:#60758d!important;
+  line-height:1.55!important;
+}
+</style>
+<script id="pedestrian-block-common-price-readonly-ui">
+(function(window, document){
+  'use strict';
+
+  function applyReadonlyView(){
+    var select = document.getElementById('ugCommonPriceList');
+    var applyBtn = document.getElementById('ugApplyCommonPriceBtn');
+    var note = document.getElementById('ugCommonPriceNote');
+    if(!select || !applyBtn) return;
+
+    var block = select.closest('.price-block');
+    if(block){
+      var title = block.querySelector('.sectionTitle');
+      if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+
+      var actions = block.querySelector('.save-btns');
+      if(actions){
+        actions.style.gridTemplateColumns = '1fr';
+        actions.style.alignItems = 'stretch';
+      }
+    }
+
+    applyBtn.textContent = '選択した共有単価を呼び出す';
+    applyBtn.classList.remove('ghost');
+    applyBtn.classList.add('primary');
+
+    if(note){
+      var activeName = '';
+      try{
+        var active = window.MSPriceMaster &&
+          typeof window.MSPriceMaster.getActive === 'function'
+          ? window.MSPriceMaster.getActive()
+          : null;
+        activeName = active && active.name ? active.name : '';
+      }catch(error){}
+
+      note.textContent =
+        (activeName ? '現在使用中：' + activeName + '　' : '') +
+        '共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。';
+    }
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(applyReadonlyView, 0);
+    setTimeout(applyReadonlyView, 300);
+    setTimeout(applyReadonlyView, 1000);
+  });
+
+  window.addEventListener('ms-price-master-changed', function(){
+    setTimeout(applyReadonlyView, 0);
+  });
+})(window, document);
+</script>
+
 </body>
 </html>

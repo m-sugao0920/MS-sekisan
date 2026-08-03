@@ -2049,5 +2049,146 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 </script>
 
+
+<style id="l-gutter-common-price-readonly-style">
+/* 旧単価マスターが一瞬表示される場合も、編集用項目を隠します */
+#pricePresetName,
+#savePriceBtn,
+#deletePriceBtn,
+#ugSaveToCommonPriceBtn,
+#ugSaveAsCommonPriceBtn,
+#ugRenameCommonPriceBtn,
+#ugDeleteCommonPriceBtn{
+  display:none!important;
+}
+#ugApplyCommonPriceBtn,
+#loadPriceBtn{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  height:36px!important;
+}
+#ugCommonPriceList,
+#savedPriceList{
+  width:100%!important;
+}
+</style>
+
+<script id="l-gutter-common-price-readonly-complete">
+(function(window, document){
+  'use strict';
+
+  function activeName(){
+    try{
+      if(window.MSPriceMaster && typeof window.MSPriceMaster.getActive === 'function'){
+        var active = window.MSPriceMaster.getActive();
+        return active && active.name ? active.name : '';
+      }
+    }catch(error){}
+    return '';
+  }
+
+  function makeReadonly(){
+    var select =
+      document.getElementById('ugCommonPriceList') ||
+      document.getElementById('savedPriceList');
+
+    if(!select) return false;
+
+    var block = select.closest('.price-block');
+    if(!block) return false;
+
+    var title = block.querySelector('.sectionTitle');
+    if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+
+    /* 編集用の入力欄とボタンはDOMからも取り除きます */
+    [
+      'pricePresetName',
+      'savePriceBtn',
+      'deletePriceBtn',
+      'ugSaveToCommonPriceBtn',
+      'ugSaveAsCommonPriceBtn',
+      'ugRenameCommonPriceBtn',
+      'ugDeleteCommonPriceBtn'
+    ].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var line = el.closest('.save-line');
+      if(id === 'pricePresetName' && line){
+        line.remove();
+      }else{
+        el.remove();
+      }
+    });
+
+    var applyBtn =
+      document.getElementById('ugApplyCommonPriceBtn') ||
+      document.getElementById('loadPriceBtn');
+
+    if(applyBtn){
+      applyBtn.textContent = '選択した共有単価を呼び出す';
+      applyBtn.classList.remove('ghost');
+      applyBtn.classList.add('primary');
+      applyBtn.style.width = '100%';
+      applyBtn.style.minWidth = '0';
+    }
+
+    var actions = block.querySelector('.save-btns');
+    if(actions){
+      actions.style.gridTemplateColumns = '1fr';
+      actions.style.alignItems = 'stretch';
+    }
+
+    var note =
+      document.getElementById('ugCommonPriceNote') ||
+      block.querySelector('.note');
+
+    if(note){
+      var name = activeName();
+      note.textContent =
+        (name ? '現在使用中：' + name + '　' : '') +
+        '共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。';
+    }
+
+    block.dataset.readonlyCommonPrice = '1';
+    return true;
+  }
+
+  function applyRepeatedly(){
+    makeReadonly();
+    setTimeout(makeReadonly, 50);
+    setTimeout(makeReadonly, 250);
+    setTimeout(makeReadonly, 700);
+    setTimeout(makeReadonly, 1500);
+  }
+
+  document.addEventListener('DOMContentLoaded', applyRepeatedly);
+  window.addEventListener('load', applyRepeatedly);
+  window.addEventListener('ms-price-master-changed', function(){
+    setTimeout(makeReadonly, 0);
+  });
+
+  /* 元の処理が後から単価欄を書き換えても、再び呼び出し専用へ戻します */
+  var observer = new MutationObserver(function(){
+    var block = document.querySelector('.price-block');
+    if(block && block.dataset.readonlyCommonPrice !== '1'){
+      makeReadonly();
+      return;
+    }
+    if(document.getElementById('ugSaveToCommonPriceBtn') ||
+       document.getElementById('ugSaveAsCommonPriceBtn') ||
+       document.getElementById('ugRenameCommonPriceBtn') ||
+       document.getElementById('ugDeleteCommonPriceBtn')){
+      if(block) delete block.dataset.readonlyCommonPrice;
+      makeReadonly();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {childList:true, subtree:true});
+  });
+})(window, document);
+</script>
+
 </body>
 </html>

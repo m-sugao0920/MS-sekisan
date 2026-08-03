@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>排水管工 積算アプリ 008</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>排水管工 積算アプリ 008</title>
+<style>
     :root{
       --blue:#0070C0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px;
     }
@@ -621,7 +622,6 @@
 @media(max-width:700px){.pm-register-grid{grid-template-columns:1fr}.pm-price-summary{grid-template-columns:1fr}.pm-register-buttons{grid-template-columns:1fr}}
 </style>
 <script src="ms_common.js"></script>
-
 <style id="estimate-columns-030">
 .result-table th,.result-table td{padding:9px 4px!important;font-size:13px!important;white-space:normal!important}
 .result-table th:nth-child(1),.result-table td:nth-child(1){width:18%!important;text-align:left!important}
@@ -643,8 +643,6 @@
 .result-memo-item b{color:#334155;font-weight:800}
 @media(max-width:700px){.result-memo-grid{grid-template-columns:1fr}.result-memo-item{grid-template-columns:105px 1fr}}
 </style>
-</style>
-
 <style id="print-preview-fix-032">
 /* 032: プレビュー時の最下段重なり防止 */
 .print-main-table tfoot .unit-price-row th,
@@ -675,7 +673,6 @@
 /* 033: SVGプレビューの合計欄と注記の間隔確保 */
 .svg-preview-mode020 .svg-print-sheet-svg020{overflow:hidden!important;}
 </style>
-
 <style id="preview-print-unify-034">
 /* 034: 印刷プレビューと実印刷を同じ最終SVG帳票に統一 */
 .svg-preview-mode020 #svgPrintWrap020{
@@ -708,14 +705,12 @@
   }
 }
 </style>
-
 <style id="preview-preview-match-print-044">
 /* 044: 「戻る・印刷」画面を実際の印刷位置と完全に一致させる */
 .svg-preview-mode020 .preview-lower-035{
   transform:none!important;
 }
 </style>
-
 <style id="ankyo-final-print">
 #pipeSectionSvg .ground{stroke:#333;stroke-width:2;stroke-dasharray:18 7 3 7}
 #pipeSectionSvg .slope{stroke:#111;stroke-width:2;stroke-dasharray:16 7 3 7;fill:none}
@@ -741,13 +736,11 @@
 .print-notes{margin-bottom:8mm!important}
 }
 </style>
-
 <style id="pipe-diagram-zoom-fix-004">
 /* 004: 断面図の実形状に合わせて表示範囲を自動調整 */
 #pipeSectionSvg{width:100%!important;height:420px!important;display:block!important;overflow:visible!important}
 .illust-box{padding:4px 4px 4px 26px!important;overflow:hidden!important}
 </style>
-
 <style id="pipe-method-input-state-007">
 /* 工法別入力制御・寸法記号フォーカス表示 */
 .pipe-field-disabled label{color:#b5bdc8!important;}
@@ -757,7 +750,6 @@
 #pipeSectionSvg .w3small.pipe-dim-active{font-size:40px!important;}
 #pipeSectionSvg .small.pipe-dim-active{font-size:36px!important;}
 </style>
-
 <style id="pipe-diagram-zoom-120-final">
 /* 断面図を約1.2倍に拡大。工法切替・赤色フォーカス表示は維持 */
 .illust-box{
@@ -785,7 +777,6 @@
   #pipeSectionSvg{height:460px!important;}
 }
 </style>
-
 <style id="socket-display-font-fix-v5">
 /* v5: 継手ソケット必要数は数値表示、結果項目は通常文字 */
 .result-table tbody tr:nth-last-child(-n+2) td{font-weight:400!important;background:#fff!important;}
@@ -796,180 +787,167 @@
 <header><div class="wrap"><div><h1>排水管工 積算アプリ 008</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><div class="illust-box">
-<svg id="pipeSectionSvg" class="illust-svg" aria-label="排水管工断面図" viewBox="0 0 1180 780" preserveAspectRatio="xMidYMid meet">
+<svg aria-label="排水管工断面図" class="illust-svg" id="pipeSectionSvg" preserveaspectratio="xMidYMid meet" viewbox="0 0 1180 780">
 <defs>
-<pattern id="gravel" width="26" height="18" patternUnits="userSpaceOnUse">
-<circle cx="5" cy="6" r="3" fill="#8b8f94"/>
-<circle cx="16" cy="11" r="4" fill="#70757a"/>
-<circle cx="24" cy="4" r="2.5" fill="#a2a6aa"/>
+<pattern height="18" id="gravel" patternunits="userSpaceOnUse" width="26">
+<circle cx="5" cy="6" fill="#8b8f94" r="3"></circle>
+<circle cx="16" cy="11" fill="#70757a" r="4"></circle>
+<circle cx="24" cy="4" fill="#a2a6aa" r="2.5"></circle>
 </pattern>
-<marker id="pipeArrow" markerWidth="4.5" markerHeight="4.5" refX="2.25" refY="2.25" orient="auto-start-reverse">
-<path d="M0,0 L4.5,2.25 L0,4.5 z" fill="#222"/>
+<marker id="pipeArrow" markerheight="4.5" markerwidth="4.5" orient="auto-start-reverse" refx="2.25" refy="2.25">
+<path d="M0,0 L4.5,2.25 L0,4.5 z" fill="#222"></path>
 </marker>
 </defs>
-
-<line id="ground" class="ground"/>
-<path id="leftSlope" class="slope"/>
-<path id="rightSlope" class="slope"/>
-<line id="bottom" class="line"/>
-
+<line class="ground" id="ground"></line>
+<path class="slope" id="leftSlope"></path>
+<path class="slope" id="rightSlope"></path>
+<line class="line" id="bottom"></line>
 <g id="structure">
-<rect id="protectBox" class="boxfill"/>
-<rect id="gravelRect" class="gravel"/>
-<rect id="levelRect" class="level"/>
-<rect id="mortarRect" class="mortar"/>
-<path id="formwork" class="form"/>
-<circle id="pipe" class="pipe"/>
+<rect class="boxfill" id="protectBox"></rect>
+<rect class="gravel" id="gravelRect"></rect>
+<rect class="level" id="levelRect"></rect>
+<rect class="mortar" id="mortarRect"></rect>
+<path class="form" id="formwork"></path>
+<circle class="pipe" id="pipe"></circle>
 </g>
-
-
 <g id="heightExts">
-<line id="h1extTop" class="ext"/><line id="h1extBottom" class="ext"/>
-<line id="h2extTop" class="ext"/><line id="h2extBottom" class="ext"/>
-<line id="h3extTop" class="ext"/><line id="h3extBottom" class="ext"/>
-<line id="h4extTop" class="ext"/><line id="h4extBottom" class="ext"/>
-<line id="h5extTop" class="ext"/><line id="h5extBottom" class="ext"/>
+<line class="ext" id="h1extTop"></line><line class="ext" id="h1extBottom"></line>
+<line class="ext" id="h2extTop"></line><line class="ext" id="h2extBottom"></line>
+<line class="ext" id="h3extTop"></line><line class="ext" id="h3extBottom"></line>
+<line class="ext" id="h4extTop"></line><line class="ext" id="h4extBottom"></line>
+<line class="ext" id="h5extTop"></line><line class="ext" id="h5extBottom"></line>
 </g>
-
 <g id="dims">
-<line id="h1dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="h1txt" class="dimtxt">H1</text>
-<line id="h2dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="h2txt" class="dimtxt">H2</text>
-<line id="h3dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="h3txt" class="dimtxt">H3</text>
-<line id="h4dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="h4txt" class="dimtxt">H4</text>
-<line id="h5dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="h5txt" class="dimtxt">H5</text>
-
-<line id="w1dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="w1txt" class="dimtxt">W1</text>
-<line id="w2dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="w2txt" class="dimtxt">W2</text>
-<line id="w3dim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="w3txt" class="w3small">W3</text>
-
-<line id="eldim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="eltxt" class="dimtxt">e</text>
-<line id="erdim" class="line" marker-start="url(#pipeArrow)" marker-end="url(#pipeArrow)"/>
-<text id="ertxt" class="dimtxt">e</text>
+<line class="line" id="h1dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="h1txt">H1</text>
+<line class="line" id="h2dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="h2txt">H2</text>
+<line class="line" id="h3dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="h3txt">H3</text>
+<line class="line" id="h4dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="h4txt">H4</text>
+<line class="line" id="h5dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="h5txt">H5</text>
+<line class="line" id="w1dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="w1txt">W1</text>
+<line class="line" id="w2dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="w2txt">W2</text>
+<line class="line" id="w3dim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="w3small" id="w3txt">W3</text>
+<line class="line" id="eldim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="eltxt">e</text>
+<line class="line" id="erdim" marker-end="url(#pipeArrow)" marker-start="url(#pipeArrow)"></line>
+<text class="dimtxt" id="ertxt">e</text>
 </g>
-
-<text id="slopeL" class="small">1:n</text>
-<text id="slopeR" class="small">1:n</text>
-
+<text class="small" id="slopeL">1:n</text>
+<text class="small" id="slopeR">1:n</text>
 <g id="labels">
-<path id="lead1" class="leader"/><text id="lab1" class="mat"></text>
-<path id="lead2" class="leader"/><text id="lab2" class="mat"></text>
-<path id="lead3" class="leader"/><text id="lab3" class="mat"></text>
-<path id="lead4" class="leader"/><text id="lab4" class="mat"></text>
+<path class="leader" id="lead1"></path><text class="mat" id="lab1"></text>
+<path class="leader" id="lead2"></path><text class="mat" id="lab2"></text>
+<path class="leader" id="lead3"></path><text class="mat" id="lab3"></text>
+<path class="leader" id="lead4"></path><text class="mat" id="lab4"></text>
 </g>
-</svg></div><div class="note" id="pipeMethodNote">※ 工法名を選択すると、排水管の断面図が切り替わります。</div>
-<div class="estimate-panel">
-  <div class="save-line">
-    <label>工事名</label>
-    <input id="projectName" type="text" placeholder="例：○○様邸 外構工事">
-  </div>
-
-  <div class="control-block estimate-block">
-    <div class="sectionTitle">積算データ保存</div>
-    <div class="save-line">
-      <label>積算名称</label>
-      <input id="estimateName" type="text" placeholder="例：東側 排水管工 L10m">
-    </div>
-    <div class="save-line">
-      <label>保存済み</label>
-      <select id="savedEstimateList"><option value="">保存データなし</option></select>
-    </div>
-    <div class="save-btns">
-      <button class="primary" id="saveEstimateBtn" type="button">保存</button>
-      <button class="ghost" id="loadEstimateBtn" type="button">呼出</button>
-      <button class="danger" id="deleteEstimateBtn" type="button">削除</button>
-    </div>
-    <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
-  </div>
-
-  <div class="product-master-box">
-    <div class="product-master-head">
-      <div class="product-master-title">製品単価マスター</div>
-    </div>
-    <div id="selectedProductMaster" class="product-master-current">製品は選択されていません。</div>
-    <div class="product-master-actions">
-      <button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
-      <button class="ghost" id="clearProductMasterBtn" type="button">選択解除</button>
-    </div>
-    <div class="pm-register-actions">
-      <button class="ghost" id="registerCurrentProductBtn" type="button">現在の入力内容をマスター登録</button>
-    </div>
-    <input id="ProductMasterId" type="hidden">
-    <input id="ProductMasterUpdatedAt" type="hidden">
-    <input id="ProductName" type="hidden">
-    <input id="ProductManufacturer" type="hidden">
-    <input id="ProductSpecification" type="hidden">
-  </div>
-
-  <div class="control-block price-block">
-    <div class="sectionTitle">単価マスター</div>
-    <div class="save-line">
-      <label>単価名</label>
-      <input id="pricePresetName" type="text" placeholder="例：標準 / U300 静岡県 / U240 民間">
-    </div>
-    <div class="save-line">
-      <label>保存済み単価</label>
-      <select id="savedPriceList"><option value="">保存単価なし</option></select>
-    </div>
-    <div class="save-btns">
-      <button class="ghost" id="savePriceBtn" type="button">保存</button>
-      <button class="ghost" id="loadPriceBtn" type="button">呼出</button>
-      <button class="danger" id="deletePriceBtn" type="button">削除</button>
-    </div>
-    <div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div>
-  </div>
-
-  <div class="control-block operation-block">
-    <div class="sectionTitle">基本操作</div>
-    <div class="save-btns" style="grid-template-columns:1fr 1fr">
-      <button class="primary" id="calcBtn" type="button">計算</button>
-      <button class="danger" id="resetBtn" type="button">入力リセット</button>
-    </div>
-  </div>
-</div></div></section>
+</svg></div><div class="note" id="pipeMethodNote">※ 工法名を選択すると、排水管の断面図が切り替わります。</div><div class="estimate-panel">
+<div class="save-line">
+<label>工事名</label>
+<input id="projectName" placeholder="例：○○様邸 外構工事" type="text"/>
+</div>
+<div class="control-block estimate-block">
+<div class="sectionTitle">積算データ保存</div>
+<div class="save-line">
+<label>積算名称</label>
+<input id="estimateName" placeholder="例：東側 排水管工 L10m" type="text"/>
+</div>
+<div class="save-line">
+<label>保存済み</label>
+<select id="savedEstimateList"><option value="">保存データなし</option></select>
+</div>
+<div class="save-btns">
+<button class="primary" id="saveEstimateBtn" type="button">保存</button>
+<button class="ghost" id="loadEstimateBtn" type="button">呼出</button>
+<button class="danger" id="deleteEstimateBtn" type="button">削除</button>
+</div>
+<div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+</div>
+<div class="product-master-box">
+<div class="product-master-head">
+<div class="product-master-title">製品単価マスター</div>
+</div>
+<div class="product-master-current" id="selectedProductMaster">製品は選択されていません。</div>
+<div class="product-master-actions">
+<button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
+<button class="ghost" id="clearProductMasterBtn" type="button">選択解除</button>
+</div>
+<div class="pm-register-actions">
+<button class="ghost" id="registerCurrentProductBtn" type="button">現在の入力内容をマスター登録</button>
+</div>
+<input id="ProductMasterId" type="hidden"/>
+<input id="ProductMasterUpdatedAt" type="hidden"/>
+<input id="ProductName" type="hidden"/>
+<input id="ProductManufacturer" type="hidden"/>
+<input id="ProductSpecification" type="hidden"/>
+</div>
+<div class="control-block price-block">
+<div class="sectionTitle">単価マスター</div>
+<div class="save-line">
+<label>単価名</label>
+<input id="pricePresetName" placeholder="例：標準 / U300 静岡県 / U240 民間" type="text"/>
+</div>
+<div class="save-line">
+<label>保存済み単価</label>
+<select id="savedPriceList"><option value="">保存単価なし</option></select>
+</div>
+<div class="save-btns">
+<button class="ghost" id="savePriceBtn" type="button">保存</button>
+<button class="ghost" id="loadPriceBtn" type="button">呼出</button>
+<button class="danger" id="deletePriceBtn" type="button">削除</button>
+</div>
+<div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div>
+</div>
+<div class="control-block operation-block">
+<div class="sectionTitle">基本操作</div>
+<div class="save-btns" style="grid-template-columns:1fr 1fr">
+<button class="primary" id="calcBtn" type="button">計算</button>
+<button class="danger" id="resetBtn" type="button">入力リセット</button>
+</div>
+</div>
+</div>
+</div></section>
 <section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
-  <div class="sectionTitle">工法選択</div>
-  <div class="row"><div><label>工法名</label><select id="method" style="width:100%;height:40px;border:1px solid var(--border);border-radius:12px;padding:8px;background:#fff;font-size:14px"><option value="pipe">管のみ</option><option value="base">砕石＋均しコンクリート</option><option value="sand">保護砂</option><option value="concrete">保護コンクリート</option></select></div><div><label>W3（管径・m）</label><input id="w3" type="number" step="0.001" value="0.300" data-dim="dim-w3"></div></div>
-  <div class="hr"></div><div class="sectionTitle">断面寸法（m）</div>
-  <div class="row"><div><label>W1（保護幅）</label><input id="W1" type="number" step="0.001" value="0.600" data-dim="dim-w1"></div><div><label>W2（基礎幅）</label><input id="W2" type="number" step="0.001" value="0.800" data-dim="dim-w2"></div></div>
-  <div class="row"><div><label>H1（土被り厚）</label><input id="H1" type="number" step="0.001" value="0.500" data-dim="dim-h1"></div><div><label>H2（保護部高さ）</label><input id="H2" type="number" step="0.001" value="0.600" data-dim="dim-h2"></div></div>
-  <div class="row"><div><label>H3（未使用）</label><input id="H3" type="number" step="0.001" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコンクリート厚）</label><input id="H4" type="number" step="0.001" value="0.050" data-dim="dim-h4"></div></div>
-  <div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="number" step="0.001" value="0.100" data-dim="dim-h5"></div><div></div></div>
-  <div class="hr"></div><div class="sectionTitle">共通条件</div>
-  <div class="row"><div><label>延長 L（m）</label><input id="L" type="number" step="0.001" value="10.000"></div><div><label>掘削余裕 e（左右・m）</label><input id="E" type="number" step="0.001" value="0.200" data-dim="dim-e"></div></div>
-  <div class="row"><div><label>法面勾配 n（1：n）</label><input id="N" type="number" step="0.01" min="0" value="0.50" data-dim="dim-n"></div><div><label>利益率（％）</label><input id="ProfitRate" type="number" step="0.1" min="0" max="99.9" value="20"></div></div>
-  <div class="row"><div><label>見積単価の丸め</label><input type="text" value="1,000円未満：10円／以上：100円" readonly></div><div></div></div>
-  <div class="note">掘削深さ＝H1＋H2＋H3＋H4＋H5。掘削底幅＝W2＋2e、掘削上幅＝掘削底幅＋2×n×掘削深さです。</div>
-  <div class="hr"></div>
-  <div class="sectionTitle">単価（任意・円）</div>
-  <div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" step="1" value="4500"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" step="1" value="250"></div></div>
-  <div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="number" step="1" value="8500"></div><div><label>均し型枠 単価/m²</label><input id="PleanForm" type="number" step="1" value="5500"></div></div>
-  <div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" type="number" step="1" value="22000"></div><div><label>保護砂 単価/m³</label><input id="Pmortar" type="number" step="1" value="6000"></div></div>
-  <div class="row"><div><label>保護コンクリート 単価/m³</label><input id="PprotectConcrete" type="number" step="1" value="24000"></div><div><label>保護コンクリート型枠 単価/m²</label><input id="PprotectForm" type="number" step="1" value="5500"></div></div>
-  <div class="row"><div><label>据付 単価/m</label><input id="Pset" type="number" step="1" value="2500"></div><div></div></div>
-  <div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" step="1" value="4000"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" step="1" value="3000"></div></div>
-  <div class="row"><div><label>製品長さ（m/本）</label><input id="ProdLen" type="number" step="0.1" value="2"></div><div><label>配管材価格（円/本）</label><input id="ProdPrice" type="number" step="1" value="20000"></div></div>
-  <div class="row"><div><label>継手ソケット 単価（円/個）</label><input id="Psocket" type="number" step="1" value="0"></div><div><label>継手ソケット 必要数</label><input id="SocketQtyDisplay" type="text" value="0" readonly></div></div>
-<input type="hidden" id="Pgrating" value="0"><input type="hidden" id="Ngrating" value="0"><input type="hidden" id="Pconcllid" value="0"><input type="hidden" id="Nconcllid" value="0"><input type="hidden" id="PcoverSet" value="0"><input type="hidden" id="NcoverSet" value="0"></div></section>
+<div class="sectionTitle">工法選択</div>
+<div class="row"><div><label>工法名</label><select id="method" style="width:100%;height:40px;border:1px solid var(--border);border-radius:12px;padding:8px;background:#fff;font-size:14px"><option value="pipe">管のみ</option><option value="base">砕石＋均しコンクリート</option><option value="sand">保護砂</option><option value="concrete">保護コンクリート</option></select></div><div><label>W3（管径・m）</label><input data-dim="dim-w3" id="w3" step="0.001" type="number" value="0.300"/></div></div>
+<div class="hr"></div><div class="sectionTitle">断面寸法（m）</div>
+<div class="row"><div><label>W1（保護幅）</label><input data-dim="dim-w1" id="W1" step="0.001" type="number" value="0.600"/></div><div><label>W2（基礎幅）</label><input data-dim="dim-w2" id="W2" step="0.001" type="number" value="0.800"/></div></div>
+<div class="row"><div><label>H1（土被り厚）</label><input data-dim="dim-h1" id="H1" step="0.001" type="number" value="0.500"/></div><div><label>H2（保護部高さ）</label><input data-dim="dim-h2" id="H2" step="0.001" type="number" value="0.600"/></div></div>
+<div class="row"><div><label>H3（未使用）</label><input data-dim="dim-h3" id="H3" step="0.001" type="number" value="0.020"/></div><div><label>H4（均しコンクリート厚）</label><input data-dim="dim-h4" id="H4" step="0.001" type="number" value="0.050"/></div></div>
+<div class="row"><div><label>H5（砕石厚）</label><input data-dim="dim-h5" id="H5" step="0.001" type="number" value="0.100"/></div><div></div></div>
+<div class="hr"></div><div class="sectionTitle">共通条件</div>
+<div class="row"><div><label>延長 L（m）</label><input id="L" step="0.001" type="number" value="10.000"/></div><div><label>掘削余裕 e（左右・m）</label><input data-dim="dim-e" id="E" step="0.001" type="number" value="0.200"/></div></div>
+<div class="row"><div><label>法面勾配 n（1：n）</label><input data-dim="dim-n" id="N" min="0" step="0.01" type="number" value="0.50"/></div><div><label>利益率（％）</label><input id="ProfitRate" max="99.9" min="0" step="0.1" type="number" value="20"/></div></div>
+<div class="row"><div><label>見積単価の丸め</label><input readonly="" type="text" value="1,000円未満：10円／以上：100円"/></div><div></div></div>
+<div class="note">掘削深さ＝H1＋H2＋H3＋H4＋H5。掘削底幅＝W2＋2e、掘削上幅＝掘削底幅＋2×n×掘削深さです。</div>
+<div class="hr"></div>
+<div class="sectionTitle">単価（任意・円）</div>
+<div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" step="1" type="number" value="4500"/></div><div><label>床付け 単価/m²</label><input id="Pbed" step="1" type="number" value="250"/></div></div>
+<div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" step="1" type="number" value="8500"/></div><div><label>均し型枠 単価/m²</label><input id="PleanForm" step="1" type="number" value="5500"/></div></div>
+<div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" step="1" type="number" value="22000"/></div><div><label>保護砂 単価/m³</label><input id="Pmortar" step="1" type="number" value="6000"/></div></div>
+<div class="row"><div><label>保護コンクリート 単価/m³</label><input id="PprotectConcrete" step="1" type="number" value="24000"/></div><div><label>保護コンクリート型枠 単価/m²</label><input id="PprotectForm" step="1" type="number" value="5500"/></div></div>
+<div class="row"><div><label>据付 単価/m</label><input id="Pset" step="1" type="number" value="2500"/></div><div></div></div>
+<div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" step="1" type="number" value="4000"/></div><div><label>埋戻し 単価/m³</label><input id="Pback" step="1" type="number" value="3000"/></div></div>
+<div class="row"><div><label>製品長さ（m/本）</label><input id="ProdLen" step="0.1" type="number" value="2"/></div><div><label>配管材価格（円/本）</label><input id="ProdPrice" step="1" type="number" value="20000"/></div></div>
+<div class="row"><div><label>継手ソケット 単価（円/個）</label><input id="Psocket" step="1" type="number" value="0"/></div><div><label>継手ソケット 必要数</label><input id="SocketQtyDisplay" readonly="" type="text" value="0"/></div></div>
+<input id="Pgrating" type="hidden" value="0"/><input id="Ngrating" type="hidden" value="0"/><input id="Pconcllid" type="hidden" value="0"/><input id="Nconcllid" type="hidden" value="0"/><input id="PcoverSet" type="hidden" value="0"/><input id="NcoverSet" type="hidden" value="0"/></div></section>
 <section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
-  <div class="btns" style="grid-template-columns:1fr;margin:0 0 12px;max-width:140px"><button class="primary" id="printReportBtn" type="button">印刷</button></div>
-  <div class="kpi"><div class="box"><div class="t">掘削</div><div class="v"><span id="k_exc">0.000</span><span class="u">m³</span></div><div class="t mono">台形断面積×L</div></div><div class="box"><div class="t">均しコンクリート</div><div class="v"><span id="k_lean">0.000</span><span class="u">m³</span></div><div class="t mono">W2×H5×L</div></div><div class="box"><div class="t">合計金額</div><div class="v"><span id="k_total">0</span><span class="u">円</span></div><div class="t mono">数量×単価</div></div><div class="box"><div class="t">mあたり単価</div><div class="v"><span id="k_unitm">0</span><span class="u">円/m</span></div><div class="t mono">合計金額÷L</div></div></div>
-  <div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultRowsBody"></tbody>
-  <tfoot>
-    <tr><td><b>合計</b></td><td></td><td></td><td></td><td class="mono" id="a_total"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_total"><b>0</b></td></tr>
-    <tr><td><b>mあたり単価</b></td><td></td><td></td><td></td><td class="mono" id="a_unitm"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_unitm"><b>0</b></td></tr>
-  </tfoot></table></div>
-  <div class="result-memo-box" aria-label="計算メモ">
-    <div class="result-memo-title">計算メモ</div>
-    <div class="result-memo-grid">
+<div class="btns" style="grid-template-columns:1fr;margin:0 0 12px;max-width:140px"><button class="primary" id="printReportBtn" type="button">印刷</button></div>
+<div class="kpi"><div class="box"><div class="t">掘削</div><div class="v"><span id="k_exc">0.000</span><span class="u">m³</span></div><div class="t mono">台形断面積×L</div></div><div class="box"><div class="t">均しコンクリート</div><div class="v"><span id="k_lean">0.000</span><span class="u">m³</span></div><div class="t mono">W2×H5×L</div></div><div class="box"><div class="t">合計金額</div><div class="v"><span id="k_total">0</span><span class="u">円</span></div><div class="t mono">数量×単価</div></div><div class="box"><div class="t">mあたり単価</div><div class="v"><span id="k_unitm">0</span><span class="u">円/m</span></div><div class="t mono">合計金額÷L</div></div></div>
+<div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultRowsBody"></tbody>
+<tfoot>
+<tr><td><b>合計</b></td><td></td><td></td><td></td><td class="mono" id="a_total"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_total"><b>0</b></td></tr>
+<tr><td><b>mあたり単価</b></td><td></td><td></td><td></td><td class="mono" id="a_unitm"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_unitm"><b>0</b></td></tr>
+</tfoot></table></div>
+<div aria-label="計算メモ" class="result-memo-box">
+<div class="result-memo-title">計算メモ</div>
+<div class="result-memo-grid">
 <div class="result-memo-item"><b>掘削</b><span>台形断面積×L</span></div>
 <div class="result-memo-item"><b>掘削深さ</b><span>H1＋H2＋H3＋H4＋H5</span></div>
 <div class="result-memo-item"><b>掘削底幅</b><span>W2＋2e</span></div>
@@ -986,125 +964,117 @@
 </div></div>
 </div></section>
 </div></main>
-
-<div id="printPreviewActions" class="print-preview-actions">
-  <button class="ghost" id="backFromPrintPreviewBtn" type="button">戻る</button>
-  <button class="primary" id="printFromPreviewBtn" type="button">印刷</button>
+<div class="print-preview-actions" id="printPreviewActions">
+<button class="ghost" id="backFromPrintPreviewBtn" type="button">戻る</button>
+<button class="primary" id="printFromPreviewBtn" type="button">印刷</button>
 </div>
-
-<section id="printReport" class="print-report" aria-label="排水管工 積算印刷帳票">
-  <div id="printHeader" class="print-header">
-    <div id="printProject">工事名：-</div>
-    <div id="printEstimate">積算名称：-</div>
-  </div>
-
-  <table class="print-main-table">
-    <thead>
-      <tr>
-        <th>項目</th>
-        <th>数量</th>
-        <th>単位</th>
-        <th>単価</th>
-        <th>金額</th>
-        <th>見積単価</th>
-        <th>見積金額</th>
-      </tr>
-    </thead>
-    <tbody id="printRows"></tbody>
-    <tfoot>
-      <tr>
-        <th colspan="4">合計</th>
-        <td id="printTotal">0</td>
-        <td></td>
-        <td id="printEstimateTotal">0</td>
-      </tr>
-      <tr class="unit-price-row">
-        <th colspan="3">mあたり単価（原価）</th>
-        <td colspan="2" id="printUnitm">0 円/m</td>
-        <th>mあたり単価（見積）</th>
-        <td id="printEstimateUnitm">0 円/m</td>
-      </tr>
-    </tfoot>
-  </table>
-
-  <div class="print-notes">
-    <div>※ 数量は入力延長Lに対する数量です。</div>
-    <div>単位：mm（特記なき場合）</div>
-  </div>
-
-  <div class="print-bottom">
-    <div class="print-drawing-box">
-      <div class="print-title">断面図（寸法図）</div>
-      <div id="printDiagram"></div>
-      <div class="print-spec">
-        <b>H1</b>：土被り厚<br><b>H2</b>：保護部高さ<br>
-        <b>H3</b>：敷モルタル厚<br>
-        <b>H4</b>：均しコンクリート厚<br>
-        <b>H5</b>：砕石厚<br>
-        <b>W1</b>：保護幅<br>
-        <b>W2</b>：床付け・砕石幅
+<section aria-label="排水管工 積算印刷帳票" class="print-report" id="printReport">
+<div class="print-header" id="printHeader">
+<div id="printProject">工事名：-</div>
+<div id="printEstimate">積算名称：-</div>
+</div>
+<table class="print-main-table">
+<thead>
+<tr>
+<th>項目</th>
+<th>数量</th>
+<th>単位</th>
+<th>単価</th>
+<th>金額</th>
+<th>見積単価</th>
+<th>見積金額</th>
+</tr>
+</thead>
+<tbody id="printRows"></tbody>
+<tfoot>
+<tr>
+<th colspan="4">合計</th>
+<td id="printTotal">0</td>
+<td></td>
+<td id="printEstimateTotal">0</td>
+</tr>
+<tr class="unit-price-row">
+<th colspan="3">mあたり単価（原価）</th>
+<td colspan="2" id="printUnitm">0 円/m</td>
+<th>mあたり単価（見積）</th>
+<td id="printEstimateUnitm">0 円/m</td>
+</tr>
+</tfoot>
+</table>
+<div class="print-notes">
+<div>※ 数量は入力延長Lに対する数量です。</div>
+<div>単位：mm（特記なき場合）</div>
+</div>
+<div class="print-bottom">
+<div class="print-drawing-box">
+<div class="print-title">断面図（寸法図）</div>
+<div id="printDiagram"></div>
+<div class="print-spec">
+<b>H1</b>：土被り厚<br/><b>H2</b>：保護部高さ<br/>
+<b>H3</b>：敷モルタル厚<br/>
+<b>H4</b>：均しコンクリート厚<br/>
+<b>H5</b>：砕石厚<br/>
+<b>W1</b>：保護幅<br/>
+<b>W2</b>：床付け・砕石幅
       </div>
-    </div>
-    <div class="print-dim-box">
-      <div class="print-title">寸法一覧</div>
-      <table class="print-dim-table">
-        <thead>
-          <tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr>
-        </thead>
-        <tbody id="printDims"></tbody>
-      </table>
-      <div class="print-spec">
-<b>掘削深さ</b>：H1＋H2＋H3＋H4＋H5<br>
-<b>掘削底幅</b>：W2＋2e<br>
-<b>掘削上幅</b>：底幅＋2×n×掘削深さ<br>
-<b>床付け</b>：W2×L<br>
-<b>均しコンクリート</b>：W2×H5×L<br>
+</div>
+<div class="print-dim-box">
+<div class="print-title">寸法一覧</div>
+<table class="print-dim-table">
+<thead>
+<tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr>
+</thead>
+<tbody id="printDims"></tbody>
+</table>
+<div class="print-spec">
+<b>掘削深さ</b>：H1＋H2＋H3＋H4＋H5<br/>
+<b>掘削底幅</b>：W2＋2e<br/>
+<b>掘削上幅</b>：底幅＋2×n×掘削深さ<br/>
+<b>床付け</b>：W2×L<br/>
+<b>均しコンクリート</b>：W2×H5×L<br/>
 <b>砕石</b>：W2×H5×L
 </div>
-    </div>
-  </div>
+</div>
+</div>
 </section>
-
-<div id="productMasterModal" class="pm-modal" aria-hidden="true">
-  <div class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="productMasterModalTitle">
-    <div class="pm-dialog-head">
-      <h3 id="productMasterModalTitle">排水管工 製品単価マスター</h3>
-      <button id="closeProductMasterBtn" class="pm-close" type="button">閉じる</button>
-    </div>
-    <div class="pm-filter">
-      <select id="pmManufacturerFilter"><option value="">すべてのメーカー</option></select>
-      <input id="pmKeywordFilter" type="search" placeholder="製品名・規格・型番で検索">
-      <button id="pmSearchBtn" class="primary" type="button">検索</button>
-    </div>
-    <div id="pmProductList" class="pm-list"></div>
-  </div>
+<div aria-hidden="true" class="pm-modal" id="productMasterModal">
+<div aria-labelledby="productMasterModalTitle" aria-modal="true" class="pm-dialog" role="dialog">
+<div class="pm-dialog-head">
+<h3 id="productMasterModalTitle">排水管工 製品単価マスター</h3>
+<button class="pm-close" id="closeProductMasterBtn" type="button">閉じる</button>
 </div>
-
-<div id="productRegisterModal" class="pm-modal" aria-hidden="true">
-  <div class="pm-dialog pm-register-dialog" role="dialog" aria-modal="true" aria-labelledby="productRegisterModalTitle">
-    <div class="pm-dialog-head">
-      <h3 id="productRegisterModalTitle">現在の単価を製品マスターへ登録</h3>
-      <button id="closeProductRegisterBtn" class="pm-close" type="button">閉じる</button>
-    </div>
-    <div class="pm-register-body">
-      <div class="pm-register-grid">
-        <label>カテゴリ</label><input id="registerCategory" type="text" value="排水管工工" readonly>
-        <label>登録日</label><input id="registerDate" type="text" readonly>
-        <label>メーカー</label><input id="registerManufacturer" type="text" placeholder="例：○○コンクリート">
-        <label>製品名</label><input id="registerProductName" type="text" placeholder="例：PU-300A">
-        <label>規格</label><input id="registerSpecification" type="text" placeholder="例：300×300×2000">
-        <label>型番</label><input id="registerModelCode" type="text" placeholder="例：PU300A">
-        <label>備考</label><textarea id="registerNote" placeholder="仕入先、価格条件、地域など"></textarea>
-      </div>
-      <div id="registerPriceSummary" class="pm-price-summary"></div>
-      <div class="pm-register-buttons">
-        <button id="cancelProductRegisterBtn" class="ghost" type="button">キャンセル</button>
-        <button id="saveProductRegisterBtn" class="primary" type="button">マスターに登録</button>
-      </div>
-    </div>
-  </div>
+<div class="pm-filter">
+<select id="pmManufacturerFilter"><option value="">すべてのメーカー</option></select>
+<input id="pmKeywordFilter" placeholder="製品名・規格・型番で検索" type="search"/>
+<button class="primary" id="pmSearchBtn" type="button">検索</button>
 </div>
-
+<div class="pm-list" id="pmProductList"></div>
+</div>
+</div>
+<div aria-hidden="true" class="pm-modal" id="productRegisterModal">
+<div aria-labelledby="productRegisterModalTitle" aria-modal="true" class="pm-dialog pm-register-dialog" role="dialog">
+<div class="pm-dialog-head">
+<h3 id="productRegisterModalTitle">現在の単価を製品マスターへ登録</h3>
+<button class="pm-close" id="closeProductRegisterBtn" type="button">閉じる</button>
+</div>
+<div class="pm-register-body">
+<div class="pm-register-grid">
+<label>カテゴリ</label><input id="registerCategory" readonly="" type="text" value="排水管工工"/>
+<label>登録日</label><input id="registerDate" readonly="" type="text"/>
+<label>メーカー</label><input id="registerManufacturer" placeholder="例：○○コンクリート" type="text"/>
+<label>製品名</label><input id="registerProductName" placeholder="例：PU-300A" type="text"/>
+<label>規格</label><input id="registerSpecification" placeholder="例：300×300×2000" type="text"/>
+<label>型番</label><input id="registerModelCode" placeholder="例：PU300A" type="text"/>
+<label>備考</label><textarea id="registerNote" placeholder="仕入先、価格条件、地域など"></textarea>
+</div>
+<div class="pm-price-summary" id="registerPriceSummary"></div>
+<div class="pm-register-buttons">
+<button class="ghost" id="cancelProductRegisterBtn" type="button">キャンセル</button>
+<button class="primary" id="saveProductRegisterBtn" type="button">マスターに登録</button>
+</div>
+</div>
+</div>
+</div>
 <script>
 const $=id=>document.getElementById(id);
 function todayYmd(){
@@ -1367,8 +1337,6 @@ function exitPrintPreview(){document.body.classList.remove('print-preview-mode')
 
 window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList();loadPrices();refreshEstimateList();calc();});
 </script>
-
-
 <!-- ===== 018: L型擁壁と同じSVG標準帳票 ===== -->
 <style>
 .svg-print-wrap{display:none;}
@@ -1392,12 +1360,12 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   .svg-print-sheet-svg{width:210mm!important;height:297mm!important;margin:0!important;box-shadow:none!important;}
 }
 </style>
-<section id="svgPrintWrap" class="svg-print-wrap" aria-label="SVG印刷帳票">
-  <div class="svg-print-actions">
-    <button class="ghost" id="closeSvgPreviewBtn" type="button">戻る</button>
-    <button class="primary" id="svgPrintNowBtn" type="button">印刷</button>
-  </div>
-  <div id="svgPrintSheet"></div>
+<section aria-label="SVG印刷帳票" class="svg-print-wrap" id="svgPrintWrap">
+<div class="svg-print-actions">
+<button class="ghost" id="closeSvgPreviewBtn" type="button">戻る</button>
+<button class="primary" id="svgPrintNowBtn" type="button">印刷</button>
+</div>
+<div id="svgPrintSheet"></div>
 </section>
 <script>
 (function(){
@@ -1640,18 +1608,14 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   window.addEventListener('beforeprint',function(){ if(document.body.classList.contains('svg-preview-mode')) updateSvgReport(); });
 })();
 </script>
-
-
-
 <!-- ===== 020: L型と同じSVG帳票（表フォーマット固定＋下段を圧縮） ===== -->
-<section id="svgPrintWrap020" class="svg-print-wrap020" aria-label="排水管工 SVG印刷帳票">
-  <div class="svg-print-actions020">
-    <button class="ghost" id="closeSvgPreviewBtn020" type="button">戻る</button>
-    <button class="primary" id="svgPrintNowBtn020" type="button">印刷</button>
-  </div>
-  <div id="svgPrintSheet020"></div>
+<section aria-label="排水管工 SVG印刷帳票" class="svg-print-wrap020" id="svgPrintWrap020">
+<div class="svg-print-actions020">
+<button class="ghost" id="closeSvgPreviewBtn020" type="button">戻る</button>
+<button class="primary" id="svgPrintNowBtn020" type="button">印刷</button>
+</div>
+<div id="svgPrintSheet020"></div>
 </section>
-
 <style>
 .svg-print-wrap020{display:none;}
 .svg-print-actions020{display:flex;gap:10px;max-width:210mm;margin:12px auto;justify-content:flex-end;}
@@ -1688,7 +1652,6 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   .svg-print-sheet-svg020{width:210mm!important;height:297mm!important;margin:0!important;}
 }
 </style>
-
 <script>
 (function(){
   function el(id){ return document.getElementById(id); }
@@ -1952,8 +1915,6 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   }
 })();
 </script>
-
-
 <script>
 (function(){
   const COMMON_KEY='msSekisanCommon_v1';
@@ -1972,7 +1933,6 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   window.addEventListener('load',applyCommon);
 })();
 </script>
-
 <script>
 (function(){
   function $(id){return document.getElementById(id);}
@@ -1999,8 +1959,6 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   window.addEventListener('load',autoLoadEstimateFromMain);
 })();
 </script>
-
-
 <script id="ms-common-app-adapter">
 (function(){
   "use strict";
@@ -2288,8 +2246,6 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   });
 })();
 </script>
-
-
 <script id="u-gutter-common-price-master-ui">
 (function(window, document){
   'use strict';
@@ -2338,8 +2294,6 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   window.addEventListener('ms-price-master-changed',function(){renderSelect();apply(MSPriceMaster.getActive().prices);});
 })(window, document);
 </script>
-
-
 <script id="u-gutter-active-price-autoload-v62">
 (function(window, document){
   'use strict';
@@ -2383,22 +2337,17 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
 
 updateSelectedProductDisplay();
 </script>
-
-
 <style id="remove-custom-preview-036">
 /* 036: 自作の印刷プレビューボタンを廃止。印刷ボタンからブラウザーの印刷プレビューを開く */
 #previewPrintBtn,#closePrintPreviewBtn,#printPreviewActions,.svg-print-actions020{display:none!important;}
 </style>
-
 <script id="register-date-init-045">
 document.addEventListener('DOMContentLoaded',function(){
   const el=document.getElementById('registerDate');
   if(el) el.value=todayYmd();
 });
 </script>
-
-
-<div style="display:none" aria-hidden="true"><input id="h1"><input id="h2"><input id="h3"><input id="h4"><input id="h5"><input id="w1"><input id="w2"><input id="e"><input id="n"></div>
+<div aria-hidden="true" style="display:none"><input id="h1"/><input id="h2"/><input id="h3"/><input id="h4"/><input id="h5"/><input id="w1"/><input id="w2"/><input id="e"/><input id="n"/></div>
 <script id="pipe-diagram-script">
 const pd$=id=>document.getElementById(id);
 function pdv(id,d){const n=Number(pd$(id).value);return Number.isFinite(n)&&n>=0?n:d}
@@ -2681,9 +2630,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  setPriceAvailability();setTimeout(()=>calc(),0);
 })();
 </script>
-
-
-
 <!-- ===== 046: 排水管工の最終印刷プレビューを020版へ完全統一 ===== -->
 <style id="pipe-final-preview-authority-046">
 /* 古い暗渠・カルバート工用SVGプレビューは常に非表示 */
@@ -2746,7 +2692,6 @@ body.svg-preview-mode020 .svg-print-actions020{display:flex!important;}
   });
 })();
 </script>
-
 <script id="pipe-socket-final-009">
 /* 継手ソケット：配管材の本数と同数。全工法・画面・印刷で共通。 */
 (function(){
@@ -2762,5 +2707,221 @@ body.svg-preview-mode020 .svg-print-actions020{display:flex!important;}
   refreshSocket();
 })();
 </script>
+<style id="drainage-pipe-common-price-readonly-style">
+/* ===== 排水管工：共有単価マスターは呼び出し専用 ===== */
+#pricePresetName,
+#savePriceBtn,
+#deletePriceBtn,
+#ugSaveToCommonPriceBtn,
+#ugSaveAsCommonPriceBtn,
+#ugRenameCommonPriceBtn,
+#ugDeleteCommonPriceBtn{
+  display:none!important;
+}
+#ugApplyCommonPriceBtn,
+#loadPriceBtn{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  height:36px!important;
+}
+#ugCommonPriceList,
+#savedPriceList{
+  width:100%!important;
+}
+</style>
+<script id="drainage-pipe-common-price-readonly-complete">
+(function(window, document){
+  'use strict';
+
+  function getActiveName(){
+    try{
+      if(window.MSPriceMaster && typeof window.MSPriceMaster.getActive === 'function'){
+        var active = window.MSPriceMaster.getActive();
+        return active && active.name ? active.name : '';
+      }
+    }catch(error){}
+    return '';
+  }
+
+  function makeReadonly(){
+    var select =
+      document.getElementById('ugCommonPriceList') ||
+      document.getElementById('savedPriceList');
+
+    if(!select) return false;
+
+    var block = select.closest('.price-block');
+    if(!block) return false;
+
+    var title = block.querySelector('.sectionTitle');
+    if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+
+    [
+      'pricePresetName',
+      'savePriceBtn',
+      'deletePriceBtn',
+      'ugSaveToCommonPriceBtn',
+      'ugSaveAsCommonPriceBtn',
+      'ugRenameCommonPriceBtn',
+      'ugDeleteCommonPriceBtn'
+    ].forEach(function(id){
+      var element = document.getElementById(id);
+      if(!element) return;
+
+      if(id === 'pricePresetName'){
+        var line = element.closest('.save-line');
+        if(line) line.remove();
+        else element.remove();
+      }else{
+        element.remove();
+      }
+    });
+
+    var applyButton =
+      document.getElementById('ugApplyCommonPriceBtn') ||
+      document.getElementById('loadPriceBtn');
+
+    if(applyButton){
+      applyButton.textContent = '選択した共有単価を呼び出す';
+      applyButton.classList.remove('ghost');
+      applyButton.classList.add('primary');
+      applyButton.removeAttribute('style');
+      applyButton.style.width = '100%';
+      applyButton.style.minWidth = '0';
+    }
+
+    var actions = block.querySelector('.save-btns, .btns');
+    if(actions){
+      actions.style.gridTemplateColumns = '1fr';
+      actions.style.alignItems = 'stretch';
+    }
+
+    var note =
+      document.getElementById('ugCommonPriceNote') ||
+      block.querySelector('.note');
+
+    if(note){
+      var activeName = getActiveName();
+      note.textContent =
+        (activeName ? '現在使用中：' + activeName + '　' : '') +
+        '共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。';
+    }
+
+    block.dataset.readonlyCommonPrice = '1';
+    return true;
+  }
+
+  function applyRepeatedly(){
+    makeReadonly();
+    setTimeout(makeReadonly, 50);
+    setTimeout(makeReadonly, 250);
+    setTimeout(makeReadonly, 700);
+    setTimeout(makeReadonly, 1500);
+  }
+
+  document.addEventListener('DOMContentLoaded', applyRepeatedly);
+  window.addEventListener('load', applyRepeatedly);
+
+  window.addEventListener('ms-price-master-changed', function(){
+    setTimeout(makeReadonly, 0);
+  });
+
+  var observer = new MutationObserver(function(){
+    if(
+      document.getElementById('ugSaveToCommonPriceBtn') ||
+      document.getElementById('ugSaveAsCommonPriceBtn') ||
+      document.getElementById('ugRenameCommonPriceBtn') ||
+      document.getElementById('ugDeleteCommonPriceBtn') ||
+      document.getElementById('savePriceBtn') ||
+      document.getElementById('deletePriceBtn') ||
+      document.getElementById('pricePresetName')
+    ){
+      makeReadonly();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {childList:true, subtree:true});
+  });
+})(window, document);
+</script>
+<style id="pipe-diagram-top-compact-final">
+/* ===== 排水管工：断面図を左上に統一し、上下余白だけを縮小 ===== */
+.grid{
+  align-items:start!important;
+}
+.illust-box{
+  min-height:0!important;
+  height:350px!important;
+  padding:0 2px 0 16px!important;
+  margin:0 0 4px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+}
+#pipeSectionSvg{
+  width:112%!important;
+  height:350px!important;
+  max-width:none!important;
+  margin:-8px 0 -8px -1%!important;
+  display:block!important;
+  overflow:visible!important;
+}
+#pipeMethodNote{
+  margin:2px 0 6px!important;
+  line-height:1.35!important;
+}
+.estimate-panel{
+  margin:6px 0 0!important;
+  padding:8px!important;
+}
+.estimate-panel .control-block{
+  margin:7px 0!important;
+  padding:8px!important;
+}
+.estimate-panel .save-line{
+  margin-bottom:6px!important;
+}
+.estimate-panel .note{
+  margin-top:6px!important;
+  line-height:1.4!important;
+}
+@media(max-width:980px){
+  .illust-box{
+    height:330px!important;
+    min-height:0!important;
+  }
+  #pipeSectionSvg{
+    height:330px!important;
+  }
+}
+</style>
+<style id="pipe-final-tight-spacing">
+/* 断面図まわりの余白をさらに圧縮 */
+.illust-box{
+  height:315px !important;
+  margin:0 !important;
+  padding:0 0 0 10px !important;
+}
+#pipeSectionSvg{
+  height:315px !important;
+  width:116% !important;
+  margin:-22px 0 -24px -3% !important;
+}
+#pipeMethodNote{
+  margin:0 0 2px !important;
+  padding:0 !important;
+  line-height:1.2 !important;
+}
+.estimate-panel{
+  margin-top:2px !important;
+}
+@media(max-width:980px){
+ .illust-box,#pipeSectionSvg{height:300px !important;}
+}
+</style>
+
 </body>
 </html>

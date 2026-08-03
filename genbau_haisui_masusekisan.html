@@ -559,4 +559,115 @@ window.addEventListener('load',async()=>{try{
   await openEstimateFromMainMenu();
   calc();
 }catch(e){console.warn(e);calc()}});
-</script></body></html>
+</script>
+<style id="cast-basin-common-price-readonly-style">
+/* ===== 現場打集水桝：共有単価マスターは呼び出し専用 ===== */
+#saveCommonPriceBtn,
+#saveAsCommonPriceBtn,
+#renameCommonPriceBtn,
+#deleteCommonPriceBtn{
+  display:none!important;
+}
+#applyCommonPriceBtn{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#commonPriceList{
+  width:100%!important;
+}
+</style>
+
+<script id="cast-basin-common-price-readonly-complete">
+(function(window, document){
+  'use strict';
+
+  function getActiveName(){
+    try{
+      if(window.MSPriceMaster && typeof window.MSPriceMaster.getActive === 'function'){
+        var active = window.MSPriceMaster.getActive();
+        return active && active.name ? active.name : '';
+      }
+    }catch(error){}
+    return '';
+  }
+
+  function makeReadonly(){
+    var select = document.getElementById('commonPriceList');
+    if(!select) return false;
+
+    var block = select.closest('.price-block');
+    if(!block) return false;
+
+    var title = block.querySelector('.sectionTitle');
+    if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+
+    [
+      'saveCommonPriceBtn',
+      'saveAsCommonPriceBtn',
+      'renameCommonPriceBtn',
+      'deleteCommonPriceBtn'
+    ].forEach(function(id){
+      var element = document.getElementById(id);
+      if(element) element.remove();
+    });
+
+    var applyButton = document.getElementById('applyCommonPriceBtn');
+    if(applyButton){
+      applyButton.textContent = '選択した共有単価を呼び出す';
+      applyButton.classList.remove('ghost');
+      applyButton.classList.add('primary');
+      applyButton.style.width = '100%';
+    }
+
+    var actions = block.querySelector('.btns');
+    if(actions){
+      actions.style.gridTemplateColumns = '1fr';
+      actions.style.alignItems = 'stretch';
+    }
+
+    var note = document.getElementById('commonPriceNote') || block.querySelector('.note');
+    if(note){
+      var activeName = getActiveName();
+      note.textContent =
+        (activeName ? '現在使用中：' + activeName + '　' : '') +
+        '共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。';
+    }
+
+    block.dataset.readonlyCommonPrice = '1';
+    return true;
+  }
+
+  function applyRepeatedly(){
+    makeReadonly();
+    setTimeout(makeReadonly, 50);
+    setTimeout(makeReadonly, 250);
+    setTimeout(makeReadonly, 700);
+    setTimeout(makeReadonly, 1500);
+  }
+
+  document.addEventListener('DOMContentLoaded', applyRepeatedly);
+  window.addEventListener('load', applyRepeatedly);
+
+  window.addEventListener('ms-price-master-changed', function(){
+    setTimeout(makeReadonly, 0);
+  });
+
+  var observer = new MutationObserver(function(){
+    if(
+      document.getElementById('saveCommonPriceBtn') ||
+      document.getElementById('saveAsCommonPriceBtn') ||
+      document.getElementById('renameCommonPriceBtn') ||
+      document.getElementById('deleteCommonPriceBtn')
+    ){
+      makeReadonly();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {childList:true, subtree:true});
+  });
+})(window, document);
+</script>
+
+</body></html>

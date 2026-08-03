@@ -902,4 +902,182 @@ window.addEventListener('load',async()=>{
     alert('共通データの読込中にエラーが発生しました。ms_common.jsが最新版か確認してください。');
   }
 });
-</script></body></html>
+</script>
+<style id="precast-common-price-readonly-style">
+#precastCommonPriceBlock .pc-price-select-wrap{margin-top:4px}
+#precastCommonPriceBlock .pc-price-select-wrap label{min-height:0;margin-bottom:4px}
+#precastCommonPriceBlock .pc-price-readonly-actions{
+  display:grid;grid-template-columns:1fr;gap:7px;margin-top:8px
+}
+#precastCommonPriceBlock .pc-price-readonly-note{
+  margin-top:8px;padding:8px 9px;border:1px solid #cfe3f7;border-radius:9px;
+  background:#f7fbff;color:#60758d;font-size:11px;line-height:1.55
+}
+</style>
+<script id="precast-common-price-readonly-ui">
+(function(window, document){
+  'use strict';
+
+  var BLOCK_ID = 'precastCommonPriceBlock';
+  var SELECT_ID = 'precastCommonPriceReadonlyList';
+  var APPLY_ID = 'precastCommonPriceReadonlyApply';
+  var NOTE_ID = 'precastCommonPriceReadonlyNote';
+  var PRICE_IDS = [
+    'Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd',
+    'PwaterstopForm','PwaterstopConc','Pfilter'
+  ];
+
+  function byId(id){ return document.getElementById(id); }
+
+  function getMasters(){
+    if(!window.MSPriceMaster) return [];
+    try{
+      if(typeof window.MSPriceMaster.ensureMasters === 'function'){
+        window.MSPriceMaster.ensureMasters();
+      }
+      return typeof window.MSPriceMaster.list === 'function'
+        ? (window.MSPriceMaster.list() || [])
+        : [];
+    }catch(error){
+      console.warn('共有単価一覧の取得に失敗しました。', error);
+      return [];
+    }
+  }
+
+  function getActive(){
+    if(!window.MSPriceMaster || typeof window.MSPriceMaster.getActive !== 'function') return null;
+    try{ return window.MSPriceMaster.getActive(); }
+    catch(error){ return null; }
+  }
+
+  function applyPrices(prices){
+    var values = prices || {};
+    PRICE_IDS.forEach(function(id){
+      var input = byId(id);
+      if(!input || values[id] === undefined || values[id] === null || values[id] === '') return;
+      input.value = values[id];
+      input.dispatchEvent(new Event('input', {bubbles:true}));
+      input.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+    if(typeof window.calc === 'function') window.calc();
+  }
+
+  function updateNote(message){
+    var note = byId(NOTE_ID);
+    if(note) note.textContent = message;
+  }
+
+  function fillSelect(){
+    var select = byId(SELECT_ID);
+    if(!select) return;
+
+    var masters = getMasters();
+    var active = getActive();
+    var keep = select.value || (active && active.id) || '';
+
+    select.innerHTML = '';
+    masters.forEach(function(master){
+      var option = document.createElement('option');
+      option.value = master.id || '';
+      option.textContent = master.name || '名称なし';
+      select.appendChild(option);
+    });
+
+    if(keep) select.value = keep;
+    if(!select.value && active && active.id) select.value = active.id;
+
+    if(active){
+      updateNote(
+        '現在使用中：' + (active.name || '標準') +
+        '　※登録・編集・名前変更・削除はメイン画面で行ってください。'
+      );
+    }else{
+      updateNote('共通単価の登録・編集・名前変更・削除は、メイン画面で行ってください。');
+    }
+  }
+
+  function render(){
+    var block = byId(BLOCK_ID);
+    if(!block || !window.MSPriceMaster) return false;
+
+    block.innerHTML =
+      '<div class="sectionTitle">共有単価マスター（呼び出し専用）</div>' +
+      '<div class="pc-price-select-wrap">' +
+        '<label for="' + SELECT_ID + '">使用する単価</label>' +
+        '<select id="' + SELECT_ID + '"></select>' +
+      '</div>' +
+      '<div class="pc-price-readonly-actions">' +
+        '<button class="primary" id="' + APPLY_ID + '" type="button">選択した共有単価を呼び出す</button>' +
+      '</div>' +
+      '<div class="pc-price-readonly-note" id="' + NOTE_ID + '">' +
+        '共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。' +
+      '</div>';
+
+    fillSelect();
+
+    byId(SELECT_ID).addEventListener('change', function(){
+      var selected = getMasters().find(function(master){ return master.id === this.value; }, this);
+      if(selected){
+        updateNote(
+          '選択中：' + (selected.name || '単価') +
+          '　※まだ読み込んでいません。下のボタンを押すと使用中単価になります。'
+        );
+      }
+    });
+
+    byId(APPLY_ID).addEventListener('click', function(){
+      var select = byId(SELECT_ID);
+      var selected = getMasters().find(function(master){
+        return master.id === (select ? select.value : '');
+      }) || getActive();
+
+      if(!selected){
+        alert('呼び出せる共有単価がありません。メイン画面で共有単価を登録してください。');
+        return;
+      }
+
+      try{
+        if(typeof window.MSPriceMaster.setActive === 'function'){
+          window.MSPriceMaster.setActive(selected.id);
+        }
+        applyPrices(selected.prices || {});
+        fillSelect();
+        alert('共有単価「' + (selected.name || '標準') + '」を読み込みました。');
+      }catch(error){
+        console.error(error);
+        alert('共有単価を読み込めませんでした。');
+      }
+    });
+
+    block.dataset.readonlyPricePanel = '1';
+    return true;
+  }
+
+  function ensureReadonlyPanel(){
+    var block = byId(BLOCK_ID);
+    if(!block || !window.MSPriceMaster) return;
+    if(block.dataset.readonlyPricePanel !== '1' || !byId(APPLY_ID)){
+      render();
+    }else{
+      fillSelect();
+    }
+  }
+
+  window.addEventListener('load', function(){
+    /* MSAppAdapterによる初期表示の後にも呼び出し専用表示を確実に適用 */
+    setTimeout(function(){
+      ensureReadonlyPanel();
+      var active = getActive();
+      if(active && active.prices) applyPrices(active.prices);
+    }, 0);
+    setTimeout(ensureReadonlyPanel, 300);
+    setTimeout(ensureReadonlyPanel, 1000);
+  });
+
+  window.addEventListener('ms-price-master-changed', function(){
+    setTimeout(ensureReadonlyPanel, 0);
+  });
+})(window, document);
+</script>
+
+</body></html>

@@ -3039,16 +3039,12 @@ section.card:nth-of-type(2) .btns button{
   function renderSelect(){const sel=$('lwCommonPriceList'); if(!sel||!window.MSPriceMaster) return; const cur=sel.value||MSPriceMaster.activeId(); sel.innerHTML=MSPriceMaster.list().map(x=>'<option value="'+x.id+'">'+x.name+'</option>').join(''); sel.value=cur; if(!sel.value) sel.value=MSPriceMaster.activeId(); const note=$('lwCommonPriceNote'); if(note){const m=MSPriceMaster.getActive(); note.textContent='現在使用中：'+(m.name||'標準')+'（積算保存時に単価も固定保存します）';}}
   function rebuildPanel(){
     const old=$('savedPriceList'); const block=old ? old.closest('.price-block') : null; if(!block||block.dataset.commonDone) return; block.dataset.commonDone='1';
-    block.innerHTML='<div class="sectionTitle">共通単価マスター</div>'+ 
+    block.innerHTML='<div class="sectionTitle">共通単価マスター（呼び出し専用）</div>'+ 
       '<div class="save-line"><label>使用する単価</label><select id="lwCommonPriceList"></select></div>'+ 
-      '<div class="save-btns" style="grid-template-columns:80px 80px 1fr;align-items:center">'+ 
-      '<button class="ghost" id="lwApplyCommonPriceBtn" type="button" style="width:80px!important;min-width:80px!important">呼出</button>'+ 
-      '<button class="primary" id="lwSaveToCommonPriceBtn" type="button" style="width:80px!important;min-width:80px!important">保存</button>'+ 
-      '<button class="ghost" id="lwSaveAsCommonPriceBtn" type="button">名前を付けて保存</button>'+ 
-      '<button class="ghost" id="lwRenameCommonPriceBtn" type="button">名前変更</button>'+ 
-      '<button class="danger" id="lwDeleteCommonPriceBtn" type="button">削除</button>'+ 
+      '<div class="save-btns" style="grid-template-columns:1fr;align-items:center">'+ 
+      '<button class="primary" id="lwApplyCommonPriceBtn" type="button">選択した共通単価を呼び出す</button>'+ 
       '</div>'+ 
-      '<div class="note" id="lwCommonPriceNote">保存＝選択中の単価を上書き。名前を付けて保存＝新しい単価セットを追加します。</div>';
+      '<div class="note" id="lwCommonPriceNote">共通単価の登録・編集・名前変更・削除は、メイン画面で行ってください。</div>';
     renderSelect();
     $('lwCommonPriceList').addEventListener('change',function(){
       const item=MSPriceMaster.list().find(x=>x.id===this.value);
@@ -3062,10 +3058,6 @@ section.card:nth-of-type(2) .btns button{
       renderSelect();
       alert('共通単価「'+((item&&item.name)||'標準')+'」を読み込みました');
     });
-    $('lwSaveToCommonPriceBtn').addEventListener('click',function(){const m=MSPriceMaster.getActive(); MSPriceMaster.update({id:m.id,name:m.name,prices:collect()}); MSPriceMaster.setActive(m.id); renderSelect(); alert('「'+m.name+'」へ上書き保存しました');});
-    $('lwSaveAsCommonPriceBtn').addEventListener('click',function(){const base=(MSPriceMaster.getActive().name||'標準')+' コピー'; const name=prompt('新しい単価名を入力してください',base); if(!name) return; const item=MSPriceMaster.create(name,collect()); renderSelect(); const sel=$('lwCommonPriceList'); if(sel)sel.value=item.id; MSPriceMaster.setActive(item.id); renderSelect(); alert('「'+item.name+'」を新しく保存しました');});
-    $('lwRenameCommonPriceBtn').addEventListener('click',function(){const m=MSPriceMaster.getActive(); const name=prompt('新しい単価名を入力してください',m.name||'標準'); if(!name) return; MSPriceMaster.update({id:m.id,name:name,prices:m.prices||collect()}); MSPriceMaster.setActive(m.id); renderSelect(); alert('単価名を「'+name+'」に変更しました');});
-    $('lwDeleteCommonPriceBtn').addEventListener('click',function(){const m=MSPriceMaster.getActive(); if(!m) return; if(!confirm('「'+(m.name||'単価')+'」を削除しますか？')) return; MSPriceMaster.remove(m.id); renderSelect(); apply(MSPriceMaster.getActive().prices); alert('削除しました');});
   }
   window.addEventListener('load',function(){
     if(!window.MSPriceMaster) return;

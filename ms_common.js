@@ -39,7 +39,7 @@
 
   MS.__initialized = true;
 
-  MS.VERSION = "1.2.0";
+  MS.VERSION = "1.2.1";
 
   MS.CONFIG = {
     dbName: "MS_SEKISAN_SYSTEM_DB",
@@ -4342,6 +4342,14 @@
     return true;
   };
 
+  MS.ProductMaster.deleteMany = async function(ids){
+    await MS.init();
+    const keys = Array.from(new Set((Array.isArray(ids) ? ids : []).filter(Boolean)));
+    if(keys.length === 0) return 0;
+    await MS.DB.deleteMany(STORE, keys);
+    return keys.length;
+  };
+
   MS.ProductMaster.duplicate = async function(id, newName){
     const original = await MS.ProductMaster.get(id);
     if(!original) throw new MS.Error("複製する製品が見つかりません。");
@@ -4578,10 +4586,10 @@
 
 /*
 ============================================================
- MS積算システム 製品単価マスター カテゴリ管理 Ver.1.0
- - 初期カテゴリの一元管理
- - 追加・名前変更・並び替え・使用停止
- - settingsストアへ保存
+ MS積算システム 製品単価マスター 固定カテゴリ Ver.2.0
+ - カテゴリはシステム固定
+ - ユーザーによる追加・変更・削除・並び替えは行わない
+ - 製品単価マスターで削除した製品は再登録しない
 ============================================================
 */
 (function(window, document){
@@ -4589,8 +4597,6 @@
   const MS = window.MS;
   if(!MS || !MS.ProductMaster) return;
 
-  const KEY = "product_master_categories_v1";
-  const SETTINGS_STORE = MS.CONFIG.stores.settings;
   const DEFAULTS = [
     {id:"u_gutter", name:"U型側溝", enabled:true},
     {id:"variable_gutter", name:"可変側溝", enabled:true},
@@ -4618,66 +4624,32 @@
     {id:"other", name:"その他", enabled:true}
   ];
 
-  function clone(v){ return JSON.parse(JSON.stringify(v)); }
-  function cleanText(v){ return String(v == null ? "" : v).trim(); }
-  function cleanId(v){
-    return cleanText(v).toLowerCase().replace(/[^a-z0-9_\-]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"");
-  }
-  function normalizeList(list){
-    const seen = {};
-    return (Array.isArray(list) ? list : []).map(function(row, index){
-      const id = cleanId(row && row.id) || ("category_" + Date.now() + "_" + index);
-      if(seen[id]) return null;
-      seen[id] = true;
+  function clone(value){ return JSON.parse(JSON.stringify(value)); }
+  function fixedRows(){
+    return DEFAULTS.map(function(row,index){
       return {
-        id:id,
-        name:cleanText(row && row.name) || id,
-        enabled:row && row.enabled === false ? false : true,
-        order:Number.isFinite(Number(row && row.order)) ? Number(row.order) : index,
-        createdAt:cleanText(row && row.createdAt) || MS.now(),
-        updatedAt:cleanText(row && row.updatedAt) || MS.now()
+        id:row.id,
+        name:row.name,
+        enabled:row.enabled !== false,
+        order:index
       };
-    }).filter(Boolean).sort(function(a,b){ return a.order-b.order || a.name.localeCompare(b.name,"ja"); })
-      .map(function(row,index){ row.order=index; return row; });
-  }
-  function mergeDefaults(saved){
-    const current = normalizeList(saved);
-    const byId = {};
-    current.forEach(function(row){ byId[row.id]=row; });
-    DEFAULTS.forEach(function(def){
-      if(!byId[def.id]){
-        current.push({id:def.id,name:def.name,enabled:def.enabled!==false,order:current.length,createdAt:MS.now(),updatedAt:MS.now()});
-      }
     });
-    return normalizeList(current);
   }
-  function syncMap(list){
+  function syncMap(rows){
     const map = {};
-    normalizeList(list).forEach(function(row){ map[row.id]=row.name; });
+    rows.forEach(function(row){ map[row.id] = row.name; });
     MS.ProductMaster.CATEGORIES = map;
-    MS.ProductMaster.CATEGORY_ROWS = clone(normalizeList(list));
-    return list;
+    MS.ProductMaster.CATEGORY_ROWS = clone(rows);
   }
-  async function readSetting(){
-    const row = await MS.DB.get(SETTINGS_STORE, KEY);
-    return row && Array.isArray(row.value) ? row.value : null;
-  }
-  async function writeSetting(list){
-    const rows = normalizeList(list);
-    await MS.DB.put(SETTINGS_STORE,{key:KEY,value:rows,updatedAt:MS.now()});
-    syncMap(rows);
-    return clone(rows);
+  function fixedError(){
+    throw new MS.Error("製品カテゴリはシステム固定のため変更できません。");
   }
 
   MS.ProductMaster.Category = MS.ProductMaster.Category || {};
   MS.ProductMaster.Category.DEFAULTS = clone(DEFAULTS);
   MS.ProductMaster.Category.ensure = async function(){
     await MS.DB.open();
-    const saved = await readSetting();
-    const rows = mergeDefaults(saved || DEFAULTS);
-    if(!saved || JSON.stringify(normalizeList(saved)) !== JSON.stringify(rows)){
-      return writeSetting(rows);
-    }
+    const rows = fixedRows();
     syncMap(rows);
     return clone(rows);
   };
@@ -4686,49 +4658,12 @@
     const includeDisabled = !!(options && options.includeDisabled);
     return rows.filter(function(row){ return includeDisabled || row.enabled !== false; });
   };
-  MS.ProductMaster.Category.saveAll = async function(rows){
-    await MS.DB.open();
-    return writeSetting(rows);
-  };
-  MS.ProductMaster.Category.add = async function(name){
-    const rows = await MS.ProductMaster.Category.list({includeDisabled:true});
-    const label = cleanText(name) || "新しいカテゴリ";
-    let base = cleanId(label) || "category";
-    let id = base, n = 2;
-    while(rows.some(function(row){ return row.id === id; })){ id = base + "_" + n++; }
-    rows.push({id:id,name:label,enabled:true,order:rows.length,createdAt:MS.now(),updatedAt:MS.now()});
-    await writeSetting(rows);
-    return id;
-  };
-  MS.ProductMaster.Category.update = async function(id, changes){
-    const rows = await MS.ProductMaster.Category.list({includeDisabled:true});
-    const row = rows.find(function(item){ return item.id === id; });
-    if(!row) throw new MS.Error("カテゴリが見つかりません。");
-    if(changes && changes.name !== undefined) row.name = cleanText(changes.name) || row.name;
-    if(changes && changes.enabled !== undefined) row.enabled = !!changes.enabled;
-    row.updatedAt = MS.now();
-    return writeSetting(rows);
-  };
-  MS.ProductMaster.Category.move = async function(id, direction){
-    const rows = await MS.ProductMaster.Category.list({includeDisabled:true});
-    const index = rows.findIndex(function(row){ return row.id === id; });
-    const to = index + Number(direction || 0);
-    if(index < 0 || to < 0 || to >= rows.length) return rows;
-    const item = rows.splice(index,1)[0]; rows.splice(to,0,item);
-    return writeSetting(rows);
-  };
-  MS.ProductMaster.Category.remove = async function(id){
-    const rows = await MS.ProductMaster.Category.list({includeDisabled:true});
-    const products = await MS.ProductMaster.list({category:id,includeDisabled:true});
-    if(products.length) throw new MS.Error("このカテゴリには製品が登録されています。削除せず、使用停止にしてください。");
-    const next = rows.filter(function(row){ return row.id !== id; });
-    return writeSetting(next);
-  };
-  MS.ProductMaster.Category.reset = async function(){
-    return writeSetting(DEFAULTS.map(function(row,index){
-      return {id:row.id,name:row.name,enabled:row.enabled!==false,order:index,createdAt:MS.now(),updatedAt:MS.now()};
-    }));
-  };
+  MS.ProductMaster.Category.saveAll = async function(){ return MS.ProductMaster.Category.ensure(); };
+  MS.ProductMaster.Category.add = async function(){ fixedError(); };
+  MS.ProductMaster.Category.update = async function(){ fixedError(); };
+  MS.ProductMaster.Category.move = async function(){ fixedError(); };
+  MS.ProductMaster.Category.remove = async function(){ fixedError(); };
+  MS.ProductMaster.Category.reset = async function(){ return MS.ProductMaster.Category.ensure(); };
   MS.ProductMaster.getCategories = function(options){
     return MS.ProductMaster.Category.list(options);
   };
@@ -4740,5 +4675,5 @@
     return result;
   };
 
-  syncMap(DEFAULTS.map(function(row,index){ return Object.assign({order:index},row); }));
+  syncMap(fixedRows());
 })(window, document);
