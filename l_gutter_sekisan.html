@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>L型側溝工 積算アプリ 007</title>
+  <title>L型側溝工 積算アプリ 010 他アプリ名混入修正版</title>
   <style>
     :root{
       --blue:#0070C0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px;
@@ -622,6 +622,21 @@
 </style>
 <script src="ms_common.js"></script>
 
+<script id="l-gutter-open-mode-capture">
+(function(window){
+  "use strict";
+  var params=new URLSearchParams(location.search);
+  var openId="";
+  try{openId=localStorage.getItem("ms_open_estimate_id")||"";}catch(e){}
+  window.__lGutterOpenMode={
+    fromSaved:!!openId || params.get("loadEstimate")==="1",
+    estimateId:openId,
+    capturedAt:Date.now()
+  };
+})(window);
+</script>
+
+
 <style id="estimate-columns-030">
 .result-table th{padding:10px 5px!important;font-size:14px!important;line-height:1.25!important;white-space:normal!important;font-weight:900!important}
 .result-table td{padding:10px 5px!important;font-size:15px!important;line-height:1.28!important;white-space:normal!important}
@@ -721,7 +736,7 @@
 </style>
 </head>
 <body>
-<header><div class="wrap"><div><h1>L型側溝工 積算アプリ 007</h1><div class="sub">掘削／残土処理／埋戻し／床付け／砕石／均し型枠／均しコンクリート／敷モルタル／L型側溝／据付を自動算出</div></div><div><span class="pill">掘削=(W2+2e)×(H1+H2+H3+H4)</span><span class="pill">残土=L型側溝埋設部+モルタル+均しCo+砕石</span><span class="pill">法面勾配なし</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<header><div class="wrap"><div><h1>L型側溝工 積算アプリ 010 他アプリ名混入修正版</h1><div class="sub">掘削／残土処理／埋戻し／床付け／砕石／均し型枠／均しコンクリート／敷モルタル／L型側溝／据付を自動算出</div></div><div><span class="pill">掘削=(W2+2e)×(H1+H2+H3+H4)</span><span class="pill">残土=L型側溝埋設部+モルタル+均しCo+砕石</span><span class="pill">法面勾配なし</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><div class="illust-box">
 <svg class="illust-svg" aria-label="L型側溝断面図" width="1100" height="760" viewBox="0 0 1100 760" role="img" aria-labelledby="svgTitle svgDesc">
@@ -1263,7 +1278,22 @@ function projectKey(){return ($('projectName')?.value||'未設定工事').trim()
 function refreshEstimateList(){const sel=$('savedEstimateList');if(!sel)return;const store=getEstimateStore();const pk=projectKey();const list=store[pk]||[];sel.innerHTML='';if(!list.length){sel.innerHTML='<option value="">保存データなし</option>';return;}list.forEach((item,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=item.name||('保存データ '+(i+1));sel.appendChild(opt);});}
 function saveEstimate(){const name=($('estimateName').value||'L型側溝工 積算').trim();const data={name,createdAt:new Date().toISOString(),values:{}};estimateFieldIds.forEach(id=>{const el=$(id);if(el)data.values[id]=el.value;});const store=getEstimateStore();const pk=projectKey();store[pk]=store[pk]||[];const idx=store[pk].findIndex(x=>x.name===name);if(idx>=0)store[pk][idx]=data;else store[pk].push(data);setEstimateStore(store);refreshEstimateList();calc();alert('積算データを保存しました');}
 function loadEstimate(){const sel=$('savedEstimateList');const store=getEstimateStore();const list=store[projectKey()]||[];const item=list[parseInt(sel.value,10)];if(!item)return;Object.entries(item.values||{}).forEach(([id,v])=>{const el=$(id);if(el)el.value=v;});refreshEstimateList();updateSelectedProductDisplay();calc();}
-function deleteEstimate(){const sel=$('savedEstimateList');const store=getEstimateStore();const pk=projectKey();const list=store[pk]||[];const idx=parseInt(sel.value,10);if(!Number.isFinite(idx)||!list[idx])return;if(!confirm('選択中の積算データを削除しますか？'))return;list.splice(idx,1);store[pk]=list;setEstimateStore(store);refreshEstimateList();}
+function deleteEstimate(){
+  const sel=$('savedEstimateList');
+  const store=getEstimateStore();
+  const pk=projectKey();
+  const list=store[pk]||[];
+  const idx=parseInt(sel.value,10);
+  if(!Number.isFinite(idx)||!list[idx])return;
+  if(!confirm('選択中の積算データを削除しますか？'))return;
+  list.splice(idx,1);
+  store[pk]=list;
+  setEstimateStore(store);
+  refreshEstimateList();
+  if($('estimateName'))$('estimateName').value='';
+  sel.value='';
+  if(sel.options&&sel.options.length)sel.selectedIndex=0;
+}
 function makePrintReport(){
   calc();
   const today=new Date().toLocaleDateString('ja-JP');
@@ -1849,8 +1879,55 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       const sel=$('savedEstimateList');
       const name=($('estimateName')?.value || DEFAULT_NAME).trim() || DEFAULT_NAME;
       const values=collectValues();
-      const existingId = sel && sel.value ? sel.value : '';
-      const priceInfo = window.MSPriceMaster ? MSPriceMaster.getSnapshot() : {};
+
+      /*
+       * 保存済みデータを選択中でも、積算名称を変更した場合は
+       * 「名前を付けて保存」として新規データを作成します。
+       * 名称が同じ場合だけ既存データを上書きします。
+       */
+      let existingId='';
+      if(sel && sel.value){
+        try{
+          const selectedItem=(MS.Estimate && typeof MS.Estimate.get==='function')
+            ? await MS.Estimate.get(sel.value)
+            : await MS.getEstimate(sel.value);
+          const selectedName=((selectedItem&&selectedItem.name)||'').trim();
+          const selectedAppType=(selectedItem&&selectedItem.appType)||'';
+          if(selectedAppType===APP_TYPE && selectedName===name){
+            existingId=sel.value;
+          }
+        }catch(e){
+          console.warn('保存済みデータ確認エラー',e);
+        }
+      }
+      /*
+       * 保存時は、最初に選んだ共通単価ではなく、
+       * 画面上で現在入力されている単価を保存します。
+       * 共通単価反映後に手入力した変更も、そのまま復元できます。
+       */
+      const currentPriceIds=[
+        'Pexc','Pspoil','Pback','Pbed','Pstone',
+        'Plean','PleanForm','Pmortar','Pset','ProdLen','ProdPrice'
+      ];
+      const currentPrices={};
+      currentPriceIds.forEach(function(id){
+        const el=document.getElementById(id);
+        if(el && el.value!=='') currentPrices[id]=Number(el.value);
+      });
+
+      const localMaster=window.__lGutterLocalPriceMaster||null;
+      const activeInfo=window.MSPriceMaster ? (MSPriceMaster.getSnapshot()||{}) : {};
+      const priceInfo={
+        priceMasterId:(localMaster&&localMaster.id)||activeInfo.priceMasterId||activeInfo.id||'manual',
+        priceMasterName:(localMaster&&localMaster.name)||activeInfo.priceMasterName||activeInfo.name||'手入力単価',
+        priceSnapshot:Object.assign({},currentPrices)
+      };
+
+      if(localMaster){
+        localMaster.prices=Object.assign({},currentPrices);
+        window.__lGutterLocalPriceMaster=localMaster;
+      }
+
       const csvRows=msBuildMitsumoroRows();
       const item={
         id:existingId || undefined, name,
@@ -1872,7 +1949,16 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       MSPriceMaster.ensureMasters();
       const snapshot = (item && item.priceSnapshot) || (item && item.data && item.data.priceSnapshot) || null;
       const active = MSPriceMaster.getActive();
+      const savedName = item && (item.priceMasterName || (item.data && item.data.priceMasterName)) || '保存時単価';
+      const savedId = item && (item.priceMasterId || (item.data && item.data.priceMasterId)) || '';
       const prices = snapshot || (active && active.prices) || {};
+
+      window.__lGutterLocalPriceMaster={
+        id:snapshot ? savedId : ((active&&active.id)||''),
+        name:snapshot ? savedName : ((active&&active.name)||'標準'),
+        prices:Object.assign({},prices)
+      };
+
       MSPriceMaster.applyFields(prices);
       const nameEl = $('pricePresetName');
       if(nameEl) nameEl.value = snapshot ? ((item.priceMasterName || (item.data && item.data.priceMasterName) || '保存時単価')) : ((active && active.name) || '標準');
@@ -1905,13 +1991,42 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   }
   async function msDeleteEstimate(){
     try{
-      const sel=$('savedEstimateList'); if(!sel || !sel.value){ alert('削除する積算データを選んでください'); return; }
+      const sel=$('savedEstimateList');
+      if(!sel || !sel.value){
+        alert('削除する積算データを選んでください');
+        return;
+      }
       if(!confirm('選択中の積算データを削除しますか？')) return;
-      if(MS.Estimate && typeof MS.Estimate.delete === 'function') await MS.Estimate.delete(sel.value);
-      else await MS.deleteEstimate(sel.value);
+
+      if(MS.Estimate && typeof MS.Estimate.delete === 'function'){
+        await MS.Estimate.delete(sel.value);
+      }else{
+        await MS.deleteEstimate(sel.value);
+      }
+
       await msRefreshEstimateList();
+
+      if($('estimateName')) $('estimateName').value='';
+      sel.value='';
+      if(sel.options && sel.options.length) sel.selectedIndex=0;
+
+      try{
+        if(typeof MS.clearCurrentEstimateId==='function'){
+          MS.clearCurrentEstimateId(APP_TYPE);
+        }
+      }catch(e){}
+
+      try{localStorage.removeItem('ms_open_estimate_id');}catch(e){}
+
+      if(window.__lGutterOpenMode){
+        window.__lGutterOpenMode.fromSaved=false;
+        window.__lGutterOpenMode.estimateId='';
+      }
+
       if(window.MS && MS.toast) MS.toast('削除しました');
-    }catch(e){ alert(e.message || '削除できませんでした'); }
+    }catch(e){
+      alert(e.message || '削除できませんでした');
+    }
   }
   function bindCapture(id, fn){
     const el=$(id); if(!el) return;
@@ -1935,7 +2050,26 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       const pn=$('projectName'); if(pn) pn.addEventListener('change', ()=>ensureProject().then(()=>msRefreshEstimateList()).catch(()=>{}));
       const sel=$('savedEstimateList'); if(sel) sel.addEventListener('change', async()=>{ const item=sel.value ? ((MS.Estimate && typeof MS.Estimate.get === 'function') ? await MS.Estimate.get(sel.value) : await MS.getEstimate(sel.value)) : null; if(item && $('estimateName')) $('estimateName').value=item.name||''; });
       const openId=localStorage.getItem('ms_open_estimate_id');
-      if(openId){ localStorage.removeItem('ms_open_estimate_id'); const item=(MS.Estimate && typeof MS.Estimate.get === 'function') ? await MS.Estimate.get(openId) : await MS.getEstimate(openId); if(item && item.appType===APP_TYPE){ if($('estimateName')) $('estimateName').value=item.name||''; applyValues(item.values || (item.data && item.data.values) || {}); applyCommonPriceForEstimate(item); await msRefreshEstimateList(openId); } }
+      if(openId){
+        localStorage.removeItem('ms_open_estimate_id');
+        const item=(MS.Estimate && typeof MS.Estimate.get === 'function')
+          ? await MS.Estimate.get(openId)
+          : await MS.getEstimate(openId);
+
+        if(item && item.appType===APP_TYPE){
+          if($('estimateName')) $('estimateName').value=item.name||'';
+          applyValues(item.values || (item.data && item.data.values) || {});
+          applyCommonPriceForEstimate(item);
+          await msRefreshEstimateList(openId);
+        }else{
+          // 他アプリの保存IDなら新規L型側溝として扱う
+          if($('estimateName')) $('estimateName').value='';
+          if(window.__lGutterOpenMode){
+            window.__lGutterOpenMode.fromSaved=false;
+            window.__lGutterOpenMode.estimateId='';
+          }
+        }
+      }
     }catch(e){ console.warn('MS共通アダプター初期化エラー', e); }
   });
 })();
@@ -2188,6 +2322,246 @@ document.addEventListener('DOMContentLoaded',function(){
     observer.observe(document.body, {childList:true, subtree:true});
   });
 })(window, document);
+</script>
+
+
+<script id="l-gutter-price-controller-final">
+(function(window,document){
+  "use strict";
+
+  var APP_TYPE="l_gutter";
+  var PRICE_IDS=[
+    "Pexc","Pspoil","Pback","Pbed","Pstone",
+    "Plean","PleanForm","Pmortar","Pset","ProdLen","ProdPrice"
+  ];
+  var mode=window.__lGutterOpenMode||{fromSaved:false,estimateId:""};
+
+  function byId(id){return document.getElementById(id);}
+  function clone(v){
+    try{return JSON.parse(JSON.stringify(v||{}));}
+    catch(e){return v||{};}
+  }
+
+  function collectPrices(){
+    var prices={};
+    PRICE_IDS.forEach(function(id){
+      var el=byId(id);
+      if(el && el.value!=="") prices[id]=Number(el.value);
+    });
+    return prices;
+  }
+
+  function applyPrices(prices){
+    if(window.MSPriceMaster && typeof MSPriceMaster.applyFields==="function"){
+      MSPriceMaster.applyFields(prices||{});
+    }else{
+      PRICE_IDS.forEach(function(id){
+        var el=byId(id);
+        if(el && prices && prices[id]!==undefined) el.value=prices[id];
+      });
+    }
+    if(typeof window.calc==="function") window.calc();
+  }
+
+  function setLocal(id,name,prices){
+    window.__lGutterLocalPriceMaster={
+      id:id||"standard",
+      name:name||"標準",
+      prices:clone(prices||{})
+    };
+  }
+
+  function showNote(message){
+    var note=byId("ugCommonPriceNote");
+    if(note) note.textContent=message;
+  }
+
+  function activeMaster(){
+    if(!window.MSPriceMaster) return null;
+    try{
+      MSPriceMaster.ensureMasters();
+      return MSPriceMaster.getActive();
+    }catch(e){
+      return null;
+    }
+  }
+
+  async function getEstimate(id){
+    if(!id || !window.MS) return null;
+    try{
+      if(MS.Estimate && typeof MS.Estimate.get==="function"){
+        return await MS.Estimate.get(id);
+      }
+      if(typeof MS.getEstimate==="function"){
+        return await MS.getEstimate(id);
+      }
+    }catch(e){}
+    return null;
+  }
+
+  async function applySavedMode(){
+    var id=mode.estimateId||"";
+    if(!id){
+      try{
+        if(window.MS && typeof MS.getCurrentEstimateId==="function"){
+          id=MS.getCurrentEstimateId(APP_TYPE)||"";
+        }
+      }catch(e){}
+    }
+    if(!id) return false;
+
+    var item=await getEstimate(id);
+    if(!item) return false;
+
+    /*
+     * 他アプリの保存IDが残っていても読み込まない。
+     * 例：L型擁壁の「L型擁壁-A」をL型側溝へ誤反映しない。
+     */
+    if(item.appType && item.appType!==APP_TYPE){
+      mode.fromSaved=false;
+      mode.estimateId='';
+      try{localStorage.removeItem('ms_open_estimate_id');}catch(e){}
+      return applyNewMode();
+    }
+
+    var snapshot=item.priceSnapshot||(item.data&&item.data.priceSnapshot)||null;
+    if(!snapshot) return false;
+
+    var name=item.priceMasterName||(item.data&&item.data.priceMasterName)||"保存時単価";
+    var masterId=item.priceMasterId||(item.data&&item.data.priceMasterId)||"saved";
+
+    applyPrices(snapshot);
+    setLocal(masterId,name,snapshot);
+
+    var sel=byId("ugCommonPriceList");
+    if(sel && Array.from(sel.options||[]).some(function(o){return o.value===masterId;})){
+      sel.value=masterId;
+    }
+
+    showNote(
+      "保存時単価を自動復元："+name+
+      "　※メイン画面の使用中単価は変更していません。手入力で変更した単価も保存されています。"
+    );
+    return true;
+  }
+
+  function applyNewMode(){
+    var active=activeMaster();
+    if(!active || !active.prices) return false;
+
+    try{
+      if(window.MS && typeof MS.clearCurrentEstimateId==="function"){
+        MS.clearCurrentEstimateId(APP_TYPE);
+      }
+    }catch(e){}
+
+    applyPrices(active.prices);
+    setLocal(active.id,active.name,active.prices);
+
+    var sel=byId("ugCommonPriceList");
+    if(sel) sel.value=active.id;
+
+    showNote(
+      "メイン画面の初期単価："+(active.name||"標準")+
+      "（新規積算として読込済み）"
+    );
+    return true;
+  }
+
+  function installApplyOverride(){
+    var btn=byId("ugApplyCommonPriceBtn")||byId("loadPriceBtn");
+    if(!btn || btn.dataset.lGutterFinalBound==="1") return false;
+
+    btn.dataset.lGutterFinalBound="1";
+    btn.textContent="今回の積算だけに反映";
+
+    btn.addEventListener("click",function(event){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      if(!window.MSPriceMaster) return;
+      var sel=byId("ugCommonPriceList")||byId("savedPriceList");
+      var item=MSPriceMaster.list().find(function(x){
+        return sel && x.id===sel.value;
+      }) || MSPriceMaster.getActive();
+
+      if(!item){
+        alert("共通単価を読み込めません。");
+        return;
+      }
+
+      if(!confirm(
+        "選択した共通単価で現在入力されている単価をすべて上書きします。\n"+
+        "手入力で変更した単価も上書きされます。\n\nよろしいですか？"
+      )) return;
+
+      applyPrices(item.prices||{});
+      setLocal(item.id,item.name,item.prices||{});
+      showNote(
+        "今回の積算だけに反映："+(item.name||"標準")+
+        "　※メイン画面の使用中単価や、ほかの積算には影響しません。"
+      );
+      alert("共通単価「"+(item.name||"標準")+"」を今回の積算だけに反映しました。");
+    },true);
+
+    return true;
+  }
+
+  window.addEventListener("load",function(){
+    [0,100,300,700,1200].forEach(function(delay){
+      setTimeout(function(){
+        installApplyOverride();
+        if(mode.fromSaved){
+          applySavedMode();
+        }else{
+          applyNewMode();
+        }
+      },delay);
+    });
+
+    var loadBtn=byId("loadEstimateBtn");
+    if(loadBtn){
+      loadBtn.addEventListener("click",function(){
+        mode.fromSaved=true;
+        var list=byId("savedEstimateList");
+        mode.estimateId=list?list.value:"";
+        [50,200,500].forEach(function(delay){
+          setTimeout(applySavedMode,delay);
+        });
+      },true);
+    }
+  });
+
+  window.addEventListener("ms-price-master-changed",function(){
+    // 積算中の単価は自動で上書きしない
+  });
+
+})(window,document);
+</script>
+
+
+<script id="l-gutter-save-as-name-helper">
+(function(window,document){
+  "use strict";
+  window.addEventListener("load",function(){
+    var nameInput=document.getElementById("estimateName");
+    var list=document.getElementById("savedEstimateList");
+    if(!nameInput || !list) return;
+
+    var loadedName="";
+
+    list.addEventListener("change",function(){
+      var option=list.options[list.selectedIndex];
+      loadedName=option ? option.textContent.replace(/（.*$/, "").trim() : "";
+    });
+
+    nameInput.addEventListener("input",function(){
+      if(list.value && loadedName && nameInput.value.trim()!==loadedName){
+        list.value="";
+      }
+    });
+  });
+})(window,document);
 </script>
 
 </body>

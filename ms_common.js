@@ -39,7 +39,7 @@
 
   MS.__initialized = true;
 
-  MS.VERSION = "1.2.1";
+  MS.VERSION = "1.2.4";
 
   MS.CONFIG = {
     dbName: "MS_SEKISAN_SYSTEM_DB",
@@ -3689,7 +3689,20 @@
     }
     return item || list[0];
   }
-  function getSnapshot(){ const m = getActive(); return { priceMasterId:m.id, priceMasterName:m.name, priceSnapshot:clone(m.prices || {}) }; }
+  function makeSnapshot(item){
+    const m = item || getActive();
+    return {
+      priceMasterId:(m && m.id) || 'standard',
+      priceMasterName:(m && m.name) || '標準',
+      priceSnapshot:clone((m && m.prices) || {})
+    };
+  }
+  function getSnapshot(){ return makeSnapshot(getActive()); }
+  function getSnapshotFor(masterId){
+    const list = ensureMasters();
+    const item = list.find(x => x.id === masterId) || getActive();
+    return makeSnapshot(item);
+  }
 
   function patchSaveFunctions(){
     const MS = window.MS;
@@ -3733,6 +3746,8 @@
     activeId,
     setActive,
     getSnapshot,
+    getSnapshotFor,
+    makeSnapshot,
     collectFields,
     applyFields,
     normalizePrices,
@@ -4677,3 +4692,190 @@
 
   syncMap(fixedRows());
 })(window, document);
+
+
+/* ===== 保存データ一覧 appType 日本語表示 最終補強 v1.2.4 =====
+   内部値は英語のまま保持し、画面上の表示文字だけ日本語化する。
+   index.html が appType を直接描画する場合や、後からDOMへ追加する場合にも対応。
+================================================================ */
+(function(window, document){
+  "use strict";
+
+  const MS = window.MS = window.MS || {};
+
+  const APP_LABELS_JA = {
+    "l_wall":"L型擁壁",
+    "l_wall_sekisan":"L型擁壁",
+    "lgata":"L型擁壁",
+
+    "precast_l_wall":"プレキャストL型擁壁",
+    "precast_l_wall_sekisan":"プレキャストL型擁壁",
+    "precast_lgata":"プレキャストL型擁壁",
+
+    "gravity_wall":"重力式擁壁",
+    "gravity_wall_sekisan":"重力式擁壁",
+
+    "u_gutter":"U型側溝",
+    "u_gutter_sekisan":"U型側溝",
+    "ugata":"U型側溝",
+
+    "genbau_u_gutter":"現場打U型側溝",
+    "genbau_u_gutter_sekisan":"現場打U型側溝",
+    "genbau_ugata":"現場打U型側溝",
+
+    "kahen_sokkou":"可変側溝",
+    "variable_gutter":"可変側溝",
+
+    "ankyo_culvert":"暗渠・カルバート工",
+    "culvert":"暗渠・カルバート工",
+
+    "drainage_pipe":"排水管工",
+    "haisui_pipe":"排水管工",
+    "drainage_pipe_sekisan":"排水管工",
+
+    "precast_drainage_basin":"プレキャスト集水桝",
+    "precast_shusui_masu":"プレキャスト集水桝",
+    "precast_drainage_pit":"プレキャスト集水桝",
+
+    "genbau_drainage_pit":"現場打排水桝",
+    "genbau_haisui_masu":"現場打排水桝",
+    "cast_in_place_drainage_pit":"現場打排水桝",
+
+    "curb":"縁石工",
+    "enshiki":"縁石工",
+    "curb_sekisan":"縁石工",
+
+    "pedestrian_vehicle_boundary_block":"歩車道ブロック工",
+    "pedestrian_vehicle_block":"歩車道ブロック工",
+    "hodousha_block":"歩車道ブロック工",
+
+    "l_gutter":"L型側溝工",
+    "l_gutter_sekisan":"L型側溝工",
+
+    "mikiri_concrete":"見切コンクリート",
+    "edge_concrete":"見切コンクリート",
+
+    "block":"ブロック積",
+    "block_wall":"ブロック積",
+    "doma":"土間コンクリート",
+    "fence":"フェンス",
+    "carport":"カーポート",
+    "masu":"集水桝",
+    "catch_basin":"集水桝",
+    "other":"その他",
+    "unknown":"その他"
+  };
+
+  function normalizeKey(value){
+    return String(value == null ? "" : value)
+      .trim()
+      .toLowerCase()
+      .replace(/\\/g, "/")
+      .split("/").pop()
+      .replace(/\.(html?|js)$/i, "")
+      .replace(/\(\d+\)$/g, "")
+      .replace(/[\s-]+/g, "_");
+  }
+
+  function getJapaneseAppLabel(value){
+    const raw = String(value == null ? "" : value).trim();
+    if(!raw) return "未分類";
+    if(/[ぁ-んァ-ヶ一-龠々]/.test(raw)) return raw;
+    const key = normalizeKey(raw);
+    return APP_LABELS_JA[key] || APP_LABELS_JA[raw] || raw;
+  }
+
+  MS.APP_LABEL = Object.assign({}, MS.APP_LABEL || {}, APP_LABELS_JA);
+  MS.APP_LABELS_JA = Object.assign({}, APP_LABELS_JA);
+  MS.getAppLabel = getJapaneseAppLabel;
+
+  if(MS.Estimate){
+    MS.Estimate.APP_LABELS = Object.assign({}, MS.Estimate.APP_LABELS || {}, APP_LABELS_JA);
+    MS.Estimate.getAppLabel = getJapaneseAppLabel;
+  }
+
+  function convertText(text){
+    const source = String(text == null ? "" : text);
+    const trimmed = source.trim();
+    if(!trimmed) return source;
+
+    // appTypeだけが表示されている場合
+    const direct = getJapaneseAppLabel(trimmed);
+    if(direct !== trimmed){
+      return source.replace(trimmed, direct);
+    }
+
+    // 「種類：gravity_wall」など、説明文字と一緒に表示される場合
+    let result = source;
+    Object.keys(APP_LABELS_JA)
+      .sort(function(a,b){ return b.length-a.length; })
+      .forEach(function(key){
+        const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const re = new RegExp("(^|[^A-Za-z0-9_])" + escaped + "(?=$|[^A-Za-z0-9_])", "gi");
+        result = result.replace(re, function(all, before){
+          return before + APP_LABELS_JA[key];
+        });
+      });
+    return result;
+  }
+
+  function translateNode(root){
+    if(!root) return;
+
+    if(root.nodeType === Node.TEXT_NODE){
+      const next = convertText(root.nodeValue);
+      if(next !== root.nodeValue) root.nodeValue = next;
+      return;
+    }
+
+    if(root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) return;
+
+    // optionのvalueやdata属性など内部値には触れず、表示文字だけを処理
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function(node){
+      const parent = node.parentElement;
+      if(parent && /^(SCRIPT|STYLE|TEXTAREA)$/i.test(parent.tagName)) return;
+      const next = convertText(node.nodeValue);
+      if(next !== node.nodeValue) node.nodeValue = next;
+    });
+  }
+
+  function startTranslation(){
+    translateNode(document.body);
+
+    if(!document.body || typeof MutationObserver === "undefined") return;
+    const observer = new MutationObserver(function(mutations){
+      mutations.forEach(function(m){
+        if(m.type === "characterData"){
+          translateNode(m.target);
+        }else{
+          m.addedNodes.forEach(function(node){ translateNode(node); });
+        }
+      });
+    });
+    observer.observe(document.body, {
+      childList:true,
+      subtree:true,
+      characterData:true
+    });
+
+    // 一覧描画が遅い画面への念押し
+    [50, 200, 500, 1000, 2000].forEach(function(ms){
+      setTimeout(function(){ translateNode(document.body); }, ms);
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", startTranslation, {once:true});
+  }else{
+    startTranslation();
+  }
+
+  window.addEventListener("load", function(){ translateNode(document.body); });
+  window.addEventListener("ms-estimate-list-changed", function(){ translateNode(document.body); });
+  window.addEventListener("ms-project-changed", function(){ translateNode(document.body); });
+
+})(window, document);
+
