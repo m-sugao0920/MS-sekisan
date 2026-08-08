@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>プレキャスト集水桝 積算アプリ 005 共通仕様完全版</title>
+<title>プレキャスト集水桝 積算アプリ Ver.1.4.0</title>
 <style>
 :root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
@@ -86,8 +86,270 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 }
 </style>
 
+
+<style id="precast-basin-v130-style">
+.ms-input-card-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important}
+.ms-input-card-head .ms-head-title{display:flex;align-items:center;gap:8px}
+.ms-new-input-btn{width:auto!important;min-width:150px!important;padding:7px 12px!important;background:#eef6ff!important;color:#0647a5!important;border:1px solid #bad8f4!important;border-radius:9px!important;white-space:nowrap!important;font-size:12px!important;font-weight:900!important}
+.ms-new-input-btn:hover{background:#e2f0ff!important}
+.ms-collapse{margin:10px 0 0;border:2px solid #8fc0ed!important;border-radius:12px!important;background:#fbfdff!important;overflow:hidden!important;box-shadow:0 4px 12px rgba(0,112,192,.09)!important}
+.ms-collapse>summary{list-style:none!important;cursor:pointer!important;display:block!important;padding:11px 12px!important;margin:0!important;color:#0647a5!important;font-size:13px!important;font-weight:950!important;line-height:1.35!important;background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;user-select:none!important}
+.ms-collapse>summary::-webkit-details-marker{display:none!important}
+.ms-collapse>summary:before{content:"▶ ";font-weight:950!important}
+.ms-collapse[open]>summary:before{content:"▼ "}
+.ms-collapse[open]>summary{border-bottom:1px solid #cfe3f7!important}
+.ms-collapse-body{padding:10px 12px 12px}
+.ms-collapse .result-memo-box{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
+.ms-collapse .result-memo-title{display:none!important}
+.kpi-unit-price-v130{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.kpi-unit-price-v130 .box{min-height:64px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;padding:8px 14px!important;border:2px solid #bad8f4!important;border-radius:14px!important;background:linear-gradient(180deg,#fbfdff,#eef6ff)!important}
+.kpi-unit-price-v130 .t{font-size:13px!important;color:#475569!important}
+.kpi-unit-price-v130 .v{margin-top:2px!important;color:#0647a5!important;font-size:22px!important;font-weight:950!important;line-height:1.15!important}
+.kpi-unit-price-v130 .u{font-size:12px!important;color:#60758d!important;margin-left:6px!important}
+#precastBasinDefaultsModal{display:none;position:fixed;inset:0;z-index:99995;background:rgba(8,24,48,.58);align-items:center;justify-content:center;padding:18px}
+#precastBasinDefaultsModal.show{display:flex}
+.precast-basin-defaults-box{width:min(620px,100%);background:#fff;border:1px solid #cfe3f7;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.30);overflow:hidden}
+.precast-basin-defaults-head{padding:17px 20px;background:linear-gradient(135deg,#063f91,#075fbd);color:#fff}
+.precast-basin-defaults-title{font-size:21px;font-weight:950}
+.precast-basin-defaults-sub{font-size:12px;line-height:1.6;margin-top:4px;color:#eaf4ff}
+.precast-basin-defaults-body{padding:18px 20px;color:#23364d;font-size:14px;line-height:1.7}
+.precast-basin-defaults-status{padding:10px 12px;border:1px solid #cfe3f7;border-radius:10px;background:#f7fbff;color:#0647a5;font-weight:900;margin-bottom:13px}
+.precast-basin-defaults-actions{display:grid;gap:9px}
+.precast-basin-defaults-actions button{height:40px;width:100%}
+.precast-basin-defaults-save{background:#0647a5;color:#fff}
+.precast-basin-defaults-close{background:#f1f5f9;color:#334155}
+@media(max-width:700px){
+ .ms-input-card-head{align-items:flex-start!important}
+ .ms-new-input-btn{min-width:132px!important;font-size:11px!important;padding:7px 8px!important}
+ .kpi-unit-price-v130{grid-template-columns:1fr!important}
+}
+@media print{.ms-new-input-btn{display:none!important}}
+</style>
+
+
+<style id="precast-basin-register-v130-style">
+#registerModal .modalbox{
+  width:min(680px,100%)!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid #cfe3f7!important;
+  border-radius:18px!important;
+}
+#registerModal .v130-register-head{
+  padding:17px 20px;
+  background:linear-gradient(135deg,#063f91,#075fbd);
+  color:#fff;
+}
+#registerModal .v130-register-title{
+  margin:0;
+  font-size:21px;
+  font-weight:950;
+  color:#fff;
+}
+#registerModal .v130-register-sub{
+  margin-top:4px;
+  font-size:12px;
+  line-height:1.6;
+  color:#eaf4ff;
+}
+#registerModal .v130-register-body{
+  padding:18px 20px;
+}
+#registerModal .v130-register-grid{
+  display:grid;
+  grid-template-columns:130px minmax(0,1fr);
+  gap:10px 12px;
+  align-items:center;
+}
+#registerModal .v130-register-grid label{
+  margin:0!important;
+  min-height:0!important;
+  color:#475569!important;
+  font-size:12px!important;
+  font-weight:800!important;
+}
+#registerModal .v130-register-grid input{
+  width:100%!important;
+  height:38px!important;
+}
+#registerModal .v130-price-summary{
+  margin-top:14px;
+  border:1px solid #dbeafe;
+  border-radius:12px;
+  background:#f8fbff;
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px 14px;
+  font-size:12px;
+  color:#334155;
+  line-height:1.5;
+}
+#registerModal .v130-price-summary b{color:#0647a5}
+#registerModal .v130-register-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+#registerModal .v130-register-actions button{
+  width:100%!important;
+  height:40px!important;
+}
+@media(max-width:700px){
+  #registerModal .v130-register-grid{grid-template-columns:1fr}
+  #registerModal .v130-price-summary{grid-template-columns:1fr}
+}
+</style>
+
+
+<style id="precast-basin-product-list-common-v130">
+#productModal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.46);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+#productModal.show{display:flex}
+#productModal .modalbox{
+  width:min(860px,100%)!important;
+  max-height:88vh!important;
+  padding:0!important;
+  background:#fff!important;
+  border-radius:18px!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.28)!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#productModal .pm-dialog-head{
+  padding:16px 18px;
+  border-bottom:1px solid #dbeafe;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+#productModal .pm-dialog-head h3{
+  margin:0;
+  color:#0647a5;
+  font-size:20px;
+}
+#productModal .pm-close{
+  width:auto!important;
+  min-width:80px!important;
+  background:#eef6ff!important;
+  color:#0647a5!important;
+}
+#productModal .pm-filter{
+  padding:12px 18px;
+  display:grid;
+  grid-template-columns:1fr 1.4fr;
+  gap:10px;
+  border-bottom:1px solid #e5e7eb;
+}
+#productModal .pm-filter select,
+#productModal .pm-filter input{
+  height:38px;
+  border:1px solid #d5e6f7;
+  border-radius:10px;
+  padding:7px 9px;
+  width:100%;
+  font-size:13px;
+  background:#fff;
+}
+#productModal .pm-list{
+  padding:12px 18px;
+  overflow:auto;
+  display:grid;
+  gap:8px;
+}
+#productModal .pm-item{
+  border:1px solid #d7e7f7;
+  border-radius:12px;
+  padding:10px;
+  background:#fbfdff;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  align-items:center;
+}
+#productModal .pm-item:hover{
+  border-color:#78b7ed;
+  background:#f4f9ff;
+}
+#productModal .pm-item-name{
+  font-weight:900;
+  color:#0647a5;
+  font-size:14px;
+}
+#productModal .pm-item-meta{
+  font-size:12px;
+  color:#60758d;
+  line-height:1.55;
+  margin-top:3px;
+}
+#productModal .pm-cover-meta{
+  color:#94a3b8;
+  font-size:11px;
+  font-weight:400;
+}
+#productModal .pm-select-btn{
+  width:auto!important;
+  min-width:86px!important;
+  background:#0647a5!important;
+  color:#fff!important;
+}
+#productModal .pm-empty{
+  padding:18px;
+  text-align:center;
+  color:#64748b;
+  border:1px dashed #cfe3f7;
+  border-radius:12px;
+}
+@media(max-width:700px){
+  #productModal .pm-filter{grid-template-columns:1fr}
+  #productModal .pm-item{grid-template-columns:1fr}
+  #productModal .pm-select-btn{width:100%!important}
+}
+</style>
+
+
+<style id="precast-basin-v140-input-style">
+.input-color-guide{
+  display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+  margin:0 0 10px;padding:7px 8px;border:1px solid #d5dde7;border-radius:12px;background:#f8fafc;
+  box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(15,23,42,.10);
+}
+.input-color-guide .guide-item{
+  position:relative;display:flex;align-items:center;justify-content:center;min-height:30px;flex:1;
+  padding:5px 8px 5px 14px;border-top:1px solid #eef2f6;border-right:1px solid #d8dee7;
+  border-bottom:3px solid #c7d0dc;border-left:6px solid #c7d0dc;border-radius:8px;
+  background:linear-gradient(180deg,#fff,#f8fafc);color:#334155;font-size:11px;font-weight:600;
+  text-align:center;white-space:nowrap;box-shadow:0 2px 4px rgba(15,23,42,.10);
+}
+.input-color-guide .guide-dimension{border-left-color:#8fc9ef;border-bottom-color:#8fc9ef}
+.input-color-guide .guide-price{border-left-color:#8A4653;border-bottom-color:#8A4653}
+.input-color-guide .guide-setting{border-left-color:#9fd0aa;border-bottom-color:#9fd0aa}
+#W1,#W2,#W3,#W4,#W5,#W6,#H1,#H2,#H3,#H4,#H5,#E,#N,#Ngrating,#Nconcllid,#Nlidwork{background:#eef9ff!important;border-left:5px solid #71c5eb!important;border-bottom:2px solid #9bd7f2!important}
+#Pexc,#Pback,#Pspoil,#Pbed,#Pstone,#Pnform,#Plean,#Pmortar,#Pinvert,#Pproduct,#Pinstall,#Pgrating,#Pconcllid,#Plidwork{background:#fff7f7!important;border-left:5px solid #8b3343!important;border-bottom:2px solid #c78a95!important}
+#ProfitRate{background:#f2fbf4!important;border-left:5px solid #4b9b61!important;border-bottom:2px solid #91cda0!important}
+#Nlidwork[readonly]{color:#64748b!important;background:#f4f8fb!important;border-left-color:#afd4e5!important}
+@media(max-width:700px){.input-color-guide{gap:5px;padding:6px}.input-color-guide .guide-item{font-size:10px;padding-left:10px}}
+@media print{.input-color-guide{display:none!important}}
+</style>
+<style id="precast-basin-product-info-v140">
+.product-info-v140{border:1px solid #f0c98f;border-radius:14px;background:#fff8ec;padding:10px 12px 12px;margin:8px 0;box-shadow:0 3px 9px rgba(146,93,28,.07)}
+.product-info-v140 .sectionTitle{color:#b75a0a;margin-top:0}
+.product-info-v140 .sectionTitle::before{background:#f59e0b!important}
+.product-info-v140 #Nlidwork[readonly]{background:#f3f4f6!important;color:#94a3b8!important;border-color:#d9dee5!important;box-shadow:none!important}
+</style>
 </head><body>
-<header><div class="wrap"><div><h1>プレキャスト集水桝 積算アプリ 005 共通仕様完全版</h1><div class="sub">内寸法・外寸法・基数から、土工／地業／製品代／据付け費／蓋を自動算出</div></div><a class="home" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<header><div class="wrap"><div><h1 id="precastBasinDefaultsTrigger" title="プレキャスト集水桝積算">プレキャスト集水桝 積算アプリ Ver.1.4.0</h1><div class="sub">内寸法・外寸法・基数から、土工／地業／製品代／据付け費／蓋を自動算出</div></div><a class="home" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><svg id="sectionSvg" class="section-svg"
   xmlns="http://www.w3.org/2000/svg"
@@ -262,34 +524,54 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
     class="dimText dim-w5 dim-w6">W5×W6</text>
 </svg><div class="note">W2×W3＝内寸法、W5×W6＝床付け・均し・砕石の外寸法です。製品の外寸法はW1＋W2＋W4、W1＋W3＋W4として計算します。</div>
 <div class="panel blue"><div class="save-line"><label>現場名</label><input id="projectName" placeholder="例：○○様邸 外構工事"></div><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：プレキャスト集水桝 600×600 1基"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div></div>
-<div class="panel green price-block"><div class="sectionTitle">共有単価マスター</div><div class="save-line"><label>使用する単価</label><select id="commonPriceList"></select></div><div class="btns"><button class="ghost" id="applyCommonPriceBtn">呼出</button><button class="primary" id="saveCommonPriceBtn">保存</button><button class="ghost" id="saveAsCommonPriceBtn">名前保存</button></div><div class="note" id="commonPriceNote">共有単価を読み込みます。</div></div>
-<div class="panel orange"><div class="sectionTitle">プレキャスト集水桝 製品単価マスター</div><div class="current" id="selectedProductMaster">製品は選択されていません。</div><div class="btns"><button class="primary" id="openProductMasterBtn">製品を選択</button><button class="ghost" id="registerCurrentProductBtn">現在値を登録</button><button class="danger" id="clearProductMasterBtn">解除</button></div><input type="hidden" id="ProductMasterId"><input type="hidden" id="ProductName"><input type="hidden" id="ProductManufacturer"><input type="hidden" id="ProductSpecification"></div>
-<div class="panel"><div class="sectionTitle">基本操作</div><div class="btns" style="grid-template-columns:1fr 1fr"><button class="primary" id="calcBtn">計算</button><button class="danger" id="resetBtn">入力リセット</button></div></div>
+<div class="panel green price-block"><div class="sectionTitle">共有単価マスター</div><div class="save-line"><label>使用する単価</label><select id="commonPriceList"></select></div><div class="btns"><button class="ghost" id="applyCommonPriceBtn">今回の積算だけに反映</button><button class="primary" id="saveCommonPriceBtn">保存</button><button class="ghost" id="saveAsCommonPriceBtn">名前保存</button></div><div class="note" id="commonPriceNote">共有単価を読み込みます。</div></div>
+<div class="panel orange"><div class="sectionTitle">プレキャスト集水桝 製品単価マスター</div><div class="current" id="selectedProductMaster">製品は選択されていません。</div><div class="btns"><button class="primary" id="openProductMasterBtn">製品を選択</button><button class="ghost" id="registerCurrentProductBtn">現在値を登録</button><button class="danger" id="clearProductMasterBtn">選択解除</button></div><input type="hidden" id="ProductMasterId"><input type="hidden" id="ProductName"><input type="hidden" id="ProductManufacturer"><input type="hidden" id="ProductSpecification"></div>
+
 </div></section>
-<section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
+<section class="card"><h2 class="ms-input-card-head">
+<span class="ms-head-title"><span class="dot"></span>入力</span>
+<button class="ms-new-input-btn" id="newInputBtn" type="button">新しい入力を開始</button>
+</h2><div class="body">
+<div class="input-color-guide" aria-label="入力欄の色分け案内">
+  <span class="guide-item guide-dimension">📐 寸法</span>
+  <span class="guide-item guide-price">💴 単価</span>
+  <span class="guide-item guide-setting">⚙ 条件</span>
+</div>
 <div class="sectionTitle">断面寸法（m）</div>
-<div class="row"><div><label>W1（左・前壁厚）</label><input id="W1" type="number" step="0.001" value="0.150" data-dim="dim-w1"></div><div><label>W4（右・後壁厚）</label><input id="W4" type="number" step="0.001" value="0.150" data-dim="dim-w4"></div></div>
-<div class="row"><div><label>W2（内幅）</label><input id="W2" type="number" step="0.001" value="0.600" data-dim="dim-w2"></div><div><label>W3（内奥行）</label><input id="W3" type="number" step="0.001" value="0.600" data-dim="dim-w3"></div></div>
-<div class="row"><div><label>W5（地業外幅）</label><input id="W5" type="number" step="0.001" value="1.000" data-dim="dim-w5"></div><div><label>W6（地業外奥行）</label><input id="W6" type="number" step="0.001" value="1.000" data-dim="dim-w6"></div></div>
-<div class="row"><div><label>H1（内空高さ）</label><input id="H1" type="number" step="0.001" value="0.800" data-dim="dim-h1"></div><div><label>H2（インバート厚）</label><input id="H2" type="number" step="0.001" value="0.150" data-dim="dim-h2"></div></div>
-<div class="row"><div><label>H3（敷モルタル厚）</label><input id="H3" type="number" step="0.001" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコン厚）</label><input id="H4" type="number" step="0.001" value="0.050" data-dim="dim-h4"></div></div>
-<div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="number" step="0.001" value="0.100" data-dim="dim-h5"></div><div></div></div>
-<div class="hr"></div><div class="sectionTitle">共通条件</div><div class="row"><div><label>基数（基）</label><input id="N" type="number" step="1" value="1"></div><div><label>掘削余裕（四周・m）</label><input id="E" type="number" step="0.001" value="0.100"></div></div><div class="row"><div><label>利益率（%）</label><input id="ProfitRate" type="number" step="0.1" min="0" max="99.9" value="20"></div><div><label>見積単価の丸め</label><input type="text" value="1,000円未満：10円／以上：100円" readonly></div></div>
-<div class="note">躯体外幅＝W1＋W2＋W4、躯体外奥行＝W1＋W3＋W4。インバートコンクリート＝W2×W3×H2×基数、敷モルタル＝W5×W6×H3×基数、埋戻し＝掘削－残土処理です。</div>
-<div class="hr"></div><div class="sectionTitle">単価（円）</div>
-<div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" value="4500"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" value="3000"></div></div>
-<div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" value="4000"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" value="250"></div></div>
-<div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="number" value="8500"></div><div><label>均し型枠 単価/m²</label><input id="Pnform" type="number" value="5500"></div></div>
-<div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" type="number" value="22000"></div><div><label>敷モルタル 単価/m³</label><input id="Pmortar" type="number" value="34000"></div></div>
-<div class="row"><div><label>インバートコンクリート 単価/m³</label><input id="Pinvert" type="number" value="22000"></div><div></div></div>
-<div class="row"><div><label>製品代 単価/基</label><input id="Pproduct" type="number" value="0"></div><div><label>据付け費 単価/基</label><input id="Pinstall" type="number" value="0"></div></div>
-<div class="row"><div><label>グレーチング蓋 単価/枚</label><input id="Pgrating" type="number" value="0"></div><div><label>必要枚数</label><input id="Ngrating" type="number" value="0"></div></div>
-<div class="row"><div><label>コンクリート蓋 単価/枚</label><input id="Pconcllid" type="number" value="0"></div><div><label>必要枚数</label><input id="Nconcllid" type="number" value="0"></div></div>
-<div class="row"><div><label>蓋掛け手間 単価/枚</label><input id="Plidwork" type="number" value="0"></div><div><label>蓋掛け枚数</label><input id="Nlidwork" type="number" value="0" readonly></div></div>
+<div class="row"><div><label>W1（左・前壁厚）</label><input id="W1" type="text" inputmode="decimal" value="0.150" data-dim="dim-w1"></div><div><label>W4（右・後壁厚）</label><input id="W4" type="text" inputmode="decimal" value="0.150" data-dim="dim-w4"></div></div>
+<div class="row"><div><label>W2（内幅）</label><input id="W2" type="text" inputmode="decimal" value="0.600" data-dim="dim-w2"></div><div><label>W3（内奥行）</label><input id="W3" type="text" inputmode="decimal" value="0.600" data-dim="dim-w3"></div></div>
+<div class="row"><div><label>W5（地業外幅）</label><input id="W5" type="text" inputmode="decimal" value="1.000" data-dim="dim-w5"></div><div><label>W6（地業外奥行）</label><input id="W6" type="text" inputmode="decimal" value="1.000" data-dim="dim-w6"></div></div>
+<div class="row"><div><label>H1（内空高さ）</label><input id="H1" type="text" inputmode="decimal" value="0.800" data-dim="dim-h1"></div><div><label>H2（インバート厚）</label><input id="H2" type="text" inputmode="decimal" value="0.150" data-dim="dim-h2"></div></div>
+<div class="row"><div><label>H3（敷モルタル厚）</label><input id="H3" type="text" inputmode="decimal" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコン厚）</label><input id="H4" type="text" inputmode="decimal" value="0.050" data-dim="dim-h4"></div></div>
+<div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="text" inputmode="decimal" value="0.100" data-dim="dim-h5"></div><div><label>e（掘削余裕・四周 m）</label><input id="E" type="text" inputmode="decimal" value="0.100"></div></div>
+<div class="hr"></div><div class="sectionTitle">共通条件</div><div class="row"><div><label>基数（基）</label><input id="N" type="text" inputmode="numeric" value="1"></div><div><label>利益率（%）</label><input id="ProfitRate" type="text" inputmode="decimal" value="20"></div></div>
+<div class="hr"></div>
+<div class="product-info-v140">
+<div class="sectionTitle">製品情報</div>
+<div class="row"><div><label>製品代 単価/基</label><input id="Pproduct" type="text" inputmode="numeric" value="0"></div><div><label>据付け費 単価/基</label><input id="Pinstall" type="text" inputmode="numeric" value="0"></div></div>
+<div class="row"><div><label>グレーチング蓋 単価/枚</label><input id="Pgrating" type="text" inputmode="numeric" value="0"></div><div><label>必要枚数</label><input id="Ngrating" type="text" inputmode="numeric" value="0"></div></div>
+<div class="row"><div><label>コンクリート蓋 単価/枚</label><input id="Pconcllid" type="text" inputmode="numeric" value="0"></div><div><label>必要枚数</label><input id="Nconcllid" type="text" inputmode="numeric" value="0"></div></div>
+<div class="row"><div><label>蓋掛け手間 単価/枚</label><input id="Plidwork" type="text" inputmode="numeric" value="0"></div><div><label>蓋設置枚数（自動）</label><input id="Nlidwork" type="text" inputmode="numeric" value="0" readonly tabindex="-1" aria-readonly="true"></div></div>
+</div>
+<div class="hr"></div><div class="sectionTitle">土工・地業単価（任意・円）</div>
+<div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="text" inputmode="numeric" value="4,500"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="text" inputmode="numeric" value="3,000"></div></div>
+<div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="text" inputmode="numeric" value="4,000"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="text" inputmode="numeric" value="250"></div></div>
+<div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="text" inputmode="numeric" value="8,500"></div><div><label>均し型枠 単価/m²</label><input id="Pnform" type="text" inputmode="numeric" value="5,500"></div></div>
+<div class="row"><div><label>均しコンクリート 単価/m³</label><input id="Plean" type="text" inputmode="numeric" value="22,000"></div><div><label>敷モルタル 単価/m³</label><input id="Pmortar" type="text" inputmode="numeric" value="34,000"></div></div>
+<div class="row"><div><label>インバートコンクリート 単価/m³</label><input id="Pinvert" type="text" inputmode="numeric" value="22,000"></div><div></div></div>
 </div></section>
 <section class="card"><h2><span class="dot"></span>結果</h2><div class="body"><div class="btns" style="max-width:180px;margin:0 0 10px;grid-template-columns:1fr"><button class="primary" id="printBtn">印刷</button></div>
-<div class="kpi"><div class="box"><div class="t">掘削</div><div class="v"><span id="k_exc">0.000</span><span class="u">m³</span></div></div><div class="box"><div class="t">製品外寸</div><div class="v"><span id="k_size">-</span><span class="u">m</span></div></div><div class="box"><div class="t">合計金額</div><div class="v"><span id="k_total">0</span><span class="u">円</span></div></div><div class="box"><div class="t">見積金額</div><div class="v"><span id="k_est_total">0</span><span class="u">円</span></div></div></div>
+<div id="legacyPrecastBasinKpiCompat" style="display:none!important">
+<span id="k_exc">0</span><span id="k_size">-</span><span id="k_total">0</span><span id="k_est_total">0</span>
+</div>
+<div class="kpi kpi-unit-price-v130">
+<div class="box"><div class="t">1基あたり単価</div><div class="v"><span id="k_cost_unit">0</span><span class="u">円/基</span></div></div>
+<div class="box"><div class="t">見積1基あたり単価</div><div class="v"><span id="k_est_unit">0</span><span class="u">円/基</span></div></div>
+</div>
 <table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultBody"></tbody><tfoot><tr class="total-row"><td colspan="4">合計</td><td id="a_total">0</td><td></td><td id="a_est_total">0</td></tr><tr class="total-row"><td colspan="3">1基あたり単価（原価）</td><td colspan="2" id="a_unit">0 円/基</td><td>1基あたり単価（見積）</td><td id="a_est_unit">0 円/基</td></tr></tfoot></table>
+<details class="ms-collapse" id="calculationMemoDetails">
+<summary>計算式・計算メモ</summary>
+<div class="ms-collapse-body">
 <div class="result-memo-box" aria-label="計算メモ"><div class="result-memo-title">計算メモ</div><div class="result-memo-grid">
 <div class="result-memo-item"><b>掘削</b><span>(W5＋2E)×(W6＋2E)×総深さ×基数</span></div>
 <div class="result-memo-item"><b>残土処理</b><span>砕石＋均しコンクリート＋敷モルタル＋製品占有体積</span></div>
@@ -305,14 +587,64 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 <div class="result-memo-item"><b>蓋類</b><span>必要枚数×各単価</span></div>
 <div class="result-memo-item"><b>見積単価</b><span>単価÷（1－利益率）</span></div>
 </div></div>
-<div class="memo-box"><label for="Memo">メモ</label><textarea id="Memo" placeholder="積算に関するメモを入力してください"></textarea></div></div></section>
 </div>
-<div class="print-wrap" id="printWrap"><div class="print-actions"><button class="primary" onclick="window.print()">印刷</button><button class="ghost" onclick="closePreview()">終了</button></div><div class="print-sheet"><div class="print-head"><div id="printProject">現場名：</div><div id="printEstimate">積算名称：</div><div id="printDate"></div></div><table class="print-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="printRows"></tbody><tfoot><tr><th colspan="4">合計</th><td id="printTotal"></td><td></td><td id="printEstimateTotal"></td></tr><tr class="unit-price-row"><th colspan="3">1基あたり単価（原価）</th><td colspan="2" id="printUnit"></td><th>1基あたり単価（見積）</th><td id="printEstimateUnit"></td></tr></tfoot></table><div class="print-note"><div>※ 数量は入力基数に対する数量です。<span id="printMemo"></span></div><div>単位：mm（特記なき場合）</div></div><div style="height:4mm"></div><div class="print-bottom"><div class="print-box"><div class="print-title">断面図（寸法図）</div><div id="printSvg"></div></div><div class="print-box"><div class="print-title">寸法一覧</div><table class="dim-table"><thead><tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr></thead><tbody id="dimRows"></tbody></table><div class="spec">プレキャスト集水桝：製品規格による<br>インバートコンクリート：18-8-25 BB<br>敷モルタル：1：3<br>均しコンクリート：18-8-25 BB<br>砕石地業：RC-40</div></div></div></div></div>
+</details>
+</div></section>
+</div>
+<div class="print-wrap" id="printWrap"><div class="print-actions"><button class="primary" onclick="window.print()">印刷</button><button class="ghost" onclick="closePreview()">終了</button></div><div class="print-sheet"><div class="print-head"><div id="printProject">現場名：</div><div id="printEstimate">積算名称：</div><div id="printDate"></div></div><table class="print-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="printRows"></tbody><tfoot><tr><th colspan="4">合計</th><td id="printTotal"></td><td></td><td id="printEstimateTotal"></td></tr><tr class="unit-price-row"><th colspan="3">1基あたり単価（原価）</th><td colspan="2" id="printUnit"></td><th>1基あたり単価（見積）</th><td id="printEstimateUnit"></td></tr></tfoot></table><div class="print-note"><div>※ 数量は入力基数に対する数量です。</div><div>単位：mm（特記なき場合）</div></div><div style="height:4mm"></div><div class="print-bottom"><div class="print-box"><div class="print-title">断面図（寸法図）</div><div id="printSvg"></div></div><div class="print-box"><div class="print-title">寸法一覧</div><table class="dim-table"><thead><tr><th>記号</th><th>名称</th><th>寸法（mm）</th></tr></thead><tbody id="dimRows"></tbody></table><div class="spec">プレキャスト集水桝：製品規格による<br>インバートコンクリート：18-8-25 BB<br>敷モルタル：1：3<br>均しコンクリート：18-8-25 BB<br>砕石地業：RC-40</div></div></div></div></div>
 </main>
-<div class="modal" id="productModal"><div class="modalbox"><h3>プレキャスト集水桝 製品単価マスター</h3><div class="row"><div><label>メーカー</label><select id="pmMaker"><option value="">すべて</option></select></div><div><label>検索</label><input id="pmKeyword"></div></div><div class="product-list" id="pmList"></div><div class="modalactions"><button class="ghost" id="pmClose">閉じる</button></div></div></div>
-<div class="modal" id="registerModal"><div class="modalbox"><h3>現在の製品単価を登録</h3><div class="row"><div><label>メーカー</label><input id="regMaker"></div><div><label>登録名</label><input id="regName"></div></div><div class="row"><div><label>規格</label><input id="regSpec"></div><div><label>登録日</label><input id="regRegisteredDate" type="date"></div></div><div class="row"><div><label>備考</label><input id="regNote"></div><div></div></div><div class="note" id="regSummary"></div><div class="modalactions"><button class="ghost" id="regCancel">取消</button><button class="primary" id="regSave">登録</button></div></div></div>
+<div class="modal" id="productModal" aria-hidden="true">
+  <div class="modalbox">
+    <div class="pm-dialog-head">
+      <h3>プレキャスト集水桝 製品単価マスター</h3>
+      <button class="pm-close" id="pmClose" type="button">閉じる</button>
+    </div>
+    <div class="pm-filter">
+      <select id="pmMaker">
+        <option value="">すべてのメーカー</option>
+      </select>
+      <input id="pmKeyword" type="search" placeholder="製品名・規格で検索">
+    </div>
+    <div class="pm-list" id="pmList">
+      <div class="pm-empty">登録製品を読み込んでいます…</div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="registerModal">
+  <div class="modalbox">
+    <div class="v130-register-head">
+      <h3 class="v130-register-title">現在の入力内容を製品単価マスターへ登録</h3>
+      <div class="v130-register-sub">製品情報と現在入力されている製品・据付・蓋関係の単価を登録します。</div>
+    </div>
+    <div class="v130-register-body">
+      <div class="v130-register-grid">
+        <label for="regRegisteredDate">登録日</label>
+        <input id="regRegisteredDate" type="date">
+
+        <label for="regMaker">メーカー</label>
+        <input id="regMaker" placeholder="例：○○コンクリート">
+
+        <label for="regName">製品名</label>
+        <input id="regName" placeholder="例：プレキャスト集水桝">
+
+        <label for="regSpec">規格</label>
+        <input id="regSpec" placeholder="例：600×600×800">
+
+        <label for="regNote">備考</label>
+        <input id="regNote" placeholder="必要な場合のみ入力">
+      </div>
+
+      <div class="v130-price-summary" id="regSummary"></div>
+
+      <div class="v130-register-actions">
+        <button class="ghost" id="regCancel" type="button">閉じる</button>
+        <button class="primary" id="regSave" type="button">製品単価マスターへ登録</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-const $=id=>document.getElementById(id), num=id=>Number($(id)?.value||0), fmt=n=>Number(n||0).toLocaleString('ja-JP',{minimumFractionDigits:3,maximumFractionDigits:3}), yen=n=>Math.round(Number(n||0)).toLocaleString('ja-JP');
+const $=id=>document.getElementById(id), parseNumeric=v=>{const t=String(v??'').replace(/[,，\s]/g,'').replace(/．/g,'.').trim();if(!t||t==='.'||t==='-'||t==='-.')return 0;const n=Number(t);return Number.isFinite(n)?n:0}, num=id=>parseNumeric($(id)?.value), fmt=n=>Number(n||0).toLocaleString('ja-JP',{minimumFractionDigits:3,maximumFractionDigits:3}), yen=n=>Math.round(Number(n||0)).toLocaleString('ja-JP');
 function roundEstimateUnit(x){if(!Number.isFinite(x)||x<=0)return 0;const step=x<1000?10:100;return Math.round(x/step)*step;}
 const items=[['exc','掘削','m³'],['back','埋戻し','m³'],['spoil','残土処理','m³'],['bed','床付け','m²'],['stone','砕石地業','m³'],['nform','均し型枠','m²'],['lean','均しコンクリート','m³'],['mortar','敷モルタル','m³'],['invert','インバートコンクリート','m³'],['product','プレキャスト集水桝 製品代','基'],['install','据付け費','基'],['grating','グレーチング蓋','枚'],['concllid','コンクリート蓋','枚'],['lidwork','蓋掛け手間','枚']];
 let last={};
@@ -330,20 +662,20 @@ function calc(){
  items.forEach(([k])=>{amount[k]=qty[k]*price[k];estimatePrice[k]=roundEstimateUnit(price[k]/divisor);estimateAmount[k]=qty[k]*estimatePrice[k];total+=amount[k];estimateTotal+=estimateAmount[k]});
  const unit=N?total/N:0,estimateUnit=N?estimateTotal/N:0;
  last={qty,price,amount,estimatePrice,estimateAmount,total,unit,estimateTotal,estimateUnit,profitRate,ow,od,productDepth};
- $('k_exc').textContent=fmt(exc);$('k_size').textContent=`${ow.toFixed(3)}×${od.toFixed(3)}×${productDepth.toFixed(3)}`;$('k_total').textContent=yen(total);$('k_est_total').textContent=yen(estimateTotal);$('a_total').textContent=yen(total);$('a_unit').textContent=yen(unit)+' 円/基';$('a_est_total').textContent=yen(estimateTotal);$('a_est_unit').textContent=yen(estimateUnit)+' 円/基';
+ $('k_exc').textContent=fmt(exc);$('k_size').textContent=`${ow.toFixed(3)}×${od.toFixed(3)}×${productDepth.toFixed(3)}`;$('k_total').textContent=yen(total);$('k_est_total').textContent=yen(estimateTotal);$('k_cost_unit').textContent=yen(unit);$('k_est_unit').textContent=yen(estimateUnit);$('a_total').textContent=yen(total);$('a_unit').textContent=yen(unit)+' 円/基';$('a_est_total').textContent=yen(estimateTotal);$('a_est_unit').textContent=yen(estimateUnit)+' 円/基';
  $('resultBody').innerHTML=items.map(([k,n,u])=>`<tr><td>${n}</td><td class="mono">${['基','枚'].includes(u)?yen(qty[k]):fmt(qty[k])}</td><td>${u}</td><td class="mono">${yen(price[k])}</td><td class="mono">${yen(amount[k])}</td><td class="mono">${yen(estimatePrice[k])}</td><td class="mono">${yen(estimateAmount[k])}</td></tr>`).join('');
  buildPrint();
 }
-function buildPrint(){if(!last.qty)return;$('printProject').textContent='現場名：'+($('projectName').value||'未名称工事');$('printEstimate').textContent='積算名称：'+($('estimateName').value||'-');$('printDate').textContent='作成日：'+new Date().toLocaleDateString('ja-JP');$('printRows').innerHTML=items.map(([k,n,u],i)=>`<tr><td>${i+1}. ${n}</td><td>${['基','枚'].includes(u)?yen(last.qty[k]):fmt(last.qty[k])}</td><td>${u}</td><td>${yen(last.price[k])}</td><td>${yen(last.amount[k])}</td><td>${yen(last.estimatePrice[k])}</td><td>${yen(last.estimateAmount[k])}</td></tr>`).join('');$('printTotal').textContent=yen(last.total);$('printUnit').textContent=yen(last.unit)+' 円/基';$('printEstimateTotal').textContent=yen(last.estimateTotal);$('printEstimateUnit').textContent=yen(last.estimateUnit)+' 円/基';$('printMemo').textContent=$('Memo').value.trim()?'　メモ：'+$('Memo').value.trim():'';const printClone=$('sectionSvg').cloneNode(true);
+function buildPrint(){if(!last.qty)return;$('printProject').textContent='現場名：'+($('projectName').value||'未名称工事');$('printEstimate').textContent='積算名称：'+($('estimateName').value||'-');$('printDate').textContent='作成日：'+new Date().toLocaleDateString('ja-JP');$('printRows').innerHTML=items.map(([k,n,u],i)=>`<tr><td>${i+1}. ${n}</td><td>${['基','枚'].includes(u)?yen(last.qty[k]):fmt(last.qty[k])}</td><td>${u}</td><td>${yen(last.price[k])}</td><td>${yen(last.amount[k])}</td><td>${yen(last.estimatePrice[k])}</td><td>${yen(last.estimateAmount[k])}</td></tr>`).join('');$('printTotal').textContent=yen(last.total);$('printUnit').textContent=yen(last.unit)+' 円/基';$('printEstimateTotal').textContent=yen(last.estimateTotal);$('printEstimateUnit').textContent=yen(last.estimateUnit)+' 円/基';const printClone=$('sectionSvg').cloneNode(true);
  printClone.id='printSectionSvg';printClone.setAttribute('viewBox','80 45 1040 900');printClone.setAttribute('preserveAspectRatio','xMidYMid meet');printClone.style.width='100%';printClone.style.height='100%';printClone.style.overflow='visible';
  const idMap={pcConcrete:'printPcConcrete',pcLean:'printPcLean',pcStone:'printPcStone',pcShadow:'printPcShadow'};Object.entries(idMap).forEach(([oldId,newId])=>{const node=printClone.querySelector('#'+oldId);if(node)node.id=newId});
  printClone.querySelectorAll('[fill]').forEach(el=>{const v=el.getAttribute('fill');if(v&&v.includes('url(#pcConcrete)'))el.setAttribute('fill','url(#printPcConcrete)');if(v&&v.includes('url(#pcLean)'))el.setAttribute('fill','url(#printPcLean)');if(v&&v.includes('url(#pcStone)'))el.setAttribute('fill','url(#printPcStone)')});printClone.querySelectorAll('[filter]').forEach(el=>el.removeAttribute('filter'));$('printSvg').replaceChildren(printClone);
- const dims=[['W1','左・前壁厚'],['W2','内幅'],['W3','内奥行'],['W4','右・後壁厚'],['W5','地業外幅'],['W6','地業外奥行'],['H1','内空高さ'],['H2','インバート厚'],['H3','敷モルタル厚'],['H4','均しコンクリート厚'],['H5','砕石厚']];$('dimRows').innerHTML=dims.map(([id,n])=>`<tr><td>${id}</td><td>${n}</td><td>${yen(num(id)*1000)}</td></tr>`).join('')}
+ const dims=[['W1','左・前壁厚'],['W2','内幅'],['W3','内奥行'],['W4','右・後壁厚'],['W5','地業外幅'],['W6','地業外奥行'],['H1','内空高さ'],['H2','インバート厚'],['H3','敷モルタル厚'],['H4','均しコンクリート厚'],['H5','砕石厚'],['E','掘削余裕 e']];$('dimRows').innerHTML=dims.map(([id,n])=>`<tr><td>${id}</td><td>${n}</td><td>${yen(num(id)*1000)}</td></tr>`).join('')}
 function closePreview(){document.body.classList.remove('preview')}window.closePreview=closePreview;window.addEventListener('afterprint',closePreview);
-$('calcBtn').onclick=calc;$('printBtn').onclick=()=>{calc();window.print()};$('resetBtn').onclick=()=>{if(confirm('入力を初期値に戻しますか？'))location.reload()};
+$('printBtn').onclick=()=>{calc();window.print()};
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));document.querySelectorAll('[data-dim]').forEach(el=>{const cls=el.dataset.dim;el.addEventListener('focus',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.add('active')));el.addEventListener('blur',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.remove('active')))});
 const APP_TYPE='precast_drainage_basin';const PRODUCT_CATEGORY='precast_drainage_basin';const FIELD_IDS=[...document.querySelectorAll('input[id],select[id],textarea[id]')].map(x=>x.id).filter(id=>!['savedEstimateList','commonPriceList','pmMaker'].includes(id));
-function values(){const o={};FIELD_IDS.forEach(id=>{const e=$(id);if(e)o[id]=e.value});return o}function applyValues(o){Object.entries(o||{}).forEach(([id,v])=>{if($(id))$(id).value=v});showSelected();calc()}
+function values(){const o={};FIELD_IDS.forEach(id=>{const e=$(id);if(e)o[id]=e.value});return o}function applyValues(o){Object.entries(o||{}).forEach(([id,v])=>{if($(id))$(id).value=v});showSelected();calc();if(window.__precastBasinV140FormatPrices)window.__precastBasinV140FormatPrices()}
 async function ensureProject(){if(!window.MS)return null;await MS.init();let p=await MS.getCurrentProject();if(!p){const name=$('projectName').value.trim()||'未名称工事';p=await MS.createProject({name});MS.setCurrentProjectId(p.id)}if($('projectName'))$('projectName').value=p.name||'';return p}
 async function refreshSaved(selected){if(!window.MS)return;const p=await ensureProject(),list=await MS.Estimate.listByProjectAndApp(p.id,APP_TYPE),s=$('savedEstimateList');s.innerHTML=list.length?list.map(x=>`<option value="${x.id}">${x.name}</option>`).join(''):'<option value="">保存データなし</option>';if(selected)s.value=selected}
 function msCsvUnit(unit){return ({'m³':'m3','m²':'m2','㎥':'m3','㎡':'m2'}[unit]||unit||'')}
@@ -519,7 +851,7 @@ $('deleteEstimateBtn').onclick=async()=>{
     }
   }
 };
-const priceIds=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pmortar','Pinvert','Pproduct','Pinstall','Pgrating','Pconcllid','Plidwork'];function collectPrices(){const o={};priceIds.forEach(id=>o[id]=num(id));return o}function applyPrices(p){const aliases={Pexc:['Pexc','excavation'],Pback:['Pback','backfill'],Pspoil:['Pspoil','spoil'],Pbed:['Pbed','bed'],Pstone:['Pstone','stone'],Pnform:['Pnform','levelingForm'],Plean:['Plean','blindingConcrete'],Pmortar:['Pmortar','mortar'],Pinvert:['Pinvert','invertConcrete'],Pproduct:['Pproduct','productPrice'],Pinstall:['Pinstall','installationPrice'],Pgrating:['Pgrating','gratingCover'],Pconcllid:['Pconcllid','concreteCover'],Plidwork:['Plidwork','coverLabor']};Object.entries(aliases).forEach(([id,ks])=>{for(const k of ks)if(p&&p[k]!==undefined){$(id).value=p[k];break}});calc()}
+const priceIds=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pmortar','Pinvert'];function collectPrices(){const o={};priceIds.forEach(id=>o[id]=num(id));return o}function applyPrices(p){const aliases={Pexc:['Pexc','excavation'],Pback:['Pback','backfill'],Pspoil:['Pspoil','spoil'],Pbed:['Pbed','bed'],Pstone:['Pstone','stone'],Pnform:['Pnform','levelingForm'],Plean:['Plean','blindingConcrete'],Pmortar:['Pmortar','mortar'],Pinvert:['Pinvert','invertConcrete'],Pproduct:['Pproduct','productPrice'],Pinstall:['Pinstall','installationPrice'],Pgrating:['Pgrating','gratingCover'],Pconcllid:['Pconcllid','concreteCover'],Plidwork:['Plidwork','coverLabor']};Object.entries(aliases).forEach(([id,ks])=>{for(const k of ks)if(p&&p[k]!==undefined){$(id).value=yen(parseNumeric(p[k]));break}});calc()}
 function setCommonPriceNote(message){
   const note=$('commonPriceNote');
   if(note)note.textContent=message;
@@ -584,11 +916,67 @@ $('applyCommonPriceBtn').onclick=()=>{
   alert('共通単価「'+(x.name||'標準')+'」を今回の積算だけに反映しました。');
 };
 function showSelected(){const n=$('ProductName').value;$('selectedProductMaster').textContent=n?`${n}${$('ProductManufacturer').value?' ／ '+$('ProductManufacturer').value:''}`:'製品は選択されていません。'}
-async function openProducts(){$('productModal').classList.add('show');if(!window.MS?.ProductMaster)return;const makers=await MS.ProductMaster.getManufacturers(PRODUCT_CATEGORY);$('pmMaker').innerHTML='<option value="">すべて</option>'+makers.map(m=>`<option>${m}</option>`).join('');renderProducts()}
-async function renderProducts(){const rows=await MS.ProductMaster.search({category:PRODUCT_CATEGORY,manufacturer:$('pmMaker').value,keyword:$('pmKeyword').value});$('pmList').innerHTML=rows.length?rows.map(r=>`<div class="product-item"><div><b>${r.productName||'名称未設定'}</b><div class="note">${r.manufacturer||''}　製品：${yen(r.productPrice)}円　据付：${yen(r.installationPrice)}円　コンクリート蓋：${yen(r.concreteCoverPrice)}円　グレーチング：${yen(r.gratingCoverPrice)}円</div></div><button class="primary" data-id="${r.id}">選択</button></div>`).join(''):'登録製品がありません。';$('pmList').querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{const r=await MS.ProductMaster.get(b.dataset.id),v=MS.ProductMaster.toAppValues(r,PRODUCT_CATEGORY);$('ProductMasterId').value=v.productMasterId||r.id||'';$('ProductName').value=v.productName||r.productName||'';$('ProductManufacturer').value=v.productManufacturer||r.manufacturer||'';$('ProductSpecification').value=v.productSpecification||r.specification||'';$('Pproduct').value=v.productPrice||r.productPrice||0;$('Pinstall').value=v.installationPrice||r.installationPrice||0;$('Pconcllid').value=v.concreteCoverPrice||r.concreteCoverPrice||0;$('Pgrating').value=v.gratingCoverPrice||r.gratingCoverPrice||0;$('Plidwork').value=v.coverInstallationPrice||r.coverInstallationPrice||0;showSelected();$('productModal').classList.remove('show');calc()})}
-$('openProductMasterBtn').onclick=openProducts;$('pmClose').onclick=()=>$('productModal').classList.remove('show');$('pmMaker').onchange=renderProducts;$('pmKeyword').oninput=renderProducts;$('clearProductMasterBtn').onclick=()=>{['ProductMasterId','ProductName','ProductManufacturer','ProductSpecification'].forEach(id=>$(id).value='');showSelected()};
-$('registerCurrentProductBtn').onclick=()=>{$('regMaker').value=$('ProductManufacturer').value;$('regName').value=$('ProductName').value;$('regSpec').value=$('ProductSpecification').value;$('regRegisteredDate').value=new Date().toISOString().slice(0,10);$('regSummary').textContent=`製品 ${yen(num('Pproduct'))}円／据付 ${yen(num('Pinstall'))}円／コンクリート蓋 ${yen(num('Pconcllid'))}円／グレーチング ${yen(num('Pgrating'))}円／蓋掛け手間 ${yen(num('Plidwork'))}円`;$('registerModal').classList.add('show')};$('regCancel').onclick=()=>$('registerModal').classList.remove('show');
-$('regSave').onclick=async()=>{const name=$('regName').value.trim();if(!name)return alert('登録名を入力してください');const data={category:PRODUCT_CATEGORY,manufacturer:$('regMaker').value.trim(),productName:name,specification:$('regSpec').value.trim(),registeredDate:$('regRegisteredDate').value||new Date().toISOString().slice(0,10),productUnit:'基',unitLength:1,productPrice:num('Pproduct'),installationPrice:num('Pinstall'),concreteCoverPrice:num('Pconcllid'),gratingCoverPrice:num('Pgrating'),coverInstallationPrice:num('Plidwork'),note:$('regNote').value.trim(),enabled:true};let result=await MS.ProductMaster.saveFromApp(data);if(!result.saved&&result.duplicate&&confirm('同じ製品があります。上書きしますか？'))result=await MS.ProductMaster.saveFromApp(data,{overwrite:true});if(result.row){$('ProductMasterId').value=result.row.id||'';$('ProductName').value=result.row.productName||name;$('ProductManufacturer').value=result.row.manufacturer||'';$('ProductSpecification').value=result.row.specification||'';showSelected();$('registerModal').classList.remove('show');alert('登録しました')}};
+async function openProducts(){$('productModal').classList.add('show');$('productModal').setAttribute('aria-hidden','false');if(!window.MS?.ProductMaster)return;const makers=await MS.ProductMaster.getManufacturers(PRODUCT_CATEGORY);$('pmMaker').innerHTML='<option value="">すべて</option>'+makers.map(m=>`<option>${m}</option>`).join('');renderProducts()}
+async function renderProducts(){
+  const rows=await MS.ProductMaster.search({
+    category:PRODUCT_CATEGORY,
+    manufacturer:$('pmMaker').value,
+    keyword:$('pmKeyword').value
+  });
+
+  $('pmList').innerHTML=rows.length
+    ? rows.map(r=>`
+      <div class="pm-item">
+        <div>
+          <div class="pm-item-name">${r.productName||'名称未設定'}</div>
+          <div class="pm-item-meta">
+            ${r.manufacturer?'メーカー：'+r.manufacturer+'　':''}
+            ${r.specification?'規格：'+r.specification+'<br>':''}
+            製品：${yen(r.productPrice)}円　　据付：${yen(r.installationPrice)}円<br>
+            <span class="pm-cover-meta">
+              コンクリート蓋：${yen(r.concreteCoverPrice)}円　
+              グレーチング蓋：${yen(r.gratingCoverPrice)}円　
+              蓋設置：${yen(r.coverInstallationPrice)}円
+            </span>
+          </div>
+        </div>
+        <button class="pm-select-btn" data-id="${r.id}" type="button">選択</button>
+      </div>
+    `).join('')
+    : '<div class="pm-empty">登録済みのプレキャスト集水桝製品がありません。</div>';
+
+  $('pmList').querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{
+    const r=await MS.ProductMaster.get(b.dataset.id);
+    const v=MS.ProductMaster.toAppValues(r,PRODUCT_CATEGORY);
+    $('ProductMasterId').value=v.productMasterId||r.id||'';
+    $('ProductName').value=v.productName||r.productName||'';
+    $('ProductManufacturer').value=v.productManufacturer||r.manufacturer||'';
+    $('ProductSpecification').value=v.productSpecification||r.specification||'';
+    $('Pproduct').value=yen(v.productPrice??r.productPrice??0);
+    $('Pinstall').value=yen(v.installationPrice??r.installationPrice??0);
+    $('Pconcllid').value=yen(v.concreteCoverPrice??r.concreteCoverPrice??0);
+    $('Pgrating').value=yen(v.gratingCoverPrice??r.gratingCoverPrice??0);
+    $('Plidwork').value=yen(v.coverInstallationPrice??r.coverInstallationPrice??0);
+    showSelected();
+    $('productModal').classList.remove('show');
+    $('productModal').setAttribute('aria-hidden','true');
+    calc();
+  });
+}
+$('openProductMasterBtn').onclick=openProducts;$('pmClose').onclick=()=>{$('productModal').classList.remove('show');$('productModal').setAttribute('aria-hidden','true')};$('pmMaker').onchange=renderProducts;$('pmKeyword').oninput=renderProducts;$('clearProductMasterBtn').onclick=()=>{
+ if(!confirm('製品の選択を解除しますか？\n製品情報の入力値は0に戻ります。'))return;
+ ['ProductMasterId','ProductName','ProductManufacturer','ProductSpecification'].forEach(id=>$(id).value='');
+ ['Pproduct','Pinstall','Pgrating','Ngrating','Pconcllid','Nconcllid','Plidwork','Nlidwork'].forEach(id=>{if($(id))$(id).value='0';});
+ showSelected();calc();
+};
+$('registerCurrentProductBtn').onclick=()=>{$('regMaker').value=$('ProductManufacturer').value;$('regName').value=$('ProductName').value;$('regSpec').value=$('ProductSpecification').value;$('regRegisteredDate').value=new Date().toISOString().slice(0,10);$('regSummary').innerHTML=[
+  ['製品代',yen(num('Pproduct'))+' 円/基'],
+  ['据付け費',yen(num('Pinstall'))+' 円/基'],
+  ['コンクリート蓋',yen(num('Pconcllid'))+' 円/枚'],
+  ['グレーチング蓋',yen(num('Pgrating'))+' 円/枚'],
+  ['蓋掛け手間',yen(num('Plidwork'))+' 円/枚']
+].map(v=>'<div><b>'+v[0]+'</b>：'+v[1]+'</div>').join('');$('registerModal').classList.add('show')};$('regCancel').onclick=()=>$('registerModal').classList.remove('show');
+$('regSave').onclick=async()=>{const name=$('regName').value.trim();if(!name)return alert('製品名を入力してください');const data={category:PRODUCT_CATEGORY,manufacturer:$('regMaker').value.trim(),productName:name,specification:$('regSpec').value.trim(),registeredDate:$('regRegisteredDate').value||new Date().toISOString().slice(0,10),productUnit:'基',unitLength:1,productPrice:num('Pproduct'),installationPrice:num('Pinstall'),concreteCoverPrice:num('Pconcllid'),gratingCoverPrice:num('Pgrating'),coverInstallationPrice:num('Plidwork'),note:$('regNote').value.trim(),enabled:true};let result=await MS.ProductMaster.saveFromApp(data);if(!result.saved&&result.duplicate&&confirm('同じ製品があります。上書きしますか？'))result=await MS.ProductMaster.saveFromApp(data,{overwrite:true});if(result.row){$('ProductMasterId').value=result.row.id||'';$('ProductName').value=result.row.productName||name;$('ProductManufacturer').value=result.row.manufacturer||'';$('ProductSpecification').value=result.row.specification||'';showSelected();$('registerModal').classList.remove('show');alert('登録しました')}};
 
 function extractProfitRate(obj){if(!obj||typeof obj!=='object')return null;for(const k of ['profitRate','ProfitRate','marginRate','profitPercent']){const v=Number(obj[k]);if(Number.isFinite(v)&&v>=0&&v<100)return v}for(const k of ['project','currentProject','settings','common']){const v=extractProfitRate(obj[k]);if(v!==null)return v}return null}
 async function applyMainMenuProfitRate(){let rate=null;try{if(window.MS?.Project?.getCurrent)rate=extractProfitRate(await MS.Project.getCurrent());if(rate===null&&window.MS?.getCurrentProject)rate=extractProfitRate(await MS.getCurrentProject())}catch(e){}if(rate===null){for(const key of ['currentProfitRate','profitRate','ProfitRate','marginRate','profitPercent']){const v=Number(localStorage.getItem(key));if(Number.isFinite(v)&&v>=0&&v<100){rate=v;break}}}if(rate!==null&&$('ProfitRate')){$('ProfitRate').value=rate;localStorage.setItem('currentProfitRate',String(rate))}}
@@ -663,8 +1051,7 @@ window.addEventListener('load',async()=>{try{
 
   var PRICE_IDS=[
     "Pexc","Pback","Pspoil","Pbed","Pstone","Pnform","Plean",
-    "Pmortar","Pinvert","Pproduct","Pinstall","Pgrating",
-    "Pconcllid","Plidwork"
+    "Pmortar","Pinvert"
   ];
 
   function byId(id){return document.getElementById(id);}
@@ -728,7 +1115,7 @@ window.addEventListener('load',async()=>{try{
           var prices={};
           PRICE_IDS.forEach(function(pid){
             var p=byId(pid);
-            if(p&&p.value!=="")prices[pid]=Number(p.value);
+            if(p&&p.value!=="")prices[pid]=parseNumeric(p.value);
           });
           local.prices=prices;
         });
@@ -745,6 +1132,202 @@ window.addEventListener('load',async()=>{try{
   });
 
 })(window,document);
+</script>
+
+
+<div id="precastBasinDefaultsModal" role="dialog" aria-modal="true">
+<div class="precast-basin-defaults-box">
+<div class="precast-basin-defaults-head">
+<div class="precast-basin-defaults-title">プレキャスト集水桝　初期値管理</div>
+<div class="precast-basin-defaults-sub">管理用の隠し設定です。製品情報・単価・利益率・現場名・積算名称は初期値に含まれません。</div>
+</div>
+<div class="precast-basin-defaults-body">
+<div class="precast-basin-defaults-status" id="precastBasinDefaultsStatus"></div>
+<div class="precast-basin-defaults-actions">
+<button class="precast-basin-defaults-save" id="precastBasinDefaultsSave" type="button">現在の画面を初期値として登録</button>
+<button class="precast-basin-defaults-close" id="precastBasinDefaultsClose" type="button">閉じる</button>
+</div>
+</div></div></div>
+<script id="precastBasinInitialDefaultsScript">
+(function(window,document){
+"use strict";
+var KEY="MS_v130_initial_values_precast_drainage_basin";
+var IDS=["W1","W2","W3","W4","W5","W6","H1","H2","H3","H4","H5","N","E","Ngrating","Nconcllid"];
+function byId(id){return document.getElementById(id)}
+function collect(){var o={};IDS.forEach(function(id){var el=byId(id);if(el)o[id]=el.value});return o}
+var BUILTIN=collect();
+function stored(){try{var v=JSON.parse(localStorage.getItem(KEY)||"null");return v&&typeof v==="object"?v:null}catch(e){return null}}
+function apply(v,clearNames){
+ v=v||BUILTIN;
+ IDS.forEach(function(id){var el=byId(id);if(!el||v[id]===undefined)return;el.value=v[id];el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}))});
+ if(clearNames&&byId("estimateName"))byId("estimateName").value="";
+ if(typeof window.calc==="function")window.calc();
+}
+function updateStatus(){var el=byId("precastBasinDefaultsStatus");if(el)el.textContent=stored()?"現在は、管理者が登録した初期値を使用しています。":"現在は、アプリ標準の初期値を使用しています。"}
+function openModal(){var m=byId("precastBasinDefaultsModal");if(m){updateStatus();m.classList.add("show")}}
+function closeModal(){byId("precastBasinDefaultsModal")?.classList.remove("show")}
+document.addEventListener("DOMContentLoaded",function(){
+ var trigger=byId("precastBasinDefaultsTrigger"),clicks=0,timer=0;
+ trigger?.addEventListener("click",function(){clicks++;clearTimeout(timer);timer=setTimeout(function(){clicks=0},3000);if(clicks>=5){clicks=0;openModal()}});
+ byId("precastBasinDefaultsSave")?.addEventListener("click",function(){if(!confirm("現在の画面を今後の初期値として登録しますか？"))return;localStorage.setItem(KEY,JSON.stringify(collect()));alert("現在の画面を初期値として登録しました。");closeModal()});
+ byId("precastBasinDefaultsClose")?.addEventListener("click",closeModal);
+ byId("precastBasinDefaultsModal")?.addEventListener("click",function(e){if(e.target===this)closeModal()});
+ byId("newInputBtn")?.addEventListener("click",function(){
+  if(!confirm("現在の入力内容を初期値へ戻します。\n保存していない内容は失われます。製品情報はそのまま引き継ぎます。\nよろしいですか？"))return;
+  apply(stored()||BUILTIN,true);
+  var sel=byId("savedEstimateList");if(sel){sel.value="";if(sel.options?.length)sel.selectedIndex=0}
+  try{if(window.MS&&typeof MS.clearCurrentEstimateId==="function")MS.clearCurrentEstimateId("precast_drainage_basin");localStorage.removeItem("ms_open_estimate_id")}catch(e){}
+  if(window.__precastBasinOpenMode){window.__precastBasinOpenMode.fromSaved=false;window.__precastBasinOpenMode.estimateId=""}
+  window.scrollTo({top:0,behavior:"smooth"});
+ });
+});
+window.addEventListener("load",function(){
+ var fromSaved=!!(window.__precastBasinOpenMode&&window.__precastBasinOpenMode.fromSaved);
+ try{var p=new URLSearchParams(location.search);if(p.get("loadEstimate")==="1")fromSaved=true}catch(e){}
+ if(!fromSaved&&stored())setTimeout(function(){apply(stored(),false)},140);
+});
+})(window,document);
+</script>
+
+
+<script id="precast-basin-product-modal-v130-fix">
+(function(window,document){
+"use strict";
+function byId(id){return document.getElementById(id)}
+function closeProductModal(e){if(e){e.preventDefault();e.stopImmediatePropagation()}byId("productModal")?.classList.remove("show")}
+function closeRegisterModal(e){if(e){e.preventDefault();e.stopImmediatePropagation()}byId("registerModal")?.classList.remove("show")}
+document.addEventListener("DOMContentLoaded",function(){
+ byId("pmClose")?.addEventListener("click",closeProductModal,true);
+ byId("productModal")?.addEventListener("click",function(e){if(e.target===this)closeProductModal(e)},true);
+ byId("regCancel")?.addEventListener("click",closeRegisterModal,true);
+ byId("registerModal")?.addEventListener("click",function(e){if(e.target===this)closeRegisterModal(e)},true);
+ document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape")return;
+  if(byId("registerModal")?.classList.contains("show"))closeRegisterModal(e);
+  else if(byId("productModal")?.classList.contains("show"))closeProductModal(e);
+ },true);
+});
+})(window,document);
+</script>
+
+
+<script id="precast-basin-v140-input-behavior">
+(function(window,document){
+'use strict';
+var PRICE_IDS=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pmortar','Pinvert','Pproduct','Pinstall','Pgrating','Pconcllid','Plidwork'];
+var DECIMAL_IDS=['W1','W2','W3','W4','W5','W6','H1','H2','H3','H4','H5','E','ProfitRate'];
+var INTEGER_IDS=['N','Ngrating','Nconcllid'];
+function el(id){return document.getElementById(id)}
+function parse(v){var t=String(v==null?'':v).replace(/[,，\s]/g,'').replace(/．/g,'.').trim();var n=Number(t);return Number.isFinite(n)?n:0}
+function comma(id){var e=el(id);if(!e)return;var raw=String(e.value||'').trim();if(raw==='')return;var n=parse(raw);e.value=Math.round(n).toLocaleString('ja-JP')}
+function decimal(id){var e=el(id);if(!e)return;var raw=String(e.value||'').replace(/，/g,',').trim();if(raw==='')return;var n=parse(raw);if(!Number.isFinite(n))return;var neg=n<0?'-':'';var a=Math.abs(n);var text=String(a);if(text.indexOf('e')>=0)text=a.toFixed(3);var parts=text.split('.');if(!parts[0])parts[0]='0';if(parts.length===1)e.value=neg+parts[0];else{var d=(parts[1]||'').slice(0,3);if(d.length===1)d+='0';e.value=neg+parts[0]+'.'+d}}
+function integer(id){var e=el(id);if(e&&e.value!=='')e.value=String(Math.max(0,Math.round(parse(e.value))))}
+function formatAll(){PRICE_IDS.forEach(comma)}
+function focusables(){
+ var order=['W1','W4','W2','W3','W5','W6','H1','H2','H3','H4','H5','E','N','ProfitRate',
+            'Pproduct','Pinstall','Pgrating','Ngrating','Pconcllid','Nconcllid','Plidwork',
+            'Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Plean','Pmortar','Pinvert'];
+ return order.map(el).filter(function(x){return x&&!x.disabled&&!x.readOnly&&x.type!=='hidden'&&x.offsetParent!==null});
+}
+document.addEventListener('DOMContentLoaded',function(){
+ PRICE_IDS.forEach(function(id){var e=el(id);if(!e)return;e.addEventListener('focus',function(){e.value=String(e.value).replace(/,/g,'');e.select()});e.addEventListener('blur',function(){comma(id);if(typeof window.calc==='function')window.calc()})});
+ DECIMAL_IDS.forEach(function(id){var e=el(id);if(e)e.addEventListener('blur',function(){decimal(id);if(typeof window.calc==='function')window.calc()})});
+ INTEGER_IDS.forEach(function(id){var e=el(id);if(e)e.addEventListener('blur',function(){integer(id);if(typeof window.calc==='function')window.calc()})});
+ document.querySelector('.card:nth-of-type(2)')?.addEventListener('keydown',function(ev){if(!['ArrowDown','ArrowUp','Enter'].includes(ev.key))return;var list=focusables(),i=list.indexOf(ev.target);if(i<0)return;ev.preventDefault();var dir=ev.key==='ArrowUp'?-1:1;var target=list[i+dir];if(target){target.focus();if(target.select)target.select()}});
+ formatAll();
+ setTimeout(function(){var first=el('W1');if(first){first.focus();if(first.select)first.select()}},0);
+});
+window.addEventListener('load',function(){setTimeout(formatAll,220);setTimeout(formatAll,800);setTimeout(function(){var first=el('W1');if(first){first.focus();if(first.select)first.select()}},240)});
+window.__precastBasinV140FormatPrices=formatAll;
+})(window,document);
+</script>
+
+<script id="precast-basin-v140-product-info-final">
+(function(){
+function e(id){return document.getElementById(id)}
+function resetProductInfo(){
+ ['Pproduct','Pinstall','Pgrating','Ngrating','Pconcllid','Nconcllid','Plidwork','Nlidwork'].forEach(function(id){var x=e(id);if(x)x.value='0';});
+ ['ProductMasterId','ProductName','ProductManufacturer','ProductSpecification'].forEach(function(id){var x=e(id);if(x)x.value='';});
+ var s=e('selectedProductMaster');if(s)s.textContent='製品は選択されていません。';
+ if(typeof window.calc==='function')window.calc();
+}
+document.addEventListener('DOMContentLoaded',function(){
+ var params=new URLSearchParams(location.search),openId='';
+ try{openId=localStorage.getItem('ms_open_estimate_id')||localStorage.getItem('msOpenEstimateId')||localStorage.getItem('openEstimateId')||''}catch(_){}
+ if(params.get('loadEstimate')!=='1'&&!openId){setTimeout(resetProductInfo,500);}
+ var b=e('newInputBtn');if(b)b.addEventListener('click',function(){setTimeout(resetProductInfo,120);},true);
+});
+})();</script>
+
+<script id="precast-basin-comma-display-change-helper">
+(function(){
+  "use strict";
+  var ids=['Pexc', 'Pback', 'Pspoil', 'Pbed', 'Pstone', 'Pnform', 'Plean', 'Pmortar', 'Pinvert', 'Pproduct', 'Pinstall', 'Pgrating', 'Pconcllid', 'Plidwork'];
+
+  function raw(v){
+    return String(v==null?"":v).replace(/[,，\s]/g,"").replace(/．/g,".").trim();
+  }
+
+  function formatOne(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","numeric");
+    var s=raw(el.value);
+    if(s==="")return;
+    var n=Number(s);
+    if(Number.isFinite(n))el.value=Math.round(n).toLocaleString("ja-JP");
+  }
+
+  function formatAll(){
+    ids.forEach(formatOne);
+  }
+
+  window.MSPrecastBasinCommaDisplayChange=formatAll;
+
+  ids.forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","numeric");
+
+    // 入力中もカンマ表示を維持
+    el.addEventListener("input",function(){
+      var s=raw(el.value);
+      if(s===""){el.value="";return;}
+      var n=Number(s);
+      if(!Number.isFinite(n))return;
+      el.value=Math.round(n).toLocaleString("ja-JP");
+      try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}
+    });
+    el.addEventListener("change",function(){formatOne(id)});
+    el.addEventListener("blur",function(){formatOne(id)});
+  });
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",formatAll,{once:true});
+  }else{
+    formatAll();
+  }
+
+  window.addEventListener("ms-price-master-changed",formatAll);
+})();
+</script>
+
+
+<script id="precast-basin-comma-apply-hook">
+(function(){
+  var btn=document.getElementById("applyCommonPriceBtn");
+  if(btn){
+    btn.addEventListener("click",function(){
+      queueMicrotask(function(){
+        if(typeof window.MSPrecastBasinCommaDisplayChange==="function"){
+          window.MSPrecastBasinCommaDisplayChange();
+        }
+      });
+    });
+  }
+})();
 </script>
 
 </body></html>

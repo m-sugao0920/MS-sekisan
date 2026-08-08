@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>暗渠・カルバート工 積算アプリ 003 共通仕様完全版</title>
+  <title>暗渠・カルバート工 積算アプリ Ver.1.4.0</title>
   <style>
     :root{
       --blue:#0070C0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px;
@@ -739,9 +739,139 @@
 .print-notes{margin-bottom:8mm!important}
 }
 </style>
+
+<style id="ankyo-v130-style">
+.ms-input-card-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important}
+.ms-input-card-head .ms-head-title{display:flex;align-items:center;gap:8px}
+.ms-new-input-btn{width:auto!important;min-width:150px!important;padding:7px 12px!important;background:#eef6ff!important;color:#0647a5!important;border:1px solid #bad8f4!important;border-radius:9px!important;white-space:nowrap!important;font-size:12px!important;font-weight:900!important}
+.ms-new-input-btn:hover{background:#e2f0ff!important}
+.ms-collapse{margin:10px 0 0;border:2px solid #8fc0ed!important;border-radius:12px!important;background:#fbfdff!important;overflow:hidden!important;box-shadow:0 4px 12px rgba(0,112,192,.09)!important}
+.ms-collapse>summary{list-style:none!important;cursor:pointer!important;display:block!important;padding:11px 12px!important;margin:0!important;color:#0647a5!important;font-size:13px!important;font-weight:950!important;line-height:1.35!important;background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;user-select:none!important}
+.ms-collapse>summary::-webkit-details-marker{display:none!important}
+.ms-collapse>summary:before{content:"▶ ";font-weight:950!important}
+.ms-collapse[open]>summary:before{content:"▼ "}
+.ms-collapse[open]>summary{border-bottom:1px solid #cfe3f7!important}
+.ms-collapse-body{padding:10px 12px 12px}
+.ms-collapse .result-memo-box{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
+.ms-collapse .result-memo-title{display:none!important}
+.product-master-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;margin-top:8px!important}
+.product-master-actions button{width:100%!important;min-width:0!important;padding:8px 2px!important;font-size:11px!important;line-height:1.15!important;white-space:nowrap!important}
+.pm-register-actions{display:none!important}
+.kpi-unit-price-v130{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.kpi-unit-price-v130 .box{min-height:64px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;padding:8px 14px!important;border:2px solid #bad8f4!important;border-radius:14px!important;background:linear-gradient(180deg,#fbfdff,#eef6ff)!important}
+.kpi-unit-price-v130 .t{font-size:13px!important;color:#475569!important}
+.kpi-unit-price-v130 .v{margin-top:2px!important;color:#0647a5!important;font-size:22px!important;font-weight:950!important;line-height:1.15!important}
+.kpi-unit-price-v130 .u{font-size:12px!important;color:#60758d!important;margin-left:6px!important}
+#ankyoDefaultsModal{display:none;position:fixed;inset:0;z-index:99995;background:rgba(8,24,48,.58);align-items:center;justify-content:center;padding:18px}
+#ankyoDefaultsModal.show{display:flex}
+.ankyo-defaults-box{width:min(620px,100%);background:#fff;border:1px solid #cfe3f7;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.30);overflow:hidden}
+.ankyo-defaults-head{padding:17px 20px;background:linear-gradient(135deg,#063f91,#075fbd);color:#fff}
+.ankyo-defaults-title{font-size:21px;font-weight:950}
+.ankyo-defaults-sub{font-size:12px;line-height:1.6;margin-top:4px;color:#eaf4ff}
+.ankyo-defaults-body{padding:18px 20px;color:#23364d;font-size:14px;line-height:1.7}
+.ankyo-defaults-status{padding:10px 12px;border:1px solid #cfe3f7;border-radius:10px;background:#f7fbff;color:#0647a5;font-weight:900;margin-bottom:13px}
+.ankyo-defaults-actions{display:grid;gap:9px}
+.ankyo-defaults-actions button{height:40px;width:100%}
+.ankyo-defaults-save{background:#0647a5;color:#fff}
+.ankyo-defaults-close{background:#f1f5f9;color:#334155}
+@media(max-width:700px){
+  .ms-input-card-head{align-items:flex-start!important}
+  .ms-new-input-btn{min-width:132px!important;font-size:11px!important;padding:7px 8px!important}
+  .product-master-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .product-master-actions button{font-size:10px!important;padding:8px 1px!important}
+  .kpi-unit-price-v130{grid-template-columns:1fr!important}
+}
+@media print{.ms-new-input-btn{display:none!important}}
+</style>
+
+
+<style id="ankyo-v140-input-standard">
+.input-color-guide{
+  display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+  margin:0 0 10px;padding:7px 8px;border:1px solid #d5dde7;border-radius:12px;background:#f8fafc;
+  box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(15,23,42,.10);
+}
+.input-color-guide .guide-item{
+  display:flex;align-items:center;justify-content:center;min-height:30px;flex:1;
+  padding:5px 8px 5px 14px;border-top:1px solid #eef2f6;border-right:1px solid #d8dee7;
+  border-bottom:3px solid #c7d0dc;border-left:6px solid #c7d0dc;border-radius:8px;
+  background:linear-gradient(180deg,#fff,#f8fafc);color:#334155;font-size:11px;font-weight:600;
+  white-space:nowrap;box-shadow:0 2px 4px rgba(15,23,42,.10);
+}
+.input-color-guide .guide-dimension{border-left-color:#8fc9ef;border-bottom-color:#8fc9ef}
+.input-color-guide .guide-price{border-left-color:#8A4653;border-bottom-color:#8A4653}
+.input-color-guide .guide-setting{border-left-color:#9fd0aa;border-bottom-color:#9fd0aa}
+
+/* 寸法・長さ = 水色 */
+section.card:nth-of-type(2) input[data-dim],
+section.card:nth-of-type(2) #L,
+section.card:nth-of-type(2) #ProdLen{
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+  border-top:1px solid #dfe4ea!important;border-right:1px solid #dfe4ea!important;
+  border-left:6px solid #8fc9ef!important;border-bottom:2px solid #8fc9ef!important;
+  border-radius:10px!important;
+}
+section.card:nth-of-type(2) input[data-dim]:focus,
+section.card:nth-of-type(2) #L:focus,
+section.card:nth-of-type(2) #ProdLen:focus{
+  border-color:#73b9e8!important;border-left-width:6px!important;
+  box-shadow:0 0 0 3px rgba(115,185,232,.14)!important;
+}
+
+/* 条件 = 緑 */
+section.card:nth-of-type(2) #ProfitRate{
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+  border-left:6px solid #9fd0aa!important;border-bottom:2px solid #9fd0aa!important;
+}
+section.card:nth-of-type(2) #ProfitRate:focus{
+  border-color:#82bd90!important;border-left-width:6px!important;
+  box-shadow:0 0 0 3px rgba(130,189,144,.14)!important;
+}
+
+/* 単価 = えんじ */
+section.card:nth-of-type(2) #Pexc,
+section.card:nth-of-type(2) #Pbed,
+section.card:nth-of-type(2) #Pstone,
+section.card:nth-of-type(2) #PleanForm,
+section.card:nth-of-type(2) #Plean,
+section.card:nth-of-type(2) #Pmortar,
+section.card:nth-of-type(2) #Pset,
+section.card:nth-of-type(2) #Pspoil,
+section.card:nth-of-type(2) #Pback,
+section.card:nth-of-type(2) #ProdPrice{
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+  border-top:1px solid #dfe4ea!important;border-right:1px solid #dfe4ea!important;
+  border-left:6px solid #8A4653!important;border-bottom:2px solid #8A4653!important;
+  border-radius:10px!important;
+}
+section.card:nth-of-type(2) #Pexc:focus,
+section.card:nth-of-type(2) #Pbed:focus,
+section.card:nth-of-type(2) #Pstone:focus,
+section.card:nth-of-type(2) #PleanForm:focus,
+section.card:nth-of-type(2) #Plean:focus,
+section.card:nth-of-type(2) #Pmortar:focus,
+section.card:nth-of-type(2) #Pset:focus,
+section.card:nth-of-type(2) #Pspoil:focus,
+section.card:nth-of-type(2) #Pback:focus,
+section.card:nth-of-type(2) #ProdPrice:focus{
+  border-color:#8A4653!important;border-left-width:6px!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.13)!important;
+}
+@media(max-width:700px){
+  .input-color-guide{gap:5px;padding:6px}
+  .input-color-guide .guide-item{font-size:10px;padding-left:10px}
+}
+@media print{.input-color-guide{display:none!important}}
+</style>
+
+<style id="ankyo-product-info-v140">
+.product-info-v140{border:1px solid #f0c98f;border-radius:14px;background:#fff8ec;padding:10px 12px 12px;margin:8px 0;box-shadow:0 3px 9px rgba(146,93,28,.07)}
+.product-info-v140 .sectionTitle{color:#b75a0a;margin-top:0}
+.product-info-v140 .sectionTitle::before{background:#f59e0b!important}
+</style>
 </head>
 <body>
-<header><div class="wrap"><div><h1>暗渠・カルバート工 積算アプリ 003 共通仕様完全版</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<header><div class="wrap"><div><h1 id="ankyoDefaultsTrigger" title="暗渠・カルバート工積算">暗渠・カルバート工 積算アプリ Ver.1.4.0</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><div class="illust-box">
 <svg viewBox="0 0 1200 900" class="illust-svg" aria-label="暗渠・カルバート工断面図">
@@ -877,10 +1007,8 @@
     <div id="selectedProductMaster" class="product-master-current">製品は選択されていません。</div>
     <div class="product-master-actions">
       <button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
-      <button class="ghost" id="clearProductMasterBtn" type="button">選択解除</button>
-    </div>
-    <div class="pm-register-actions">
-      <button class="ghost" id="registerCurrentProductBtn" type="button">現在の入力内容をマスター登録</button>
+      <button class="ghost" id="registerCurrentProductBtn" type="button">現在値を登録</button>
+      <button class="danger" id="clearProductMasterBtn" type="button">選択解除</button>
     </div>
     <input id="ProductMasterId" type="hidden">
     <input id="ProductMasterUpdatedAt" type="hidden">
@@ -901,44 +1029,54 @@
     </div>
     <div class="save-btns">
       <button class="ghost" id="savePriceBtn" type="button">保存</button>
-      <button class="ghost" id="loadPriceBtn" type="button">呼出</button>
+      <button class="ghost" id="loadPriceBtn" type="button">今回の積算だけに反映</button>
       <button class="danger" id="deletePriceBtn" type="button">削除</button>
     </div>
     <div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div>
   </div>
 
-  <div class="control-block operation-block">
-    <div class="sectionTitle">基本操作</div>
-    <div class="save-btns" style="grid-template-columns:1fr 1fr">
-      <button class="primary" id="calcBtn" type="button">計算</button>
-      <button class="danger" id="resetBtn" type="button">入力リセット</button>
-    </div>
-  </div>
+  
 </div></div></section>
-<section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
+<section class="card"><h2 class="ms-input-card-head">
+<span class="ms-head-title"><span class="dot"></span>入力</span>
+<button class="ms-new-input-btn" id="newInputBtn" type="button">新しい入力を開始</button>
+</h2><div class="body">
+  <div class="input-color-guide" aria-label="入力欄の色分け案内">
+    <span class="guide-item guide-dimension">📐 寸法</span>
+    <span class="guide-item guide-price">💴 単価</span>
+    <span class="guide-item guide-setting">⚙ 条件</span>
+  </div>
   <div class="sectionTitle">断面寸法（m）</div>
   <div class="row"><div><label>W1（カルバート外幅）</label><input id="W1" type="number" step="0.001" value="0.600" data-dim="dim-w1"></div><div><label>W2（床付け・砕石幅）</label><input id="W2" type="number" step="0.001" value="0.800" data-dim="dim-w2"></div></div>
   <div class="row"><div><label>H1（土被り厚）</label><input id="H1" type="number" step="0.001" value="0.500" data-dim="dim-h1"></div><div><label>H2（カルバート高さ）</label><input id="H2" type="number" step="0.001" value="0.600" data-dim="dim-h2"></div></div>
   <div class="row"><div><label>H3（敷モルタル厚）</label><input id="H3" type="number" step="0.001" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコンクリート厚）</label><input id="H4" type="number" step="0.001" value="0.050" data-dim="dim-h4"></div></div>
-  <div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="number" step="0.001" value="0.100" data-dim="dim-h5"></div><div></div></div>
+  <div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="number" step="0.001" value="0.100" data-dim="dim-h5"></div><div><label>e（掘削余裕 左右・m）</label><input id="E" type="number" step="0.001" value="0.200" data-dim="dim-e"></div></div>
+  <div class="row"><div><label>n（法面勾配 1：n）</label><input id="N" type="number" step="0.01" min="0" value="0.50" data-dim="dim-n"></div><div></div></div>
   <div class="hr"></div><div class="sectionTitle">共通条件</div>
-  <div class="row"><div><label>延長 L（m）</label><input id="L" type="number" step="0.001" value="10.000"></div><div><label>掘削余裕 e（左右・m）</label><input id="E" type="number" step="0.001" value="0.200" data-dim="dim-e"></div></div>
-  <div class="row"><div><label>法面勾配 n（1：n）</label><input id="N" type="number" step="0.01" min="0" value="0.50" data-dim="dim-n"></div><div><label>利益率（％）</label><input id="ProfitRate" type="number" step="0.1" min="0" max="99.9" value="20"></div></div>
-  <div class="row"><div><label>見積単価の丸め</label><input type="text" value="1,000円未満：10円／以上：100円" readonly></div><div></div></div>
-  <div class="note">掘削深さ＝H1＋H2＋H3＋H4＋H5。掘削底幅＝W2＋2e、掘削上幅＝掘削底幅＋2×n×掘削深さです。</div>
+  <div class="row"><div><label>延長 L（m）</label><input id="L" type="number" step="0.001" value="10.000"></div><div><label>利益率（％）</label><input id="ProfitRate" type="number" step="0.1" min="0" max="99.9" value="20"></div></div>
   <div class="hr"></div>
-  <div class="sectionTitle">単価（任意・円）</div>
-  <div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" step="1" value="4500"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" step="1" value="250"></div></div>
-  <div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="number" step="1" value="8500"></div><div><label>均し型枠 単価/m²</label><input id="PleanForm" type="number" step="1" value="5500"></div></div>
-  <div class="row"><div><label>均しコン 単価/m³</label><input id="Plean" type="number" step="1" value="22000"></div><div><label>敷モルタル 単価/m³</label><input id="Pmortar" type="number" step="1" value="38000"></div></div>
-  <div class="row"><div><label>据付 単価/m</label><input id="Pset" type="number" step="1" value="2500"></div><div></div></div>
-  <div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" step="1" value="4000"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" step="1" value="3000"></div></div>
-  <div class="row"><div><label>製品長さ（m/個）</label><input id="ProdLen" type="number" step="0.1" value="2"></div><div><label>製品価格（円/個）</label><input id="ProdPrice" type="number" step="1" value="20000"></div></div>
+  <div class="product-info-v140">
+    <div class="sectionTitle">製品情報</div>
+    <div class="row"><div><label>製品長さ（m/個）</label><input id="ProdLen" type="text" inputmode="decimal" value="0.00"></div><div><label>製品価格（円/個）</label><input id="ProdPrice" type="text" inputmode="decimal" value="0"></div></div>
+    <div class="row"><div><label>据付 単価/m</label><input id="Pset" type="text" inputmode="decimal" value="0"></div><div></div></div>
+  </div>
+  <div class="hr"></div>
+  <div class="sectionTitle">土工・地業単価（任意・円）</div>
+  <div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" step="1" value="4,500"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" step="1" value="250"></div></div>
+  <div class="row"><div><label>砕石 単価/m³</label><input id="Pstone" type="number" step="1" value="8,500"></div><div><label>均し型枠 単価/m²</label><input id="PleanForm" type="number" step="1" value="5,500"></div></div>
+  <div class="row"><div><label>均しコン 単価/m³</label><input id="Plean" type="number" step="1" value="22,000"></div><div><label>敷モルタル 単価/m³</label><input id="Pmortar" type="number" step="1" value="38,000"></div></div>
+  <div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" step="1" value="4,000"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" step="1" value="3,000"></div></div>
 <input type="hidden" id="Pgrating" value="0"><input type="hidden" id="Ngrating" value="0"><input type="hidden" id="Pconcllid" value="0"><input type="hidden" id="Nconcllid" value="0"><input type="hidden" id="PcoverSet" value="0"><input type="hidden" id="NcoverSet" value="0"></div></section>
 <section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
   <div class="btns" style="grid-template-columns:1fr;margin:0 0 12px;max-width:140px"><button class="primary" id="printReportBtn" type="button">印刷</button></div>
-  <div class="kpi"><div class="box"><div class="t">掘削</div><div class="v"><span id="k_exc">0.000</span><span class="u">m³</span></div><div class="t mono">台形断面積×L</div></div><div class="box"><div class="t">均しコンクリート</div><div class="v"><span id="k_lean">0.000</span><span class="u">m³</span></div><div class="t mono">W2×H5×L</div></div><div class="box"><div class="t">合計金額</div><div class="v"><span id="k_total">0</span><span class="u">円</span></div><div class="t mono">数量×単価</div></div><div class="box"><div class="t">mあたり単価</div><div class="v"><span id="k_unitm">0</span><span class="u">円/m</span></div><div class="t mono">合計金額÷L</div></div></div>
-  <div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody>
+  <div id="legacyAnkyoKpiCompat" style="display:none!important">
+<span id="k_exc">0</span><span id="k_lean">0</span><span id="k_total">0</span><span id="k_unitm">0</span>
+</div>
+<div class="kpi kpi-unit-price-v130">
+  <div class="box"><div class="t">mあたり単価</div><div class="v"><span id="k_cost_unitm">0</span><span class="u">円/m</span></div></div>
+  <div class="box"><div class="t">見積mあたり単価</div><div class="v"><span id="k_est_unitm">0</span><span class="u">円/m</span></div></div>
+</div>
+<div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody>
     <tr><td>掘削</td><td class="mono" id="r_exc">0.000</td><td>m³</td><td class="mono" id="u_exc">0</td><td class="mono" id="a_exc">0</td><td class="mono estimate-value" id="eu_exc">0</td><td class="mono estimate-value" id="ea_exc">0</td></tr>
     <tr><td>残土処理</td><td class="mono" id="r_spoil">0.000</td><td>m³</td><td class="mono" id="u_spoil">0</td><td class="mono" id="a_spoil">0</td><td class="mono estimate-value" id="eu_spoil">0</td><td class="mono estimate-value" id="ea_spoil">0</td></tr>
     <tr><td>埋戻し</td><td class="mono" id="r_back">0.000</td><td>m³</td><td class="mono" id="u_back">0</td><td class="mono" id="a_back">0</td><td class="mono estimate-value" id="eu_back">0</td><td class="mono estimate-value" id="ea_back">0</td></tr>
@@ -952,7 +1090,10 @@
     <tr><td><b>合計</b></td><td></td><td></td><td></td><td class="mono" id="a_total"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_total"><b>0</b></td></tr>
     <tr><td><b>mあたり単価</b></td><td></td><td></td><td></td><td class="mono" id="a_unitm"><b>0</b></td><td></td><td class="mono estimate-value" id="ea_unitm"><b>0</b></td></tr>
   </tbody></table></div>
-  <div class="result-memo-box" aria-label="計算メモ">
+  <details class="ms-collapse" id="calculationMemoDetails">
+<summary>計算式・計算メモ</summary>
+<div class="ms-collapse-body">
+<div class="result-memo-box" aria-label="計算メモ">
     <div class="result-memo-title">計算メモ</div>
     <div class="result-memo-grid">
 <div class="result-memo-item"><b>掘削</b><span>台形断面積×L</span></div>
@@ -968,6 +1109,8 @@
 <div class="result-memo-item"><b>床付け</b><span>W2×L</span></div>
 <div class="result-memo-item"><b>製品</b><span>必要個数＝L÷製品長さ（端数切上げ）</span></div>
 </div></div>
+</div>
+</details>
 </div></section>
 </div></main>
 
@@ -1097,7 +1240,7 @@ function todayYmd(){
   const m=String(d.getMonth()+1).padStart(2,'0');
   const day=String(d.getDate()).padStart(2,'0');
   return `${y}/${m}/${day}`;
-}const num=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0};const fmt=(x,d=3)=>(Number.isFinite(x)?Number(x).toFixed(d):Number(0).toFixed(d));const yen=x=>(Number.isFinite(x)?Math.round(x).toLocaleString('ja-JP'):'0');
+}const num=id=>{const v=parseFloat(String($(id).value||'').replace(/,/g,''));return Number.isFinite(v)?v:0};const fmt=(x,d=3)=>(Number.isFinite(x)?Number(x).toFixed(d):Number(0).toFixed(d));const yen=x=>(Number.isFinite(x)?Math.round(x).toLocaleString('ja-JP'):'0');
 function roundEstimateUnit(x){if(!Number.isFinite(x)||x<=0)return 0;const step=x<1000?10:100;return Math.round(x/step)*step;}
 function calc(){
  const W1=num('W1'),W2=num('W2'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),H5=num('H5'),L=num('L'),E=num('E'),slopeN=Math.max(0,num('N'));
@@ -1114,7 +1257,12 @@ function calc(){
  const amounts={},estimateUnits={},estimateAmounts={};
  Object.keys(qty).forEach(k=>{amounts[k]=qty[k]*units[k];estimateUnits[k]=roundEstimateUnit(profit<1?units[k]/(1-profit):0);estimateAmounts[k]=qty[k]*estimateUnits[k];});
  const total=Object.values(amounts).reduce((a,b)=>a+b,0),estimateTotal=Object.values(estimateAmounts).reduce((a,b)=>a+b,0),unitm=L>0?total/L:0,estimateUnitm=L>0?estimateTotal/L:0;
- $('k_exc').textContent=fmt(Vexc);$('k_lean').textContent=fmt(Vlean);$('k_total').textContent=yen(total);$('k_unitm').textContent=yen(unitm);
+ $('k_exc').textContent=fmt(Vexc);
+$('k_lean').textContent=fmt(Vlean);
+$('k_total').textContent=yen(total);
+$('k_unitm').textContent=yen(unitm);
+$('k_cost_unitm').textContent=yen(unitm);
+$('k_est_unitm').textContent=yen(estimateUnitm);
  Object.keys(qty).forEach(k=>{const r=$('r_'+k),u=$('u_'+k),a=$('a_'+k),eu=$('eu_'+k),ea=$('ea_'+k);if(r)r.textContent=k==='prod'?yen(qty[k]):fmt(qty[k]);if(u)u.textContent=yen(units[k]);if(a)a.textContent=yen(amounts[k]);if(eu)eu.textContent=yen(estimateUnits[k]);if(ea)ea.textContent=yen(estimateAmounts[k]);});
  $('a_total').innerHTML='<b>'+yen(total)+'</b>';$('a_unitm').innerHTML='<b>'+yen(unitm)+' 円/m</b>';$('ea_total').innerHTML='<b>'+yen(estimateTotal)+'</b>';$('ea_unitm').innerHTML='<b>'+yen(estimateUnitm)+' 円/m</b>';
 }
@@ -1122,7 +1270,7 @@ function savePrices(){const name=(($('pricePresetName')&&$('pricePresetName').va
 function loadPrices(){const list=getPriceStore();const sel=$('savedPriceList');let item=null;if(sel&&sel.value!=='')item=list[parseInt(sel.value,10)];if(!item&&list.length)item=list[0];if(item){if($('pricePresetName'))$('pricePresetName').value=item.name||'';localStorage.setItem(lastPricePresetKey,item.name||'');applyPriceValues(item.values||{});}else{try{applyPriceValues(JSON.parse(localStorage.getItem(oldPriceKey)||'{}'));}catch(e){calc();}}}
 function deletePricePreset(){const list=getPriceStore();const sel=$('savedPriceList');const idx=sel?parseInt(sel.value,10):NaN;if(!Number.isFinite(idx)||!list[idx])return alert('削除する保存単価を選んでください');if(list[idx].name==='標準')return alert('標準マスターは削除できません。内容を変更したい場合は、単価を入力して「標準」の名前で保存してください。');if(!confirm('選択中の保存単価を削除しますか？'))return;list.splice(idx,1);setPriceStore(list);localStorage.setItem(lastPricePresetKey,'標準');refreshPriceList();loadPrices();calc();}
 function setDefaultPrices(){priceIds.forEach(id=>$(id).value=defaultPrices[id]);calc();}
-$('calcBtn').addEventListener('click',calc);$('savePriceBtn').addEventListener('click',()=>{savePrices();alert('単価を保存しました');});$('loadPriceBtn').addEventListener('click',loadPrices);const deletePriceBtn=$('deletePriceBtn');if(deletePriceBtn)deletePriceBtn.addEventListener('click',deletePricePreset);$('resetBtn').addEventListener('click',()=>{['W1','W2','H1','H2','H3','H4','H5','E','N'].forEach(id=>$(id).value='');$('L').value=10;$('ProfitRate').value=20;calc();});const priceSel=$('savedPriceList');if(priceSel)priceSel.addEventListener('change',()=>{const list=getPriceStore();const item=list[parseInt(priceSel.value,10)];if(item&&$('pricePresetName'))$('pricePresetName').value=item.name||'';});
+$('savePriceBtn').addEventListener('click',()=>{savePrices();alert('単価を保存しました');});$('loadPriceBtn').addEventListener('click',loadPrices);const deletePriceBtn=$('deletePriceBtn');if(deletePriceBtn)deletePriceBtn.addEventListener('click',deletePricePreset);const priceSel=$('savedPriceList');if(priceSel)priceSel.addEventListener('change',()=>{const list=getPriceStore();const item=list[parseInt(priceSel.value,10)];if(item&&$('pricePresetName'))$('pricePresetName').value=item.name||'';});
 $('saveEstimateBtn').addEventListener('click',saveEstimate);$('loadEstimateBtn').addEventListener('click',loadEstimate);$('deleteEstimateBtn').addEventListener('click',deleteEstimate);$('projectName').addEventListener('input',refreshEstimateList);$('printReportBtn').addEventListener('click',()=>{makePrintReport();window.print();});
 (function(){let raf=0;const schedule=()=>{if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{raf=0;calc();});};document.querySelectorAll('input').forEach(el=>{el.addEventListener('input',schedule);el.addEventListener('change',schedule);});})();
 (function(){const clear=()=>document.querySelectorAll('.dimText.active').forEach(el=>el.classList.remove('active'));const activate=cls=>{clear();if(!cls)return;document.querySelectorAll('.'+cls).forEach(el=>el.classList.add('active'));};document.querySelectorAll('input[data-dim]').forEach(inp=>{inp.addEventListener('focus',()=>activate(inp.dataset.dim));inp.addEventListener('click',()=>activate(inp.dataset.dim));inp.addEventListener('blur',clear);});})();
@@ -1197,9 +1345,9 @@ async function selectProductMaster(id){
     $('ProductName').value=v.productName||'';
     $('ProductManufacturer').value=v.productManufacturer||'';
     $('ProductSpecification').value=v.productSpecification||'';
-    if(Number(v.productUnitLength)>0)$('ProdLen').value=v.productUnitLength;
-    $('ProdPrice').value=Number(v.productPrice||0);
-    $('Pset').value=Number(v.installationPrice||0);
+    $('ProdLen').value=(Number(v.productUnitLength||0)||0).toFixed(2);
+    $('ProdPrice').value=Math.round(Number(v.productPrice||0)||0).toLocaleString('ja-JP');
+    $('Pset').value=Math.round(Number(v.installationPrice||0)||0).toLocaleString('ja-JP');
     $('Pconcllid').value=Number(v.concreteCoverPrice||0);
     $('Pgrating').value=Number(v.gratingCoverPrice||0);
     $('PcoverSet').value=Number(v.coverInstallationPrice||0);
@@ -1207,8 +1355,14 @@ async function selectProductMaster(id){
   }catch(error){console.error(error);alert('製品の読込に失敗しました。');}
 }
 function clearProductMaster(){
+  if(!confirm('製品の選択を解除しますか？\n製品情報の入力値は0に戻ります。'))return;
   ['ProductMasterId','ProductMasterUpdatedAt','ProductName','ProductManufacturer','ProductSpecification'].forEach(id=>{if($(id))$(id).value='';});
-  selectedProductMasterSnapshot=null;updateSelectedProductDisplay();
+  if($('ProdLen'))$('ProdLen').value='0.00';
+  if($('ProdPrice'))$('ProdPrice').value='0';
+  if($('Pset'))$('Pset').value='0';
+  selectedProductMasterSnapshot=null;
+  updateSelectedProductDisplay();
+  calc();
 }
 $('openProductMasterBtn')?.addEventListener('click',openProductMaster);
 $('clearProductMasterBtn')?.addEventListener('click',clearProductMaster);
@@ -1229,7 +1383,7 @@ function currentProductMasterInput(){
     productName:($('registerProductName')?.value||'').trim(),
     specification:($('registerSpecification')?.value||'').trim(),
     modelCode:($('registerModelCode')?.value||'').trim(),
-    productUnit:'本',
+    productUnit:'個',
     unitLength:num('ProdLen'),
     productPrice:num('ProdPrice'),
     installationPrice:num('Pset'),
@@ -1670,7 +1824,7 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   function el(id){ return document.getElementById(id); }
   function val(id){ var e=el(id); return e ? (e.value||'').trim() : ''; }
   function txt(id){ var e=el(id); return e ? (e.innerText||e.textContent||'').trim() : ''; }
-  function nval(id){ var e=el(id); var v=e?parseFloat(e.value):0; return isFinite(v)?v:0; }
+  function nval(id){ var e=el(id); var v=e?parseFloat(String(e.value||'').replace(/,/g,'')):0; return isFinite(v)?v:0; }
   function mm(id){ return Math.round(nval(id)*1000).toLocaleString('ja-JP'); }
   function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
   function t(x,y,str,size,weight,anchor){ return '<text x="'+x+'" y="'+y+'" font-size="'+size+'" font-weight="'+(weight||400)+'" text-anchor="'+(anchor||'start')+'">'+esc(str)+'</text>'; }
@@ -2096,7 +2250,7 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
         MSPriceMaster.ensureMasters();
         const active = MSPriceMaster.getActive();
         if(active && active.prices){
-          MSPriceMaster.applyFields(active.prices);
+          MSPriceMaster.applyFields(active.prices); if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();
           const nameEl = $('pricePresetName');
           if(nameEl) nameEl.value = active.name || '標準';
           if(typeof calc === 'function') calc();
@@ -2164,12 +2318,12 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
       // 保存時は画面上の現在単価を必ず保存
       const currentPriceIds=[
         'Pexc','Pspoil','Pback','Pbed','Pstone','PleanForm',
-        'Plean','Pmortar','Pset','ProdLen','ProdPrice'
+        'Plean','Pmortar'
       ];
       const currentPrices={};
       currentPriceIds.forEach(function(id){
         const el=$(id);
-        if(el && el.value!=='') currentPrices[id]=Number(el.value);
+        if(el && el.value!=='') currentPrices[id]=Number(String(el.value||'').replace(/,/g,''));
       });
 
       const localMaster=window.__ankyoLocalPriceMaster||null;
@@ -2241,7 +2395,7 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
         prices:Object.assign({},prices)
       };
 
-      MSPriceMaster.applyFields(prices);
+      MSPriceMaster.applyFields(prices); if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();
 
       const nameEl=$('pricePresetName');
       if(nameEl) nameEl.value=snapshot?savedName:((active&&active.name)||'標準');
@@ -2385,7 +2539,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var mode=window.__ankyoOpenMode||{fromSaved:false,estimateId:""};
   var PRICE_IDS=[
     "Pexc","Pspoil","Pback","Pbed","Pstone","PleanForm",
-    "Plean","Pmortar","Pset","ProdLen","ProdPrice"
+    "Plean","Pmortar"
   ];
 
   function byId(id){return document.getElementById(id);}
@@ -2393,13 +2547,14 @@ document.addEventListener('DOMContentLoaded',function(){
 
   function applyPrices(prices){
     if(window.MSPriceMaster&&typeof MSPriceMaster.applyFields==="function"){
-      MSPriceMaster.applyFields(prices||{});
+      MSPriceMaster.applyFields(prices||{}); if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();
     }else{
       PRICE_IDS.forEach(function(id){
         var el=byId(id);
         if(el&&prices&&prices[id]!==undefined)el.value=prices[id];
       });
     }
+    if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();
     if(typeof window.calc==="function")window.calc();
   }
 
@@ -2552,7 +2707,7 @@ document.addEventListener('DOMContentLoaded',function(){
           var prices={};
           PRICE_IDS.forEach(function(pid){
             var p=byId(pid);
-            if(p&&p.value!=="")prices[pid]=Number(p.value);
+            if(p&&p.value!=="")prices[pid]=Number(String(p.value||'').replace(/,/g,''));
           });
           local.prices=prices;
         });
@@ -2569,6 +2724,281 @@ document.addEventListener('DOMContentLoaded',function(){
   });
 
 })(window,document);
+</script>
+
+
+<div id="ankyoDefaultsModal" role="dialog" aria-modal="true" aria-labelledby="ankyoDefaultsTitle">
+  <div class="ankyo-defaults-box">
+    <div class="ankyo-defaults-head">
+      <div class="ankyo-defaults-title" id="ankyoDefaultsTitle">暗渠・カルバート工　初期値管理</div>
+      <div class="ankyo-defaults-sub">管理用の隠し設定です。製品情報・単価・利益率・工事名・積算名称は初期値に含まれません。</div>
+    </div>
+    <div class="ankyo-defaults-body">
+      <div class="ankyo-defaults-status" id="ankyoDefaultsStatus">現在の画面に入力されている寸法・延長・掘削余裕・法面勾配を、今後の初期値として登録します。</div>
+      <div class="ankyo-defaults-actions">
+        <button class="ankyo-defaults-save" id="ankyoDefaultsSave" type="button">現在の画面を初期値として登録</button>
+        <button class="ankyo-defaults-close" id="ankyoDefaultsClose" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script id="ankyoInitialDefaultsScript">
+(function(window,document){
+"use strict";
+var KEY="MS_v130_initial_values_ankyo_culvert";
+var IDS=["W1","W2","H1","H2","H3","H4","H5","L","E","N"];
+function byId(id){return document.getElementById(id)}
+function collect(){var o={};IDS.forEach(function(id){var el=byId(id);if(el)o[id]=el.value});return o}
+var BUILTIN=collect();
+function stored(){try{var v=JSON.parse(localStorage.getItem(KEY)||"null");return v&&typeof v==="object"?v:null}catch(e){return null}}
+function apply(v,clearNames){
+ v=v||BUILTIN;
+ IDS.forEach(function(id){var el=byId(id);if(!el||v[id]===undefined)return;el.value=v[id];el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}))});
+ if(clearNames&&byId("estimateName"))byId("estimateName").value="";
+ if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();
+ if(typeof window.calc==="function")window.calc();
+}
+function updateStatus(){var el=byId("ankyoDefaultsStatus");if(el)el.textContent=stored()?"現在は、管理者が登録した初期値を使用しています。":"現在は、アプリ標準の初期値を使用しています。"}
+function openModal(){var m=byId("ankyoDefaultsModal");if(m){updateStatus();m.classList.add("show")}}
+function closeModal(){byId("ankyoDefaultsModal")?.classList.remove("show")}
+document.addEventListener("DOMContentLoaded",function(){
+ var trigger=byId("ankyoDefaultsTrigger"),clicks=0,timer=0;
+ trigger?.addEventListener("click",function(){clicks++;clearTimeout(timer);timer=setTimeout(function(){clicks=0},3000);if(clicks>=5){clicks=0;openModal()}});
+ byId("ankyoDefaultsSave")?.addEventListener("click",function(){if(!confirm("現在の画面を今後の初期値として登録しますか？"))return;localStorage.setItem(KEY,JSON.stringify(collect()));alert("現在の画面を初期値として登録しました。");closeModal()});
+ byId("ankyoDefaultsClose")?.addEventListener("click",closeModal);
+ byId("ankyoDefaultsModal")?.addEventListener("click",function(e){if(e.target===this)closeModal()});
+ byId("newInputBtn")?.addEventListener("click",function(){
+  if(!confirm("現在の入力内容を初期値へ戻します。\n保存していない内容は失われます。製品情報はそのまま引き継ぎます。\nよろしいですか？"))return;
+  apply(stored()||BUILTIN,true);
+  var sel=byId("savedEstimateList");if(sel){sel.value="";if(sel.options?.length)sel.selectedIndex=0}
+  try{if(window.MS&&typeof MS.clearCurrentEstimateId==="function")MS.clearCurrentEstimateId("ankyo_culvert");localStorage.removeItem("ms_open_estimate_id")}catch(e){}
+  if(window.__ankyoOpenMode){window.__ankyoOpenMode.fromSaved=false;window.__ankyoOpenMode.estimateId=""}
+  window.scrollTo({top:0,behavior:"smooth"});
+ });
+});
+window.addEventListener("load",function(){
+ var fromSaved=!!(window.__ankyoOpenMode&&window.__ankyoOpenMode.fromSaved);
+ try{var p=new URLSearchParams(location.search);if(p.get("loadEstimate")==="1")fromSaved=true}catch(e){}
+ if(!fromSaved&&stored())setTimeout(function(){apply(stored(),false)},140);
+});
+})(window,document);
+</script>
+
+
+<script id="ankyo-product-master-v130-fix">
+(function(window,document){
+"use strict";
+function byId(id){return document.getElementById(id)}
+function value(id){return String(byId(id)?.value||"").trim()}
+function numberValue(id){var n=Number(String(byId(id)?.value||0).replace(/,/g,""));return Number.isFinite(n)?n:0}
+function closeSelection(e){if(e){e.preventDefault();e.stopImmediatePropagation()}var m=byId("productMasterModal");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true")}}
+function clearSelection(e){if(e){e.preventDefault();e.stopImmediatePropagation()}if(!confirm("製品の選択を解除しますか？\n製品情報の入力値は0に戻ります。"))return;["ProductMasterId","ProductMasterUpdatedAt","ProductName","ProductManufacturer","ProductSpecification"].forEach(function(id){var el=byId(id);if(el)el.value=""});if(byId("ProdLen"))byId("ProdLen").value="0.00";if(byId("ProdPrice"))byId("ProdPrice").value="0";if(byId("Pset"))byId("Pset").value="0";if(byId("selectedProductMaster"))byId("selectedProductMaster").textContent="製品は選択されていません。";if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();if(typeof window.calc==="function")window.calc();}
+function buildInput(){return {category:"ankyo_culvert",manufacturer:value("registerManufacturer"),productName:value("registerProductName"),specification:value("registerSpecification"),modelCode:value("registerModelCode"),productUnit:"個",unitLength:numberValue("ProdLen"),productPrice:numberValue("ProdPrice"),installationPrice:numberValue("Pset"),installationUnit:"m",concreteCoverPrice:numberValue("Pconcllid"),concreteCoverUnit:"枚",gratingCoverPrice:numberValue("Pgrating"),gratingCoverUnit:"枚",coverInstallationPrice:numberValue("PcoverSet"),coverInstallationUnit:"枚",note:value("registerNote"),enabled:true}}
+async function saveProduct(e){
+ if(e){e.preventDefault();e.stopImmediatePropagation()}
+ if(!value("registerProductName")){alert("製品名を入力してください。");byId("registerProductName")?.focus();return}
+ if(!window.MS?.ProductMaster?.saveFromApp){alert("製品単価マスターの保存機能を読み込めません。");return}
+ var btn=byId("saveProductRegisterBtn");if(btn)btn.disabled=true;
+ try{
+  var input=buildInput(),result=await MS.ProductMaster.saveFromApp(input);
+  if(result&&result.saved===false&&result.duplicate){var d=result.duplicate;if(!confirm("同じ製品がすでに登録されています。\n\n"+(d.manufacturer?d.manufacturer+" ／ ":"")+(d.productName||d.name||"")+(d.specification?" ／ "+d.specification:"")+"\n\n現在の入力単価で上書き更新しますか？"))return;result=await MS.ProductMaster.saveFromApp(input,{overwrite:true})}
+  var row=result?.row||result?.savedRow||result?.item||(result?.id?result:null);if(!row)throw new Error("登録結果を取得できませんでした。");
+  var v={};try{if(MS.ProductMaster.toAppValues)v=MS.ProductMaster.toAppValues(row,"ankyo_culvert")||{}}catch(err){}
+  if(byId("ProductMasterId"))byId("ProductMasterId").value=v.productMasterId||row.id||"";
+  if(byId("ProductMasterUpdatedAt"))byId("ProductMasterUpdatedAt").value=v.productMasterUpdatedAt||row.updatedAt||"";
+  if(byId("ProductName"))byId("ProductName").value=v.productName||row.productName||row.name||value("registerProductName");
+  if(byId("ProductManufacturer"))byId("ProductManufacturer").value=v.productManufacturer||row.manufacturer||value("registerManufacturer");
+  if(byId("ProductSpecification"))byId("ProductSpecification").value=v.productSpecification||row.specification||value("registerSpecification");
+  if(typeof window.updateSelectedProductDisplay==="function")window.updateSelectedProductDisplay();
+  var modal=byId("productRegisterModal");if(modal){modal.classList.remove("show");modal.setAttribute("aria-hidden","true")}
+  alert("現在の入力内容を製品単価マスターへ登録しました。");
+ }catch(err){console.error(err);alert("製品単価マスターへ登録できませんでした。\n"+(err?.message||"登録処理でエラーが発生しました。"))}
+ finally{if(btn)btn.disabled=false}
+}
+document.addEventListener("DOMContentLoaded",function(){
+ var close=byId("closeProductMasterBtn"),modal=byId("productMasterModal"),clear=byId("clearProductMasterBtn"),save=byId("saveProductRegisterBtn");
+ close?.addEventListener("click",closeSelection,true);
+ modal?.addEventListener("click",function(e){if(e.target===modal)closeSelection(e)},true);
+ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&modal?.classList.contains("show"))closeSelection(e)},true);
+ clear?.addEventListener("click",clearSelection,true);
+ save?.addEventListener("click",saveProduct,true);
+});
+})(window,document);
+</script>
+
+
+<script id="ankyo-v140-standard-behavior">
+(function(){
+  "use strict";
+  function byId(id){return document.getElementById(id)}
+  function raw(v){return String(v==null?"":v).replace(/,/g,"").trim()}
+
+  var dimIds=["W1","W2","H1","H2","H3","H4","H5","E","N","L","ProdLen"];
+  var moneyIds=["Pexc","Pbed","Pstone","PleanForm","Plean","Pmortar","Pset","Pspoil","Pback","ProdPrice"];
+  var order=["W1","W2","H1","H2","H3","H4","H5","E","N","L","ProfitRate",
+             "ProdLen","ProdPrice","Pset",
+             "Pexc","Pbed","Pstone","PleanForm","Plean","Pmortar","Pspoil","Pback"];
+
+  function textMode(el){
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","decimal");
+    el.setAttribute("autocomplete","off");
+  }
+  function focusField(el){
+    if(!el)return;
+    requestAnimationFrame(function(){
+      try{el.focus()}catch(e){}
+      try{if(typeof el.select==="function")el.select()}catch(e){}
+    });
+  }
+  function formatDim(el){
+    if(!el||el===document.activeElement)return;
+    textMode(el);
+    var s=raw(el.value);if(s==="")return;
+    var n=Number(s);if(!Number.isFinite(n))return;
+    el.value=n.toFixed(2);
+  }
+  function formatMoney(el){
+    if(!el||el===document.activeElement)return;
+    textMode(el);
+    var s=raw(el.value);if(s==="")return;
+    var n=Number(s);if(!Number.isFinite(n))return;
+    el.value=Math.abs(n-Math.round(n))<1e-9
+      ? Math.round(n).toLocaleString("ja-JP")
+      : n.toLocaleString("ja-JP",{maximumFractionDigits:6});
+  }
+  function prepare(){
+    dimIds.forEach(function(id){formatDim(byId(id))});
+    moneyIds.forEach(function(id){formatMoney(byId(id))});
+  }
+
+  document.addEventListener("focusin",function(e){
+    var id=e.target&&e.target.id;
+    if(dimIds.indexOf(id)>=0||moneyIds.indexOf(id)>=0){
+      textMode(e.target);
+      e.target.value=raw(e.target.value);
+    }
+  },true);
+
+  document.addEventListener("focusout",function(e){
+    var id=e.target&&e.target.id;
+    if(dimIds.indexOf(id)>=0)setTimeout(function(){formatDim(e.target)},0);
+    else if(moneyIds.indexOf(id)>=0)setTimeout(function(){formatMoney(e.target)},0);
+  },true);
+
+  document.addEventListener("keydown",function(e){
+    var t=e.target;if(!t||!t.id)return;
+    var i=order.indexOf(t.id);if(i<0)return;
+    if(e.key==="Enter"||e.key==="ArrowDown"||(e.key==="Tab"&&!e.shiftKey)){
+      e.preventDefault();e.stopImmediatePropagation();
+      if(i<order.length-1)focusField(byId(order[i+1]));
+      return;
+    }
+    if(e.key==="ArrowUp"||(e.key==="Tab"&&e.shiftKey)){
+      e.preventDefault();e.stopImmediatePropagation();
+      if(i>0)focusField(byId(order[i-1]));
+      return;
+    }
+  },true);
+
+  function start(){
+    dimIds.concat(moneyIds).forEach(function(id){textMode(byId(id))});
+    prepare();
+    var count=0;
+    var timer=setInterval(function(){
+      prepare();
+      if(++count>=28)clearInterval(timer);
+    },250);
+    setTimeout(function(){focusField(byId("W1"))},300);
+  }
+
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
+  else start();
+
+  window.addEventListener("load",function(){
+    setTimeout(prepare,100);setTimeout(prepare,600);setTimeout(prepare,1600);
+  },{once:true});
+  document.addEventListener("change",function(){
+    setTimeout(prepare,40);setTimeout(prepare,300);
+  },true);
+
+  var b=byId("newInputBtn");
+  if(b)b.addEventListener("click",function(){
+    setTimeout(function(){prepare();focusField(byId("W1"))},280);
+  });
+})();
+</script>
+
+<script id="ankyo-v140-product-zero-final">
+(function(){
+function $(id){return document.getElementById(id)}
+function resetProductInfo(){
+ if($('ProdLen'))$('ProdLen').value='0.00';
+ if($('ProdPrice'))$('ProdPrice').value='0';
+ if($('Pset'))$('Pset').value='0';
+ ['ProductMasterId','ProductMasterUpdatedAt','ProductName','ProductManufacturer','ProductSpecification'].forEach(function(id){var el=$(id);if(el)el.value='';});
+ var box=$('selectedProductMaster');if(box)box.textContent='製品は選択されていません。';
+ try{window.selectedProductMasterSnapshot=null}catch(e){}
+ if(typeof window.MSAnkyoCommaDisplayChange==="function")window.MSAnkyoCommaDisplayChange();
+ if(typeof window.calc==='function')window.calc();
+}
+document.addEventListener('DOMContentLoaded',function(){
+ var params=new URLSearchParams(location.search),openId='';
+ try{openId=localStorage.getItem('ms_open_estimate_id')||''}catch(e){}
+ if(params.get('loadEstimate')!=='1'&&!openId){setTimeout(resetProductInfo,350);setTimeout(resetProductInfo,800);}
+ var b=$('newInputBtn');if(b)b.addEventListener('click',function(){setTimeout(resetProductInfo,100);setTimeout(resetProductInfo,400);},true);
+});
+})();</script>
+
+<script id="ankyo-comma-display-change-helper">
+(function(){
+  "use strict";
+  var ids=['Pexc', 'Pbed', 'Pstone', 'PleanForm', 'Plean', 'Pmortar', 'Pset', 'Pspoil', 'Pback', 'ProdPrice'];
+
+  function raw(v){
+    return String(v==null?"":v).replace(/[,，\s]/g,"").replace(/．/g,".").trim();
+  }
+  function formatOne(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","numeric");
+    var s=raw(el.value);
+    if(s==="")return;
+    var n=Number(s);
+    if(Number.isFinite(n))el.value=Math.round(n).toLocaleString("ja-JP");
+  }
+  function formatAll(){
+    ids.forEach(formatOne);
+  }
+
+  window.MSAnkyoCommaDisplayChange=formatAll;
+
+  ids.forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","numeric");
+    el.addEventListener("input",function(){
+      var s=raw(el.value);
+      if(s===""){el.value="";return;}
+      var n=Number(s);
+      if(!Number.isFinite(n))return;
+      el.value=Math.round(n).toLocaleString("ja-JP");
+      try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}
+    });
+    el.addEventListener("change",function(){formatOne(id)});
+    el.addEventListener("blur",function(){formatOne(id)});
+  });
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",formatAll,{once:true});
+  }else{
+    formatAll();
+  }
+  window.addEventListener("ms-price-master-changed",formatAll);
+})();
 </script>
 
 </body>

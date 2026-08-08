@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>擁壁 数量計算（L型擁壁積算 054 削除後初期化修正版）</title>
+<title>L型擁壁 積算アプリ Ver.1.4.0</title>
 <style>
     :root{
       --blue:#0070C0;
@@ -826,12 +826,398 @@
   }
 }
 </style>
+
+<style id="lwallRebarCollapseStyle">
+/* 鉄筋8系統を折りたたみ表示 */
+.rebar-collapse{
+  margin:8px 0 12px;
+  border:1px solid #cfe3f7;
+  border-radius:12px;
+  background:#fbfdff;
+  overflow:hidden;
+}
+.rebar-collapse>summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:11px 12px;color:#0647a5;font-size:13px;font-weight:950;background:#eef6ff;
+  user-select:none;
+}
+.rebar-collapse>summary::-webkit-details-marker{display:none}
+.rebar-collapse>summary span:before{content:"▶ ";font-weight:950}
+.rebar-collapse[open]>summary span:before{content:"▼ "}
+.rebar-collapse>summary small{font-size:10px;color:#60758d;font-weight:800;text-align:right}
+.rebar-collapse[open]>summary{border-bottom:1px solid #cfe3f7}
+.rebar-collapse>.toggleRow,.rebar-collapse>.note,.rebar-collapse>.rebar-head,.rebar-collapse>.row4,.rebar-collapse>.hr{
+  margin-left:10px;margin-right:10px;
+}
+.rebar-collapse>.toggleRow{margin-top:10px}
+.rebar-collapse>.row4:last-child{margin-bottom:10px}
+@media(max-width:600px){
+  .rebar-collapse>summary{align-items:flex-start;flex-direction:column;gap:3px}
+  .rebar-collapse>summary small{text-align:left}
+}
+</style>
+
+<style id="lwall-usability-layout-v2">
+/* ===== 入力しやすさ改善：図面タブ・付帯工・計算メモ・上部リセット ===== */
+.input-card-head{justify-content:space-between!important;gap:10px}
+.input-card-head .input-head-title{display:flex;align-items:center;gap:8px}
+.input-card-head #resetBtn{width:auto;min-width:150px;padding:7px 12px;background:#eef6ff;color:#0647a5;border:1px solid #bad8f4;white-space:nowrap}
+.input-card-head #resetBtn:hover{background:#e2f0ff}
+.diagram-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 10px}
+.diagram-tab{height:34px;padding:0 8px;background:#eef6ff;color:#0647a5;border:1px solid #cfe3f7;border-radius:9px;font-size:12px;font-weight:900}
+.diagram-tab.active{background:#0647a5;color:#fff;border-color:#0647a5}
+.diagram-pane{display:none}
+.diagram-pane.active{display:block}
+.accessory-collapse,.memo-collapse{border:1px solid #cfe3f7;border-radius:12px;background:#fbfdff;margin:8px 0;overflow:hidden}
+.accessory-collapse>summary,.memo-collapse>summary{list-style:none;cursor:pointer;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;color:#0647a5;font-size:12px;font-weight:950;background:#f3f8fd}
+.accessory-collapse>summary::-webkit-details-marker,.memo-collapse>summary::-webkit-details-marker{display:none}
+.accessory-collapse>summary span:before,.memo-collapse>summary span:before{content:"▶ ";font-weight:950}
+.accessory-collapse[open]>summary span:before,.memo-collapse[open]>summary span:before{content:"▼ "}
+.accessory-collapse>summary small,.memo-collapse>summary small{font-size:10px;color:#60758d;font-weight:800;text-align:right}
+.accessory-collapse[open]>summary,.memo-collapse[open]>summary{border-bottom:1px solid #cfe3f7}
+.accessory-collapse-content{padding:9px 10px 10px}
+.memo-collapse .result-memo-grid{padding:10px 12px 12px}
+.memo-collapse.result-memo-box{padding:0!important;background:#fbfdff}
+.memo-collapse .result-memo-title{display:none!important}
+@media(max-width:600px){
+ .input-card-head{align-items:flex-start!important}
+ .input-card-head #resetBtn{min-width:132px;font-size:11px;padding:7px 8px}
+ .accessory-collapse>summary,.memo-collapse>summary{align-items:flex-start;flex-direction:column;gap:3px}
+ .accessory-collapse>summary small,.memo-collapse>summary small{text-align:left}
+}
+@media print{
+ .diagram-tabs{display:none!important}
+ .diagram-pane{display:block!important}
+ .input-card-head #resetBtn{display:none!important}
+}
+</style>
+
+<style id="lwall-layout-readjust-v3">
+/* 図面は断面図・鉄筋図を上下に常時表示 */
+.diagram-tabs{display:none!important}
+.diagram-pane{display:block!important}
+.diagram-pane+.diagram-pane{margin-top:12px}
+.diagram-vertical-title{
+  margin:0 0 7px;padding:7px 10px;border-radius:9px;
+  background:#eef6ff;border:1px solid #cfe3f7;color:#0647a5;
+  font-size:12px;font-weight:950;text-align:center;
+}
+/* 鉄筋入力が折りたたまれていることを明確に表示 */
+.rebar-collapse{border:2px solid #8fc0ed!important;box-shadow:0 4px 12px rgba(0,112,192,.09)}
+.rebar-collapse>summary{padding:13px 12px!important;background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;font-size:14px!important}
+.rebar-collapse>summary span{display:flex;align-items:center;gap:6px}
+.rebar-collapse>summary span:after{content:"折りたたみ";font-size:10px;color:#fff;background:#0647a5;border-radius:999px;padding:2px 8px;font-weight:900}
+.rebar-collapse[open]>summary span:after{content:"表示中";background:#087d10}
+.rebar-collapse>summary small{color:#40566f!important;font-size:11px!important}
+/* 結果表の鉄筋8系統を折りたたみ */
+.rebar-result-toggle{cursor:pointer;user-select:none}
+.rebar-result-toggle th{background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;color:#0647a5!important;border-top:2px solid #8fc0ed!important;border-bottom:2px solid #8fc0ed!important}
+.rebar-result-toggle th{display:table-cell!important}
+.rebar-result-title:before{content:"▶ ";font-weight:950}
+.rebar-result-toggle.is-open .rebar-result-title:before{content:"▼ "}
+.rebar-result-toggle small{float:right;color:#60758d;font-size:10px;font-weight:800;margin-top:2px}
+.rebar-result-row{display:none}
+tbody.rebar-result-open .rebar-result-row{display:table-row}
+@media(max-width:700px){.rebar-result-toggle small{float:none;display:block;margin:4px 0 0 18px;text-align:left}}
+@media print{.rebar-result-row{display:table-row!important}.rebar-result-toggle small{display:none!important}.rebar-result-title:before{content:""!important}.diagram-vertical-title{display:none!important}}
+</style>
+
+<style id="lwall-fold-unified-v4">
+/* 折りたたみ見出しを1行の共通デザインに統一 */
+.rebar-collapse,.accessory-collapse,.memo-collapse{
+  border:2px solid #8fc0ed!important;
+  border-radius:12px!important;
+  background:#fbfdff!important;
+  overflow:hidden!important;
+  box-shadow:0 4px 12px rgba(0,112,192,.09)!important;
+}
+.rebar-collapse>summary,.accessory-collapse>summary,.memo-collapse>summary{
+  list-style:none!important;cursor:pointer!important;display:block!important;
+  padding:11px 12px!important;margin:0!important;
+  color:#0647a5!important;font-size:13px!important;font-weight:950!important;
+  line-height:1.35!important;white-space:nowrap!important;
+  background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;
+  user-select:none!important;
+}
+.rebar-collapse>summary::-webkit-details-marker,.accessory-collapse>summary::-webkit-details-marker,.memo-collapse>summary::-webkit-details-marker{display:none!important}
+.rebar-collapse>summary span,.accessory-collapse>summary span,.memo-collapse>summary span{display:inline!important}
+.rebar-collapse>summary span:before,.accessory-collapse>summary span:before,.memo-collapse>summary span:before{content:"▶ ";font-weight:950!important}
+.rebar-collapse[open]>summary span:before,.accessory-collapse[open]>summary span:before,.memo-collapse[open]>summary span:before{content:"▼ "}
+.rebar-collapse>summary span:after{content:none!important;display:none!important}
+.rebar-collapse>summary small,.accessory-collapse>summary small,.memo-collapse>summary small{display:none!important}
+.rebar-collapse[open]>summary,.accessory-collapse[open]>summary,.memo-collapse[open]>summary{border-bottom:1px solid #cfe3f7!important}
+/* 鉄筋結果も同じ見た目 */
+.rebar-result-toggle th{
+  padding:11px 12px!important;line-height:1.35!important;
+  background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;
+  color:#0647a5!important;border:2px solid #8fc0ed!important;
+  border-radius:12px!important;overflow:hidden!important;background-clip:padding-box!important;
+  font-size:13px!important;font-weight:950!important;white-space:nowrap!important;
+}
+.rebar-result-toggle small{display:none!important}
+@media(max-width:600px){
+ .rebar-collapse>summary,.accessory-collapse>summary,.memo-collapse>summary,.rebar-result-toggle th{
+   display:block!important;white-space:normal!important;font-size:12px!important;
+ }
+}
+</style>
+
+<style id="lwall-kpi-v130">
+/* ===== Ver.1.3.0 主要結果共通仕様 ===== */
+.kpi-unit-price-v130{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+.kpi-unit-price-v130 .box{
+  min-height:64px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:8px 14px!important;
+  border:2px solid #bad8f4!important;
+  border-radius:14px!important;
+  background:linear-gradient(180deg,#fbfdff,#eef6ff)!important;
+}
+.kpi-unit-price-v130 .t{
+  font-size:13px!important;
+  color:#475569!important;
+}
+.kpi-unit-price-v130 .v{
+  margin-top:2px!important;
+  color:#0647a5!important;
+  font-size:22px!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+}
+.kpi-unit-price-v130 .u{
+  font-size:12px!important;
+  color:#60758d!important;
+  margin-left:6px!important;
+}
+.kpi-unit-price-v130 .t.muted{
+  display:none!important;
+}
+@media(max-width:700px){
+  .kpi-unit-price-v130{grid-template-columns:1fr!important}
+}
+</style>
+
+
+<style id="lwall-input-color-guide-v140">
+/* ===== Ver.1.4.0 入力欄の用途別カラー：左＋下カラー帯版（単価＝紺色） ===== */
+.input-color-guide{
+  display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+  margin:0 0 10px;padding:7px 8px;border:1px solid #d5dde7;border-radius:12px;background:#f8fafc;
+  box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(15,23,42,.10);
+}
+.input-color-guide .guide-item{
+  position:relative;display:flex;align-items:center;justify-content:center;min-height:30px;flex:1;
+  padding:5px 8px 5px 14px;border-top:1px solid #eef2f6;border-right:1px solid #d8dee7;
+  border-bottom:3px solid #c7d0dc;border-left:6px solid #c7d0dc;border-radius:8px;
+  background:linear-gradient(180deg,#fff,#f8fafc);color:#334155;font-size:11px;font-weight:600;
+  text-align:center;white-space:nowrap;box-shadow:0 2px 4px rgba(15,23,42,.10);overflow:hidden;
+}
+.input-color-guide .guide-dimension{border-left-color:#8fc9ef;border-bottom-color:#8fc9ef}
+.input-color-guide .guide-price{border-left-color:#8A4653;border-bottom-color:#8A4653}
+.input-color-guide .guide-setting{border-left-color:#9fd0aa;border-bottom-color:#9fd0aa}
+@media(max-width:700px){
+  .input-color-guide{gap:5px;padding:6px}
+  .input-color-guide .guide-item{font-size:10px;padding-left:10px}
+}
+
+/* 共通：入力欄は白を基本にし、左側6px＋下側2pxのL字色帯で用途を区別 */
+section.card:nth-of-type(2) input[data-dim],
+section.card:nth-of-type(2) #L,
+section.card:nth-of-type(2) #ProfitRate,
+section.card:nth-of-type(2) #Pexc,
+section.card:nth-of-type(2) #Pbed,
+section.card:nth-of-type(2) #Pstone,
+section.card:nth-of-type(2) #Pnform,
+section.card:nth-of-type(2) #Pblnd,
+section.card:nth-of-type(2) #Pconc,
+section.card:nth-of-type(2) #Pform,
+section.card:nth-of-type(2) #Pback,
+section.card:nth-of-type(2) #Pspoil,
+section.card:nth-of-type(2) #Prebar,
+section.card:nth-of-type(2) #Pdrain,
+section.card:nth-of-type(2) #Pfilter{
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+  border-top:1px solid #dfe4ea!important;border-right:1px solid #dfe4ea!important;
+  border-bottom:2px solid #dfe4ea!important;border-radius:10px!important;
+}
+
+/* 寸法：淡い水色の左帯 */
+section.card:nth-of-type(2) input[data-dim],
+section.card:nth-of-type(2) #L{
+  border-left:6px solid #8fc9ef!important;
+  border-bottom:2px solid #8fc9ef!important;
+}
+section.card:nth-of-type(2) input[data-dim]:focus,
+section.card:nth-of-type(2) #L:focus{
+  border-color:#73b9e8!important;border-left-width:6px!important;
+  box-shadow:0 0 0 3px rgba(115,185,232,.14)!important;
+}
+
+/* 共通条件：利益率は淡い緑の左＋下のL字帯 */
+section.card:nth-of-type(2) #ProfitRate{
+  border-left:6px solid #9fd0aa!important;
+  border-bottom:2px solid #9fd0aa!important;
+  background:#fff!important;
+  color:var(--text)!important;
+  opacity:1!important;
+  font-weight:400!important;
+}
+section.card:nth-of-type(2) #ProfitRate:focus{
+  border-color:#82bd90!important;border-left-width:6px!important;
+  box-shadow:0 0 0 3px rgba(130,189,144,.14)!important;
+}
+
+/* 単価：落ち着いた紺色の左＋下L字帯。文字は普通文字 */
+section.card:nth-of-type(2) #Pexc,
+section.card:nth-of-type(2) #Pbed,
+section.card:nth-of-type(2) #Pstone,
+section.card:nth-of-type(2) #Pnform,
+section.card:nth-of-type(2) #Pblnd,
+section.card:nth-of-type(2) #Pconc,
+section.card:nth-of-type(2) #Pform,
+section.card:nth-of-type(2) #Pback,
+section.card:nth-of-type(2) #Pspoil,
+section.card:nth-of-type(2) #Prebar,
+section.card:nth-of-type(2) #Pdrain,
+section.card:nth-of-type(2) #Pfilter{
+  border-left:6px solid #8A4653!important;
+  border-bottom:2px solid #8A4653!important;
+}
+section.card:nth-of-type(2) #Pexc:focus,
+section.card:nth-of-type(2) #Pbed:focus,
+section.card:nth-of-type(2) #Pstone:focus,
+section.card:nth-of-type(2) #Pnform:focus,
+section.card:nth-of-type(2) #Pblnd:focus,
+section.card:nth-of-type(2) #Pconc:focus,
+section.card:nth-of-type(2) #Pform:focus,
+section.card:nth-of-type(2) #Pback:focus,
+section.card:nth-of-type(2) #Pspoil:focus,
+section.card:nth-of-type(2) #Prebar:focus,
+section.card:nth-of-type(2) #Pdrain:focus,
+section.card:nth-of-type(2) #Pfilter:focus{
+  border-color:#557797!important;border-left-width:6px!important;
+  box-shadow:0 0 0 3px rgba(85,119,151,.13)!important;
+}
+
+/* 読み取り専用はグレーで明確化 */
+section.card:nth-of-type(2) input[readonly]{
+  background:#f4f5f7!important;border-color:#cfd5dc!important;color:#6b7280!important;cursor:not-allowed;
+}
+
+/* 見出しは色を薄く残し、入力欄の分類を補助 */
+.dimension-title-v140,.condition-title-v140,.price-title-v140{
+  padding:7px 9px!important;border-radius:9px;border:1px solid transparent;font-weight:800!important;
+}
+.dimension-title-v140{background:#f6fbff;border-color:#d7eaf7;color:#315f7e!important}
+.dimension-title-v140:before{background:#8fc9ef!important}
+.condition-title-v140{background:#f8fcf8;border-color:#dcecdf;color:#3f6848!important}
+.condition-title-v140:before{background:#9fd0aa!important}
+.price-title-v140{background:#f8fafc;border-color:#dce5ee;color:#425a72!important}
+.price-title-v140:before{background:#8A4653!important}
+.price-title-v140:after{content:none!important;display:none!important}
+
+/* 鉄筋入力：白背景・通常枠のまま（図面の赤色連動で判別） */
+.rebar-collapse input:not([disabled]),
+.rebar-collapse select:not([disabled]){
+  background:#fff!important;border:1px solid #e5e7eb!important;color:var(--text)!important;font-weight:400!important;
+}
+.rebar-collapse input:focus,
+.rebar-collapse select:focus{
+  border-color:rgba(0,112,192,.55)!important;box-shadow:0 0 0 3px rgba(0,112,192,.15)!important;
+}
+
+/* 付帯工：入力欄は白、折りたたみ見出しだけごく薄いクリーム色 */
+.accessory-collapse{
+  background:#fff!important;border-color:#eadfbe!important;box-shadow:0 3px 10px rgba(120,90,20,.04)!important;
+}
+.accessory-collapse>summary{
+  background:linear-gradient(180deg,#fffefb,#fffaf1)!important;color:#6f5a20!important;border-color:#eadfbe!important;
+}
+.accessory-collapse[open]>summary{border-bottom-color:#eadfbe!important}
+.accessory-collapse-content{background:#fff!important}
+.accessory-collapse .backfill-choice label{background:#fff!important;border-color:#eadfbe!important}
+
+@media(max-width:600px){
+  .input-color-guide{grid-template-columns:1fr;gap:5px}
+  .input-color-guide .guide-item{justify-content:flex-start}
+}
+@media print{.input-color-guide{display:none!important}}
+</style>
+
+
+<style id="lwall-rebar-space-guide-v140">
+.rebar-key-hint-v140{
+  margin:6px 0 8px;
+  padding:7px 9px;
+  border:1px solid #d8dee7;
+  border-radius:9px;
+  background:#f8fafc;
+  color:#475569;
+  font-size:10px;
+  line-height:1.4;
+}
+.rebar-key-hint-v140 b{color:#8A4653;font-weight:800;}
+.rebar-collapse select.rebar-select-editing{
+  border:2px solid #8A4653!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+  background:#fff8f9!important;
+}
+@media print{.rebar-key-hint-v140{display:none!important;}}
+</style>
+
+
+<style id="lwall-accessory-v140-standard-style">
+.accessory-key-hint-v140{
+  margin:0 0 8px;padding:7px 9px;border:1px solid #d8dee7;border-radius:9px;
+  background:#f8fafc;color:#475569;font-size:10px;line-height:1.4;
+}
+.accessory-key-hint-v140 b{color:#8A4653}
+.accessory-collapse .backfill-choice label:has(input:focus){
+  border:2px solid #8fc0ed!important;
+  box-shadow:0 0 0 3px rgba(0,112,192,.10)!important;
+}
+.accessory-collapse .backfill-choice label.accessory-select-editing{
+  border:2px solid #8A4653!important;
+  background:#fff8f9!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+  color:#7A3542!important;
+}
+.accessory-collapse .backfill-choice label.accessory-select-editing input{
+  accent-color:#8A4653;
+}
+@media print{.accessory-key-hint-v140{display:none!important}}
+</style>
+
+
+<style id="lwall-rebar-toggle-keyboard-v140">
+/* Ver.1.4.0：裏側なし（シングル）のキーボード編集モード */
+.rebar-collapse .toggleLabel{
+  padding:5px 8px;
+  border:2px solid transparent;
+  border-radius:9px;
+  transition:border-color .12s ease,box-shadow .12s ease,background .12s ease;
+}
+.rebar-collapse .toggleLabel:focus-within{
+  border-color:#8fc0ed;
+  box-shadow:0 0 0 3px rgba(0,112,192,.10);
+}
+.rebar-collapse .toggleLabel.rebar-toggle-editing{
+  border-color:#8A4653!important;
+  background:#fff7f8!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+}
+</style>
 </head>
 <body>
 <header>
 <div class="wrap">
 <div>
-<h1>擁壁 数量計算（L型擁壁積算 054 削除後初期化修正版）</h1>
+<h1 id="lwallAdminTrigger" title="L型擁壁積算">L型擁壁 積算アプリ Ver.1.4.0</h1>
 <div class="sub">土工／地業／コンクリ／止水・裏込め工／型枠／鉄筋（8系統）を自動算出</div>
 </div>
 <div class="sub">
@@ -849,6 +1235,8 @@
 <section class="card">
 <h2><span class="dot"></span>断面</h2>
 <div class="body">
+<div class="diagram-pane active" id="diagramSectionPane">
+<div class="diagram-vertical-title">断面図</div>
 <div class="illust-box">
 <svg class="illust-svg" viewbox="0 0 1300 950" xmlns="http://www.w3.org/2000/svg">
 <defs>
@@ -1011,6 +1399,9 @@
 <text class="soilLabel" x="80" y="485">土被り</text>
 </svg>
 </div>
+</div>
+<div class="diagram-pane" id="diagramRebarPane">
+<div class="diagram-vertical-title">鉄筋図</div>
 <div class="illust-box rebar">
 <svg aria-label="鉄筋配置イラスト" class="illust-svg" viewbox="0 -140 1100 860" xmlns="http://www.w3.org/2000/svg">
 <defs>
@@ -1194,6 +1585,7 @@ section.card:nth-of-type(2) .btns button{
 </g>
 </svg>
 </div>
+</div>
 <div class="estimate-panel">
 <div class="save-line">
 <label>工事名</label>
@@ -1233,13 +1625,7 @@ section.card:nth-of-type(2) .btns button{
 </div>
 <div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div>
 </div>
-<div class="control-block operation-block">
-<div class="sectionTitle">基本操作</div>
-<div class="save-btns" style="grid-template-columns:1fr 1fr">
-<button class="primary" id="calcBtn" type="button">計算</button>
-<button class="danger" id="resetBtn" type="button">入力リセット</button>
-</div>
-</div>
+
 </div>
 <div class="note" style="margin-top:6px;">※ H6・e・nを使った掘削計算に対応済みです。前面は垂直、後面は1：n法面で計算します。</div>
 <div class="hr"></div>
@@ -1247,9 +1633,14 @@ section.card:nth-of-type(2) .btns button{
 </section>
 <!-- Inputs -->
 <section class="card">
-<h2><span class="dot"></span>入力</h2>
+<h2 class="input-card-head"><span class="input-head-title"><span class="dot"></span>入力</span><button class="ghost" id="resetBtn" type="button" title="登録済みの初期値に戻します">新しい入力を開始</button></h2>
 <div class="body">
-<div class="sectionTitle">断面寸法（m）</div>
+<div class="input-color-guide" aria-label="入力欄の色分け案内">
+<div class="guide-item guide-dimension">📐 寸法</div>
+<div class="guide-item guide-price">💴 単価</div>
+<div class="guide-item guide-setting">⚙ 条件</div>
+</div>
+<div class="sectionTitle dimension-title-v140">断面寸法（m）</div>
 <div class="row">
 <div><label>H1（立ち上がり高さ）</label><input data-dim="dim-h1" id="H1" step="0.001" type="number" value="1.35"/></div>
 <div><label>H2（基礎厚）</label><input data-dim="dim-h2" id="H2" step="0.001" type="number" value="0.15"/></div>
@@ -1276,8 +1667,8 @@ section.card:nth-of-type(2) .btns button{
 </div>
 <div class="hr"></div>
 <!-- Rebar area -->
-<div class="rebar-area">
-<div class="sectionTitle">鉄筋（8系統）</div>
+<details class="rebar-area rebar-collapse" id="rebarInputDetails">
+<summary><span>鉄筋入力（8系統）</span></summary>
 <div class="toggleRow">
 <label class="toggleLabel">
 <input id="toggleBackless" type="checkbox"/>
@@ -1386,15 +1777,19 @@ section.card:nth-of-type(2) .btns button{
 </div>
 <div><label class="muted unitAt">@</label><input id="p_bhb" step="1" type="number" value="200"/></div>
 </div>
-</div><!-- /rebar-area -->
-<div class="sectionTitle">共通条件</div>
-<div class="row3">
+</details><!-- /rebar-area -->
+<div class="sectionTitle condition-title-v140">共通条件</div>
+<div class="row">
 <div><label>延長 L（m）</label><input id="L" step="0.001" type="number" value="10"/></div>
-<div><label>掘削余裕 e（m）</label><input id="E_view" readonly="" type="number" value="0.300"/></div>
-<div><label>法面勾配 1：n</label><input id="N_view" readonly="" type="number" value="0.50"/></div>
-</div><div class="row"><div><label>利益率（%）</label><input id="ProfitRate" max="99.9" min="0" step="0.1" type="number" value="20"/></div><div></div></div>
+<div><label>利益率（%）</label><input id="ProfitRate" max="99.9" min="0" step="0.1" type="number" value="20"/></div>
+</div>
 <div class="hr"></div>
-<div class="sectionTitle">付帯工</div>
+<details class="accessory-collapse">
+<summary><span>付帯工</span></summary>
+<div class="accessory-collapse-content">
+<div class="accessory-key-hint-v140">
+通常は <b>↑↓ / Enterで移動</b>　変更するときだけ <b>Space → ↑↓</b>　確定：<b>Enter</b>
+</div>
 <div class="backfill-choice">
 <label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠含む）</label>
 </div>
@@ -1404,34 +1799,36 @@ section.card:nth-of-type(2) .btns button{
 <label><input id="backfillSheet" name="backfillType" type="radio" value="sheet">吸出し防止材</label>
 </div>
 <div class="accessory-note">止水コンクリートは1つのボタンで、止水コンクリート型枠と止水コンクリートを同時にON／OFFできます。裏込め材は「なし・裏込め砕石・吸出し防止材」から選択できます。止水コンクリートは幅0.30m・厚さ0.05m、裏込め幅は0.30mで固定します。水抜きパイプは基準面積÷3.3の小数を切り上げて整数本で算出します。</div>
+</div>
+</details>
 <div class="hr"></div>
-<div class="sectionTitle">単価（任意・円）</div>
+<div class="sectionTitle price-title-v140">単価（任意・円）</div>
 <div class="row">
-<div><label>掘削 単価/m³</label><input id="Pexc" step="1" type="number" value="4500"/></div>
-<div><label>床付け 単価/m²</label><input id="Pbed" step="1" type="number" value="250"/></div>
+<div><label>掘削 単価/m³</label><input id="Pexc" step="1" type="text" inputmode="numeric" value="4,500"/></div>
+<div><label>床付け 単価/m²</label><input id="Pbed" step="1" type="text" inputmode="numeric" value="250"/></div>
 </div>
 <div class="row">
-<div><label>砕石 単価/m³</label><input id="Pstone" step="1" type="number" value="8500"/></div>
-<div><label>均し型枠 単価/m²</label><input id="Pnform" step="1" type="number" value="5500"/></div>
+<div><label>砕石 単価/m³</label><input id="Pstone" step="1" type="text" inputmode="numeric" value="8,500"/></div>
+<div><label>均し型枠 単価/m²</label><input id="Pnform" step="1" type="text" inputmode="numeric" value="5,500"/></div>
 </div>
 <div class="row">
-<div><label>均しコン 単価/m³</label><input id="Pblnd" step="1" type="number" value="22000"/></div>
-<div><label>擁壁コンクリート 単価/m³</label><input id="Pconc" step="1" type="number" value="35000"/></div>
+<div><label>均しコン 単価/m³</label><input id="Pblnd" step="1" type="text" inputmode="numeric" value="22,000"/></div>
+<div><label>擁壁コンクリート 単価/m³</label><input id="Pconc" step="1" type="text" inputmode="numeric" value="35,000"/></div>
 </div>
 <div class="row">
-<div><label>型枠 単価/m²</label><input id="Pform" step="1" type="number" value="5500"/></div>
+<div><label>型枠 単価/m²</label><input id="Pform" step="1" type="text" inputmode="numeric" value="5,500"/></div>
 <div></div>
 </div>
 <div class="row">
-<div><label>埋戻し 単価/m³</label><input id="Pback" step="1" type="number" value="3000"/></div>
-<div><label>残土処理 単価/m³</label><input id="Pspoil" step="1" type="number" value="4000"/></div>
+<div><label>埋戻し 単価/m³</label><input id="Pback" step="1" type="text" inputmode="numeric" value="3,000"/></div>
+<div><label>残土処理 単価/m³</label><input id="Pspoil" step="1" type="text" inputmode="numeric" value="4,000"/></div>
 </div>
 <div class="row">
-<div><label>鉄筋 単価/kg</label><input id="Prebar" step="1" type="number" value="220"/></div>
-<div><label>水抜きパイプ 単価/本</label><input id="Pdrain" step="1" type="number" value="1500"/></div>
+<div><label>鉄筋 単価/kg</label><input id="Prebar" step="1" type="text" inputmode="numeric" value="220"/></div>
+<div><label>水抜きパイプ 単価/本</label><input id="Pdrain" step="1" type="text" inputmode="numeric" value="1,500"/></div>
 </div>
 <div class="row">
-<div><label>吸出し防止材 単価/m²</label><input id="Pfilter" step="1" type="number" value="1000"/></div>
+<div><label>吸出し防止材 単価/m²</label><input id="Pfilter" step="1" type="text" inputmode="numeric" value="1,000"/></div>
 <div></div>
 </div>
 <div class="note">単価は左側の「単価マスター」で名前を付けて保存・呼出できます。</div>
@@ -1452,25 +1849,22 @@ section.card:nth-of-type(2) .btns button{
 <div class="btns" style="grid-template-columns: repeat(3, 1fr); margin:0 0 12px; max-width:420px;">
 <button class="primary" id="printReportBtn" type="button">印刷</button>
 </div>
-<div class="kpi">
-<div class="box">
-<div class="t">掘削</div>
-<div class="v"><span id="k_exc">0.000</span><span class="u">m³</span></div>
-<div class="t muted mono">V={(W4+2e)D + 0.5mD²}L</div>
+
+<div id="legacyKpiCompat" style="display:none!important">
+  <span id="k_exc">0.000</span>
+  <span id="k_conc">0.000</span>
+  <span id="k_rebar">0.00</span>
 </div>
+
+<div class="kpi kpi-unit-price-v130">
 <div class="box">
-<div class="t">擁壁コンクリート</div>
-<div class="v"><span id="k_conc">0.000</span><span class="u">m³</span></div>
-<div class="t muted mono">V={(W3(H2+H5)/2 + H1W1)}L</div>
-</div>
-<div class="box">
-<div class="t">鉄筋合計</div>
-<div class="v"><span id="k_rebar">0.00</span><span class="u">kg</span></div>
-<div class="t muted mono">8系統の合計</div>
+<div class="t">mあたり単価</div>
+<div class="v"><span id="k_cost_unitm">0</span><span class="u">円/m</span></div>
+<div class="t muted mono">原価合計 ÷ L</div>
 </div>
 <div class="box">
 <div class="t">見積mあたり単価</div>
-<div class="v"><span id="k_unitm">0</span><span class="u">円/m</span></div>
+<div class="v"><span id="k_est_unitm">0</span><span class="u">円/m</span></div>
 <div class="t muted mono">見積合計 ÷ L</div>
 </div>
 </div>
@@ -1495,21 +1889,21 @@ section.card:nth-of-type(2) .btns button{
 <tr><td>水抜きパイプ</td><td class="mono" id="r_drain">0</td><td>本</td><td class="mono" id="u_drain">0</td><td class="mono" id="a_drain">0</td><td class="mono estimate-price" id="eu_drain">0</td><td class="mono estimate-amount" id="ea_drain">0</td></tr>
 <tr id="row_backstone"><td>裏込め砕石</td><td class="mono" id="r_backstone">0.000</td><td>m³</td><td class="mono" id="u_backstone">0</td><td class="mono" id="a_backstone">0</td><td class="mono estimate-price" id="eu_backstone">0</td><td class="mono estimate-amount" id="ea_backstone">0</td></tr>
 <tr id="row_filter" style="display:none"><td>吸出し防止材</td><td class="mono" id="r_filter">0.000</td><td>m²</td><td class="mono" id="u_filter">0</td><td class="mono" id="a_filter">0</td><td class="mono estimate-price" id="eu_filter">0</td><td class="mono estimate-amount" id="ea_filter">0</td></tr>
-<tr class="section-row"><th colspan="7">鉄筋（8系統：kg）</th></tr>
-<tr><td>立上り縦前筋</td><td class="mono" id="kg_vf">0.00</td><td>kg</td><td class="mono" id="u_vf">0</td><td class="mono" id="a_vf">0</td><td class="mono estimate-price" id="eu_vf">0</td><td class="mono estimate-amount" id="ea_vf">0</td></tr>
-<tr><td>立上り縦後筋</td><td class="mono" id="kg_vr">0.00</td><td>kg</td><td class="mono" id="u_vr">0</td><td class="mono" id="a_vr">0</td><td class="mono estimate-price" id="eu_vr">0</td><td class="mono estimate-amount" id="ea_vr">0</td></tr>
-<tr><td>基礎縦上筋</td><td class="mono" id="kg_bvt">0.00</td><td>kg</td><td class="mono" id="u_bvt">0</td><td class="mono" id="a_bvt">0</td><td class="mono estimate-price" id="eu_bvt">0</td><td class="mono estimate-amount" id="ea_bvt">0</td></tr>
-<tr><td>基礎縦下筋</td><td class="mono" id="kg_bvb">0.00</td><td>kg</td><td class="mono" id="u_bvb">0</td><td class="mono" id="a_bvb">0</td><td class="mono estimate-price" id="eu_bvb">0</td><td class="mono estimate-amount" id="ea_bvb">0</td></tr>
-<tr><td>立上り横前筋</td><td class="mono" id="kg_hf">0.00</td><td>kg</td><td class="mono" id="u_hf">0</td><td class="mono" id="a_hf">0</td><td class="mono estimate-price" id="eu_hf">0</td><td class="mono estimate-amount" id="ea_hf">0</td></tr>
-<tr><td>立上り横後筋</td><td class="mono" id="kg_hr">0.00</td><td>kg</td><td class="mono" id="u_hr">0</td><td class="mono" id="a_hr">0</td><td class="mono estimate-price" id="eu_hr">0</td><td class="mono estimate-amount" id="ea_hr">0</td></tr>
-<tr><td>基礎横上筋</td><td class="mono" id="kg_bht">0.00</td><td>kg</td><td class="mono" id="u_bht">0</td><td class="mono" id="a_bht">0</td><td class="mono estimate-price" id="eu_bht">0</td><td class="mono estimate-amount" id="ea_bht">0</td></tr>
-<tr><td>基礎横下筋</td><td class="mono" id="kg_bhb">0.00</td><td>kg</td><td class="mono" id="u_bhb">0</td><td class="mono" id="a_bhb">0</td><td class="mono estimate-price" id="eu_bhb">0</td><td class="mono estimate-amount" id="ea_bhb">0</td></tr>
-<tr><td><b>鉄筋合計</b></td><td class="mono" id="kg_total">0.00</td><td>kg</td><td class="mono" id="u_rebar">0</td><td class="mono" id="a_rebar">0</td><td class="mono estimate-price" id="eu_rebar">0</td><td class="mono estimate-amount" id="ea_rebar">0</td></tr>
+<tr class="section-row rebar-result-toggle" id="rebarResultToggle" tabindex="0" role="button" aria-expanded="false"><th colspan="7"><span class="rebar-result-title">鉄筋結果（8系統：kg）</span></th></tr>
+<tr class="rebar-result-row"><td>立上り縦前筋</td><td class="mono" id="kg_vf">0.00</td><td>kg</td><td class="mono" id="u_vf">0</td><td class="mono" id="a_vf">0</td><td class="mono estimate-price" id="eu_vf">0</td><td class="mono estimate-amount" id="ea_vf">0</td></tr>
+<tr class="rebar-result-row"><td>立上り縦後筋</td><td class="mono" id="kg_vr">0.00</td><td>kg</td><td class="mono" id="u_vr">0</td><td class="mono" id="a_vr">0</td><td class="mono estimate-price" id="eu_vr">0</td><td class="mono estimate-amount" id="ea_vr">0</td></tr>
+<tr class="rebar-result-row"><td>基礎縦上筋</td><td class="mono" id="kg_bvt">0.00</td><td>kg</td><td class="mono" id="u_bvt">0</td><td class="mono" id="a_bvt">0</td><td class="mono estimate-price" id="eu_bvt">0</td><td class="mono estimate-amount" id="ea_bvt">0</td></tr>
+<tr class="rebar-result-row"><td>基礎縦下筋</td><td class="mono" id="kg_bvb">0.00</td><td>kg</td><td class="mono" id="u_bvb">0</td><td class="mono" id="a_bvb">0</td><td class="mono estimate-price" id="eu_bvb">0</td><td class="mono estimate-amount" id="ea_bvb">0</td></tr>
+<tr class="rebar-result-row"><td>立上り横前筋</td><td class="mono" id="kg_hf">0.00</td><td>kg</td><td class="mono" id="u_hf">0</td><td class="mono" id="a_hf">0</td><td class="mono estimate-price" id="eu_hf">0</td><td class="mono estimate-amount" id="ea_hf">0</td></tr>
+<tr class="rebar-result-row"><td>立上り横後筋</td><td class="mono" id="kg_hr">0.00</td><td>kg</td><td class="mono" id="u_hr">0</td><td class="mono" id="a_hr">0</td><td class="mono estimate-price" id="eu_hr">0</td><td class="mono estimate-amount" id="ea_hr">0</td></tr>
+<tr class="rebar-result-row"><td>基礎横上筋</td><td class="mono" id="kg_bht">0.00</td><td>kg</td><td class="mono" id="u_bht">0</td><td class="mono" id="a_bht">0</td><td class="mono estimate-price" id="eu_bht">0</td><td class="mono estimate-amount" id="ea_bht">0</td></tr>
+<tr class="rebar-result-row"><td>基礎横下筋</td><td class="mono" id="kg_bhb">0.00</td><td>kg</td><td class="mono" id="u_bhb">0</td><td class="mono" id="a_bhb">0</td><td class="mono estimate-price" id="eu_bhb">0</td><td class="mono estimate-amount" id="ea_bhb">0</td></tr>
+<tr class="rebar-result-row"><td><b>鉄筋合計</b></td><td class="mono" id="kg_total">0.00</td><td>kg</td><td class="mono" id="u_rebar">0</td><td class="mono" id="a_rebar">0</td><td class="mono estimate-price" id="eu_rebar">0</td><td class="mono estimate-amount" id="ea_rebar">0</td></tr>
 <tr><td>合計</td><td></td><td></td><td></td><td class="mono" id="a_total">0</td><td class="mono estimate-price" id="eu_total">0</td><td class="mono estimate-amount" id="ea_total">0</td></tr>
 <tr><td>mあたり単価</td><td></td><td></td><td></td><td class="mono" id="a_unitm">0</td><td class="mono estimate-price" id="eu_unitm">0</td><td class="mono estimate-amount" id="ea_unitm">0</td></tr>
 </tbody>
 </table>
-</div><div class="result-memo-box"><div class="result-memo-title">計算メモ</div><div class="result-memo-grid"><div class="result-memo-item"><b>掘削</b><span>A1=(H6+H3+H4)×e / D=H1+H2+H3+H4 / A2=(W4+e)×D+0.5×n×D² / 掘削=A1+A2</span></div><div class="result-memo-item"><b>埋戻し</b><span>掘削 −（砕石＋均し＋コンクリ）</span></div><div class="result-memo-item"><b>残土処理</b><span>砕石＋均し＋コンクリ（置換体積）</span></div><div class="result-memo-item"><b>床付け</b><span>W4×L</span></div><div class="result-memo-item"><b>砕石地業</b><span>W4×H4×L</span></div><div class="result-memo-item"><b>均し型枠</b><span>H3×2×L</span></div><div class="result-memo-item"><b>均しコンクリート</b><span>W4×H3×L</span></div><div class="result-memo-item"><b>擁壁コンクリート</b><span>A=W3(H2+H5)/2 + H1W1 / V=A×L</span></div><div class="result-memo-item"><b>型枠（擁壁）</b><span>2(H1+H2)L（壁前後のみ）</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>L×0.05（均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>L×0.30×0.05（均しコンクリート単価）</span></div><div class="result-memo-item"><b>水抜きパイプ</b><span>ceil｛(H1−H6−0.30)×L÷3.3｝</span></div><div class="result-memo-item"><b>裏込め砕石</b><span>(H1−H6−0.30)×0.30×L</span></div><div class="result-memo-item"><b>吸出し防止材</b><span>(H1−H6−0.30)×L（裏込め砕石と選択）</span></div><div class="result-memo-item"><b>立上り縦前筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>立上り縦後筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>基礎縦上筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>基礎縦下筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>立上り横前筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>立上り横後筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>基礎横上筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>基礎横下筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>鉄筋合計</b><span>上の合計</span></div><div class="result-memo-item"><b>合計</b><span>数量×単価の合計</span></div><div class="result-memo-item"><b>mあたり単価</b><span>合計金額 ÷ L</span></div></div></div>
+</div><details class="result-memo-box memo-collapse"><summary><span>計算式・計算メモ</span></summary><div class="result-memo-grid"><div class="result-memo-item"><b>掘削</b><span>A1=(H6+H3+H4)×e / D=H1+H2+H3+H4 / A2=(W4+e)×D+0.5×n×D² / 掘削=A1+A2</span></div><div class="result-memo-item"><b>埋戻し</b><span>掘削 −（砕石＋均し＋コンクリ）</span></div><div class="result-memo-item"><b>残土処理</b><span>砕石＋均し＋コンクリ（置換体積）</span></div><div class="result-memo-item"><b>床付け</b><span>W4×L</span></div><div class="result-memo-item"><b>砕石地業</b><span>W4×H4×L</span></div><div class="result-memo-item"><b>均し型枠</b><span>H3×2×L</span></div><div class="result-memo-item"><b>均しコンクリート</b><span>W4×H3×L</span></div><div class="result-memo-item"><b>擁壁コンクリート</b><span>A=W3(H2+H5)/2 + H1W1 / V=A×L</span></div><div class="result-memo-item"><b>型枠（擁壁）</b><span>2(H1+H2)L（壁前後のみ）</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>L×0.05（均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>L×0.30×0.05（均しコンクリート単価）</span></div><div class="result-memo-item"><b>水抜きパイプ</b><span>ceil｛(H1−H6−0.30)×L÷3.3｝</span></div><div class="result-memo-item"><b>裏込め砕石</b><span>(H1−H6−0.30)×0.30×L</span></div><div class="result-memo-item"><b>吸出し防止材</b><span>(H1−H6−0.30)×L（裏込め砕石と選択）</span></div><div class="result-memo-item"><b>立上り縦前筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>立上り縦後筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>基礎縦上筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>基礎縦下筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>立上り横前筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>立上り横後筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>基礎横上筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>基礎横下筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>鉄筋合計</b><span>上の合計</span></div><div class="result-memo-item"><b>合計</b><span>数量×単価の合計</span></div><div class="result-memo-item"><b>mあたり単価</b><span>合計金額 ÷ L</span></div></div></details>
 <div class="note">
           ※ 縦筋の40dは自動で加算します（D13なら 0.52m）。横筋は40d加算しません。
         </div>
@@ -1643,7 +2037,10 @@ section.card:nth-of-type(2) .btns button{
 
   // 空欄は0扱い（入力途中でも結果が消えない）
   function num(id){
-    const v = parseFloat($(id).value);
+    // Ver.1.4.0: 金額・単価欄は 4,500 のようなカンマ表示でも正しく計算する
+    const el = $(id);
+    const raw = el && typeof el.value === "string" ? el.value.replace(/,/g, "") : "";
+    const v = parseFloat(raw);
     return Number.isFinite(v) ? v : 0;
   }
 
@@ -1672,7 +2069,7 @@ section.card:nth-of-type(2) .btns button{
       ["r_exc","r_conc"].forEach(id=>$(id).textContent="0.0000");
       ["r_bed","r_stone","r_nform","r_blnd","r_form","r_back","r_spoil","r_wform","r_wconc","r_drain","r_backstone","r_filter"].forEach(id=>$(id).textContent="0.000");
       ["kg_vf","kg_vr","kg_bvt","kg_bvb","kg_hf","kg_hr","kg_bht","kg_bhb","kg_total"].forEach(id=>$(id).textContent="0.00");
-      ["a_exc","a_bed","a_stone","a_nform","a_blnd","a_conc","a_form","a_back","a_spoil","a_wform","a_wconc","a_drain","a_backstone","a_filter","a_vf","a_vr","a_bvt","a_bvb","a_hf","a_hr","a_bht","a_bhb","a_rebar","a_total","a_unitm","k_unitm",
+      ["a_exc","a_bed","a_stone","a_nform","a_blnd","a_conc","a_form","a_back","a_spoil","a_wform","a_wconc","a_drain","a_backstone","a_filter","a_vf","a_vr","a_bvt","a_bvb","a_hf","a_hr","a_bht","a_bhb","a_rebar","a_total","a_unitm","k_cost_unitm","k_est_unitm",
        "u_exc","u_bed","u_stone","u_nform","u_blnd","u_conc","u_form","u_back","u_spoil","u_wform","u_wconc","u_drain","u_backstone","u_filter","u_vf","u_vr","u_bvt","u_bvb","u_hf","u_hr","u_bht","u_bhb","u_rebar"].forEach(id=>{ if($(id)) $(id).textContent="0"; });
       return;
     }
@@ -1689,8 +2086,6 @@ section.card:nth-of-type(2) .btns button{
     const Vexc = Aexc * L;
     const Abed = W4 * L;
 
-    if($("E_view")) $("E_view").value = e.toFixed(3);
-    if($("N_view")) $("N_view").value = n.toFixed(2);
 
     // 地業・均し
     const Vstone = W4 * H4 * L;
@@ -1800,7 +2195,7 @@ section.card:nth-of-type(2) .btns button{
     $("k_exc").textContent  = fmt(Vexc, 3);
     $("k_conc").textContent = fmt(Vconc, 3);
     $("k_rebar").textContent= fmtKg(KgTotal);
-    $("k_unitm").textContent= yen(Aunitm);
+    $("k_cost_unitm").textContent=yen(Aunitm);
 
     // table
     $("r_exc").textContent   = fmt4(Vexc);
@@ -1872,6 +2267,8 @@ section.card:nth-of-type(2) .btns button{
   function applyPriceValues(data){
     priceIds.forEach(id=>{ const el=$(id); if(el && data && data[id] !== undefined) el.value = data[id]; });
     calc();
+    // 単価呼出し直後に1回だけカンマ表示をそろえる
+    if(window.__lwallFormatMoneyInputs) window.__lwallFormatMoneyInputs();
   }
 
   function defaultPriceValues(){
@@ -2167,7 +2564,7 @@ section.card:nth-of-type(2) .btns button{
   refreshEstimateList();
 
   // 計算・単価マスター
-  $("calcBtn").addEventListener("click", calc);
+  if($("calcBtn")) $("calcBtn").addEventListener("click", calc);
   $("savePriceBtn").addEventListener("click", () => { savePrices(); alert("単価を保存しました"); });
   $("loadPriceBtn").addEventListener("click", loadPrices);
   const deletePriceBtn = $("deletePriceBtn");
@@ -2179,15 +2576,10 @@ section.card:nth-of-type(2) .btns button{
     if(item && $("pricePresetName")) $("pricePresetName").value = item.name || "";
   });
 
-  // リセット（結果は0表示にする＝消えない）
-  $("resetBtn").addEventListener("click", () => {
-    ["H1","H2","H3","H4","H5","H6","E","N","W1","W2","W3","W4"].forEach(id => $(id).value="");
-    $("L").value=10;
-
-    ["d_vf","d_vr","d_bvt","d_bvb","d_hf","d_hr","d_bht","d_bhb"].forEach(id => $(id).value=13);
-    ["p_vf","p_vr","p_bvt","p_bvb","p_hf","p_hr","p_bht","p_bhb"].forEach(id => $(id).value=200);
-
-    calc();
+  // 新しい入力を開始：管理者が登録した初期値（未登録時は標準初期値）へ戻す
+  if($("resetBtn")) $("resetBtn").addEventListener("click", () => {
+    if(!confirm("現在の入力内容を初期値に戻します。\n保存していない内容は失われます。よろしいですか？")) return;
+    if(typeof window.LWallInitialDefaultsApply === "function") window.LWallInitialDefaultsApply(true);
   });
 
   // リアルタイム再計算（軽いデバウンス）
@@ -2825,7 +3217,8 @@ section.card:nth-of-type(2) .btns button{
     return values;
   }
   function applyValues(values){
-    values = Object.assign({}, values || {});
+    values = Object.assign({
+  if(typeof window.MSLWallCommaDisplayChange==="function")window.MSLWallCommaDisplayChange();}, values || {});
     if(values.useWaterstop === undefined && (values.useWaterstopForm !== undefined || values.useWaterstopConcrete !== undefined)){
       values.useWaterstop = values.useWaterstopConcrete !== false && values.useWaterstopForm !== false;
     }
@@ -3159,7 +3552,7 @@ section.card:nth-of-type(2) .btns button{
   function $(id){return document.getElementById(id)}
   function apply(prices){
     if(typeof window.applyCommonPriceFields === 'function') window.applyCommonPriceFields(prices||{});
-    else if(window.MSPriceMaster) MSPriceMaster.applyFields(prices||{});
+    else if(window.MSPriceMaster) MSPriceMaster.applyFields(prices||{}); if(typeof window.MSLWallCommaDisplayChange==="function")window.MSLWallCommaDisplayChange();
     if(typeof calc==='function') calc();
   }
   function selectedLocalId(){ return (window.lwLocalPriceInfo && window.lwLocalPriceInfo.priceMasterId) || ''; }
@@ -3217,48 +3610,6 @@ section.card:nth-of-type(2) .btns button{
   window.addEventListener('ms-price-master-changed',function(){ renderSelect(); });
 })(window, document);
 </script>
-<script id="lw-active-price-autoload">
-(function(window, document){
-  'use strict';
-  function applyActive(){
-    if(!window.MSPriceMaster) return;
-    try{
-      MSPriceMaster.ensureMasters();
-      var active=MSPriceMaster.getActive();
-      if((!active || !active.prices) && localStorage.getItem('msSekisanActivePriceMasterName_v1')){
-        var nm=localStorage.getItem('msSekisanActivePriceMasterName_v1');
-        active=MSPriceMaster.list().find(function(x){return x.name===nm;}) || active;
-      }
-      var prices=(active&&active.prices)||{};
-      if(!Object.keys(prices).length){ try{prices=JSON.parse(localStorage.getItem('msSekisanActivePriceMasterSnapshot_v1')||'{}');}catch(e){prices={};} }
-      if(!active || !prices) return;
-      if(typeof window.lwSetLocalPrice === 'function') window.lwSetLocalPrice({id:active.id,name:active.name,prices:prices});
-      if(typeof window.applyCommonPriceFields === 'function') window.applyCommonPriceFields(prices); else MSPriceMaster.applyFields(prices);
-      var nameEl=document.getElementById('pricePresetName');
-      if(nameEl) nameEl.value=active.name||'標準';
-      var sel=document.getElementById('lwCommonPriceList');
-      if(sel) sel.value=active.id;
-      var note=document.getElementById('lwCommonPriceNote');
-      if(note) note.textContent='メイン画面の初期単価：'+(active.name||'標準')+'（この積算の初期値として読込済み）';
-      if(typeof window.calc==='function') window.calc();
-    }catch(e){ console.warn('使用中単価の自動読込エラー', e); }
-  }
-  function shouldAutoApply(){
-    var params=new URLSearchParams(location.search);
-    if(params.get('loadEstimate')==='1') return false;
-    if(localStorage.getItem('ms_open_estimate_id')) return false;
-    return true;
-  }
-  window.addEventListener('load', function(){
-    if(!shouldAutoApply()) return;
-    setTimeout(applyActive, 0);
-    setTimeout(applyActive, 150);
-    setTimeout(applyActive, 500);
-  });
-  window.addEventListener('ms-price-master-changed', function(){ /* 各アプリの一時単価は上書きしない */ });
-})(window, document);
-</script>
-
 <script id="lwall-estimate-profit-034">
 (function(){
   const $=id=>document.getElementById(id);
@@ -3282,7 +3633,7 @@ section.card:nth-of-type(2) .btns button{
     const total=numberText('a_total'), L=Number($('L')?.value)||0, et=estimate(total), eu=L>0?et/L:0;
     if($('ea_total'))$('ea_total').textContent=yen(et); if($('eu_total'))$('eu_total').textContent='';
     if($('ea_unitm'))$('ea_unitm').textContent=yen(eu)+' 円/m'; if($('eu_unitm'))$('eu_unitm').textContent='';
-    if($('k_unitm'))$('k_unitm').textContent=yen(eu);
+    if($('k_est_unitm'))$('k_est_unitm').textContent=yen(eu);
     if($('pr_est_total'))$('pr_est_total').textContent=yen(et); if($('pr_est_unitm'))$('pr_est_unitm').textContent=yen(eu)+' 円/m';
   }
   const original=window.calc;
@@ -3328,8 +3679,12 @@ section.card:nth-of-type(2) .btns button{
     if(typeof window.applyCommonPriceFields === "function"){
       window.applyCommonPriceFields(prices || {});
     }else if(window.MSPriceMaster){
-      MSPriceMaster.applyFields(prices || {});
+      MSPriceMaster.applyFields(prices || {}); if(typeof window.MSLWallCommaDisplayChange==="function")window.MSLWallCommaDisplayChange();
     }
+    if(typeof window.MSLWallCommaDisplayChange === "function"){
+      window.MSLWallCommaDisplayChange();
+    }
+    if(typeof window.MSLWallCommaDisplayChange==="function")window.MSLWallCommaDisplayChange();
     if(typeof window.calc === "function") window.calc();
   }
 
@@ -3454,9 +3809,7 @@ section.card:nth-of-type(2) .btns button{
   }
 
   window.addEventListener("load", function(){
-    [0, 80, 250, 600, 1200, 2000].forEach(function(delay){
-      setTimeout(function(){ enforce(); }, delay);
-    });
+    enforce();
 
     var loadBtn = byId("loadEstimateBtn");
     if(loadBtn){
@@ -3464,13 +3817,10 @@ section.card:nth-of-type(2) .btns button{
         mode.fromSaved = true;
         var sel = byId("savedEstimateList");
         mode.estimateId = sel ? sel.value : "";
-
-        [0, 100, 300, 700].forEach(function(delay){
-          setTimeout(function(){ applySavedMode(); }, delay);
-        });
+        applySavedMode();
       }, true);
     }
-  });
+  }, {once:true});
 
   window.addEventListener("ms-price-master-changed", function(){
     if(!mode.fromSaved && !window.lwLocalPriceInfo){
@@ -3503,5 +3853,694 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
 </script>
 
 
+
+
+<style id="lwallInitialDefaultsStyle">
+#lwallDefaultsModal{display:none;position:fixed;inset:0;z-index:99995;background:rgba(8,24,48,.58);align-items:center;justify-content:center;padding:18px}
+#lwallDefaultsModal.show{display:flex}
+.lwall-defaults-box{width:min(620px,100%);background:#fff;border:1px solid #cfe3f7;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.30);overflow:hidden}
+.lwall-defaults-head{padding:17px 20px;background:linear-gradient(135deg,#063f91,#075fbd);color:#fff}
+.lwall-defaults-title{font-size:21px;font-weight:950}.lwall-defaults-sub{font-size:12px;line-height:1.6;margin-top:4px;color:#eaf4ff}
+.lwall-defaults-body{padding:18px 20px;color:#23364d;font-size:14px;line-height:1.7}
+.lwall-defaults-status{padding:10px 12px;border:1px solid #cfe3f7;border-radius:10px;background:#f7fbff;color:#0647a5;font-weight:900;margin-bottom:13px}
+.lwall-defaults-actions{display:grid;gap:9px}.lwall-defaults-actions button{height:40px}
+.lwall-defaults-save{background:#0647a5;color:#fff}.lwall-defaults-close{background:#f1f5f9;color:#334155}
+</style>
+<div id="lwallDefaultsModal" role="dialog" aria-modal="true" aria-labelledby="lwallDefaultsTitle">
+  <div class="lwall-defaults-box">
+    <div class="lwall-defaults-head">
+      <div class="lwall-defaults-title" id="lwallDefaultsTitle">L型擁壁　初期値管理</div>
+      <div class="lwall-defaults-sub">管理用の隠し設定です。単価・工事名・積算名称は初期値に含まれません。</div>
+    </div>
+    <div class="lwall-defaults-body">
+      <div class="lwall-defaults-status" id="lwallDefaultsStatus">現在の画面に入力されている寸法・延長・鉄筋・付帯工の設定を、今後の初期値として登録します。</div>
+      <div class="lwall-defaults-actions">
+        <button class="lwall-defaults-save" id="lwallDefaultsSave" type="button">現在の画面を初期値として登録</button>
+        <button class="lwall-defaults-close" id="lwallDefaultsClose" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script id="lwallInitialDefaultsScript">
+(function(){
+  "use strict";
+  var STORAGE_KEY="Lgatasekisan_initial_defaults_v1";
+  var IDS=[
+    "H1","H2","H3","H4","H5","H6","E","N","W1","W2","W3","W4","L",
+    "d_vf","d_vr","d_bvt","d_bvb","d_hf","d_hr","d_bht","d_bhb",
+    "p_vf","p_vr","p_bvt","p_bvb","p_hf","p_hr","p_bht","p_bhb",
+    "backfillNone","backfillStone","backfillSheet","useWaterstop","toggleBackless"
+  ];
+  function byId(id){return document.getElementById(id)}
+  function collect(){
+    var out={};
+    IDS.forEach(function(id){var el=byId(id);if(!el)return;out[id]=(el.type==="checkbox"||el.type==="radio")?!!el.checked:el.value});
+    return out;
+  }
+  var BUILTIN=collect();
+  function stored(){try{var v=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");return v&&typeof v==="object"?v:null}catch(e){return null}}
+  function apply(values,clearNames){
+    values=values||BUILTIN;
+    IDS.forEach(function(id){
+      var el=byId(id);if(!el||values[id]===undefined)return;
+      if(el.type==="checkbox"||el.type==="radio"){
+        el.checked=!!values[id];
+        el.dispatchEvent(new Event("change",{bubbles:true}));
+      }else{
+        el.value=values[id];
+        el.dispatchEvent(new Event("input",{bubbles:true}));
+        el.dispatchEvent(new Event("change",{bubbles:true}));
+      }
+    });
+    if(clearNames){var n=byId("estimateName");if(n)n.value=""}
+    if(typeof window.calc==="function")window.calc();
+  }
+  window.LWallInitialDefaultsApply=function(clearNames){apply(stored()||BUILTIN,!!clearNames)};
+  function updateStatus(){
+    var el=byId("lwallDefaultsStatus");if(!el)return;
+    el.textContent=stored()
+      ? "現在は、管理者が登録した初期値を使用しています。画面の入力内容を変更して再登録すると、その内容に上書きされます。"
+      : "現在は、アプリ標準の初期値を使用しています。画面の入力内容を登録すると、次回からその内容が初期値になります。";
+  }
+  function openModal(){var m=byId("lwallDefaultsModal");if(m){updateStatus();m.classList.add("show")}}
+  function closeModal(){var m=byId("lwallDefaultsModal");if(m)m.classList.remove("show")}
+  document.addEventListener("DOMContentLoaded",function(){
+    var trigger=byId("lwallAdminTrigger"),clicks=0,timer=0;
+    if(trigger)trigger.addEventListener("click",function(){
+      clicks++;clearTimeout(timer);timer=setTimeout(function(){clicks=0},3000);
+      if(clicks>=5){clicks=0;openModal()}
+    });
+    byId("lwallDefaultsSave")?.addEventListener("click",function(){
+      if(!confirm("現在の画面に入力されている寸法・延長・鉄筋・付帯工の設定を、今後の初期値として登録します。\nすでに登録されている初期値は上書きされます。よろしいですか？"))return;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(collect()));
+      updateStatus();
+      alert("現在の画面を初期値として登録しました。\n次回の新規入力と『新しい入力を開始』から、この初期値が使用されます。");
+      closeModal();
+    });
+    byId("lwallDefaultsClose")?.addEventListener("click",closeModal);
+    byId("lwallDefaultsModal")?.addEventListener("click",function(e){if(e.target===this)closeModal()});
+  });
+  // 新規積算として開いた場合だけ登録初期値を反映。保存データ呼出時は保存内容を優先する。
+  window.addEventListener("load",function(){
+    var fromSaved=!!(window.__lwallOpenMode&&window.__lwallOpenMode.fromSaved);
+    var params=new URLSearchParams(location.search);
+    if(params.get("loadEstimate")==="1")fromSaved=true;
+    if(!fromSaved&&stored())setTimeout(function(){apply(stored(),false)},120);
+  });
+})();
+</script>
+
+
+<script id="lwall-diagram-tabs-v2">
+(function(){
+  function setPane(id){
+    document.querySelectorAll('.diagram-pane').forEach(function(p){p.classList.toggle('active',p.id===id);});
+    document.querySelectorAll('.diagram-tab').forEach(function(b){
+      var active=b.getAttribute('data-pane')===id;
+      b.classList.toggle('active',active);
+      b.setAttribute('aria-selected',active?'true':'false');
+    });
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.diagram-tab');
+    if(!b)return;
+    setPane(b.getAttribute('data-pane'));
+  });
+  document.addEventListener('DOMContentLoaded',function(){setPane('diagramSectionPane');});
+})();
+</script>
+
+<script id="lwall-fold-status-v3">
+(function(){
+  function init(){
+    var input=document.getElementById('rebarInputDetails');
+    var inputState=document.getElementById('rebarInputState');
+    function updateInput(){
+      if(!input||!inputState)return;
+      inputState.textContent=input.open?'現在は開いています｜クリックして閉じる':'現在は閉じています｜クリックして開く';
+    }
+    if(input){input.addEventListener('toggle',updateInput);updateInput();}
+
+    var toggle=document.getElementById('rebarResultToggle');
+    var state=document.getElementById('rebarResultState');
+    var tbody=toggle&&toggle.closest('tbody');
+    function setResult(open){
+      if(!toggle||!tbody)return;
+      tbody.classList.toggle('rebar-result-open',open);
+      toggle.classList.toggle('is-open',open);
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+      if(state)state.textContent=open?'現在は開いています｜クリックして閉じる':'現在は閉じています｜クリックして開く';
+    }
+    if(toggle){
+      toggle.addEventListener('click',function(){setResult(toggle.getAttribute('aria-expanded')!=='true');});
+      toggle.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle.click();}});
+      setResult(false);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+
+<script id="lwall-number-format-v140">
+(function(){
+  "use strict";
+
+  var dimIds=["W1","W2","W3","W4","H1","H2","H3","H4","H5","H6","E","N","L"];
+  var moneyIds=["Pexc","Pbed","Pstone","Pnform","Pblnd","Pconc","Pform",
+                "Pback","Pspoil","Prebar","Pdrain","Pfilter"];
+
+  function byId(id){return document.getElementById(id);}
+  function raw(v){
+    return String(v==null?"":v).replace(/[,，\s]/g,"").replace(/．/g,".").trim();
+  }
+
+  function formatDim(el){
+    if(!el || el.value==="") return;
+    var n=Number(raw(el.value));
+    if(Number.isFinite(n)) el.value=n.toFixed(2);
+  }
+
+  function formatMoney(el){
+    if(!el || el.value==="") return;
+    var n=Number(raw(el.value));
+    if(Number.isFinite(n)) el.value=Math.round(n).toLocaleString("ja-JP");
+  }
+
+  function formatAllMoney(){
+    moneyIds.forEach(function(id){formatMoney(byId(id));});
+  }
+
+  function setupMoney(el){
+    if(!el || el.dataset.lwallCommaReady==="1") return;
+    el.dataset.lwallCommaReady="1";
+    if(el.type==="number"){try{el.type="text";}catch(e){}}
+    el.setAttribute("inputmode","numeric");
+    el.setAttribute("autocomplete","off");
+
+    // 入力中もカンマを維持
+    el.addEventListener("input",function(){
+      var s=raw(el.value);
+      if(s===""){el.value="";return;}
+      var n=Number(s);
+      if(!Number.isFinite(n)) return;
+      el.value=Math.round(n).toLocaleString("ja-JP");
+      try{el.setSelectionRange(el.value.length,el.value.length);}catch(e){}
+    });
+
+    el.addEventListener("change",function(){formatMoney(el);});
+    el.addEventListener("blur",function(){formatMoney(el);});
+  }
+
+  function setupDim(el){
+    if(!el || el.dataset.lwallDimReady==="1") return;
+    el.dataset.lwallDimReady="1";
+    el.addEventListener("blur",function(){formatDim(el);});
+  }
+
+  function init(){
+    moneyIds.forEach(function(id){setupMoney(byId(id));});
+    dimIds.forEach(function(id){setupDim(byId(id));});
+    formatAllMoney();
+  }
+
+  window.__lwallFormatMoneyInputs=formatAllMoney;
+  window.MSLWallCommaDisplayChange=formatAllMoney;
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",init,{once:true});
+  }else{
+    init();
+  }
+
+  // 他の初期化処理が値を入れた後に、load時に1回だけカンマ確定
+  window.addEventListener("load",formatAllMoney,{once:true});
+  window.addEventListener("ms-price-master-changed",formatAllMoney);
+})();
+</script>
+
+
+<script id="lwall-keyboard-navigation-v140">
+(function(){
+  "use strict";
+  var selectEditMode = null;
+  var toggleEditMode = false;
+
+  function visibleEnabled(el){
+    if(!el || el.disabled || el.readOnly) return false;
+    if(el.type === "hidden") return false;
+    var st = window.getComputedStyle(el);
+    if(st.display === "none" || st.visibility === "hidden") return false;
+    if(el.offsetParent === null && st.position !== "fixed") return false;
+    return true;
+  }
+
+  function getEntryFields(){
+    var root = document.querySelector("section.card:nth-of-type(2)") || document;
+    var fields = Array.from(root.querySelectorAll("input, select, textarea"))
+      .filter(visibleEnabled)
+      .filter(function(el){
+        return !el.matches('input[type="checkbox"],input[type="radio"],input[type="button"],input[type="submit"],input[type="reset"],input[type="file"]');
+      });
+
+    var h1Index = fields.findIndex(function(el){ return el.id === "H1"; });
+    if(h1Index > 0){
+      var h1 = fields.splice(h1Index, 1)[0];
+      fields.unshift(h1);
+    }
+    return fields;
+  }
+
+  function selectAllIfTextLike(el){
+    if(!el) return;
+    if(el.tagName === "INPUT" && !["checkbox","radio","button","submit","reset"].includes(el.type)){
+      requestAnimationFrame(function(){ try{ el.select(); }catch(e){} });
+    }
+  }
+
+  function moveFocus(current, delta){
+    var fields = getEntryFields();
+    var idx = fields.indexOf(current);
+    if(idx < 0) return;
+    var next = Math.max(0, Math.min(fields.length - 1, idx + delta));
+    if(selectEditMode){
+      selectEditMode.classList.remove("rebar-select-editing");
+      selectEditMode = null;
+    }
+    if(fields[next] && fields[next] !== current){
+      var target = fields[next];
+      var rebarDetails = target.closest && target.closest(".rebar-collapse");
+      if(rebarDetails && !rebarDetails.open){
+        rebarDetails.open = true;
+        // details展開後に確実にフォーカス
+        requestAnimationFrame(function(){
+          target.focus();
+          selectAllIfTextLike(target);
+        });
+      }else{
+        target.focus();
+        selectAllIfTextLike(target);
+      }
+    }
+  }
+
+  function isRebarSelect(el){
+    return !!(el && el.tagName === "SELECT" && el.closest(".rebar-collapse"));
+  }
+
+  function setSelectMode(el, on){
+    if(!isRebarSelect(el)) return;
+    if(on){
+      if(selectEditMode && selectEditMode !== el){
+        selectEditMode.classList.remove("rebar-select-editing");
+      }
+      selectEditMode = el;
+      el.classList.add("rebar-select-editing");
+    }else{
+      el.classList.remove("rebar-select-editing");
+      if(selectEditMode === el) selectEditMode = null;
+    }
+  }
+
+  function stepSelect(el, delta){
+    var opts = Array.from(el.options).filter(function(o){ return !o.disabled; });
+    if(!opts.length) return;
+    var idx = opts.findIndex(function(o){ return o.value === el.value; });
+    if(idx < 0) idx = 0;
+    idx = Math.max(0, Math.min(opts.length - 1, idx + delta));
+    el.value = opts[idx].value;
+    el.dispatchEvent(new Event("input",{bubbles:true}));
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+  }
+
+  function setToggleMode(on){
+    var toggle = document.getElementById("toggleBackless");
+    var label = toggle && toggle.closest(".toggleLabel");
+    toggleEditMode = !!on;
+    if(label) label.classList.toggle("rebar-toggle-editing", toggleEditMode);
+  }
+
+  function focusFirstRebarField(){
+    var first = document.getElementById("d_vf");
+    if(first && visibleEnabled(first)){
+      first.focus();
+    }
+  }
+
+  document.addEventListener("focusin", function(e){
+    var el = e.target;
+    if(selectEditMode && selectEditMode !== el){
+      setSelectMode(selectEditMode, false);
+    }
+    if(toggleEditMode && (!el || el.id !== "toggleBackless")){
+      setToggleMode(false);
+    }
+    if(el && (el.matches("input") || el.matches("textarea")) && visibleEnabled(el) && el.type !== "checkbox"){
+      selectAllIfTextLike(el);
+    }
+  }, true);
+
+  document.addEventListener("keydown", function(e){
+    var el = e.target;
+    if(!el || !el.matches("input, select, textarea") || !visibleEnabled(el)) return;
+
+    // 裏側なし（シングル）：Spaceで編集モード、↑↓でOFF/ON、Enterで次の鉄筋へ
+    if(el.id === "toggleBackless"){
+      if(e.key === " " || e.code === "Space"){
+        e.preventDefault();
+        setToggleMode(!toggleEditMode);
+        return;
+      }
+      if(toggleEditMode){
+        if(e.key === "ArrowDown" || e.key === "ArrowUp"){
+          e.preventDefault();
+          el.checked = (e.key === "ArrowDown");
+          el.dispatchEvent(new Event("input",{bubbles:true}));
+          el.dispatchEvent(new Event("change",{bubbles:true}));
+          return;
+        }
+        if(e.key === "Enter"){
+          e.preventDefault();
+          setToggleMode(false);
+          focusFirstRebarField();
+          return;
+        }
+        if(e.key === "Escape"){
+          e.preventDefault();
+          setToggleMode(false);
+          return;
+        }
+      }else{
+        if(e.key === "ArrowDown" || e.key === "Enter"){
+          e.preventDefault();
+          focusFirstRebarField();
+          return;
+        }
+        if(e.key === "ArrowUp"){
+          e.preventDefault();
+          var nInput = document.getElementById("N");
+          if(nInput){ nInput.focus(); selectAllIfTextLike(nInput); }
+          return;
+        }
+      }
+      return;
+    }
+
+    // 鉄筋入力の最後（基礎横下筋ピッチ）を過ぎたら自動で折りたたみ、延長Lへ
+    if(el.id === "p_bhb" && (e.key === "Enter" || e.key === "ArrowDown")){
+      var rebarEnd = document.getElementById("rebarInputDetails") || document.querySelector(".rebar-collapse");
+      var lengthInput = document.getElementById("L");
+      if(rebarEnd && lengthInput){
+        e.preventDefault();
+        rebarEnd.open = false;
+        requestAnimationFrame(function(){
+          lengthInput.focus();
+          selectAllIfTextLike(lengthInput);
+        });
+        return;
+      }
+    }
+
+    // 延長Lから上へ戻るときは鉄筋入力を再展開し、最後のピッチへ戻る
+    if(el.id === "L" && (
+        e.key === "ArrowUp" ||
+        (e.key === "Tab" && e.shiftKey)
+      )){
+      var rebarBack = document.getElementById("rebarInputDetails") || document.querySelector(".rebar-collapse");
+      var lastPitch = document.getElementById("p_bhb");
+      if(rebarBack && lastPitch){
+        e.preventDefault();
+        rebarBack.open = true;
+        requestAnimationFrame(function(){
+          lastPitch.focus();
+          selectAllIfTextLike(lastPitch);
+        });
+        return;
+      }
+    }
+
+    // 上側の法面勾配 n の次は、鉄筋入力を展開して「裏側なし（シングル）」へ
+    if(el.id === "N" && (e.key === "Enter" || e.key === "ArrowDown")){
+      var rebar = document.getElementById("rebarInputDetails") || document.querySelector(".rebar-collapse");
+      var toggle = document.getElementById("toggleBackless");
+      if(rebar && toggle){
+        e.preventDefault();
+        if(!rebar.open) rebar.open = true;
+        requestAnimationFrame(function(){ toggle.focus(); });
+        return;
+      }
+    }
+
+    if(isRebarSelect(el)){
+      if(e.key === " " || e.code === "Space"){
+        e.preventDefault();
+        setSelectMode(el, selectEditMode !== el);
+        return;
+      }
+
+      if(selectEditMode === el){
+        if(e.key === "ArrowDown"){
+          e.preventDefault();
+          stepSelect(el, 1);
+          return;
+        }
+        if(e.key === "ArrowUp"){
+          e.preventDefault();
+          stepSelect(el, -1);
+          return;
+        }
+        if(e.key === "Enter"){
+          e.preventDefault();
+          setSelectMode(el, false);
+          moveFocus(el, 1);
+          return;
+        }
+        if(e.key === "Escape"){
+          e.preventDefault();
+          setSelectMode(el, false);
+          return;
+        }
+      }
+
+      if(e.key === "ArrowDown" || e.key === "Enter"){
+        e.preventDefault();
+        moveFocus(el, 1);
+        return;
+      }
+      if(e.key === "ArrowUp"){
+        e.preventDefault();
+        moveFocus(el, -1);
+        return;
+      }
+      return;
+    }
+
+    if(e.key === "Enter"){
+      e.preventDefault();
+      moveFocus(el, 1);
+      return;
+    }
+    if(e.key === "ArrowDown"){
+      e.preventDefault();
+      moveFocus(el, 1);
+      return;
+    }
+    if(e.key === "ArrowUp"){
+      e.preventDefault();
+      moveFocus(el, -1);
+      return;
+    }
+  }, true);
+
+  function focusH1(){
+    var h1 = document.getElementById("H1");
+    if(h1 && visibleEnabled(h1)){
+      h1.focus();
+      selectAllIfTextLike(h1);
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", function(){
+      setTimeout(focusH1, 250);
+    });
+  }else{
+    setTimeout(focusH1, 250);
+  }
+})();
+</script>
+
+
+<script id="lwall-accessory-keyboard-v140-standard">
+(function(){
+  "use strict";
+  var editChoice = null;
+
+  function acc(){ return document.querySelector(".accessory-collapse"); }
+  function water(){ return document.getElementById("useWaterstop"); }
+  function selectedBackfill(){
+    return document.querySelector('input[name="backfillType"]:checked') ||
+           document.querySelector('input[name="backfillType"]');
+  }
+  function radios(){
+    return Array.from(document.querySelectorAll('input[name="backfillType"]'));
+  }
+  function mark(el,on){
+    document.querySelectorAll(".accessory-collapse .backfill-choice label").forEach(function(l){
+      l.classList.remove("accessory-select-editing");
+    });
+    editChoice = on ? el : null;
+    if(editChoice && editChoice.closest("label")){
+      editChoice.closest("label").classList.add("accessory-select-editing");
+    }
+  }
+  function editing(el){
+    if(editChoice === el) return true;
+    return !!(el && el.type==="radio" && editChoice && editChoice.type==="radio" && el.name===editChoice.name);
+  }
+  function focus(el){
+    if(el) requestAnimationFrame(function(){ el.focus(); });
+  }
+  function openFirst(){
+    var d=acc(); if(!d) return;
+    d.open=true; focus(water() || selectedBackfill());
+  }
+  function openLast(){
+    var d=acc(); if(!d) return;
+    d.open=true; focus(selectedBackfill() || water());
+  }
+  function closeToPrice(){
+    var d=acc(), p=document.getElementById("Pexc");
+    mark(null,false);
+    if(d) d.open=false;
+    focus(p);
+  }
+  function cycleRadio(delta){
+    var rs=radios(), cur=selectedBackfill();
+    if(!rs.length) return;
+    var i=rs.indexOf(cur); if(i<0)i=0;
+    i=Math.max(0,Math.min(rs.length-1,i+delta));
+    rs[i].checked=true;
+    rs[i].dispatchEvent(new Event("input",{bubbles:true}));
+    rs[i].dispatchEvent(new Event("change",{bubbles:true}));
+    rs[i].focus();
+    mark(rs[i],true);
+  }
+
+  /* captureで既存キーボード処理より先に付帯工操作を処理 */
+  document.addEventListener("keydown",function(e){
+    var el=e.target;
+    var d=acc();
+    if(!d || !el) return;
+
+    /* 上側の n（法面勾配）の次は鉄筋入力を自動展開し「裏側なし（シングル）」へ */
+    if(el.id==="N" && (e.key==="Enter" || e.key==="ArrowDown")){
+      e.preventDefault(); e.stopImmediatePropagation();
+      var rebar=document.getElementById("rebarInputDetails") || document.querySelector(".rebar-collapse");
+      var toggle=document.getElementById("toggleBackless");
+      if(rebar) rebar.open=true;
+      if(toggle) requestAnimationFrame(function(){ toggle.focus(); });
+      return;
+    }
+
+    /* 利益率の次は付帯工を自動展開し、最初の項目へ */
+    if(el.id==="ProfitRate" && (e.key==="Enter" || e.key==="ArrowDown")){
+      e.preventDefault(); e.stopImmediatePropagation();
+      openFirst();
+      return;
+    }
+
+    /* 単価の最初から上へ戻ると付帯工を再展開 */
+    if(el.id==="Pexc" && (e.key==="ArrowUp" || (e.key==="Tab" && e.shiftKey))){
+      e.preventDefault(); e.stopImmediatePropagation();
+      openLast();
+      return;
+    }
+
+    if(!el.closest || !el.closest(".accessory-collapse")) return;
+
+    /* 止水コンクリート */
+    if(el.id==="useWaterstop"){
+      if(e.key===" " || e.code==="Space"){
+        e.preventDefault(); e.stopImmediatePropagation();
+        mark(el,!editing(el));
+        return;
+      }
+      if(editing(el)){
+        if(e.key==="ArrowUp" || e.key==="ArrowDown"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          el.checked=!el.checked;
+          el.dispatchEvent(new Event("input",{bubbles:true}));
+          el.dispatchEvent(new Event("change",{bubbles:true}));
+          return;
+        }
+        if(e.key==="Enter"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          mark(null,false); focus(selectedBackfill()); return;
+        }
+        if(e.key==="Escape"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          mark(null,false); return;
+        }
+      }else{
+        if(e.key==="Enter" || e.key==="ArrowDown"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          focus(selectedBackfill()); return;
+        }
+        if(e.key==="ArrowUp"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          var profit=document.getElementById("ProfitRate"); focus(profit); return;
+        }
+      }
+      return;
+    }
+
+    /* 裏込め材 */
+    if(el.name==="backfillType"){
+      if(e.key===" " || e.code==="Space"){
+        e.preventDefault(); e.stopImmediatePropagation();
+        mark(el,!editing(el));
+        return;
+      }
+      if(editing(el)){
+        if(e.key==="ArrowDown"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          cycleRadio(1); return;
+        }
+        if(e.key==="ArrowUp"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          cycleRadio(-1); return;
+        }
+        if(e.key==="Enter"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          closeToPrice(); return;
+        }
+        if(e.key==="Escape"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          mark(null,false); return;
+        }
+      }else{
+        if(e.key==="Enter" || e.key==="ArrowDown"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          closeToPrice(); return;
+        }
+        if(e.key==="ArrowUp"){
+          e.preventDefault(); e.stopImmediatePropagation();
+          focus(water()); return;
+        }
+      }
+      return;
+    }
+  },true);
+
+  document.addEventListener("focusin",function(e){
+    if(editChoice && e.target!==editChoice &&
+       !(e.target && e.target.type==="radio" && editChoice.type==="radio" && e.target.name===editChoice.name)){
+      mark(null,false);
+    }
+  },true);
+})();
+</script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>見切コンクリート積算アプリ 006 保存単価表示復元完全版</title>
+<title>見切コンクリート積算アプリ Ver.1.4.0</title>
 <style>
 :root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
@@ -100,9 +100,188 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 
 
 
+
+<style id="mikiri-v130-style">
+.ms-input-card-head{
+  display:flex!important;align-items:center!important;
+  justify-content:space-between!important;gap:10px!important;
+}
+.ms-input-card-head .ms-head-title{display:flex;align-items:center;gap:8px}
+.ms-new-input-btn{
+  width:auto!important;min-width:150px!important;padding:7px 12px!important;
+  background:#eef6ff!important;color:#0647a5!important;
+  border:1px solid #bad8f4!important;border-radius:9px!important;
+  white-space:nowrap!important;font-size:12px!important;font-weight:900!important;
+}
+.ms-new-input-btn:hover{background:#e2f0ff!important}
+
+.ms-collapse{
+  margin:10px 0 0;border:2px solid #8fc0ed!important;border-radius:12px!important;
+  background:#fbfdff!important;overflow:hidden!important;
+  box-shadow:0 4px 12px rgba(0,112,192,.09)!important;
+}
+.ms-collapse>summary{
+  list-style:none!important;cursor:pointer!important;display:block!important;
+  padding:11px 12px!important;margin:0!important;color:#0647a5!important;
+  font-size:13px!important;font-weight:950!important;line-height:1.35!important;
+  background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;user-select:none!important;
+}
+.ms-collapse>summary::-webkit-details-marker{display:none!important}
+.ms-collapse>summary:before{content:"▶ ";font-weight:950!important}
+.ms-collapse[open]>summary:before{content:"▼ "}
+.ms-collapse[open]>summary{border-bottom:1px solid #cfe3f7!important}
+.ms-collapse-body{padding:10px 12px 12px}
+.ms-collapse .result-memo-box{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
+.ms-collapse .result-memo-title{display:none!important}
+
+.kpi-unit-price-v130{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;
+}
+.kpi-unit-price-v130 .box{
+  min-height:64px!important;display:flex!important;flex-direction:column!important;
+  justify-content:center!important;padding:8px 14px!important;
+  border:2px solid #bad8f4!important;border-radius:14px!important;
+  background:linear-gradient(180deg,#fbfdff,#eef6ff)!important;
+}
+.kpi-unit-price-v130 .t{font-size:13px!important;color:#475569!important}
+.kpi-unit-price-v130 .v{
+  margin-top:2px!important;color:#0647a5!important;font-size:22px!important;
+  font-weight:950!important;line-height:1.15!important;
+}
+.kpi-unit-price-v130 .u{font-size:12px!important;color:#60758d!important;margin-left:6px!important}
+
+#mikiriDefaultsModal{
+  display:none;position:fixed;inset:0;z-index:99995;background:rgba(8,24,48,.58);
+  align-items:center;justify-content:center;padding:18px
+}
+#mikiriDefaultsModal.show{display:flex}
+.mikiri-defaults-box{
+  width:min(620px,100%);background:#fff;border:1px solid #cfe3f7;border-radius:18px;
+  box-shadow:0 24px 70px rgba(0,0,0,.30);overflow:hidden
+}
+.mikiri-defaults-head{padding:17px 20px;background:linear-gradient(135deg,#063f91,#075fbd);color:#fff}
+.mikiri-defaults-title{font-size:21px;font-weight:950}
+.mikiri-defaults-sub{font-size:12px;line-height:1.6;margin-top:4px;color:#eaf4ff}
+.mikiri-defaults-body{padding:18px 20px;color:#23364d;font-size:14px;line-height:1.7}
+.mikiri-defaults-status{
+  padding:10px 12px;border:1px solid #cfe3f7;border-radius:10px;background:#f7fbff;
+  color:#0647a5;font-weight:900;margin-bottom:13px
+}
+.mikiri-defaults-actions{display:grid;gap:9px}
+.mikiri-defaults-actions button{height:40px;width:100%}
+.mikiri-defaults-save{background:#0647a5;color:#fff}
+.mikiri-defaults-close{background:#f1f5f9;color:#334155}
+
+@media(max-width:700px){
+  .ms-input-card-head{align-items:flex-start!important}
+  .ms-new-input-btn{min-width:132px!important;font-size:11px!important;padding:7px 8px!important}
+  .kpi-unit-price-v130{grid-template-columns:1fr!important}
+}
+@media print{.ms-new-input-btn{display:none!important}}
+</style>
+
+
+<style id="mikiri-v140-standard-style">
+.input-guide-v140{
+  display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:7px 8px;
+  border:1px solid #d5dde7;border-radius:12px;background:#f8fafc;
+  box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(15,23,42,.10);
+}
+.input-guide-v140 .guide-item{
+  flex:1;display:flex;align-items:center;justify-content:center;min-height:30px;
+  padding:5px 8px 5px 14px;border-top:1px solid #eef2f6;border-right:1px solid #d8dee7;
+  border-bottom:3px solid #c7d0dc;border-left:6px solid #c7d0dc;border-radius:8px;
+  background:linear-gradient(180deg,#fff,#f8fafc);color:#334155;
+  font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 2px 4px rgba(15,23,42,.10);
+}
+.input-guide-v140 .guide-dim{border-left-color:#8fc9ef;border-bottom-color:#8fc9ef}
+.input-guide-v140 .guide-price{border-left-color:#8A4653;border-bottom-color:#8A4653}
+.input-guide-v140 .guide-cond{border-left-color:#9fd0aa;border-bottom-color:#9fd0aa}
+
+/* 寸法 */
+#W1,#W2,#H1,#H2,#H3,#e,#cover,#L,#Pv,#Ph{
+  border-left:6px solid #8fc9ef!important;border-bottom:2px solid #8fc9ef!important;
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+}
+/* 条件 */
+#profit{
+  border-left:6px solid #9fd0aa!important;border-bottom:2px solid #9fd0aa!important;
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+}
+/* 単価 */
+#Pexc,#Pwaste,#Pback,#Pbed,#Pstone,#Pconc,#Pform,#Prebar{
+  border-left:6px solid #8A4653!important;border-bottom:2px solid #8A4653!important;
+  background:#fff!important;color:var(--text)!important;font-weight:400!important;
+}
+
+/* 鉄筋入力はVer1.4.0では常時開く */
+#rebarInputDetails.rebar-always-open-v140>summary{
+  cursor:default!important;
+  background:linear-gradient(180deg,#fffefb,#fffaf1)!important;
+  color:#6f5a20!important;
+  border-bottom:1px solid #eadfbe!important;
+}
+#rebarInputDetails.rebar-always-open-v140>summary:before{content:"▼ "!important}
+#rebarInputDetails.rebar-always-open-v140{
+  border-color:#eadfbe!important;
+  background:#fff!important;
+  box-shadow:0 3px 10px rgba(120,90,20,.04)!important;
+}
+@media(max-width:700px){
+  .input-guide-v140{gap:5px;padding:6px}
+  .input-guide-v140 .guide-item{font-size:10px;padding-left:9px}
+}
+@media print{.input-guide-v140{display:none!important}}
+</style>
+
+
+<style id="mikiri-v140-rebar-edit-style">
+/* ===== Ver1.4.0：L型擁壁と同じ鉄筋選択UI ===== */
+#Dv,#Dh{
+  background:#fff!important;
+  color:#1b1f24!important;
+  font-weight:400!important;
+  border:1px solid #dfe4ea!important;
+  border-left:6px solid #8fc9ef!important;
+  border-bottom:2px solid #8fc9ef!important;
+  border-radius:10px!important;
+  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease,color .15s ease;
+}
+#Dv:focus,#Dh:focus{
+  border-color:#8fc0ed!important;
+  border-left-color:#8fc9ef!important;
+  border-bottom-color:#8fc9ef!important;
+  box-shadow:0 0 0 3px rgba(0,112,192,.10)!important;
+}
+/* スペースで編集モードになった時は D13 等の欄だけ変色 */
+#Dv.rebar-editing-v140,#Dh.rebar-editing-v140{
+  background:#fff8f9!important;
+  color:#7A3542!important;
+  border:2px solid #8A4653!important;
+  border-left:6px solid #8A4653!important;
+  border-bottom:2px solid #8A4653!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+  font-weight:700!important;
+}
+/* 縦筋 径・横筋 径のラベルは通常表示のまま */
+#Dv.rebar-editing-v140 ~ *,
+#Dh.rebar-editing-v140 ~ *{color:inherit!important}
+
+/* 無筋は従来どおり項目全体を編集色にする */
+.no-rebar-toggle.rebar-editing-v140{
+  background:#fff8f9!important;
+  border:2px solid #8A4653!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+}
+.no-rebar-toggle.rebar-editing-v140 label{
+  color:#7A3542!important;
+  font-weight:800!important;
+}
+</style>
+
 </head>
 <body>
-<header><div class="wrap"><div><h1>見切コンクリート積算アプリ 006 保存単価表示復元完全版</h1><div class="sub">土工／砕石／コンクリート／型枠／鉄筋（縦筋＋横筋）を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<header><div class="wrap"><div><h1 id="mikiriDefaultsTrigger" title="見切コンクリート積算">見切コンクリート積算アプリ Ver.1.4.0</h1><div class="sub">土工／砕石／コンクリート／型枠／鉄筋（縦筋＋横筋）を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main>
 <div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body">
@@ -142,19 +321,47 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
 </div>
 <div class="control-block price-block"><div class="sectionTitle">単価保存</div><div class="save-line"><label>単価名</label><input id="pricePresetName" placeholder="例：標準"></div><div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div><div class="btns"><button class="ghost" id="savePriceBtn">保存</button><button class="ghost" id="loadPriceBtn">呼出</button><button class="danger" id="deletePriceBtn">削除</button></div></div>
-<div class="control-block operation-block"><div class="sectionTitle">基本操作</div><div class="save-btns" style="grid-template-columns:1fr 1fr"><button class="primary" id="calcBtn" type="button">計算</button><button class="danger" id="resetBtn" type="button">リセット</button></div></div>
+
 </div>
 </div></section>
-<section class="card"><h2><span class="dot"></span>入力</h2><div class="body">
-<div class="sectionTitle">断面寸法（m）</div><div class="row"><div><label>W1（コンクリート幅）</label><input id="W1" data-dim="dim-w1" type="number" step="0.001" value="0.15"></div><div><label>W2（砕石幅）</label><input id="W2" data-dim="dim-w2" type="number" step="0.001" value="0.30"></div></div><div class="row3"><div><label>H1（Co高さ）</label><input id="H1" data-dim="dim-h1" type="number" step="0.001" value="0.50"></div><div><label>H2（砕石厚）</label><input id="H2" data-dim="dim-h2" type="number" step="0.001" value="0.10"></div><div><label>H3（土被り）</label><input id="H3" data-dim="dim-h3" type="number" step="0.001" value="0.20"></div></div><div class="row"><div><label>L（延長）</label><input id="L" type="number" step="0.01" value="10"></div><div><label>掘削余裕 e（m・片側）</label><input id="e" type="number" step="0.01" value="0.20"></div></div><div class="row"><div><label>かぶり（m）</label><input id="cover" type="number" step="0.001" value="0.04"></div><div></div></div>
-<div class="hr"></div><div class="sectionTitle">鉄筋</div><div class="no-rebar-toggle"><label><input id="noRebar" type="checkbox"> 無筋コンクリート</label></div><div id="rebarInputArea"><div class="row"><div><label>縦筋 径</label><select id="Dv" data-rebar="rebarVertical"><option>10</option><option selected>13</option><option>16</option><option>19</option><option>22</option><option>25</option></select></div><div><label>縦筋ピッチ（m）</label><input id="Pv" data-rebar="rebarVertical" type="number" step="0.01" value="0.20"></div></div><div class="row"><div><label>横筋 径</label><select id="Dh" data-rebar="rebarHorizontal"><option selected>10</option><option>13</option><option>16</option><option>19</option><option>22</option><option>25</option></select></div><div><label>横筋ピッチ（m）</label><input id="Ph" data-rebar="rebarHorizontal" type="number" step="0.01" value="0.20"></div></div></div><div class="note">縦筋本数＝ceil(L÷ピッチ)+1。横筋本数＝ceil((H1−上下かぶり)÷ピッチ)+1。無筋ON時は鉄筋数量を0kgにします。</div>
-<div class="hr"></div><div class="sectionTitle">単価</div><div class="row"><div><label>掘削 円/m³</label><input id="Pexc" type="number" value="4000"></div><div><label>残土処理 円/m³</label><input id="Pwaste" type="number" value="5000"></div></div><div class="row"><div><label>埋戻し 円/m³</label><input id="Pback" type="number" value="3000"></div><div><label>床付け 円/m²</label><input id="Pbed" type="number" value="700"></div></div><div class="row"><div><label>砕石 円/m³</label><input id="Pstone" type="number" value="6500"></div><div><label>コンクリート（FC21） 円/m³</label><input id="Pconc" type="number" value="22000"></div></div><div class="row"><div><label>型枠 円/m²</label><input id="Pform" type="number" value="6500"></div><div><label>鉄筋 円/kg</label><input id="Prebar" type="number" value="220"></div></div><div class="row"><div><label>利益率（%）</label><input id="profit" type="number" step="0.1" value="20"></div><div><label>見積丸め</label><input type="text" value="1,000円未満：10円／1,000円以上：100円" readonly></div></div>
+<section class="card"><h2 class="ms-input-card-head">
+<span class="ms-head-title"><span class="dot"></span>入力</span>
+<button class="ms-new-input-btn" id="newInputBtn" type="button">新しい入力を開始</button>
+</h2><div class="body">
+<div class="input-guide-v140" aria-label="入力欄の色分け案内"><span class="guide-item guide-dim">📐 寸法</span><span class="guide-item guide-price">💴 単価</span><span class="guide-item guide-cond">⚙ 条件</span></div>
+<div class="sectionTitle">断面寸法（m）</div><div class="row"><div><label>W1（コンクリート幅）</label><input id="W1" data-dim="dim-w1" type="number" step="0.001" value="0.15"></div><div><label>W2（砕石幅）</label><input id="W2" data-dim="dim-w2" type="number" step="0.001" value="0.30"></div></div><div class="row3"><div><label>H1（Co高さ）</label><input id="H1" data-dim="dim-h1" type="number" step="0.001" value="0.50"></div><div><label>H2（砕石厚）</label><input id="H2" data-dim="dim-h2" type="number" step="0.001" value="0.10"></div><div><label>H3（土被り）</label><input id="H3" data-dim="dim-h3" type="number" step="0.001" value="0.20"></div></div><div class="row"><div><label>e（掘削余裕・片側）</label><input id="e" data-dim="dim-e" type="number" step="0.01" value="0.20"></div><div><label>かぶり（m）</label><input id="cover" data-dim="dim-cover" type="number" step="0.001" value="0.04"></div></div>
+<div class="hr"></div><div class="sectionTitle">共通条件</div><div class="row"><div><label>延長 L（m）</label><input id="L" type="number" step="0.01" value="10"></div><div><label>利益率（%）</label><input id="profit" type="number" step="0.1" value="20"></div></div>
+<div class="hr"></div>
+<details class="ms-collapse rebar-always-open-v140" id="rebarInputDetails" open>
+<summary>鉄筋入力</summary>
+<div class="ms-collapse-body">
+<div class="no-rebar-toggle"><label><input id="noRebar" type="checkbox"> 無筋コンクリート</label></div><div id="rebarInputArea"><div class="row"><div><label>縦筋 径</label><select id="Dv" data-rebar="rebarVertical"><option value="10">D10</option><option value="13" selected>D13</option><option value="16">D16</option><option value="19">D19</option><option value="22">D22</option><option value="25">D25</option></select></div><div><label>縦筋ピッチ（m）</label><input id="Pv" data-rebar="rebarVertical" type="number" step="0.01" value="0.20"></div></div><div class="row"><div><label>横筋 径</label><select id="Dh" data-rebar="rebarHorizontal"><option value="10" selected>D10</option><option value="13">D13</option><option value="16">D16</option><option value="19">D19</option><option value="22">D22</option><option value="25">D25</option></select></div><div><label>横筋ピッチ（m）</label><input id="Ph" data-rebar="rebarHorizontal" type="number" step="0.01" value="0.20"></div></div></div><div class="note">縦筋本数＝ceil(L÷ピッチ)+1。横筋本数＝ceil((H1−上下かぶり)÷ピッチ)+1。無筋ON時は鉄筋数量を0kgにします。</div>
+
+</div>
+</details>
+<div class="hr"></div><div class="sectionTitle">単価</div><div class="row"><div><label>掘削 円/m³</label><input id="Pexc" type="text" inputmode="numeric" value="4,000"></div><div><label>残土処理 円/m³</label><input id="Pwaste" type="text" inputmode="numeric" value="5,000"></div></div><div class="row"><div><label>埋戻し 円/m³</label><input id="Pback" type="text" inputmode="numeric" value="3,000"></div><div><label>床付け 円/m²</label><input id="Pbed" type="text" inputmode="numeric" value="700"></div></div><div class="row"><div><label>砕石 円/m³</label><input id="Pstone" type="text" inputmode="numeric" value="6,500"></div><div><label>コンクリート（FC21） 円/m³</label><input id="Pconc" type="text" inputmode="numeric" value="22,000"></div></div><div class="row"><div><label>型枠 円/m²</label><input id="Pform" type="text" inputmode="numeric" value="6,500"></div><div><label>鉄筋 円/kg</label><input id="Prebar" type="text" inputmode="numeric" value="220"></div></div>
 </div></section>
 <section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
 <div class="btns" style="grid-template-columns:repeat(3,1fr);margin:0 0 12px;max-width:420px">
 <button class="primary" id="printBtn" type="button">印刷</button>
-</div><div class="kpi"><div class="box"><div class="t">掘削量</div><div class="v"><span id="kExc">0.000</span> m³</div></div><div class="box"><div class="t">コンクリート（FC21）</div><div class="v"><span id="kConc">0.000</span> m³</div></div><div class="box"><div class="t">鉄筋</div><div class="v"><span id="kRebar">0.00</span> kg</div></div><div class="box"><div class="t">mあたり見積</div><div class="v"><span id="kPer">0</span> 円</div></div></div>
+</div><div id="legacyMikiriKpiCompat" style="display:none!important">
+<span id="kExc">0.000</span><span id="kConc">0.000</span>
+<span id="kRebar">0.00</span><span id="kPer">0</span>
+</div>
+<div class="kpi kpi-unit-price-v130">
+  <div class="box">
+    <div class="t">mあたり単価</div>
+    <div class="v"><span id="kCostPerM">0</span><span class="u">円/m</span></div>
+  </div>
+  <div class="box">
+    <div class="t">見積mあたり単価</div>
+    <div class="v"><span id="kEstimatePerM">0</span><span class="u">円/m</span></div>
+  </div>
+</div>
 <div class="table-wrap"><table class="result-table"><thead><tr><th>項目</th><th>数量</th><th>単位</th><th>原価単価</th><th>原価金額</th><th>見積単価</th><th>見積金額</th></tr></thead><tbody id="resultBody"></tbody><tfoot><tr class="total-row"><td>合計</td><td colspan="3"></td><td id="totalCost">0</td><td></td><td id="totalEstimate">0</td></tr><tr class="total-row"><td>mあたり</td><td colspan="3"></td><td id="perCost">0</td><td></td><td id="perEstimate">0</td></tr></tfoot></table></div>
+<details class="ms-collapse" id="calculationMemoDetails">
+<summary>計算式・計算メモ</summary>
+<div class="ms-collapse-body">
 <div class="result-memo-box">
 <div class="result-memo-title">計算メモ</div>
 <div class="result-memo-grid">
@@ -174,6 +381,8 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 <div class="result-memo-item"><span class="result-memo-label">mあたり単価</span><span>合計金額÷L</span></div>
 </div>
 </div>
+</div>
+</details>
 
 </div></section></div>
 <div class="print-report" id="printReport"><div class="print-head"><h1>見切コンクリート積算書</h1><span id="printMeta"></span></div><table class="print-table" id="printTable"></table><div class="print-bottom"><div class="print-diagram" id="printDiagram"></div><div class="print-dims"><h3>寸法一覧</h3><table><tr><th>記号</th><th>名称</th><th>寸法</th></tr><tbody id="printDims"></tbody></table></div></div></div>
@@ -190,7 +399,7 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 const $=id=>document.getElementById(id); const APP_TYPE='mikiri_concrete';
 const ids=['W1','W2','H1','H2','H3','L','e','cover','Dv','Pv','Dh','Ph','Pexc','Pwaste','Pback','Pbed','Pstone','Pconc','Pform','Prebar','profit'];
 const weights={10:0.560,13:0.995,16:1.560,19:2.250,22:3.040,25:3.980};
-const num=id=>Math.max(0,parseFloat($(id).value)||0), fmt=(v,d=3)=>Number.isFinite(Number(v))?Number(v).toFixed(d):Number(0).toFixed(d), yen=v=>Math.round(v||0).toLocaleString('ja-JP');
+const num=id=>Math.max(0,parseFloat(String($(id).value||'').replace(/,/g,''))||0), fmt=(v,d=3)=>Number.isFinite(Number(v))?Number(v).toFixed(d):Number(0).toFixed(d), yen=v=>Math.round(v||0).toLocaleString('ja-JP');
 function roundTo(v,u){u=Math.max(1,u||1);return Math.round(v/u)*u}
 function estimateUnit(cost){
   const p=num('profit')/100;
@@ -198,7 +407,7 @@ function estimateUnit(cost){
   const unit=raw>=1000?100:10;
   return roundTo(raw,unit);
 }
-function values(){const o={};ids.forEach(id=>o[id]=$(id).value);o.noRebar=$('noRebar')?.checked||false;o.projectName=$('projectName').value;o.estimateName=$('estimateName').value;return o} function applyValues(o){if(!o)return;ids.forEach(id=>{if(o[id]!=null)$(id).value=o[id]});if($('noRebar'))$('noRebar').checked=!!o.noRebar;if(o.projectName!=null)$('projectName').value=o.projectName;if(o.estimateName!=null)$('estimateName').value=o.estimateName;syncNoRebar();calc()}
+function values(){const o={};ids.forEach(id=>o[id]=$(id).value);o.noRebar=$('noRebar')?.checked||false;o.projectName=$('projectName').value;o.estimateName=$('estimateName').value;return o} function applyValues(o){if(!o)return;ids.forEach(id=>{if(o[id]!=null)$(id).value=o[id]});if($('noRebar'))$('noRebar').checked=!!o.noRebar;if(o.projectName!=null)$('projectName').value=o.projectName;if(o.estimateName!=null)$('estimateName').value=o.estimateName;syncNoRebar();calc();if(typeof window.MSMikiriCommaDisplayChange==="function")window.MSMikiriCommaDisplayChange()}
 function calc(){
  const W1=num('W1'),W2=num('W2'),H1=num('H1'),H2=num('H2'),H3=num('H3'),L=num('L'),e=num('e'),cover=num('cover');
  const excavation=(W2+2*e)*(H2+H3)*L, stone=W2*H2*L, buriedConc=W1*Math.min(H1,H3)*L, waste=stone+buriedConc, back=Math.max(0,excavation-waste), bed=W2*L, conc=W1*H1*L, form=2*H1*L;
@@ -217,7 +426,16 @@ function calc(){
  let tc=0,te=0;const body=$('resultBody');body.innerHTML='';rows.forEach(r=>{const u=num(r[3]),a=r[1]*u,eu=estimateUnit(u),ea=r[1]*eu;tc+=a;te+=ea;const tr=document.createElement('tr');tr.innerHTML=`<td>${r[0]}</td><td>${fmt(r[1],r[2]==='kg'?2:3)}</td><td class="unit">${r[2]}</td><td>${yen(u)}</td><td>${yen(a)}</td><td>${yen(eu)}</td><td>${yen(ea)}</td>`;body.appendChild(tr)});
  $('memoVerticalRebar').textContent=noRebar?'無筋':`${nv}本 × ${fmt(lenV,3)}m ＝ ${fmt(kgV,2)}kg`;
  $('memoHorizontalRebar').textContent=noRebar?'無筋':`${nh}本 × ${fmt(lenH,3)}m ＝ ${fmt(kgH,2)}kg`;
- $('totalCost').textContent=yen(tc);$('totalEstimate').textContent=yen(te);$('perCost').textContent=yen(L?tc/L:0);$('perEstimate').textContent=yen(L?te/L:0);$('kExc').textContent=fmt(excavation);$('kConc').textContent=fmt(conc);$('kRebar').textContent=fmt(rebar,2);$('kPer').textContent=yen(L?te/L:0);window.__last={rows,tc,te,kgV,kgH,nv,nh,noRebar};buildPrint();return window.__last;
+ $('totalCost').textContent=yen(tc);
+$('totalEstimate').textContent=yen(te);
+$('perCost').textContent=yen(L?tc/L:0);
+$('perEstimate').textContent=yen(L?te/L:0);
+$('kExc').textContent=fmt(excavation);
+$('kConc').textContent=fmt(conc);
+$('kRebar').textContent=fmt(rebar,2);
+$('kPer').textContent=yen(L?te/L:0);
+$('kCostPerM').textContent=yen(L?tc/L:0);
+$('kEstimatePerM').textContent=yen(L?te/L:0);window.__last={rows,tc,te,kgV,kgH,nv,nh,noRebar};buildPrint();return window.__last;
 }
 
 function svgEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]))}
@@ -390,11 +608,11 @@ function syncNoRebar(){
  calc();
 }
 if($('noRebar'))$('noRebar').addEventListener('change',syncNoRebar);
-$('calcBtn').onclick=calc;
+
 $('printBtn').onclick=printSvgReport;
 $('closeSvgPreviewBtn').onclick=()=>document.body.classList.remove('svg-preview-mode');
 $('svgPrintNowBtn').onclick=printSvgReport;
-window.addEventListener('beforeprint',()=>{if(!svgPrinting)updateSvgReport();});$('resetBtn').onclick=()=>{if(confirm('入力内容を初期値へ戻しますか？'))location.reload()};
+window.addEventListener('beforeprint',()=>{if(!svgPrinting)updateSvgReport();});
 const localKey='mikiri_concrete_estimates',priceKey='mikiri_concrete_prices';function getLocal(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[]}}function setLocal(k,v){localStorage.setItem(k,JSON.stringify(v))}function refresh(){const a=getLocal(localKey);$('savedEstimateList').innerHTML='<option value="">保存データなし</option>'+a.map((x,i)=>`<option value="${i}">${x.name}</option>`).join('');const p=getLocal(priceKey);$('savedPriceList').innerHTML='<option value="">保存単価なし</option>'+p.map((x,i)=>`<option value="${i}">${x.name}</option>`).join('')}
 $('saveEstimateBtn').onclick=async()=>{const name=$('estimateName').value.trim()||'見切コンクリート';const v=values();try{if(window.MS?.Estimate?.save){await MS.Estimate.save({appType:APP_TYPE,name,values:v});alert('保存しました')}else{const a=getLocal(localKey);a.push({name,values:v});setLocal(localKey,a);refresh();alert('保存しました')}}catch(e){alert('保存に失敗しました：'+e.message)}};$('loadEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;applyValues(getLocal(localKey)[Number(i)]?.values)};$('deleteEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;const a=getLocal(localKey);a.splice(Number(i),1);setLocal(localKey,a);refresh()};
 const priceIds=['Pexc','Pwaste','Pback','Pbed','Pstone','Pconc','Pform','Prebar','profit'];$('savePriceBtn').onclick=()=>{const name=$('pricePresetName').value.trim()||'標準';const v={};priceIds.forEach(id=>v[id]=$(id).value);const a=getLocal(priceKey);a.push({name,values:v});setLocal(priceKey,a);refresh()};$('loadPriceBtn').onclick=()=>{const i=$('savedPriceList').value;if(i==='')return;const v=getLocal(priceKey)[Number(i)]?.values||{};priceIds.forEach(id=>{if(v[id]!=null)$(id).value=v[id]});calc()};$('deletePriceBtn').onclick=()=>{const i=$('savedPriceList').value;if(i==='')return;const a=getLocal(priceKey);a.splice(Number(i),1);setLocal(priceKey,a);refresh()};
@@ -533,9 +751,6 @@ calc();
         }
 
         restoreSavedMasterDisplay();
-        [50,200,500,1000].forEach(function(delay){
-          setTimeout(restoreSavedMasterDisplay,delay);
-        });
       }
     }catch(e){console.warn('保存時単価の復元に失敗しました',e);}
   }
@@ -785,6 +1000,9 @@ calc();
       if(typeof window.MSPriceMaster.applyFields === 'function'){
         window.MSPriceMaster.applyFields(selected.prices || {});
       }
+      if(typeof window.MSMikiriCommaDisplayChange === 'function'){
+        window.MSMikiriCommaDisplayChange();
+      }
       if(typeof window.calc === 'function') window.calc();
       fillSelect();
       updateNote('今回の積算だけに反映：'+(selected.name||'標準')+'　※メイン画面の使用中単価や、ほかの積算には影響しません。');
@@ -842,13 +1060,11 @@ calc();
   }
 
   window.addEventListener('load', function(){
-    setTimeout(ensurePanel, 0);
-    setTimeout(ensurePanel, 300);
-    setTimeout(ensurePanel, 1000);
-  });
+    ensurePanel();
+  }, {once:true});
 
   window.addEventListener('ms-price-master-changed', function(){
-    setTimeout(ensurePanel, 0);
+    ensurePanel();
   });
 })(window, document);
 </script>
@@ -861,7 +1077,11 @@ calc();
   var mode=window.__mikiriOpenMode||{fromSaved:false,estimateId:""};
   function byId(id){return document.getElementById(id);}
   function active(){try{if(!window.MSPriceMaster)return null;MSPriceMaster.ensureMasters();return MSPriceMaster.getActive();}catch(e){return null;}}
-  function apply(prices){if(window.MSPriceMaster&&typeof MSPriceMaster.applyFields==="function")MSPriceMaster.applyFields(prices||{});if(typeof window.calc==="function")window.calc();}
+  function apply(prices){
+    if(window.MSPriceMaster&&typeof MSPriceMaster.applyFields==="function")MSPriceMaster.applyFields(prices||{});
+    if(typeof window.MSMikiriCommaDisplayChange==="function")window.MSMikiriCommaDisplayChange();
+    if(typeof window.calc==="function")window.calc();
+  }
   async function getEstimate(id){if(!id||!window.MS)return null;try{return MS.Estimate&&typeof MS.Estimate.get==="function"?await MS.Estimate.get(id):await MS.getEstimate(id);}catch(e){return null;}}
   async function saved(){
     var id=mode.estimateId||"";
@@ -908,15 +1128,527 @@ calc();
     }
 
     restoreDisplay();
-    [80,250,600,1200].forEach(function(d){
-      setTimeout(restoreDisplay,d);
-    });
     return true;
   }
   function fresh(){var a=active();if(!a||!a.prices)return false;try{if(window.MS&&typeof MS.clearCurrentEstimateId==="function")MS.clearCurrentEstimateId(APP_TYPE);}catch(e){}window.__mikiriLocalPriceMaster={id:a.id||"standard",name:a.name||"標準",prices:Object.assign({},a.prices||{})};apply(a.prices);var sel=byId("mikiriCommonPriceList");if(sel)sel.value=a.id;var note=byId("mikiriCommonPriceNote");if(note)note.textContent="メイン画面の初期単価："+(a.name||"標準")+"（新規積算として読込済み）";return true;}
-  window.addEventListener("load",function(){[0,100,300,700,1200].forEach(function(d){setTimeout(function(){mode.fromSaved?saved():fresh();},d);});var b=byId("loadEstimateBtn");if(b)b.addEventListener("click",function(){mode.fromSaved=true;var s=byId("savedEstimateList");mode.estimateId=s?s.value:"";[50,200,500].forEach(function(d){setTimeout(saved,d);});},true);});
+  window.addEventListener("load",function(){
+    mode.fromSaved?saved():fresh();
+    var b=byId("loadEstimateBtn");
+    if(b)b.addEventListener("click",function(){
+      mode.fromSaved=true;
+      var s=byId("savedEstimateList");
+      mode.estimateId=s?s.value:"";
+      saved();
+    },true);
+  },{once:true});
   window.addEventListener("ms-price-master-changed",function(){});
 })(window,document);
+</script>
+
+
+<div id="mikiriDefaultsModal" role="dialog" aria-modal="true" aria-labelledby="mikiriDefaultsTitle">
+  <div class="mikiri-defaults-box">
+    <div class="mikiri-defaults-head">
+      <div class="mikiri-defaults-title" id="mikiriDefaultsTitle">見切コンクリート　初期値管理</div>
+      <div class="mikiri-defaults-sub">管理用の隠し設定です。単価・利益率・工事名・積算名称は初期値に含まれません。</div>
+    </div>
+    <div class="mikiri-defaults-body">
+      <div class="mikiri-defaults-status" id="mikiriDefaultsStatus">
+        現在の画面に入力されている寸法・延長・掘削余裕・鉄筋条件を、今後の初期値として登録します。
+      </div>
+      <div class="mikiri-defaults-actions">
+        <button class="mikiri-defaults-save" id="mikiriDefaultsSave" type="button">現在の画面を初期値として登録</button>
+        <button class="mikiri-defaults-close" id="mikiriDefaultsClose" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="mikiriInitialDefaultsScript">
+(function(){
+  "use strict";
+  var STORAGE_KEY="MS_v130_initial_values_mikiri_concrete";
+  var IDS=["W1","W2","H1","H2","H3","L","e","cover","Dv","Pv","Dh","Ph","noRebar"];
+
+  function byId(id){return document.getElementById(id)}
+  function collect(){
+    var out={};
+    IDS.forEach(function(id){
+      var el=byId(id);
+      if(!el)return;
+      out[id]=(el.type==="checkbox")?!!el.checked:el.value;
+    });
+    return out;
+  }
+  var BUILTIN=collect();
+
+  function stored(){
+    try{
+      var v=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+      return v&&typeof v==="object"?v:null;
+    }catch(e){return null}
+  }
+
+  function apply(values,clearNames){
+    values=values||BUILTIN;
+    IDS.forEach(function(id){
+      var el=byId(id);
+      if(!el||values[id]===undefined)return;
+      if(el.type==="checkbox"){
+        el.checked=!!values[id];
+      }else{
+        el.value=values[id];
+      }
+      el.dispatchEvent(new Event("input",{bubbles:true}));
+      el.dispatchEvent(new Event("change",{bubbles:true}));
+    });
+    if(clearNames){
+      var name=byId("estimateName");
+      if(name)name.value="";
+    }
+    if(typeof window.syncNoRebar==="function")window.syncNoRebar();
+    if(typeof window.calc==="function")window.calc();
+  }
+
+  function updateStatus(){
+    var el=byId("mikiriDefaultsStatus");
+    if(!el)return;
+    el.textContent=stored()
+      ?"現在は、管理者が登録した初期値を使用しています。画面の入力内容を変更して再登録すると、その内容に上書きされます。"
+      :"現在は、アプリ標準の初期値を使用しています。画面の入力内容を登録すると、次回からその内容が初期値になります。";
+  }
+  function openModal(){var m=byId("mikiriDefaultsModal");if(m){updateStatus();m.classList.add("show")}}
+  function closeModal(){var m=byId("mikiriDefaultsModal");if(m)m.classList.remove("show")}
+
+  document.addEventListener("DOMContentLoaded",function(){
+    var trigger=byId("mikiriDefaultsTrigger"),clicks=0,timer=0;
+    if(trigger){
+      trigger.addEventListener("click",function(){
+        clicks++;clearTimeout(timer);timer=setTimeout(function(){clicks=0},3000);
+        if(clicks>=5){clicks=0;openModal()}
+      });
+    }
+
+    var save=byId("mikiriDefaultsSave");
+    if(save)save.addEventListener("click",function(){
+      if(!confirm(
+        "現在の画面に入力されている寸法・延長・掘削余裕・鉄筋条件を、今後の初期値として登録します。\n"+
+        "すでに登録されている初期値は上書きされます。よろしいですか？"
+      ))return;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(collect()));
+      updateStatus();
+      alert("現在の画面を初期値として登録しました。\n次回の新規入力と『新しい入力を開始』から、この初期値が使用されます。");
+      closeModal();
+    });
+
+    var close=byId("mikiriDefaultsClose");
+    if(close)close.addEventListener("click",closeModal);
+    var modal=byId("mikiriDefaultsModal");
+    if(modal)modal.addEventListener("click",function(e){if(e.target===this)closeModal()});
+
+    var newBtn=byId("newInputBtn");
+    if(newBtn)newBtn.addEventListener("click",function(){
+      if(!confirm(
+        "現在の入力内容を初期値に戻します。\n"+
+        "保存していない内容は失われます。よろしいですか？"
+      ))return;
+
+      apply(stored()||BUILTIN,true);
+
+      var sel=byId("savedEstimateList");
+      if(sel){sel.value="";if(sel.options&&sel.options.length)sel.selectedIndex=0}
+
+      try{
+        if(window.MS&&typeof MS.clearCurrentEstimateId==="function"){
+          MS.clearCurrentEstimateId("mikiri_concrete");
+        }
+        localStorage.removeItem("ms_open_estimate_id");
+      }catch(e){}
+
+      if(window.__mikiriOpenMode){
+        window.__mikiriOpenMode.fromSaved=false;
+        window.__mikiriOpenMode.estimateId="";
+      }
+      window.scrollTo({top:0,behavior:"smooth"});
+    });
+  });
+
+  window.addEventListener("load",function(){
+    var fromSaved=!!(window.__mikiriOpenMode&&window.__mikiriOpenMode.fromSaved);
+    try{
+      var p=new URLSearchParams(location.search);
+      if(p.get("loadEstimate")==="1")fromSaved=true;
+    }catch(e){}
+    if(!fromSaved&&stored())setTimeout(function(){apply(stored(),false)},140);
+  });
+})();
+</script>
+
+
+<script id="mikiri-v140-standard-behavior">
+(function(){
+  "use strict";
+  function byId(id){ return document.getElementById(id); }
+
+  var dimIds=["W1","W2","H1","H2","H3","e","cover","L","Pv","Ph"];
+  var normalIds=["W1","W2","H1","H2","H3","e","cover","L","profit"];
+  var moneyIds=["Pexc","Pwaste","Pback","Pbed","Pstone","Pconc","Pform","Prebar"];
+  var priceOrder=["Pexc","Pwaste","Pback","Pbed","Pstone","Pconc","Pform","Prebar"];
+  var rebarOrder=["noRebar","Dv","Pv","Dh","Ph"];
+  var editing=null;
+  var userStarted=false;
+
+  function raw(v){return String(v==null?"":v).replace(/,/g,"").trim()}
+  function textMode(el){
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","decimal");
+    el.setAttribute("autocomplete","off");
+  }
+  function focusField(el){
+    if(!el)return;
+    requestAnimationFrame(function(){
+      try{el.focus()}catch(e){}
+      try{
+        if(typeof el.select==="function" && el.tagName!=="SELECT" &&
+           el.type!=="checkbox" && el.type!=="radio") el.select();
+      }catch(e){}
+    });
+  }
+  function fmtDim(el){
+    if(!el||el===document.activeElement)return;
+    textMode(el);
+    var s=raw(el.value); if(s==="")return;
+    var n=Number(s); if(Number.isFinite(n))el.value=n.toFixed(2);
+  }
+  function fmtMoney(el){
+    if(!el||el===document.activeElement)return;
+    textMode(el);
+    var s=raw(el.value); if(s==="")return;
+    var n=Number(s); if(!Number.isFinite(n))return;
+    el.value=Math.abs(n-Math.round(n))<1e-9
+      ? Math.round(n).toLocaleString("ja-JP")
+      : n.toLocaleString("ja-JP",{maximumFractionDigits:6});
+  }
+  function ensureRebarOpen(){
+    var d=byId("rebarInputDetails");
+    if(d && !d.open)d.open=true;
+  }
+  function prepareAll(){
+    ensureRebarOpen();
+    dimIds.forEach(function(id){fmtDim(byId(id))});
+    moneyIds.forEach(function(id){fmtMoney(byId(id))});
+  }
+
+  function clearEdit(){
+    document.querySelectorAll(".rebar-editing-v140").forEach(function(x){
+      x.classList.remove("rebar-editing-v140");
+    });
+    editing=null;
+  }
+  function setEdit(el){
+    clearEdit();
+    editing=el;
+    if(!el)return;
+    if(el.id==="Dv" || el.id==="Dh"){
+      el.classList.add("rebar-editing-v140");
+    }else{
+      var box=el.closest(".rebar-edit-target-v140") || el.parentElement;
+      if(box)box.classList.add("rebar-editing-v140");
+    }
+  }
+  function isEditing(el){ return editing===el; }
+
+  function moveRebar(el,dir){
+    var i=rebarOrder.indexOf(el.id);
+    if(i<0)return;
+    var ni=i+dir;
+    if(ni<0){focusField(byId("profit"));return}
+    if(ni>=rebarOrder.length){focusField(byId("Pexc"));return}
+    var next=byId(rebarOrder[ni]);
+    if(next && !next.disabled) focusField(next);
+    else {
+      if(dir>0) focusField(byId("Pexc"));
+      else focusField(byId("profit"));
+    }
+  }
+
+  function changeSelect(sel,dir){
+    var ni=Math.max(0,Math.min(sel.options.length-1,sel.selectedIndex+dir));
+    if(ni!==sel.selectedIndex){
+      sel.selectedIndex=ni;
+      sel.dispatchEvent(new Event("input",{bubbles:true}));
+      sel.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+  }
+  function changeCheckbox(cb,dir){
+    var next = dir>0;
+    if(cb.checked!==next){
+      cb.checked=next;
+      cb.dispatchEvent(new Event("input",{bubbles:true}));
+      cb.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+  }
+
+  /* 鉄筋欄は常時開く */
+  var rebar=byId("rebarInputDetails");
+  if(rebar){
+    rebar.open=true;
+    var summary=rebar.querySelector("summary");
+    if(summary){
+      summary.addEventListener("click",function(e){e.preventDefault();rebar.open=true});
+      summary.addEventListener("keydown",function(e){
+        if(e.key==="Enter"||e.key===" "){e.preventDefault();rebar.open=true}
+      });
+    }
+    rebar.addEventListener("toggle",function(){if(!rebar.open)rebar.open=true});
+  }
+
+  /* 編集色の対象を包む */
+  ["noRebar","Dv","Dh"].forEach(function(id){
+    var el=byId(id);
+    if(!el)return;
+    if(id==="noRebar"){
+      var box=el.closest(".no-rebar-toggle");
+      if(box)box.classList.add("rebar-edit-target-v140");
+    }else{
+      el.classList.add("rebar-edit-target-v140");
+    }
+  });
+
+  document.addEventListener("focusin",function(e){
+    var id=e.target&&e.target.id;
+    if(editing && e.target!==editing) clearEdit();
+    if(dimIds.indexOf(id)>=0 || moneyIds.indexOf(id)>=0){
+      textMode(e.target);
+      e.target.value=raw(e.target.value);
+    }
+  },true);
+
+  document.addEventListener("focusout",function(e){
+    var id=e.target&&e.target.id;
+    if(dimIds.indexOf(id)>=0)setTimeout(function(){fmtDim(e.target)},0);
+    else if(moneyIds.indexOf(id)>=0)setTimeout(function(){fmtMoney(e.target)},0);
+  },true);
+
+  document.addEventListener("keydown",function(e){
+    userStarted=true;
+    var t=e.target;
+    if(!t||!t.id)return;
+
+    /* 通常入力 */
+    var ni=normalIds.indexOf(t.id);
+    if(ni>=0){
+      if(e.key==="Enter"||e.key==="ArrowDown"){
+        e.preventDefault();e.stopImmediatePropagation();
+        if(ni<normalIds.length-1)focusField(byId(normalIds[ni+1]));
+        else focusField(byId("noRebar"));
+        return;
+      }
+      if(e.key==="ArrowUp"&&ni>0){
+        e.preventDefault();e.stopImmediatePropagation();
+        focusField(byId(normalIds[ni-1]));
+        return;
+      }
+    }
+
+    /* 無筋コンクリート：Spaceで編集モード、↑↓でOFF/ON */
+    if(t.id==="noRebar"){
+      if(e.key===" "||e.code==="Space"){
+        e.preventDefault();e.stopImmediatePropagation();
+        if(isEditing(t))clearEdit(); else setEdit(t);
+        return;
+      }
+      if(isEditing(t)){
+        if(e.key==="ArrowUp"||e.key==="ArrowDown"){
+          e.preventDefault();e.stopImmediatePropagation();
+          changeCheckbox(t,e.key==="ArrowDown"?1:-1);
+          return;
+        }
+        if(e.key==="Enter"){
+          e.preventDefault();e.stopImmediatePropagation();
+          clearEdit();
+          if(t.checked)focusField(byId("Pexc"));
+          else focusField(byId("Dv"));
+          return;
+        }
+      }else{
+        if(e.key==="Enter"||e.key==="ArrowDown"){
+          e.preventDefault();e.stopImmediatePropagation();
+          if(t.checked)focusField(byId("Pexc")); else focusField(byId("Dv"));
+          return;
+        }
+        if(e.key==="ArrowUp"){
+          e.preventDefault();e.stopImmediatePropagation();
+          focusField(byId("profit"));
+          return;
+        }
+      }
+    }
+
+    /* 鉄筋径：Spaceで編集モード、↑↓で径変更 */
+    if(t.id==="Dv"||t.id==="Dh"){
+      if(e.key===" "||e.code==="Space"){
+        e.preventDefault();e.stopImmediatePropagation();
+        if(isEditing(t))clearEdit(); else setEdit(t);
+        return;
+      }
+      if(isEditing(t)){
+        if(e.key==="ArrowUp"||e.key==="ArrowDown"){
+          e.preventDefault();e.stopImmediatePropagation();
+          changeSelect(t,e.key==="ArrowDown"?1:-1);
+          return;
+        }
+        if(e.key==="Enter"){
+          e.preventDefault();e.stopImmediatePropagation();
+          clearEdit();
+          focusField(byId(t.id==="Dv"?"Pv":"Ph"));
+          return;
+        }
+      }else{
+        if(e.key==="Enter"||e.key==="ArrowDown"){
+          e.preventDefault();e.stopImmediatePropagation();
+          focusField(byId(t.id==="Dv"?"Pv":"Ph"));
+          return;
+        }
+        if(e.key==="ArrowUp"){
+          e.preventDefault();e.stopImmediatePropagation();
+          focusField(byId(t.id==="Dv"?"noRebar":"Pv"));
+          return;
+        }
+      }
+    }
+
+    /* ピッチは普通の数値入力 */
+    if(t.id==="Pv"){
+      if(e.key==="Enter"||e.key==="ArrowDown"){
+        e.preventDefault();e.stopImmediatePropagation();focusField(byId("Dh"));return;
+      }
+      if(e.key==="ArrowUp"){
+        e.preventDefault();e.stopImmediatePropagation();focusField(byId("Dv"));return;
+      }
+    }
+    if(t.id==="Ph"){
+      if(e.key==="Enter"||e.key==="ArrowDown"){
+        e.preventDefault();e.stopImmediatePropagation();focusField(byId("Pexc"));return;
+      }
+      if(e.key==="ArrowUp"){
+        e.preventDefault();e.stopImmediatePropagation();focusField(byId("Dh"));return;
+      }
+    }
+
+    /* 単価 */
+    var pi=priceOrder.indexOf(t.id);
+    if(pi>=0){
+      if(e.key==="Enter"||e.key==="ArrowDown"){
+        if(pi<priceOrder.length-1){
+          e.preventDefault();e.stopImmediatePropagation();
+          focusField(byId(priceOrder[pi+1]));
+        }
+        return;
+      }
+      if(e.key==="ArrowUp"){
+        e.preventDefault();e.stopImmediatePropagation();
+        if(pi===0){
+          var no=byId("noRebar");
+          focusField(no&&no.checked?no:byId("Ph"));
+        }else{
+          focusField(byId(priceOrder[pi-1]));
+        }
+        return;
+      }
+    }
+  },true);
+
+  document.addEventListener("pointerdown",function(){userStarted=true},{capture:true,once:true});
+
+  function first(){
+    if(userStarted)return;
+    ensureRebarOpen();
+    focusField(byId("W1"));
+  }
+  function start(){
+    dimIds.concat(moneyIds).forEach(function(id){textMode(byId(id))});
+    prepareAll();
+    var count=0;
+    var timer=setInterval(function(){
+      prepareAll();
+      if(++count>=28)clearInterval(timer);
+    },250);
+    [250,700,1300,2200].forEach(function(ms){setTimeout(first,ms)});
+  }
+
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
+  else start();
+
+  window.addEventListener("load",function(){
+    ensureRebarOpen();
+    setTimeout(prepareAll,100);
+    setTimeout(prepareAll,600);
+    setTimeout(prepareAll,1600);
+  },{once:true});
+
+  document.addEventListener("change",function(){
+    ensureRebarOpen();
+    setTimeout(prepareAll,40);
+    setTimeout(prepareAll,300);
+  },true);
+
+  var newBtn=byId("newInputBtn");
+  if(newBtn)newBtn.addEventListener("click",function(){
+    setTimeout(function(){
+      userStarted=false;
+      clearEdit();
+      ensureRebarOpen();
+      prepareAll();
+      focusField(byId("W1"));
+    },260);
+  });
+})();
+</script>
+
+
+<script id="mikiri-comma-display-change-helper">
+(function(){
+  "use strict";
+  var ids=['Pexc', 'Pwaste', 'Pback', 'Pbed', 'Pstone', 'Pconc', 'Pform', 'Prebar'];
+  function raw(v){return String(v==null?"":v).replace(/[,，\s]/g,"").replace(/．/g,".").trim();}
+  function formatOne(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==="number"){try{el.type="text"}catch(e){}}
+    el.setAttribute("inputmode","numeric");
+    var s=raw(el.value);
+    if(s==="")return;
+    var n=Number(s);
+    if(Number.isFinite(n))el.value=Math.round(n).toLocaleString("ja-JP");
+  }
+  function formatAll(){ids.forEach(formatOne);}
+  window.MSMikiriCommaDisplayChange=formatAll;
+  function setup(){
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el || el.dataset.commaReady==="1")return;
+      el.dataset.commaReady="1";
+      if(el.type==="number"){try{el.type="text"}catch(e){}}
+      el.setAttribute("inputmode","numeric");
+      el.addEventListener("input",function(){
+        var s=raw(el.value);
+        if(s===""){el.value="";return;}
+        var n=Number(s);
+        if(!Number.isFinite(n))return;
+        el.value=Math.round(n).toLocaleString("ja-JP");
+        try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}
+      });
+      el.addEventListener("change",function(){formatOne(id)});
+      el.addEventListener("blur",function(){formatOne(id)});
+    });
+    formatAll();
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});
+  else setup();
+  window.addEventListener("ms-price-master-changed",function(){queueMicrotask(formatAll);});
+})();
 </script>
 
 </body></html>
