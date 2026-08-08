@@ -3217,8 +3217,7 @@ section.card:nth-of-type(2) .btns button{
     return values;
   }
   function applyValues(values){
-    values = Object.assign({
-  if(typeof window.MSLWallCommaDisplayChange==="function")window.MSLWallCommaDisplayChange();}, values || {});
+    values = Object.assign({}, values || {});
     if(values.useWaterstop === undefined && (values.useWaterstopForm !== undefined || values.useWaterstopConcrete !== undefined)){
       values.useWaterstop = values.useWaterstopConcrete !== false && values.useWaterstopForm !== false;
     }
@@ -3284,6 +3283,13 @@ section.card:nth-of-type(2) .btns button{
         if(prices && prices[k] !== undefined && prices[k] !== ''){ el.value = prices[k]; break; }
       }
     });
+    // Ver.1.4.0: 共通単価・今回単価を反映した直後に表示だけカンマ整形する。
+    // 単価データそのものや計算処理には手を加えない。
+    setTimeout(function(){
+      if(typeof window.__lwallFormatMoneyInputs === 'function'){
+        window.__lwallFormatMoneyInputs();
+      }
+    },0);
   }
   window.applyCommonPriceFields = applyCommonPriceFields;
 
