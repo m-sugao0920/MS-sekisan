@@ -11,7 +11,7 @@ window.MS_VIDEO_LIST = [
       "L型擁壁アプリの開き方",
       "寸法・条件の入力と積算結果の確認"
     ],
-    url: "https://www.youtube.com/watch?v=LLxn0_faAZs"
+    url: "https://www.youtube.com/watch?v=M4y_SKG8hWA"
   }
 
   /* 追加例
