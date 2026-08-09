@@ -567,8 +567,6 @@ section.card:nth-of-type(2) #Pbed,
 section.card:nth-of-type(2) #Pstone,
 section.card:nth-of-type(2) #Pnform,
 section.card:nth-of-type(2) #Pblnd,
-section.card:nth-of-type(2) #PwaterstopForm,
-section.card:nth-of-type(2) #PwaterstopConc,
 section.card:nth-of-type(2) #Pfilter{
   background:#fff!important;color:var(--text)!important;font-weight:400!important;
   border-top:1px solid #dfe4ea!important;border-right:1px solid #dfe4ea!important;
@@ -601,8 +599,6 @@ section.card:nth-of-type(2) #Pbed,
 section.card:nth-of-type(2) #Pstone,
 section.card:nth-of-type(2) #Pnform,
 section.card:nth-of-type(2) #Pblnd,
-section.card:nth-of-type(2) #PwaterstopForm,
-section.card:nth-of-type(2) #PwaterstopConc,
 section.card:nth-of-type(2) #Pfilter{
   border-left:6px solid #8A4653!important;border-bottom-color:#8A4653!important;
 }
@@ -888,10 +884,10 @@ section.card:nth-of-type(2) input[readonly]{
 
 <div class="backfill-choice" style="grid-template-columns:1fr"><label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠とセット）</label></div>
 <div class="row"><div><label>止水コンクリート幅（m）</label><input id="WaterstopW" type="number" step="0.001" value="0.30"></div><div><label>止水コンクリート厚（m）</label><input id="WaterstopH" type="number" step="0.001" value="0.10"></div></div>
-<div class="row"><div><label>止水コンクリート型枠 単価/m²</label><input id="PwaterstopForm" type="number" value="5,500"></div><div><label>止水コンクリート 単価/m³</label><input id="PwaterstopConc" type="number" value="22,000"></div></div>
+
 <label>裏込め材</label><div class="backfill-choice"><label><input type="radio" name="backfillType" id="backfillNone" value="none">なし</label><label><input type="radio" name="backfillType" id="backfillStone" value="stone" checked>裏込め砕石</label><label><input type="radio" name="backfillType" id="backfillSheet" value="sheet">吸出し防止材</label></div>
-<div class="row"><div><label>吸出し防止材 単価/m²</label><input id="Pfilter" type="number" value="1,200"></div><div></div></div>
-<div class="accessory-note">止水コンクリートをONにすると、止水コンクリート型枠と止水コンクリートを同時に計上します。裏込め砕石は（H1－H6－0.30）×0.30×Lで算出し、単価は砕石地業単価を使用します。</div>
+<div class="row"><div><label>吸出し防止材 単価/m²</label><input id="Pfilter" type="text" inputmode="decimal" value="1,200"></div><div></div></div>
+<div class="accessory-note"><b>止水用の単価入力欄はありません。</b> 止水コンクリート型枠は「均し型枠」、止水コンクリートは「均しコンクリート」の単価を自動使用します。裏込め砕石は砕石地業単価を使用し、吸出し防止材だけ単価を入力できます。</div>
 
 </div>
 </details>
@@ -903,10 +899,10 @@ section.card:nth-of-type(2) input[readonly]{
 <div class="row"><div><label>据え付け単価（円/m）</label><input id="Pset" type="text" inputmode="decimal" value="0"></div><div><label>必要本数（自動）</label><input id="productCount" readonly tabindex="-1" aria-readonly="true"></div></div>
 </div>
 <div class="hr"></div><div class="sectionTitle price-title-v140">土工・地業単価（円）</div>
-<div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="number" value="4,500"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="number" value="3,000"></div></div>
-<div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="number" value="4,000"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="number" value="400"></div></div>
-<div class="row"><div><label>砕石地業 単価/m³</label><input id="Pstone" type="number" value="8,500"></div><div></div></div>
-<div class="row"><div><label>均し型枠 単価/m²</label><input id="Pnform" type="number" value="5,500"></div><div><label>均しコンクリート 単価/m³</label><input id="Pblnd" type="number" value="22,000"></div></div>
+<div class="row"><div><label>掘削 単価/m³</label><input id="Pexc" type="text" inputmode="decimal" value="4,500"></div><div><label>埋戻し 単価/m³</label><input id="Pback" type="text" inputmode="decimal" value="3,000"></div></div>
+<div class="row"><div><label>残土処理 単価/m³</label><input id="Pspoil" type="text" inputmode="decimal" value="4,000"></div><div><label>床付け 単価/m²</label><input id="Pbed" type="text" inputmode="decimal" value="400"></div></div>
+<div class="row"><div><label>砕石地業 単価/m³</label><input id="Pstone" type="text" inputmode="decimal" value="8,500"></div><div></div></div>
+<div class="row"><div><label>均し型枠 単価/m²</label><input id="Pnform" type="text" inputmode="decimal" value="5,500"></div><div><label>均しコンクリート 単価/m³</label><input id="Pblnd" type="text" inputmode="decimal" value="22,000"></div></div>
 
 <div class="note"><b>土工計算：</b>前面は垂直掘削、背面は1：n法面です。前面=(H6+H3+H4)×e、背面=(W4+e)×D+0.5×n×D²、D=H1+H2+H3+H4。埋戻しと残土処理では製品本体体積を控除します。</div></div></section>
 <section class="card"><h2><span class="dot"></span>結果</h2><div class="body"><div class="save-btns" style="grid-template-columns:1fr;max-width:140px;margin:0 0 10px"><button class="primary" id="printBtn">印刷</button></div>
@@ -953,7 +949,7 @@ section.card:nth-of-type(2) input[readonly]{
 <div class="result-memo-item"><b>均し型枠</b><span>H3×2×L</span></div>
 <div class="result-memo-item"><b>均しコンクリート</b><span>W4×H3×L</span></div>
 <div class="result-memo-item"><b>製品代金</b><span>必要本数×製品1本価格</span></div>
-<div class="result-memo-item"><b>据え付け費</b><span>据え付け単価×施工延長</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>止水幅×2面×延長（ON時）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>幅×厚さ×延長（ON時）</span></div><div class="result-memo-item"><b>裏込め材</b><span>砕石＝（H1－H6－0.30）×0.30×L／防止材＝（H1－H6－0.30）×L</span></div>
+<div class="result-memo-item"><b>据え付け費</b><span>据え付け単価×施工延長</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>止水コンクリート厚×L（ON時・均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>幅×厚さ×延長（ON時・均しコンクリート単価）</span></div><div class="result-memo-item"><b>裏込め材</b><span>砕石＝（H1－H6－0.30）×0.30×L／防止材＝（H1－H6－0.30）×L</span></div>
 </div></div>
 </div>
 </details></div></section></div>
@@ -999,7 +995,7 @@ function calc(){
   const useWaterstop=$('useWaterstop')?.checked!==false;
   const backfillType=document.querySelector('input[name="backfillType"]:checked')?.value||'none';
   const waterstopW=num('WaterstopW'),waterstopH=num('WaterstopH');
-  const AwstopForm=useWaterstop?waterstopW*2*L:0;
+  const AwstopForm=useWaterstop?waterstopH*L:0;
   const VwstopConc=useWaterstop?waterstopW*waterstopH*L:0;
   const accessoryHeight=Math.max(0,H1-H6-0.30);
   const Qbackfill=backfillType==='stone'?accessoryHeight*0.30*L:(backfillType==='sheet'?accessoryHeight*L:0);
@@ -1017,7 +1013,7 @@ function calc(){
   $('k_productm').textContent=yen(prodLen>0?prodPrice/prodLen:0);
 
   const vals={exc:Vexc,back:Vback,spoil:Vspoil,bed:Abed,stone:Vstone,nform:Anform,blnd:Vblnd,product:count,set:L,wstopForm:AwstopForm,wstopConc:VwstopConc,backfill:Qbackfill};
-  const prices={exc:num('Pexc'),back:num('Pback'),spoil:num('Pspoil'),bed:num('Pbed'),stone:num('Pstone'),nform:num('Pnform'),blnd:num('Pblnd'),product:prodPrice,set:num('Pset'),wstopForm:num('PwaterstopForm'),wstopConc:num('PwaterstopConc'),backfill:backfillType==='stone'?num('Pstone'):(backfillType==='sheet'?num('Pfilter'):0)};
+  const prices={exc:num('Pexc'),back:num('Pback'),spoil:num('Pspoil'),bed:num('Pbed'),stone:num('Pstone'),nform:num('Pnform'),blnd:num('Pblnd'),product:prodPrice,set:num('Pset'),wstopForm:num('Pnform'),wstopConc:num('Pblnd'),backfill:backfillType==='stone'?num('Pstone'):(backfillType==='sheet'?num('Pfilter'):0)};
 
   const rate=Math.max(0,Math.min(99.9,num('ProfitRate')));
   const divisor=1-rate/100;
@@ -1046,8 +1042,8 @@ function calc(){
   $('k_cost_unitm').textContent=yen(unit);
   $('k_est_unitm').textContent=yen(estUnitm);
 }
-const inputIds=['H1','H2','H3','H4','H5','H6','W1','W2','W3','W4','E','N','L','Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','ProdLen','ProdPrice','Pset','ProfitRate','WaterstopW','WaterstopH','PwaterstopForm','PwaterstopConc','Pfilter'];inputIds.forEach(id=>$(id)?.addEventListener('input',calc));$('useWaterstop')?.addEventListener('change',calc);document.querySelectorAll('input[name="backfillType"]').forEach(el=>el.addEventListener('change',calc));document.querySelectorAll('[data-dim]').forEach(el=>{const cls=el.dataset.dim;el.addEventListener('focus',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.add('active')));el.addEventListener('blur',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.remove('active')))});
-const EST_KEY='PrecastLWall_estimates_v1';const fields=['projectName','estimateName','H1','H2','H3','H4','H5','H6','W1','W2','W3','W4','E','N','L','Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','ProductManufacturer','ProductName','ProductSpecification','ProdLen','ProdPrice','Pset','ProductMasterId','ProductMasterUpdatedAt','ProfitRate','useWaterstop','backfillNone','backfillStone','backfillSheet','WaterstopW','WaterstopH','PwaterstopForm','PwaterstopConc','Pfilter'];function store(){try{return JSON.parse(localStorage.getItem(EST_KEY)||'{}')}catch(e){return {}}}function projectKey(){return ($('projectName').value||'未設定工事').trim()||'未設定工事'}function refreshList(){const list=store()[projectKey()]||[],s=$('savedEstimateList');s.innerHTML=list.length?'':'<option value="">保存データなし</option>';list.forEach((x,i)=>{const o=document.createElement('option');o.value=i;o.textContent=x.name;s.appendChild(o)})}function saveEstimate(){const d=store(),pk=projectKey(),name=($('estimateName').value||'プレキャストL型擁壁 積算').trim(),values={};fields.forEach(id=>{const el=$(id);values[id]=el?(el.type==='checkbox'||el.type==='radio'?el.checked:el.value):''});d[pk]=d[pk]||[];const i=d[pk].findIndex(x=>x.name===name),item={name,values,updatedAt:new Date().toISOString()};if(i>=0)d[pk][i]=item;else d[pk].push(item);localStorage.setItem(EST_KEY,JSON.stringify(d));refreshList();alert('積算データを保存しました。')}function loadEstimate(){const item=(store()[projectKey()]||[])[parseInt($('savedEstimateList').value,10)];if(!item)return;Object.entries(item.values||{}).forEach(([id,v])=>{const el=$(id);if(!el)return;if(el.type==='checkbox'||el.type==='radio')el.checked=!!v;else el.value=v});updateSelected();calc()}function deleteEstimate(){const d=store(),pk=projectKey(),i=parseInt($('savedEstimateList').value,10);if(!Number.isFinite(i)||!d[pk]?.[i])return;if(!confirm('選択中の積算データを削除しますか？'))return;d[pk].splice(i,1);localStorage.setItem(EST_KEY,JSON.stringify(d));refreshList()}/* 積算保存・呼出・削除はMS.AppAdapterで共通化 */
+const inputIds=['H1','H2','H3','H4','H5','H6','W1','W2','W3','W4','E','N','L','Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','ProdLen','ProdPrice','Pset','ProfitRate','WaterstopW','WaterstopH','Pfilter'];inputIds.forEach(id=>$(id)?.addEventListener('input',calc));$('useWaterstop')?.addEventListener('change',calc);document.querySelectorAll('input[name="backfillType"]').forEach(el=>el.addEventListener('change',calc));document.querySelectorAll('[data-dim]').forEach(el=>{const cls=el.dataset.dim;el.addEventListener('focus',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.add('active')));el.addEventListener('blur',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.remove('active')))});
+const EST_KEY='PrecastLWall_estimates_v1';const fields=['projectName','estimateName','H1','H2','H3','H4','H5','H6','W1','W2','W3','W4','E','N','L','Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','ProductManufacturer','ProductName','ProductSpecification','ProdLen','ProdPrice','Pset','ProductMasterId','ProductMasterUpdatedAt','ProfitRate','useWaterstop','backfillNone','backfillStone','backfillSheet','WaterstopW','WaterstopH','Pfilter'];function store(){try{return JSON.parse(localStorage.getItem(EST_KEY)||'{}')}catch(e){return {}}}function projectKey(){return ($('projectName').value||'未設定工事').trim()||'未設定工事'}function refreshList(){const list=store()[projectKey()]||[],s=$('savedEstimateList');s.innerHTML=list.length?'':'<option value="">保存データなし</option>';list.forEach((x,i)=>{const o=document.createElement('option');o.value=i;o.textContent=x.name;s.appendChild(o)})}function saveEstimate(){const d=store(),pk=projectKey(),name=($('estimateName').value||'プレキャストL型擁壁 積算').trim(),values={};fields.forEach(id=>{const el=$(id);values[id]=el?(el.type==='checkbox'||el.type==='radio'?el.checked:el.value):''});d[pk]=d[pk]||[];const i=d[pk].findIndex(x=>x.name===name),item={name,values,updatedAt:new Date().toISOString()};if(i>=0)d[pk][i]=item;else d[pk].push(item);localStorage.setItem(EST_KEY,JSON.stringify(d));refreshList();alert('積算データを保存しました。')}function loadEstimate(){const item=(store()[projectKey()]||[])[parseInt($('savedEstimateList').value,10)];if(!item)return;Object.entries(item.values||{}).forEach(([id,v])=>{const el=$(id);if(!el)return;if(el.type==='checkbox'||el.type==='radio')el.checked=!!v;else el.value=v});updateSelected();calc()}function deleteEstimate(){const d=store(),pk=projectKey(),i=parseInt($('savedEstimateList').value,10);if(!Number.isFinite(i)||!d[pk]?.[i])return;if(!confirm('選択中の積算データを削除しますか？'))return;d[pk].splice(i,1);localStorage.setItem(EST_KEY,JSON.stringify(d));refreshList()}/* 積算保存・呼出・削除はMS.AppAdapterで共通化 */
 let selectedSnapshot=null;function updateSelected(){const name=$('ProductName').value.trim(),maker=$('ProductManufacturer').value.trim(),spec=$('ProductSpecification').value.trim();$('selectedProductMaster').innerHTML=name?'<b>'+[maker,name,spec].filter(Boolean).join(' ／ ')+'</b><br>製品 '+yen(num('ProdPrice'))+'円/本（'+fmt(num('ProdLen'))+'m）・据付 '+yen(num('Pset'))+'円/m':'製品は選択されていません。'}['ProductName','ProductManufacturer','ProductSpecification','ProdLen','ProdPrice','Pset'].forEach(id=>$(id).addEventListener('input',updateSelected));
 async function getProducts(){if(!window.MS?.ProductMaster?.list)return[];return await MS.ProductMaster.list({category:'precast_l_wall',enabledOnly:true})}async function renderProducts(){const q=$('productKeyword').value.trim().toLowerCase(),rows=await getProducts(),list=$('productMasterList');const f=rows.filter(r=>[r.manufacturer,r.productName,r.specification,r.modelCode].join(' ').toLowerCase().includes(q));list.innerHTML=f.length?'':'<div class="selected-product">登録製品がありません。</div>';f.forEach(r=>{const d=document.createElement('div');d.className='master-item';d.innerHTML='<div><div class="master-name">'+[r.manufacturer,r.productName].filter(Boolean).join(' ／ ')+'</div><div class="master-meta">'+(r.specification||'')+'<br>製品 '+yen(Number(r.productPrice||0))+'円/本（'+fmt(Number(r.unitLength||0))+'m）・据付 '+yen(Number(r.installationPrice||0))+'円/m</div></div><button class="primary" style="width:auto;min-width:80px">選択</button>';d.querySelector('button').onclick=()=>selectProduct(r);list.appendChild(d)})}function selectProduct(r){
   const v=window.MS?.ProductMaster?.toAppValues?MS.ProductMaster.toAppValues(r,'precast_l_wall'):{};
@@ -1290,7 +1286,7 @@ function msInstallCsvSaveHook(){
       const localMaster=window.__precastLocalPriceMaster||null;
       const currentPriceIds=[
         'Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd',
-        'PwaterstopForm','PwaterstopConc','Pfilter'
+        'Pfilter'
       ];
       const currentPrices={};
       currentPriceIds.forEach(function(id){
@@ -1354,7 +1350,7 @@ window.addEventListener('load',async()=>{
       collectValues:function(){const values={};fields.forEach(function(id){if($(id))values[id]=$(id).value;});return values;},
       applyValues:function(values){Object.keys(values||{}).forEach(function(id){if($(id))$(id).value=values[id];});updateSelected();calc();},
       collectPrices:function(){const values={};['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd'].forEach(function(id){if($(id))values[id]=$(id).value;});return values;},
-      applyPrices:function(values){Object.keys(values||{}).forEach(function(id){if($(id))$(id).value=values[id];});calc();}
+      applyPrices:function(values){if(typeof window.applyPrecastCommonPriceFields==='function')window.applyPrecastCommonPriceFields(values||{});else{Object.keys(values||{}).forEach(function(id){if($(id))$(id).value=values[id];});calc();}}
     });
     const currentProjectAfter=await MS.Project?.getCurrent?.();
     if(currentProjectAfter){
@@ -1388,7 +1384,7 @@ window.addEventListener('load',async()=>{
   var SELECT_ID='precastCommonPriceReadonlyList';
   var APPLY_ID='precastCommonPriceReadonlyApply';
   var NOTE_ID='precastCommonPriceReadonlyNote';
-  var PRICE_IDS=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','PwaterstopForm','PwaterstopConc','Pfilter'];
+  var PRICE_IDS=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','Pfilter'];
   function byId(id){return document.getElementById(id);}
   function getMasters(){
     if(!window.MSPriceMaster) return [];
@@ -1402,17 +1398,19 @@ window.addEventListener('load',async()=>{
     try{return window.MSPriceMaster.getActive();}catch(e){return null;}
   }
   function applyPrices(prices){
+    if(typeof window.applyPrecastCommonPriceFields==="function") window.applyPrecastCommonPriceFields(prices||{});
     var values=prices||{};
     PRICE_IDS.forEach(function(id){
       var input=byId(id); if(!input||values[id]===undefined||values[id]===null||values[id]==='') return;
       {
         var __v=values[id];
         var __n=Number(String(__v==null?"":__v).replace(/[,，\s]/g,"").trim());
-        input.value=Number.isFinite(__n)
-          ? (Math.abs(__n-Math.round(__n))<1e-9
-              ? Math.round(__n).toLocaleString("ja-JP")
-              : __n.toLocaleString("ja-JP",{maximumFractionDigits:6}))
-          : __v;
+        if(Number.isFinite(__n)){
+          input.value=String(__n);
+          if(input.type!=="number") input.value=Math.abs(__n-Math.round(__n))<1e-9
+            ? Math.round(__n).toLocaleString("ja-JP")
+            : __n.toLocaleString("ja-JP",{maximumFractionDigits:6});
+        }else input.value=__v;
       }
       input.dispatchEvent(new Event('input',{bubbles:true}));
       input.dispatchEvent(new Event('change',{bubbles:true}));
@@ -1496,11 +1494,12 @@ window.addEventListener('load',async()=>{
   var APP_TYPE='precast_l_wall';
   var SELECT_ID='precastCommonPriceReadonlyList';
   var NOTE_ID='precastCommonPriceReadonlyNote';
-  var PRICE_IDS=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','PwaterstopForm','PwaterstopConc','Pfilter'];
+  var PRICE_IDS=['Pexc','Pback','Pspoil','Pbed','Pstone','Pnform','Pblnd','Pfilter'];
 
   function byId(id){return document.getElementById(id);}
 
   function applyPrices(prices){
+    if(typeof window.applyPrecastCommonPriceFields==="function") window.applyPrecastCommonPriceFields(prices||{});
     var values=prices||{};
     PRICE_IDS.forEach(function(id){
       var input=byId(id);
@@ -1622,6 +1621,63 @@ window.addEventListener('load',async()=>{
 </script>
 
 
+<script id="precast-common-price-field-map-fix">
+(function(window, document){
+  "use strict";
+  function byId(id){ return document.getElementById(id); }
+  function rawNumber(value){
+    if(value===undefined || value===null || value==="") return null;
+    var n=Number(String(value).replace(/[,，\s]/g,"").trim());
+    return Number.isFinite(n) ? n : null;
+  }
+  function setPrice(id, value){
+    var el=byId(id); if(!el) return;
+    var n=rawNumber(value);
+    if(n===null) return;
+    // type=number でもカンマで空欄にならないよう、まず生の数値で設定する。
+    el.value=String(n);
+    // Ver1.4.0 の表示形式に合わせ、text入力ならカンマ表示する。
+    if(el.type!=="number") el.value=Math.abs(n-Math.round(n))<1e-9
+      ? Math.round(n).toLocaleString("ja-JP")
+      : n.toLocaleString("ja-JP",{maximumFractionDigits:6});
+    el.dispatchEvent(new Event("input",{bubbles:true}));
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+  }
+  var MAP={
+    Pexc:["Pexc","excavation","exc"],
+    Pback:["Pback","backfill","back"],
+    Pspoil:["Pspoil","spoil","disposal"],
+    Pbed:["Pbed","bed","bedding"],
+    Pstone:["Pstone","stone","crushedStone"],
+    // L型擁壁 Ver1.4.0 と同じ共通単価キーを最優先
+    Pnform:["PleanForm","Pnform","nform","levelingForm","blindingForm"],
+    Pblnd:["Plean","Pblnd","blindingConcrete","levelingConcrete","blnd"],
+    Pfilter:["Pfilter","filterSheet","filter"]
+  };
+  function unwrapPrices(prices){
+    prices=prices||{};
+    // 保存形式の違いに備えて prices / values の内側も受け付ける。
+    if(prices.prices && typeof prices.prices==="object") prices=prices.prices;
+    if(prices.values && typeof prices.values==="object") prices=prices.values;
+    return prices||{};
+  }
+  window.applyPrecastCommonPriceFields=function(prices){
+    prices=unwrapPrices(prices);
+    Object.keys(MAP).forEach(function(id){
+      var keys=MAP[id];
+      for(var i=0;i<keys.length;i++){
+        if(prices[keys[i]]!==undefined && prices[keys[i]]!==null && prices[keys[i]]!==""){
+          setPrice(id,prices[keys[i]]); break;
+        }
+      }
+    });
+    // 止水は専用単価を持たず、必ず均し単価と同額を使う。
+    window.__precastWaterstopFormPrice = rawNumber(byId("Pnform") && byId("Pnform").value) || 0;
+    window.__precastWaterstopConcPrice = rawNumber(byId("Pblnd") && byId("Pblnd").value) || 0;
+    if(typeof window.calc==="function") window.calc();
+  };
+})(window, document);
+</script>
 <script id="precast-price-startup-controller-final">
 (function(window, document){
   "use strict";
@@ -1649,10 +1705,11 @@ window.addEventListener('load',async()=>{
   }
 
   function applyPrices(prices){
+    if(typeof window.applyPrecastCommonPriceFields==="function") window.applyPrecastCommonPriceFields(prices||{});
     var values = prices || {};
     var ids = [
       "Pexc","Pback","Pspoil","Pbed","Pstone",
-      "Pnform","Pblnd","PwaterstopForm","PwaterstopConc","Pfilter"
+      "Pnform","Pblnd","Pfilter"
     ];
 
     ids.forEach(function(id){
@@ -2166,7 +2223,7 @@ window.addEventListener('load',async()=>{
   ]);
   var PRICE_IDS = new Set([
     "ProdPrice","Pset","Pexc","Pback","Pspoil","Pbed","Pstone","Pnform","Pblnd",
-    "PwaterstopForm","PwaterstopConc","Pfilter"
+    "Pfilter"
   ]);
 
   var accessoryChoiceEditTarget = null;
@@ -2226,7 +2283,7 @@ window.addEventListener('load',async()=>{
   }
 
   function accessoryFields(){
-    var ids=["useWaterstop","WaterstopW","WaterstopH","PwaterstopForm","PwaterstopConc"];
+    var ids=["useWaterstop","WaterstopW","WaterstopH"];
     var arr=ids.map(byId).filter(visibleEnabled);
     var radio=selectedBackfillRadio();
     if(radio && visibleEnabled(radio)) arr.push(radio);
@@ -2533,7 +2590,7 @@ window.addEventListener('load',async()=>{
 <script id="precast-v140-comma-display-stable-final">
 (function(){
   "use strict";
-  var PRICE_IDS=["ProdPrice","Pset","Pexc","Pback","Pspoil","Pbed","Pstone","Pnform","Pblnd","PwaterstopForm","PwaterstopConc","Pfilter"];
+  var PRICE_IDS=["ProdPrice","Pset","Pexc","Pback","Pspoil","Pbed","Pstone","Pnform","Pblnd","Pfilter"];
 
   function raw(v){
     return String(v==null?"":v).replace(/[,，\s]/g,"").replace(/．/g,".").trim();

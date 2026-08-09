@@ -370,6 +370,19 @@ section.card:nth-of-type(2) #profit{
 }
 </style>
 
+
+<style id="gravity-accessory-lwall-unified-v140">
+/* 付帯工：L型擁壁（プレキャスト統一後）と同じ青系デザイン */
+#accessoryDetails{border:2px solid #8fc0ed!important;border-radius:12px!important;background:#fbfdff!important;overflow:hidden!important;box-shadow:0 4px 12px rgba(0,112,192,.09)!important;}
+#accessoryDetails>summary{background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;color:#0647a5!important;border-color:#cfe3f7!important;padding:11px 12px!important;font-size:13px!important;font-weight:950!important;}
+#accessoryDetails[open]>summary{border-bottom:1px solid #cfe3f7!important;}
+#accessoryDetails .ms-collapse-body{background:#fbfdff!important;}
+#accessoryDetails .accessory-choice label{background:#fbfdff!important;border-color:#d7e7f7!important;}
+#accessoryDetails #WaterstopW,#accessoryDetails #WaterstopH,#accessoryDetails #Pfilter{background:#fff!important;color:var(--text)!important;font-weight:400!important;border-top:1px solid #dfe4ea!important;border-right:1px solid #dfe4ea!important;border-bottom:2px solid #dfe4ea!important;border-radius:10px!important;}
+#accessoryDetails #WaterstopW,#accessoryDetails #WaterstopH{border-left:6px solid #8fc9ef!important;border-bottom-color:#8fc9ef!important;}
+#accessoryDetails #Pfilter{border-left:6px solid #8A4653!important;border-bottom-color:#8A4653!important;}
+@media(max-width:700px){#accessoryDetails .accessory-choice{grid-template-columns:1fr!important;}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="gravityDefaultsTrigger" title="重力式擁壁積算">重力式擁壁 積算アプリ Ver.1.4.0</h1><div class="sub">土工／地業／擁壁／止水・水抜き・裏込め工を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -470,23 +483,21 @@ section.card:nth-of-type(2) #profit{
 
 <div class="hr"></div>
 <details class="ms-collapse" id="accessoryDetails">
-<summary>止水・水抜き・裏込め工</summary>
+<summary>付帯工</summary>
 <div class="ms-collapse-body">
-<div class="accessory-key-hint-v140">フォーカス後に <b>スペース</b> で変更モード → <b>↑↓</b> で変更します。</div>
-
-<div class="accessory-choice">
-<label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠含む）</label>
+<div class="accessory-key-hint-v140">付帯工：通常は <b>↑↓ / Enterで移動</b>　変更するときだけ <b>Space → ↑↓</b>　確定：<b>Enter</b></div>
+<div class="accessory-choice" style="grid-template-columns:1fr">
+<label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠とセット）</label>
 </div>
+<div class="row"><div><label>止水コンクリート幅（m）</label><input id="WaterstopW" type="number" step="0.001" value="0.30"></div><div><label>止水コンクリート厚（m）</label><input id="WaterstopH" type="number" step="0.001" value="0.05"></div></div>
+<label style="margin-top:8px">裏込め材</label>
 <div class="accessory-choice">
 <label><input id="backfillNone" name="backfillType" type="radio" value="none">なし</label>
 <label><input id="backfillStone" name="backfillType" type="radio" value="stone" checked>裏込め砕石</label>
 <label><input id="backfillSheet" name="backfillType" type="radio" value="sheet">吸出し防止材</label>
 </div>
-<div class="accessory-note">
-止水コンクリートは型枠とセットでON／OFFします。吸出し防止材＝（H1－H4－0.30）×L、
-裏込め砕石＝吸出し防止材面積×0.30、水抜きパイプ＝吸出し防止材面積÷3.3を切り上げた本数です。
-</div>
-
+<div class="row"><div><label>吸出し防止材 単価/m²</label><input id="Pfilter" type="text" inputmode="decimal" value="1,000"></div><div></div></div>
+<div class="accessory-note"><b>止水用の単価入力欄はありません。</b> 止水コンクリート型枠は「均し型枠」、止水コンクリートは「均しコンクリート」の単価を自動使用します。裏込め砕石は砕石単価を使用し、吸出し防止材だけ単価を入力できます。</div>
 </div>
 </details>
 <div class="hr"></div><div class="sectionTitle">単価（円）</div>
@@ -495,7 +506,6 @@ section.card:nth-of-type(2) #profit{
 <div class="row"><div><label>砕石 / m³</label><input id="Pstone" type="number" value="6,000"></div><div><label>均しCo / m³</label><input id="Plean" type="number" value="18,000"></div></div>
 <div class="row"><div><label>均し型枠 / m²</label><input id="PleanForm" type="number" value="3,500"></div><div><label>擁壁Co / m³</label><input id="Pconc" type="number" value="22,000"></div></div>
 <div class="row"><div><label>擁壁型枠 / m²</label><input id="Pform" type="number" value="4,500"></div><div><label>水抜きパイプ / 本</label><input id="Pdrain" type="number" value="1,500"></div></div>
-<div class="row"><div><label>吸出し防止材 / m²</label><input id="Pfilter" type="number" value="1,000"></div><div></div></div>
 <div class="note">止水コンクリート型枠は均し型枠単価、止水コンクリートは均しコンクリート単価、裏込め砕石は砕石単価を使用します。</div>
 </div></section>
 
@@ -572,7 +582,7 @@ section.card:nth-of-type(2) #profit{
 'use strict';
 const $=id=>document.getElementById(id);
 const APP_TYPE='gravity_wall';
-const inputIds=['W1','W2','W3','H1','H2','H3','H4','L','e','n','Pexc','Pspoil','Pback','Pbed','Pstone','Plean','PleanForm','Pconc','Pform','Pdrain','Pfilter','profit','useWaterstop','backfillNone','backfillStone','backfillSheet'];
+const inputIds=['W1','W2','W3','H1','H2','H3','H4','L','e','n','Pexc','Pspoil','Pback','Pbed','Pstone','Plean','PleanForm','Pconc','Pform','Pdrain','Pfilter','profit','useWaterstop','WaterstopW','WaterstopH','backfillNone','backfillStone','backfillSheet'];
 const num=id=>Math.max(0,parseFloat(String($(id).value||'').replace(/,/g,''))||0);
 const fmt=(v,d=3)=>Number(v||0).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
 const yen=v=>'¥'+Math.round(v||0).toLocaleString('ja-JP');
@@ -582,7 +592,7 @@ let lastRows=[],lastTotal=0,lastEstimateTotal=0;
 function values(){const o={};inputIds.forEach(id=>{const el=$(id);if(!el)return;o[id]=(el.type==='checkbox'||el.type==='radio')?el.checked:num(id)});o.projectName=$('projectName').value;o.estimateName=$('estimateName').value;return o}
 function applyValues(v){if(!v)return;inputIds.forEach(id=>{const el=$(id);if(!el||v[id]==null)return;if(el.type==='checkbox'||el.type==='radio')el.checked=!!v[id];else el.value=v[id]});if(v.projectName!=null)$('projectName').value=v.projectName;if(v.estimateName!=null)$('estimateName').value=v.estimateName;if(typeof window.MSGWCommaDisplayChange==='function')window.MSGWCommaDisplayChange();calc()}
 function calc(){
- const W1=num('W1'),W2=num('W2'),W3=num('W3'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),L=num('L'),e=num('e'),n=num('n');
+ const W1=num('W1'),W2=num('W2'),W3=num('W3'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),L=num('L'),e=num('e'),n=num('n'),WaterstopW=num('WaterstopW'),WaterstopH=num('WaterstopH');
  const D=H1+H2+H3;
  const bottom=W3+e;
  const frontExc=e*(H4+H2+H3);
@@ -608,8 +618,8 @@ function calc(){
  const useNone=!!($('backfillNone')&&$('backfillNone').checked);
  const useStone=!!($('backfillStone')&&$('backfillStone').checked);
  const useSheet=!!($('backfillSheet')&&$('backfillSheet').checked);
- const waterstopForm=useWaterstop?L*0.05:0;
- const waterstopConc=useWaterstop?L*0.30*0.05:0;
+ const waterstopForm=useWaterstop?WaterstopH*L:0;
+ const waterstopConc=useWaterstop?WaterstopW*WaterstopH*L:0;
  const drain=useNone?0:drainCount;
  const backStone=useStone?filterBase*0.30:0;
  const filter=useSheet?filterBase:0;
@@ -624,8 +634,8 @@ function calc(){
   ['均しコンクリート',lean,'m³',num('Plean'),'W3×H2×L'],
   ['擁壁型枠',form,'m²',num('Pform'),'前面斜面＋背面鉛直'],
   ['擁壁コンクリート',wall,'m³',num('Pconc'),'台形断面×L'],
-  ['止水コンクリート型枠',waterstopForm,'m²',num('PleanForm'),'L×0.05'],
-  ['止水コンクリート',waterstopConc,'m³',num('Plean'),'L×0.30×0.05'],
+  ['止水コンクリート型枠',waterstopForm,'m²',num('PleanForm'),'止水コンクリート厚×L'],
+  ['止水コンクリート',waterstopConc,'m³',num('Plean'),'止水コンクリート幅×止水コンクリート厚×L'],
   ['水抜きパイプ',drain,'本',num('Pdrain'),'ceil{吸出し防止材面積÷3.3}'],
   [useNone?'裏込め材なし':(useSheet?'吸出し防止材':'裏込め砕石'),useNone?0:(useSheet?filter:backStone),useSheet?'m²':(useNone?'': 'm³'),useNone?0:(useSheet?num('Pfilter'):num('Pstone')),useNone?'なし':(useSheet?'（H1－H4－0.30）×L':'吸出し防止材面積×0.30')]
  ];
@@ -650,8 +660,8 @@ function calc(){
  <div class="memo-item"><span class="memo-label">均しコンクリート</span><span>W3×H2×L＝${fmt(lean)} m³</span></div>
  <div class="memo-item"><span class="memo-label">擁壁型枠</span><span>{H1＋√(H1²＋(W2－W1)²)}×L＝${fmt(form)} m²</span></div>
  <div class="memo-item"><span class="memo-label">擁壁コンクリート</span><span>（W1＋W2）×H1÷2×L＝${fmt(wall)} m³</span></div>
- <div class="memo-item"><span class="memo-label">止水コンクリート型枠</span><span>L×0.05＝${fmt(waterstopForm)} m²</span></div>
- <div class="memo-item"><span class="memo-label">止水コンクリート</span><span>L×0.30×0.05＝${fmt(waterstopConc)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">止水コンクリート型枠</span><span>止水コンクリート厚×L＝${fmt(WaterstopH)}×${fmt(L)}＝${fmt(waterstopForm)} m²</span></div>
+ <div class="memo-item"><span class="memo-label">止水コンクリート</span><span>止水コンクリート幅×止水コンクリート厚×L＝${fmt(WaterstopW)}×${fmt(WaterstopH)}×${fmt(L)}＝${fmt(waterstopConc)} m³</span></div>
  <div class="memo-item"><span class="memo-label">水抜きパイプ</span><span>ceil｛${fmt(filterBase)}÷3.3｝＝${drain} 本</span></div>
  <div class="memo-item"><span class="memo-label">吸出し防止材</span><span>（H1－H4－0.30）×L＝${fmt(filterBase)} m²</span></div>
  <div class="memo-item"><span class="memo-label">裏込め砕石</span><span>吸出し防止材面積×0.30＝${fmt(filterBase*0.30)} m³</span></div>
@@ -1386,7 +1396,7 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
 <script id="gravity-number-format-v140">
 (function(){
   "use strict";
-  var DIM_IDS=new Set(["W1","W2","W3","H1","H2","H3","H4","e","n","L"]);
+  var DIM_IDS=new Set(["W1","W2","W3","H1","H2","H3","H4","e","n","L","WaterstopW","WaterstopH"]);
   var PRICE_IDS=new Set(["Pexc","Pspoil","Pback","Pbed","Pstone","Plean","PleanForm","Pconc","Pform","Pdrain","Pfilter"]);
 
   function raw(v){return String(v==null?"":v).replace(/[,，\s]/g,"").replace(/．/g,".").trim();}
@@ -1450,11 +1460,14 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
   }
 
   var normalIds=["W1","W2","W3","H1","H2","H3","H4","e","n","L","profit"];
-  var priceIds=["Pexc","Pspoil","Pback","Pbed","Pstone","Plean","PleanForm","Pconc","Pform","Pdrain","Pfilter"];
+  var priceIds=["Pexc","Pspoil","Pback","Pbed","Pstone","Plean","PleanForm","Pconc","Pform","Pdrain"];
   var editChoice=null;
 
   function acc(){return el("accessoryDetails")}
   function water(){return el("useWaterstop")}
+  function waterW(){return el("WaterstopW")}
+  function waterH(){return el("WaterstopH")}
+  function filterPrice(){return el("Pfilter")}
   function radios(){
     return ["backfillNone","backfillStone","backfillSheet"].map(el).filter(Boolean);
   }
@@ -1486,7 +1499,7 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
     var d=acc();
     if(!d) return;
     d.open=true;
-    focusField(selectedBackfill() || water());
+    focusField(filterPrice() || selectedBackfill() || waterH() || waterW() || water());
   }
   function closeToPrice(){
     var d=acc();
@@ -1553,13 +1566,13 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
           if(e.key==="Enter"){
             e.preventDefault(); e.stopImmediatePropagation();
             mark(null,false);
-            focusField(selectedBackfill());
+            focusField(waterW() || selectedBackfill());
             return;
           }
         }else{
           if(e.key==="Enter" || e.key==="ArrowDown"){
             e.preventDefault(); e.stopImmediatePropagation();
-            focusField(selectedBackfill());
+            focusField(waterW() || selectedBackfill());
             return;
           }
           if(e.key==="ArrowUp"){
@@ -1568,6 +1581,17 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
             return;
           }
         }
+        return;
+      }
+
+      if(target.id==="WaterstopW"){
+        if(e.key==="Enter" || e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();focusField(waterH() || selectedBackfill());return;}
+        if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();focusField(water());return;}
+        return;
+      }
+      if(target.id==="WaterstopH"){
+        if(e.key==="Enter" || e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();focusField(selectedBackfill());return;}
+        if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();focusField(waterW() || water());return;}
         return;
       }
 
@@ -1588,18 +1612,23 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
           }
           if(e.key==="Enter"){
             e.preventDefault(); e.stopImmediatePropagation();
-            closeToPrice(); return;
+            mark(null,false); focusField(filterPrice() || el("Pexc")); return;
           }
         }else{
           if(e.key==="Enter" || e.key==="ArrowDown"){
             e.preventDefault(); e.stopImmediatePropagation();
-            closeToPrice(); return;
+            focusField(filterPrice() || el("Pexc")); return;
           }
           if(e.key==="ArrowUp"){
             e.preventDefault(); e.stopImmediatePropagation();
-            focusField(water()); return;
+            focusField(waterH() || waterW() || water()); return;
           }
         }
+        return;
+      }
+      if(target.id==="Pfilter"){
+        if(e.key==="Enter" || e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();closeToPrice();return;}
+        if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();focusField(selectedBackfill() || waterH());return;}
         return;
       }
     }

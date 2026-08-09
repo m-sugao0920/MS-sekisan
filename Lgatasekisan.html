@@ -1212,6 +1212,24 @@ section.card:nth-of-type(2) input[readonly]{
   box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
 }
 </style>
+
+<style id="lwall-accessory-precast-match-v140">
+/* 付帯工をプレキャストL型擁壁 Ver.1.4.0 と同じ配色・まとまりに統一 */
+#accessoryDetails{border:2px solid #8fc0ed!important;border-radius:12px!important;background:#fbfdff!important;overflow:hidden!important;box-shadow:0 4px 12px rgba(0,112,192,.09)!important;}
+#accessoryDetails>summary{padding:11px 12px!important;background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;color:#0647a5!important;font-size:13px!important;font-weight:950!important;white-space:nowrap!important;border-color:#cfe3f7!important;}
+#accessoryDetails[open]>summary{border-bottom:1px solid #cfe3f7!important;}
+#accessoryDetails .accessory-collapse-content{background:#fbfdff!important;padding:10px 12px 12px!important;}
+#accessoryDetails .backfill-choice{grid-template-columns:repeat(3,1fr);gap:7px;margin:5px 0 8px;}
+#accessoryDetails .backfill-choice label{background:#fbfdff!important;border:1px solid var(--border)!important;color:#1b1f24!important;}
+#accessoryDetails .backfill-choice input:focus-visible{outline:none!important;}
+#accessoryDetails .backfill-choice label:has(input:focus){border:2px solid #8fc0ed!important;box-shadow:0 0 0 3px rgba(0,112,192,.10)!important;}
+#accessoryDetails .backfill-choice label.accessory-select-editing{border:2px solid #8A4653!important;background:#fff8f9!important;box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;color:#7A3542!important;}
+#accessoryDetails .backfill-choice label.accessory-select-editing input{accent-color:#8A4653;}
+#accessoryDetails #WaterstopW,#accessoryDetails #WaterstopH,#accessoryDetails #Pfilter{background:#fff!important;color:var(--text)!important;font-weight:400!important;border-top:1px solid #dfe4ea!important;border-right:1px solid #dfe4ea!important;border-bottom:2px solid #dfe4ea!important;border-radius:10px!important;}
+#accessoryDetails #WaterstopW,#accessoryDetails #WaterstopH{border-left:6px solid #8fc9ef!important;border-bottom-color:#8fc9ef!important;}
+#accessoryDetails #Pfilter{border-left:6px solid #8A4653!important;border-bottom-color:#8A4653!important;}
+@media(max-width:700px){#accessoryDetails .backfill-choice{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 <header>
@@ -1784,21 +1802,15 @@ section.card:nth-of-type(2) .btns button{
 <div><label>利益率（%）</label><input id="ProfitRate" max="99.9" min="0" step="0.1" type="number" value="20"/></div>
 </div>
 <div class="hr"></div>
-<details class="accessory-collapse">
+<details class="accessory-collapse" id="accessoryDetails">
 <summary><span>付帯工</span></summary>
 <div class="accessory-collapse-content">
-<div class="accessory-key-hint-v140">
-通常は <b>↑↓ / Enterで移動</b>　変更するときだけ <b>Space → ↑↓</b>　確定：<b>Enter</b>
-</div>
-<div class="backfill-choice">
-<label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠含む）</label>
-</div>
-<div class="backfill-choice">
-<label><input id="backfillNone" name="backfillType" type="radio" value="none">なし</label>
-<label><input id="backfillStone" name="backfillType" type="radio" value="stone" checked>裏込め砕石</label>
-<label><input id="backfillSheet" name="backfillType" type="radio" value="sheet">吸出し防止材</label>
-</div>
-<div class="accessory-note">止水コンクリートは1つのボタンで、止水コンクリート型枠と止水コンクリートを同時にON／OFFできます。裏込め材は「なし・裏込め砕石・吸出し防止材」から選択できます。止水コンクリートは幅0.30m・厚さ0.05m、裏込め幅は0.30mで固定します。水抜きパイプは基準面積÷3.3の小数を切り上げて整数本で算出します。</div>
+<div class="accessory-key-hint-v140">付帯工：通常は <b>↑↓ / Enterで移動</b>　変更するときだけ <b>Space → ↑↓</b>　確定：<b>Enter</b></div>
+<div class="backfill-choice" style="grid-template-columns:1fr"><label><input id="useWaterstop" type="checkbox" checked>止水コンクリート（型枠とセット）</label></div>
+<div class="row"><div><label>止水コンクリート幅（m）</label><input id="WaterstopW" type="number" step="0.001" value="0.30"></div><div><label>止水コンクリート厚（m）</label><input id="WaterstopH" type="number" step="0.001" value="0.05"></div></div>
+<label>裏込め材</label><div class="backfill-choice"><label><input id="backfillNone" name="backfillType" type="radio" value="none">なし</label><label><input id="backfillStone" name="backfillType" type="radio" value="stone" checked>裏込め砕石</label><label><input id="backfillSheet" name="backfillType" type="radio" value="sheet">吸出し防止材</label></div>
+<div class="row"><div><label>吸出し防止材 単価/m²</label><input id="Pfilter" type="text" inputmode="decimal" value="1,000"></div><div></div></div>
+<div class="accessory-note"><b>止水用の単価入力欄はありません。</b> 止水コンクリート型枠は「均し型枠」、止水コンクリートは「均しコンクリート」の単価を自動使用します。裏込め砕石は砕石地業単価を使用し、吸出し防止材だけ単価を入力できます。</div>
 </div>
 </details>
 <div class="hr"></div>
@@ -1827,10 +1839,7 @@ section.card:nth-of-type(2) .btns button{
 <div><label>鉄筋 単価/kg</label><input id="Prebar" step="1" type="text" inputmode="numeric" value="220"/></div>
 <div><label>水抜きパイプ 単価/本</label><input id="Pdrain" step="1" type="text" inputmode="numeric" value="1,500"/></div>
 </div>
-<div class="row">
-<div><label>吸出し防止材 単価/m²</label><input id="Pfilter" step="1" type="text" inputmode="numeric" value="1,000"/></div>
-<div></div>
-</div>
+
 <div class="note">単価は左側の「単価マスター」で名前を付けて保存・呼出できます。</div>
 <div class="note">
 <b>土工・型枠（確定ルール）</b><br/>
@@ -1903,7 +1912,7 @@ section.card:nth-of-type(2) .btns button{
 <tr><td>mあたり単価</td><td></td><td></td><td></td><td class="mono" id="a_unitm">0</td><td class="mono estimate-price" id="eu_unitm">0</td><td class="mono estimate-amount" id="ea_unitm">0</td></tr>
 </tbody>
 </table>
-</div><details class="result-memo-box memo-collapse"><summary><span>計算式・計算メモ</span></summary><div class="result-memo-grid"><div class="result-memo-item"><b>掘削</b><span>A1=(H6+H3+H4)×e / D=H1+H2+H3+H4 / A2=(W4+e)×D+0.5×n×D² / 掘削=A1+A2</span></div><div class="result-memo-item"><b>埋戻し</b><span>掘削 −（砕石＋均し＋コンクリ）</span></div><div class="result-memo-item"><b>残土処理</b><span>砕石＋均し＋コンクリ（置換体積）</span></div><div class="result-memo-item"><b>床付け</b><span>W4×L</span></div><div class="result-memo-item"><b>砕石地業</b><span>W4×H4×L</span></div><div class="result-memo-item"><b>均し型枠</b><span>H3×2×L</span></div><div class="result-memo-item"><b>均しコンクリート</b><span>W4×H3×L</span></div><div class="result-memo-item"><b>擁壁コンクリート</b><span>A=W3(H2+H5)/2 + H1W1 / V=A×L</span></div><div class="result-memo-item"><b>型枠（擁壁）</b><span>2(H1+H2)L（壁前後のみ）</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>L×0.05（均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>L×0.30×0.05（均しコンクリート単価）</span></div><div class="result-memo-item"><b>水抜きパイプ</b><span>ceil｛(H1−H6−0.30)×L÷3.3｝</span></div><div class="result-memo-item"><b>裏込め砕石</b><span>(H1−H6−0.30)×0.30×L</span></div><div class="result-memo-item"><b>吸出し防止材</b><span>(H1−H6−0.30)×L（裏込め砕石と選択）</span></div><div class="result-memo-item"><b>立上り縦前筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>立上り縦後筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>基礎縦上筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>基礎縦下筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>立上り横前筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>立上り横後筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>基礎横上筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>基礎横下筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>鉄筋合計</b><span>上の合計</span></div><div class="result-memo-item"><b>合計</b><span>数量×単価の合計</span></div><div class="result-memo-item"><b>mあたり単価</b><span>合計金額 ÷ L</span></div></div></details>
+</div><details class="result-memo-box memo-collapse"><summary><span>計算式・計算メモ</span></summary><div class="result-memo-grid"><div class="result-memo-item"><b>掘削</b><span>A1=(H6+H3+H4)×e / D=H1+H2+H3+H4 / A2=(W4+e)×D+0.5×n×D² / 掘削=A1+A2</span></div><div class="result-memo-item"><b>埋戻し</b><span>掘削 −（砕石＋均し＋コンクリ）</span></div><div class="result-memo-item"><b>残土処理</b><span>砕石＋均し＋コンクリ（置換体積）</span></div><div class="result-memo-item"><b>床付け</b><span>W4×L</span></div><div class="result-memo-item"><b>砕石地業</b><span>W4×H4×L</span></div><div class="result-memo-item"><b>均し型枠</b><span>H3×2×L</span></div><div class="result-memo-item"><b>均しコンクリート</b><span>W4×H3×L</span></div><div class="result-memo-item"><b>擁壁コンクリート</b><span>A=W3(H2+H5)/2 + H1W1 / V=A×L</span></div><div class="result-memo-item"><b>型枠（擁壁）</b><span>2(H1+H2)L（壁前後のみ）</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>止水コンクリート厚×L（均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>止水コンクリート幅×止水コンクリート厚×L（均しコンクリート単価）</span></div><div class="result-memo-item"><b>水抜きパイプ</b><span>ceil｛(H1−H6−0.30)×L÷3.3｝</span></div><div class="result-memo-item"><b>裏込め砕石</b><span>(H1−H6−0.30)×0.30×L</span></div><div class="result-memo-item"><b>吸出し防止材</b><span>(H1−H6−0.30)×L（裏込め砕石と選択）</span></div><div class="result-memo-item"><b>立上り縦前筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>立上り縦後筋</b><span>N×{(H1+H2)+40d}</span></div><div class="result-memo-item"><b>基礎縦上筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>基礎縦下筋</b><span>N×{W3+40d}</span></div><div class="result-memo-item"><b>立上り横前筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>立上り横後筋</b><span>Nh×{L}（Nh=ceil((H1+H2)/p)+1）</span></div><div class="result-memo-item"><b>基礎横上筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>基礎横下筋</b><span>N×{W3}</span></div><div class="result-memo-item"><b>鉄筋合計</b><span>上の合計</span></div><div class="result-memo-item"><b>合計</b><span>数量×単価の合計</span></div><div class="result-memo-item"><b>mあたり単価</b><span>合計金額 ÷ L</span></div></div></details>
 <div class="note">
           ※ 縦筋の40dは自動で加算します（D13なら 0.52m）。横筋は40d加算しません。
         </div>
@@ -2108,8 +2117,10 @@ section.card:nth-of-type(2) .btns button{
     // 付帯工（固定寸法）
     const accessoryHeight = Math.max(0, H1 - H6 - 0.30);
     const useWaterstop = !!($("useWaterstop") && $("useWaterstop").checked);
-    const Awform = useWaterstop ? L * 0.05 : 0;
-    const Vwconc = useWaterstop ? L * 0.30 * 0.05 : 0;
+    const WaterstopW = Math.max(0, num("WaterstopW"));
+    const WaterstopH = Math.max(0, num("WaterstopH"));
+    const Awform = useWaterstop ? WaterstopH * L : 0;
+    const Vwconc = useWaterstop ? WaterstopW * WaterstopH * L : 0;
     const AfilterBase = accessoryHeight * L;
     const Ndrain = Math.ceil(AfilterBase / 3.3);
     const VbackstoneRaw = accessoryHeight * 0.30 * L;
@@ -2388,7 +2399,7 @@ section.card:nth-of-type(2) .btns button{
     "d_vf","d_vr","d_bvt","d_bvb","d_hf","d_hr","d_bht","d_bhb",
     "p_vf","p_vr","p_bvt","p_bvb","p_hf","p_hr","p_bht","p_bhb",
     "Pexc","Pbed","Pstone","Pnform","Pblnd","Pconc","Pform","Pback","Pspoil","Prebar",
-    "Pdrain","Pfilter","backfillNone","backfillStone","backfillSheet","useWaterstop","toggleBackless"
+    "Pdrain","Pfilter","WaterstopW","WaterstopH","WaterstopW","WaterstopH","backfillNone","backfillStone","backfillSheet","useWaterstop","toggleBackless"
   ];
 
   function normalizeProjectName(name){
@@ -2632,6 +2643,7 @@ section.card:nth-of-type(2) .btns button{
 
   window.addEventListener("load", () => { migrateOldPriceIfNeeded(); refreshPriceList(); loadPrices(); calc(); });
   ["backfillNone","backfillStone","backfillSheet","useWaterstop"].forEach(id=>{ const e=$(id); if(e) e.addEventListener("change", calc); });
+  ["WaterstopW","WaterstopH","Pfilter"].forEach(id=>{ const e=$(id); if(e){ e.addEventListener("input", calc); e.addEventListener("change", calc); } });
 
   // 印刷帳票
   function textOf(id){ const el=$(id); return el ? (el.textContent || el.innerText || "").trim() : ""; }
@@ -3197,7 +3209,7 @@ section.card:nth-of-type(2) .btns button{
   "use strict";
   const APP_TYPE = "l_wall";
   const DEFAULT_NAME = "L型擁壁 積算";
-  const FIELD_IDS = ["ProfitRate", "projectName", "estimateName", "H1", "H2", "H3", "H4", "H5", "H6", "E", "N", "W1", "W2", "W3", "W4", "L", "d_vf", "d_vr", "d_bvt", "d_bvb", "d_hf", "d_hr", "d_bht", "d_bhb", "p_vf", "p_vr", "p_bvt", "p_bvb", "p_hf", "p_hr", "p_bht", "p_bhb", "Pexc", "Pbed", "Pstone", "Pnform", "Pblnd", "Pconc", "Pform", "Pback", "Pspoil", "Prebar", "Pdrain", "Pfilter", "backfillNone", "backfillStone", "backfillSheet", "useWaterstop", "toggleBackless"];
+  const FIELD_IDS = ["ProfitRate", "projectName", "estimateName", "H1", "H2", "H3", "H4", "H5", "H6", "E", "N", "W1", "W2", "W3", "W4", "L", "d_vf", "d_vr", "d_bvt", "d_bvb", "d_hf", "d_hr", "d_bht", "d_bhb", "p_vf", "p_vr", "p_bvt", "p_bvb", "p_hf", "p_hr", "p_bht", "p_bhb", "Pexc", "Pbed", "Pstone", "Pnform", "Pblnd", "Pconc", "Pform", "Pback", "Pspoil", "Prebar", "Pdrain", "Pfilter", "WaterstopW", "WaterstopH", "backfillNone", "backfillStone", "backfillSheet", "useWaterstop", "toggleBackless"];
   const PRICE_MAP = {"Pexc": ["Pexc", "excavation"], "Pspoil": ["Pspoil", "spoil"], "Pback": ["Pback", "backfill"], "Pbed": ["Pbed", "bed"], "Pstone": ["Pstone", "stone"], "Pnform": ["Pnform", "nform"], "Pblnd": ["Pblnd", "blindingConcrete"], "Pconc": ["Pconc", "concrete"], "Pform": ["Pform", "form"], "Prebar": ["Prebar", "rebar"], "Pdrain":["Pdrain","drainPipe"], "Pfilter":["Pfilter","filterSheet"]};
   const COMMON_PRICE_FIELD_MAP = { "Pexc":["Pexc","excavation"], "Pspoil":["Pspoil","spoil"], "Pback":["Pback","backfill"], "Pbed":["Pbed","bed"], "Pstone":["Pstone","stone"], "Pnform":["PleanForm","Pnform","nform"], "Pblnd":["Plean","Pblnd","blindingConcrete","levelingConcrete"], "Pconc":["Pconc","concrete"], "Pform":["Pform","form"], "Prebar":["Prebar","rebar"], "Pdrain":["Pdrain","drainPipe"], "Pfilter":["Pfilter","filterSheet"] };
   const $ = id => document.getElementById(id);
@@ -3895,7 +3907,7 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
     "H1","H2","H3","H4","H5","H6","E","N","W1","W2","W3","W4","L",
     "d_vf","d_vr","d_bvt","d_bvb","d_hf","d_hr","d_bht","d_bhb",
     "p_vf","p_vr","p_bvt","p_bvb","p_hf","p_hr","p_bht","p_bhb",
-    "backfillNone","backfillStone","backfillSheet","useWaterstop","toggleBackless"
+    "WaterstopW","WaterstopH","backfillNone","backfillStone","backfillSheet","useWaterstop","toggleBackless"
   ];
   function byId(id){return document.getElementById(id)}
   function collect(){
@@ -4013,7 +4025,7 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
 (function(){
   "use strict";
 
-  var dimIds=["W1","W2","W3","W4","H1","H2","H3","H4","H5","H6","E","N","L"];
+  var dimIds=["W1","W2","W3","W4","H1","H2","H3","H4","H5","H6","E","N","L","WaterstopW","WaterstopH"];
   var moneyIds=["Pexc","Pbed","Pstone","Pnform","Pblnd","Pconc","Pform",
                 "Pback","Pspoil","Prebar","Pdrain","Pfilter"];
 
@@ -4385,6 +4397,9 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
 
   function acc(){ return document.querySelector(".accessory-collapse"); }
   function water(){ return document.getElementById("useWaterstop"); }
+  function waterW(){ return document.getElementById("WaterstopW"); }
+  function waterH(){ return document.getElementById("WaterstopH"); }
+  function filterPrice(){ return document.getElementById("Pfilter"); }
   function selectedBackfill(){
     return document.querySelector('input[name="backfillType"]:checked') ||
            document.querySelector('input[name="backfillType"]');
@@ -4414,7 +4429,7 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
   }
   function openLast(){
     var d=acc(); if(!d) return;
-    d.open=true; focus(selectedBackfill() || water());
+    d.open=true; focus(filterPrice() || selectedBackfill() || waterH() || waterW() || water());
   }
   function closeToPrice(){
     var d=acc(), p=document.getElementById("Pexc");
@@ -4483,7 +4498,7 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
         }
         if(e.key==="Enter"){
           e.preventDefault(); e.stopImmediatePropagation();
-          mark(null,false); focus(selectedBackfill()); return;
+          mark(null,false); focus(waterW() || selectedBackfill()); return;
         }
         if(e.key==="Escape"){
           e.preventDefault(); e.stopImmediatePropagation();
@@ -4492,7 +4507,7 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
       }else{
         if(e.key==="Enter" || e.key==="ArrowDown"){
           e.preventDefault(); e.stopImmediatePropagation();
-          focus(selectedBackfill()); return;
+          focus(waterW() || selectedBackfill()); return;
         }
         if(e.key==="ArrowUp"){
           e.preventDefault(); e.stopImmediatePropagation();
@@ -4500,6 +4515,16 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
         }
       }
       return;
+    }
+
+    /* 止水コンクリート幅・厚 */
+    if(el.id==="WaterstopW"){
+      if(e.key==="Enter" || e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();focus(waterH() || selectedBackfill());return;}
+      if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();focus(water());return;}
+    }
+    if(el.id==="WaterstopH"){
+      if(e.key==="Enter" || e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();focus(selectedBackfill());return;}
+      if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();focus(waterW() || water());return;}
     }
 
     /* 裏込め材 */
@@ -4520,7 +4545,7 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
         }
         if(e.key==="Enter"){
           e.preventDefault(); e.stopImmediatePropagation();
-          closeToPrice(); return;
+          mark(null,false); focus(filterPrice() || document.getElementById("Pexc")); return;
         }
         if(e.key==="Escape"){
           e.preventDefault(); e.stopImmediatePropagation();
@@ -4529,14 +4554,19 @@ window.addEventListener('load',function(){setTimeout(hook,300);});
       }else{
         if(e.key==="Enter" || e.key==="ArrowDown"){
           e.preventDefault(); e.stopImmediatePropagation();
-          closeToPrice(); return;
+          focus(filterPrice() || document.getElementById("Pexc")); return;
         }
         if(e.key==="ArrowUp"){
           e.preventDefault(); e.stopImmediatePropagation();
-          focus(water()); return;
+          focus(waterH() || waterW() || water()); return;
         }
       }
       return;
+    }
+
+    if(el.id==="Pfilter"){
+      if(e.key==="Enter" || e.key==="ArrowDown"){e.preventDefault();e.stopImmediatePropagation();closeToPrice();return;}
+      if(e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();focus(selectedBackfill() || waterH());return;}
     }
   },true);
 
