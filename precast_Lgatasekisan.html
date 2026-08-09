@@ -949,7 +949,7 @@ section.card:nth-of-type(2) input[readonly]{
 <div class="result-memo-item"><b>均し型枠</b><span>H3×2×L</span></div>
 <div class="result-memo-item"><b>均しコンクリート</b><span>W4×H3×L</span></div>
 <div class="result-memo-item"><b>製品代金</b><span>必要本数×製品1本価格</span></div>
-<div class="result-memo-item"><b>据え付け費</b><span>据え付け単価×施工延長</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>止水コンクリート厚×L（ON時・均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>幅×厚さ×延長（ON時・均しコンクリート単価）</span></div><div class="result-memo-item"><b>裏込め材</b><span>砕石＝（H1－H6－0.30）×0.30×L／防止材＝（H1－H6－0.30）×L</span></div>
+<div class="result-memo-item"><b>据え付け費</b><span>据え付け単価×施工延長</span></div><div class="result-memo-item"><b>止水コンクリート型枠</b><span>止水コンクリート厚×L（ON時・均し型枠単価）</span></div><div class="result-memo-item"><b>止水コンクリート</b><span>幅×厚さ×延長（ON時・均しコンクリート単価）</span></div><div class="result-memo-item"><b>裏込め材</b><span>砕石＝（H1－H6－0.30）×止水コンクリート幅×L／防止材＝（H1－H6－0.30）×L</span></div>
 </div></div>
 </div>
 </details></div></section></div>
@@ -998,7 +998,7 @@ function calc(){
   const AwstopForm=useWaterstop?waterstopH*L:0;
   const VwstopConc=useWaterstop?waterstopW*waterstopH*L:0;
   const accessoryHeight=Math.max(0,H1-H6-0.30);
-  const Qbackfill=backfillType==='stone'?accessoryHeight*0.30*L:(backfillType==='sheet'?accessoryHeight*L:0);
+  const Qbackfill=backfillType==='stone'?accessoryHeight*waterstopW*L:(backfillType==='sheet'?accessoryHeight*L:0);
   $('diagramWaterstopConcrete').style.display=useWaterstop?'':'none';
   $('diagramBackfillStone').style.display=backfillType==='stone'?'':'none';
   $('diagramFilterSheet').style.display=backfillType==='sheet'?'':'none';

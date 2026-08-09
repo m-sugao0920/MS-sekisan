@@ -621,7 +621,7 @@ function calc(){
  const waterstopForm=useWaterstop?WaterstopH*L:0;
  const waterstopConc=useWaterstop?WaterstopW*WaterstopH*L:0;
  const drain=useNone?0:drainCount;
- const backStone=useStone?filterBase*0.30:0;
+ const backStone=useStone?accessoryHeight*WaterstopW*L:0;
  const filter=useSheet?filterBase:0;
 
  const q=[
@@ -637,7 +637,7 @@ function calc(){
   ['止水コンクリート型枠',waterstopForm,'m²',num('PleanForm'),'止水コンクリート厚×L'],
   ['止水コンクリート',waterstopConc,'m³',num('Plean'),'止水コンクリート幅×止水コンクリート厚×L'],
   ['水抜きパイプ',drain,'本',num('Pdrain'),'ceil{吸出し防止材面積÷3.3}'],
-  [useNone?'裏込め材なし':(useSheet?'吸出し防止材':'裏込め砕石'),useNone?0:(useSheet?filter:backStone),useSheet?'m²':(useNone?'': 'm³'),useNone?0:(useSheet?num('Pfilter'):num('Pstone')),useNone?'なし':(useSheet?'（H1－H4－0.30）×L':'吸出し防止材面積×0.30')]
+  [useNone?'裏込め材なし':(useSheet?'吸出し防止材':'裏込め砕石'),useNone?0:(useSheet?filter:backStone),useSheet?'m²':(useNone?'': 'm³'),useNone?0:(useSheet?num('Pfilter'):num('Pstone')),useNone?'なし':(useSheet?'（H1－H4－0.30）×L':'（H1－H4－0.30）×止水コンクリート幅×L')]
  ];
 
  const profit=num('profit')/100;
@@ -664,7 +664,7 @@ function calc(){
  <div class="memo-item"><span class="memo-label">止水コンクリート</span><span>止水コンクリート幅×止水コンクリート厚×L＝${fmt(WaterstopW)}×${fmt(WaterstopH)}×${fmt(L)}＝${fmt(waterstopConc)} m³</span></div>
  <div class="memo-item"><span class="memo-label">水抜きパイプ</span><span>ceil｛${fmt(filterBase)}÷3.3｝＝${drain} 本</span></div>
  <div class="memo-item"><span class="memo-label">吸出し防止材</span><span>（H1－H4－0.30）×L＝${fmt(filterBase)} m²</span></div>
- <div class="memo-item"><span class="memo-label">裏込め砕石</span><span>吸出し防止材面積×0.30＝${fmt(filterBase*0.30)} m³</span></div>
+ <div class="memo-item"><span class="memo-label">裏込め砕石</span><span>（H1－H4－0.30）×止水コンクリート幅×L＝${fmt(accessoryHeight)}×${fmt(WaterstopW)}×${fmt(L)}＝${fmt(backStone)} m³</span></div>
  <div class="memo-item"><span class="memo-label">掘削深さ D</span><span>H1＋H2＋H3＝${fmt(D)} m</span></div></div>`;
  updateDrawing();preparePrint();
 }
