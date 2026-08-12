@@ -71,7 +71,8 @@
       KAHEN_SOKKOU: "kahen_sokkou",
       ANKYO_CULVERT: "ankyo_culvert",
       DRAINAGE_PIPE: "drainage_pipe",
-      PRECAST_DRAINAGE_BASIN: "precast_drainage_basin"
+      PRECAST_DRAINAGE_BASIN: "precast_drainage_basin",
+      KENCHI_BLOCK: "kenchi_block"
     }
   };
 
@@ -1763,6 +1764,7 @@
     ankyo_culvert: "暗渠・カルバート工",
     drainage_pipe: "排水管工",
     precast_drainage_basin: "プレキャスト集水桝",
+    kenchi_block: "間知ブロック積み",
     l_gutter: "L型側溝工",
     curb: "縁石工",
     pedestrian_vehicle_boundary_block: "歩車道ブロック工",
@@ -4207,7 +4209,10 @@
       "L型側溝工":"l_gutter",
       "Ｌ型側溝":"l_gutter",
       "Ｌ型側溝工":"l_gutter",
-      "重力式擁壁":"gravity_wall"
+      "重力式擁壁":"gravity_wall",
+      "間知ブロック":"kenchi_block",
+      "間知ブロック積み":"kenchi_block",
+      "間知ブロック積工":"kenchi_block"
     };
     return aliases[v] || v;
   }
@@ -4251,6 +4256,13 @@
 
       transportPrice: number(src.transportPrice !== undefined ? src.transportPrice : old.transportPrice),
       lossRate: number(src.lossRate !== undefined ? src.lossRate : old.lossRate),
+
+      // 間知ブロック製品専用（他カテゴリでは未使用のまま保持）
+      blockFaceWidth: number(src.blockFaceWidth !== undefined ? src.blockFaceWidth : old.blockFaceWidth),
+      blockFaceHeight: number(src.blockFaceHeight !== undefined ? src.blockFaceHeight : old.blockFaceHeight),
+      blockDepth: number(src.blockDepth !== undefined ? src.blockDepth : old.blockDepth),
+      blockUsePerM2: number(src.blockUsePerM2 !== undefined ? src.blockUsePerM2 : old.blockUsePerM2),
+
       note: text(src.note !== undefined ? src.note : old.note),
       enabled: src.enabled === undefined ? (old.enabled === undefined ? true : !!old.enabled) : !!src.enabled,
       registeredDate: text(
@@ -4413,6 +4425,12 @@
       socketUnit: item.socketUnit,
       productMasterSnapshot: clone(item)
     };
+    if(type === "kenchi_block"){
+      common.blockFaceWidth = item.blockFaceWidth;
+      common.blockFaceHeight = item.blockFaceHeight;
+      common.blockDepth = item.blockDepth;
+      common.blockUsePerM2 = item.blockUsePerM2;
+    }
     if(type === "u_gutter" || type === "variable_gutter" || type === "precast_drainage_basin" || type === "genbau_drainage_pit"){
       common.concreteCoverPrice = item.concreteCoverPrice;
       common.concreteCoverLength = item.concreteCoverLength;
