@@ -689,6 +689,41 @@ section.card:nth-of-type(2) input[readonly]{
 }
 </style>
 
+
+<style id="precast-management-standard-style">
+/* 左管理画面をL型擁壁等の標準形へ統一 */
+.estimate-panel{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fbfdff;
+  padding:10px;
+  margin-top:10px;
+}
+.estimate-panel .save-line{
+  display:block;
+  margin-bottom:8px;
+}
+.estimate-panel .save-line label{
+  display:block;
+  margin-bottom:4px;
+  font-size:12px;
+  color:var(--muted);
+  min-height:0;
+}
+.estimate-panel .save-line input,
+.estimate-panel .save-line select{
+  width:100%;
+  height:36px;
+  padding:7px 9px;
+  font-size:13px;
+  border-radius:10px;
+}
+.precst-management-standard .control-block,
+.precast-management-standard .control-block{
+  margin-top:10px;
+}
+</style>
+
 </head><body>
 <header><div class="wrap"><div><h1 id="precastDefaultsTrigger" title="プレキャストL型擁壁積算">プレキャストL型擁壁 積算アプリ Ver.1.4.0</h1><div class="sub">土工・地業・製品代・据え付け費を自動算出</div></div><div><span class="pill">土工計算はL型擁壁と共通</span><span class="pill">鉄筋計算なし</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
@@ -847,13 +882,47 @@ section.card:nth-of-type(2) input[readonly]{
 </g>
 </svg>
 </div>
-<div class="control-block estimate-block"><div class="sectionTitle">積算データ保存</div><label>現場名</label><input id="projectName" placeholder="例：○○様邸 外構工事"><label style="margin-top:7px">積算名称</label><input id="estimateName" placeholder="例：南側 プレキャストL型擁壁 H1500 L10m"><label style="margin-top:7px">保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select><div class="save-btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div></div>
-<div class="control-block price-block" id="precastCommonPriceBlock"><div class="sectionTitle">共有単価マスター</div><div class="note">共有単価を読み込み中です。</div></div>
-<div class="control-block product-block"><div class="sectionTitle">製品単価マスター</div><div id="selectedProductMaster" class="selected-product">製品は選択されていません。</div><div class="save-btns product-master-actions" style="grid-template-columns:repeat(3,1fr)">
-<button class="primary" id="openProductMasterBtn">製品を選択</button>
-<button class="ghost" id="registerCurrentProductBtn">現在値を登録</button>
-<button class="danger" id="clearSelectedProductBtn">選択解除</button>
-</div><input id="ProductMasterId" type="hidden"><input id="ProductMasterUpdatedAt" type="hidden"></div>
+<div class="estimate-panel precast-management-standard">
+  <div class="save-line">
+    <label>工事名</label>
+    <input id="projectName" type="text" placeholder="例：○○様邸 外構工事">
+  </div>
+
+  <div class="control-block estimate-block">
+    <div class="sectionTitle">積算データ保存</div>
+    <div class="save-line">
+      <label>積算名称</label>
+      <input id="estimateName" type="text" placeholder="例：南側 プレキャストL型擁壁 H1500 L10m">
+    </div>
+    <div class="save-line">
+      <label>保存済み</label>
+      <select id="savedEstimateList"><option value="">保存データなし</option></select>
+    </div>
+    <div class="save-btns">
+      <button class="primary" id="saveEstimateBtn" type="button">保存</button>
+      <button class="ghost" id="loadEstimateBtn" type="button">呼出</button>
+      <button class="danger" id="deleteEstimateBtn" type="button">削除</button>
+    </div>
+    <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+  </div>
+
+  <div class="control-block product-block">
+    <div class="sectionTitle">製品単価マスター</div>
+    <div id="selectedProductMaster" class="selected-product">製品は選択されていません。</div>
+    <div class="save-btns product-master-actions" style="grid-template-columns:repeat(3,1fr)">
+      <button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
+      <button class="ghost" id="registerCurrentProductBtn" type="button">現在値を登録</button>
+      <button class="danger" id="clearSelectedProductBtn" type="button">選択解除</button>
+    </div>
+    <input id="ProductMasterId" type="hidden">
+    <input id="ProductMasterUpdatedAt" type="hidden">
+  </div>
+
+  <div class="control-block price-block" id="precastCommonPriceBlock">
+    <div class="sectionTitle">共有単価マスター</div>
+    <div class="note">共有単価を読み込み中です。</div>
+  </div>
+</div>
 </div></section>
 <section class="card"><h2 class="ms-input-card-head">
 <span class="ms-head-title"><span class="dot"></span>入力</span>

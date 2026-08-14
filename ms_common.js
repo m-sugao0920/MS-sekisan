@@ -72,7 +72,8 @@
       ANKYO_CULVERT: "ankyo_culvert",
       DRAINAGE_PIPE: "drainage_pipe",
       PRECAST_DRAINAGE_BASIN: "precast_drainage_basin",
-      KENCHI_BLOCK: "kenchi_block"
+      KENCHI_BLOCK: "kenchi_block",
+      FIRE_TANK: "fire_tank"
     }
   };
 
@@ -1765,6 +1766,7 @@
     drainage_pipe: "排水管工",
     precast_drainage_basin: "プレキャスト集水桝",
     kenchi_block: "間知ブロック積み",
+    fire_tank: "防火水槽工",
     l_gutter: "L型側溝工",
     curb: "縁石工",
     pedestrian_vehicle_boundary_block: "歩車道ブロック工",
@@ -3045,9 +3047,9 @@
   const APP_ALIAS = {
     L:"l_wall", l:"l_wall", l_wall:"l_wall", L_WALL:"l_wall",
     U:"u_gutter", u:"u_gutter", u_gutter:"u_gutter", U_GUTTER:"u_gutter",
-    G:"genbau_u_gutter", g:"genbau_u_gutter", GENBAU_U:"genbau_u_gutter", genbau_u_gutter:"genbau_u_gutter", K:"kahen_sokkou", k:"kahen_sokkou", KAHEN:"kahen_sokkou", kahen_sokkou:"kahen_sokkou", P:"precast_l_wall", p:"precast_l_wall", PRECAST_L:"precast_l_wall", precast_l_wall:"precast_l_wall", DRAINAGE_PIT:"genbau_drainage_pit", GENBAU_DRAINAGE_PIT:"genbau_drainage_pit", genbau_drainage_pit:"genbau_drainage_pit", CURB:"curb", curb:"curb", PEDESTRIAN_VEHICLE_BLOCK:"pedestrian_vehicle_boundary_block", pedestrian_vehicle_boundary_block:"pedestrian_vehicle_boundary_block", L_GUTTER:"l_gutter", l_gutter:"l_gutter", GRAVITY_WALL:"gravity_wall", gravity_wall:"gravity_wall", ANKYO_CULVERT:"ankyo_culvert", ankyo_culvert:"ankyo_culvert", DRAINAGE_PIPE:"drainage_pipe", drainage_pipe:"drainage_pipe", PRECAST_DRAINAGE_BASIN:"precast_drainage_basin", precast_drainage_basin:"precast_drainage_basin"
+    G:"genbau_u_gutter", g:"genbau_u_gutter", GENBAU_U:"genbau_u_gutter", genbau_u_gutter:"genbau_u_gutter", K:"kahen_sokkou", k:"kahen_sokkou", KAHEN:"kahen_sokkou", kahen_sokkou:"kahen_sokkou", P:"precast_l_wall", p:"precast_l_wall", PRECAST_L:"precast_l_wall", precast_l_wall:"precast_l_wall", DRAINAGE_PIT:"genbau_drainage_pit", GENBAU_DRAINAGE_PIT:"genbau_drainage_pit", genbau_drainage_pit:"genbau_drainage_pit", CURB:"curb", curb:"curb", PEDESTRIAN_VEHICLE_BLOCK:"pedestrian_vehicle_boundary_block", pedestrian_vehicle_boundary_block:"pedestrian_vehicle_boundary_block", L_GUTTER:"l_gutter", l_gutter:"l_gutter", GRAVITY_WALL:"gravity_wall", gravity_wall:"gravity_wall", ANKYO_CULVERT:"ankyo_culvert", ankyo_culvert:"ankyo_culvert", DRAINAGE_PIPE:"drainage_pipe", drainage_pipe:"drainage_pipe", PRECAST_DRAINAGE_BASIN:"precast_drainage_basin", precast_drainage_basin:"precast_drainage_basin", FIRE_TANK:"fire_tank", fire_tank:"fire_tank"
   };
-  const APP_LABEL = {l_wall:"L型擁壁", u_gutter:"U型側溝", genbau_u_gutter:"現場打U型側溝", kahen_sokkou:"可変側溝", precast_l_wall:"プレキャストL型擁壁", genbau_drainage_pit:"現場打排水桝", curb:"縁石工", pedestrian_vehicle_boundary_block:"歩車道ブロック工", l_gutter:"L型側溝工", mikiri_concrete:"見切コンクリート", gravity_wall:"重力式擁壁", ankyo_culvert:"暗渠・カルバート工", drainage_pipe:"排水管工", precast_drainage_basin:"プレキャスト集水桝"};
+  const APP_LABEL = {l_wall:"L型擁壁", u_gutter:"U型側溝", genbau_u_gutter:"現場打U型側溝", kahen_sokkou:"可変側溝", precast_l_wall:"プレキャストL型擁壁", genbau_drainage_pit:"現場打排水桝", curb:"縁石工", pedestrian_vehicle_boundary_block:"歩車道ブロック工", l_gutter:"L型側溝工", mikiri_concrete:"見切コンクリート", gravity_wall:"重力式擁壁", ankyo_culvert:"暗渠・カルバート工", drainage_pipe:"排水管工", precast_drainage_basin:"プレキャスト集水桝", fire_tank:"防火水槽工"};
   const CURRENT_PROJECT_KEY = "ms_current_project_id";
   const GLOBAL_EST_PREFIX = (MS.CONFIG && MS.CONFIG.currentEstimateKeyPrefix) || "ms_current_estimate_id_";
   const PROJECT_EST_PREFIX = "ms_current_estimate_id_by_project_";
@@ -3343,7 +3345,7 @@
   const APP_ALIAS = {
     L:"l_wall", l:"l_wall", l_wall:"l_wall", L_WALL:"l_wall",
     U:"u_gutter", u:"u_gutter", u_gutter:"u_gutter", U_GUTTER:"u_gutter",
-    G:"genbau_u_gutter", g:"genbau_u_gutter", GENBAU_U:"genbau_u_gutter", genbau_u_gutter:"genbau_u_gutter", K:"kahen_sokkou", k:"kahen_sokkou", KAHEN:"kahen_sokkou", kahen_sokkou:"kahen_sokkou", P:"precast_l_wall", p:"precast_l_wall", PRECAST_L:"precast_l_wall", precast_l_wall:"precast_l_wall", DRAINAGE_PIT:"genbau_drainage_pit", GENBAU_DRAINAGE_PIT:"genbau_drainage_pit", genbau_drainage_pit:"genbau_drainage_pit", CURB:"curb", curb:"curb", PEDESTRIAN_VEHICLE_BLOCK:"pedestrian_vehicle_boundary_block", pedestrian_vehicle_boundary_block:"pedestrian_vehicle_boundary_block", L_GUTTER:"l_gutter", l_gutter:"l_gutter", GRAVITY_WALL:"gravity_wall", gravity_wall:"gravity_wall", ANKYO_CULVERT:"ankyo_culvert", ankyo_culvert:"ankyo_culvert", DRAINAGE_PIPE:"drainage_pipe", drainage_pipe:"drainage_pipe", PRECAST_DRAINAGE_BASIN:"precast_drainage_basin", precast_drainage_basin:"precast_drainage_basin"
+    G:"genbau_u_gutter", g:"genbau_u_gutter", GENBAU_U:"genbau_u_gutter", genbau_u_gutter:"genbau_u_gutter", K:"kahen_sokkou", k:"kahen_sokkou", KAHEN:"kahen_sokkou", kahen_sokkou:"kahen_sokkou", P:"precast_l_wall", p:"precast_l_wall", PRECAST_L:"precast_l_wall", precast_l_wall:"precast_l_wall", DRAINAGE_PIT:"genbau_drainage_pit", GENBAU_DRAINAGE_PIT:"genbau_drainage_pit", genbau_drainage_pit:"genbau_drainage_pit", CURB:"curb", curb:"curb", PEDESTRIAN_VEHICLE_BLOCK:"pedestrian_vehicle_boundary_block", pedestrian_vehicle_boundary_block:"pedestrian_vehicle_boundary_block", L_GUTTER:"l_gutter", l_gutter:"l_gutter", GRAVITY_WALL:"gravity_wall", gravity_wall:"gravity_wall", ANKYO_CULVERT:"ankyo_culvert", ankyo_culvert:"ankyo_culvert", DRAINAGE_PIPE:"drainage_pipe", drainage_pipe:"drainage_pipe", PRECAST_DRAINAGE_BASIN:"precast_drainage_basin", precast_drainage_basin:"precast_drainage_basin", FIRE_TANK:"fire_tank", fire_tank:"fire_tank"
   };
   function txt(v){ return v === null || v === undefined ? "" : String(v).trim(); }
   function app(appType){ return APP_ALIAS[appType] || txt(appType) || "other"; }
@@ -4212,7 +4214,9 @@
       "重力式擁壁":"gravity_wall",
       "間知ブロック":"kenchi_block",
       "間知ブロック積み":"kenchi_block",
-      "間知ブロック積工":"kenchi_block"
+      "間知ブロック積工":"kenchi_block",
+      "防火水槽":"fire_tank",
+      "防火水槽工":"fire_tank"
     };
     return aliases[v] || v;
   }
@@ -4303,6 +4307,7 @@
     precast_l_wall: "プレキャストL型擁壁",
     genbau_drainage_pit: "現場打排水桝",
     kenchi_block: "間知ブロック",
+    fire_tank: "防火水槽工",
     decorative_block: "化粧ブロック",
     concrete_block: "普通ブロック",
     interlocking: "インターロッキング",
@@ -4643,6 +4648,7 @@
     {id:"precast_l_wall", name:"プレキャストL型擁壁", enabled:true},
     {id:"genbau_drainage_pit", name:"現場打排水桝", enabled:true},
     {id:"kenchi_block", name:"間知ブロック", enabled:true},
+    {id:"fire_tank", name:"防火水槽工", enabled:true},
     {id:"decorative_block", name:"化粧ブロック", enabled:true},
     {id:"concrete_block", name:"普通ブロック", enabled:true},
     {id:"interlocking", name:"インターロッキング", enabled:true},

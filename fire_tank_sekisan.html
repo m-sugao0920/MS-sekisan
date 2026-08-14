@@ -1,0 +1,2392 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>防火水槽工 積算 Ver1.0.0</title>
+<script src="ms_common.js"></script>
+<script>window.MS_APP_TYPE="fire_tank";</script>
+<style>
+:root{--blue:#1769aa;--blue2:#eaf4ff;--green:#eaf8ef;--wine:#7a263a;--winebg:#fff3f6;--border:#cfd8e3;--text:#263238;--muted:#667781;--shadow:0 2px 8px rgba(0,0,0,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic UI",Meiryo,sans-serif;color:var(--text);background:#f4f7fa;font-size:13px}button,input,select{font:inherit}
+header{background:linear-gradient(135deg,#0f5d95,#2685c6);color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+header h1{font-size:20px;margin:0}header .ver{font-size:12px;opacity:.9}
+main{padding:12px;max-width:1580px;margin:auto}.topbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}.topbar input{width:100%}
+input,select{border:1px solid #bdc9d4;border-radius:7px;background:#fff;padding:6px 8px;min-height:31px;width:100%;outline:none}input:focus,select:focus{border-color:#4a90c8;box-shadow:0 0 0 2px rgba(74,144,200,.15)}
+button{border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:#fff}.ghost{background:#eef6ff;color:var(--blue)}.danger{background:#fff0f1;color:#ad2437}.winebtn{background:var(--wine);color:#fff}.small{padding:5px 8px;font-size:12px}
+.layout{display:grid;grid-template-columns:minmax(330px,1.05fr) minmax(420px,1.25fr) minmax(450px,1.25fr);gap:10px;align-items:start}.card{background:#fff;border:1px solid var(--border);border-radius:13px;box-shadow:var(--shadow);overflow:hidden}.card-title{padding:9px 12px;font-size:14px;font-weight:800;background:linear-gradient(#fff,#f4f8fb);border-bottom:1px solid var(--border)}.card-body{padding:10px}
+.guide{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px}.guide div{border-radius:9px;padding:7px 5px;text-align:center;font-weight:700;border:1px solid #d6dee7}.gdim{background:#edf8ff;border-left:6px solid #6cb9e8!important;border-bottom:4px solid #b8e0f7!important}.gprice{background:#fff1f4;border-left:6px solid #9b4057!important;border-bottom:4px solid #e3b3bf!important}.gcond{background:#f0faef;border-left:6px solid #65a75e!important;border-bottom:4px solid #b8dab4!important}
+.section{border:1px solid #d7e0e8;border-radius:11px;margin-bottom:9px;overflow:hidden}.section h3{font-size:13px;margin:0;padding:7px 9px;background:#f7f9fb;border-bottom:1px solid #d7e0e8}.secbody{padding:8px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.field label{display:flex;justify-content:space-between;gap:6px;font-size:11px;color:#52636d;margin-bottom:3px}.field label b{color:#24333a}.dim input,.dim select{border-left:6px solid #6cb9e8;border-bottom:4px solid #b8e0f7;background:#f7fcff}.price input{border-left:6px solid #9b4057;border-bottom:4px solid #e3b3bf;background:#fffafb}.cond input,.cond select{border-left:6px solid #65a75e;border-bottom:4px solid #b8dab4;background:#fbfffb}.money{text-align:right}.muted{color:var(--muted);font-size:11px}.hidden{display:none!important}
+.prod-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.selected-product{font-size:11px;line-height:1.55;border:1px solid #cfe1ef;background:#f7fbff;border-radius:8px;padding:7px;margin-top:7px;min-height:42px}
+.svg-wrap{padding:10px 8px 8px}
+.diagram-vertical-title{margin:0 0 7px;padding:7px 10px;border-radius:9px;background:#eef6ff;border:1px solid #cfe3f7;color:#0647a5;font-size:12px;font-weight:950;text-align:center}
+.diagram-vertical-title.second{margin-top:12px}
+.illust-box{border:1px solid #e5e7eb;border-radius:12px;padding:5px;background:#fafafa;margin-bottom:8px;overflow:hidden}
+.diagram{width:100%;height:auto;display:block;background:#fff;border-radius:8px}
+.dimmark{font-family:'Yu Gothic','Meiryo',sans-serif;font-size:34px;font-weight:800;fill:#111;paint-order:stroke fill;stroke:#fff;stroke-width:5px;transition:.15s}
+.dimline{stroke:#111;stroke-width:2.4;fill:none;marker-start:url(#dimDotStart);marker-end:url(#dimDotEnd);transition:.15s}
+.extline{stroke:#111;stroke-width:1;fill:none}
+.active{stroke:#d32f2f!important;fill:#d32f2f!important;font-size:46px!important;font-weight:950!important;stroke-width:4!important}
+.partlabel{font-size:27px;font-weight:800;fill:#24333a}.subtxt{font-size:22px;fill:#52636d}.ground{stroke:#5d5140;stroke-width:5}.tank{fill:url(#tankGrad);stroke:#334a55;stroke-width:4}.concrete{stroke-width:4!important;fill:url(#concGrad);stroke:#5b6268;stroke-width:3}.mortar{fill:#f6e7be;stroke:#9e8a60;stroke-width:2}.pitvoid{fill:#fff;stroke:#475b66;stroke-width:3}
+.pitvoid-open{fill:#fff;stroke:none}
+.pitvoid-edge{fill:none;stroke:#475b66;stroke-width:3}
+.excavation{fill:#f7eddb;fill-opacity:.68;stroke:#a66a2c;stroke-width:3;stroke-dasharray:12 8}.stone-shape{fill:url(#stoneHatch);stroke:#6f675d;stroke-width:3}.mhfill{fill:#e7eef2;stroke:#425762;stroke-width:3}
+.svg-note{font-size:10px;color:#667781;line-height:1.5;margin:3px 2px 0}
+
+.calc-note{font-size:11px;background:#f8fafc;border:1px solid #dce4eb;border-radius:9px;padding:8px;line-height:1.65;margin-top:8px}.calc-note b{color:#224e6d}
+.results table{width:100%;border-collapse:collapse;font-size:11px}.results th,.results td{border:1px solid #cad5de;padding:5px 4px}.results th{background:#eef4f8}.results td:nth-child(n+2){text-align:right}.results td:nth-child(3){text-align:center}.results tfoot th,.results tfoot td{font-weight:900;background:#f6f9fb}.estimate-total{color:#74263a;font-size:13px}.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.memo{margin-top:8px}.memo summary{cursor:pointer;font-weight:800;color:#275b7b}.memo pre{white-space:pre-wrap;font-family:inherit;font-size:11px;line-height:1.55;background:#f8fafc;border:1px solid #dce4eb;border-radius:8px;padding:8px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:30;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.dialog{width:min(760px,96vw);max-height:88vh;overflow:auto;background:#fff;border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.25)}.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #d8e0e7}.dialog-head h3{margin:0;font-size:15px}.dialog-body{padding:12px}.master-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:9px;border:1px solid #d7e0e8;border-radius:9px;margin-top:7px}.master-name{font-weight:800}.master-meta{font-size:11px;color:#60717b}.register-grid{display:grid;grid-template-columns:130px 1fr;gap:7px;align-items:center}
+#printSheet{display:none}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.diagram{max-height:620px}}
+@media print{body>*:not(#printSheet){display:none!important}body{background:#fff}#printSheet{display:block!important;width:180mm;margin:0 auto;font-size:10pt;color:#111}.phead{text-align:center;border-bottom:2px solid #111;padding-bottom:4mm;margin-bottom:3mm}.phead h2{margin:0 0 2mm;font-size:16pt}.pmeta{display:flex;justify-content:space-between;font-size:9pt}.ptable{width:100%;border-collapse:collapse}.ptable th,.ptable td{border:1px solid #222;padding:1.6mm}.ptable th{background:#eee}.ptable td:nth-child(n+2){text-align:right}.pdiagram{margin-top:4mm;border:1px solid #222;padding:2mm}.pdiagram svg{width:100%;height:105mm}.pfoot{margin-top:2mm;font-size:8pt}@page{size:A4 portrait;margin:12mm}}
+
+/* ===== L型擁壁アプリ準拠 3列レイアウト ===== */
+main{max-width:1660px;margin:16px auto;padding:0 16px 28px;}
+.layout{
+  display:grid;
+  grid-template-columns:460px 320px minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+}
+.diagram-card{grid-column:1;grid-row:1;}
+.input-card{grid-column:2;grid-row:1;}
+.result-card{grid-column:3;grid-row:1;}
+.card{border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 10px 24px rgba(0,0,0,.07);}
+.card-title{
+  font-size:14px;margin:0;padding:12px 14px;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;align-items:center;gap:8px;
+  background:#fff;font-weight:800;
+}
+.dot{width:8px;height:8px;border-radius:999px;background:#0070C0;display:inline-block;flex:0 0 auto;}
+.svg-wrap{padding:14px 10px 10px;}
+.input-card .card-body{padding:14px;}
+.result-card .card-body{padding:14px;}
+.topbar{margin-bottom:14px;}
+@media(max-width:980px){
+  .layout{grid-template-columns:1fr;}
+  .diagram-card,.input-card,.result-card{grid-column:1;grid-row:auto;}
+  .diagram-card{order:1}.input-card{order:2}.result-card{order:3}
+}
+</style>
+
+
+
+
+<style id="firetank-pit-detail-refine">
+/* ピット詳細の補助線を明確に表示 */
+#pitSvg .extline{stroke:#111!important;stroke-width:1.4!important;fill:none!important}
+#pitSvg .pit-dimline{stroke:#111!important;stroke-width:2.4!important;fill:none!important}
+#pitSvg .dimmark{font-size:32px!important}
+#pitSvg .pit-helper{stroke:#111;stroke-width:1.4;fill:none}
+</style>
+
+
+<style id="symbol-highlight-refine">
+/* 寸法記号は通常の太さ。選択時は赤＋拡大のみ */
+.dimmark, .dimmark2 { font-weight:400 !important; }
+.dimmark.active, .dimmark2.active,
+.dimmark.hl, .dimmark2.hl,
+.dimmark.highlight, .dimmark2.highlight {
+  font-weight:400 !important;
+}
+/* L×W の各記号を個別に強調 */
+.dim-token { display:inline; font-weight:400; transform-box:fill-box; transform-origin:center; }
+.dim-token.active {
+  fill:#d40000 !important;
+  font-weight:400 !important;
+  font-size:1.35em;
+}
+.dim-sep { font-weight:400; }
+</style>
+
+
+<style id="foundation-material-compact-v2">
+@media(max-width:700px){
+  .section .grid3{grid-template-columns:1fr!important}
+}
+</style>
+
+
+<style id="firetank-manage-layout">
+.firetank-manage{margin-top:10px;display:grid;gap:9px}
+.firetank-manage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+.firetank-manage-grid>.manage-cell{min-width:0}
+.firetank-manage-grid .estimate-panel,.firetank-manage-grid .control-block,.firetank-manage-grid .product-master-box{margin:0;height:100%}
+@media(max-width:700px){.firetank-manage-grid{grid-template-columns:1fr}}
+.manage-box{border:1px solid #d7e0e8;border-radius:11px;background:#fff;padding:9px}
+.manage-title{font-size:13px;font-weight:800;margin-bottom:7px;color:#24333a}
+.manage-note{font-size:11px;color:#667781;margin-top:6px}
+</style>
+
+
+<style id="firetank-u-gutter-manage-style">
+.estimate-panel{border:1px solid var(--border);border-radius:14px;background:#fbfdff;padding:10px;margin:10px 0}
+.control-block{border:1px solid var(--border);border-radius:14px;background:#fff;padding:10px;margin:10px 0;box-shadow:0 3px 10px rgba(0,0,0,.03)}
+.estimate-block{border-color:#bad8f4;background:#f7fbff}
+.price-block{border-color:#c5ead0;background:#f7fff9}
+.estimate-block .sectionTitle{color:#0647a5}
+.price-block .sectionTitle{color:#087d10}
+.sectionTitle{margin:10px 0 8px;font-size:12px;font-weight:900;color:#0f172a;display:flex;align-items:center;gap:8px}
+.sectionTitle::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--blue);display:inline-block}
+.price-block .sectionTitle::before{background:#12a150}
+.estimate-panel .save-line{display:block;margin-bottom:8px}
+.estimate-panel .save-line label{display:block;margin-bottom:4px;font-size:12px;color:var(--muted);min-height:0}
+.estimate-panel .save-line input,.estimate-panel .save-line select{width:100%;height:36px;padding:7px 9px;font-size:13px;border-radius:10px}
+.save-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.save-btns button{padding:8px 6px;font-size:13px;border-radius:10px}
+.note{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.55}
+.product-master-box{border:1px solid #bad8f4;border-radius:14px;background:#f7fbff;padding:10px;margin:0 0 12px}
+.product-master-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.product-master-title{font-size:13px;font-weight:900;color:#0647a5}
+.product-master-current{font-size:12px;color:#475569;line-height:1.55;background:#fff;border:1px solid #dbeafe;border-radius:10px;padding:8px 10px;min-height:38px}
+.product-master-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin-top:8px!important}
+.product-master-actions button{min-width:0!important;width:100%!important;padding-left:4px!important;padding-right:4px!important;white-space:nowrap!important}
+@media(max-width:700px){.product-master-actions{grid-template-columns:1fr!important}}
+</style>
+
+
+<style id="firetank-common-condition-style">
+.input-card .section:last-of-type h3{
+  background:#f8fcf8;
+  color:#3f6848;
+  border-bottom-color:#dcecdf;
+}
+</style>
+
+
+<style id="firetank-input-band-unified">
+/* U型側溝 Ver1.4.0 と同じ入力欄色帯 */
+.field.dim input,
+.field.dim select{
+  background:#fff!important;
+  color:var(--text)!important;
+  font-weight:400!important;
+  border-top:1px solid #dfe4ea!important;
+  border-right:1px solid #dfe4ea!important;
+  border-left:6px solid #8fc9ef!important;
+  border-bottom:2px solid #8fc9ef!important;
+  border-radius:10px!important;
+}
+
+.field.cond input,
+.field.cond select{
+  background:#fff!important;
+  color:var(--text)!important;
+  font-weight:400!important;
+  border-top:1px solid #dfe4ea!important;
+  border-right:1px solid #dfe4ea!important;
+  border-left:6px solid #9fd0aa!important;
+  border-bottom:2px solid #9fd0aa!important;
+  border-radius:10px!important;
+}
+
+.field.price input,
+.field.price select{
+  background:#fff!important;
+  color:var(--text)!important;
+  font-weight:400!important;
+  border-top:1px solid #dfe4ea!important;
+  border-right:1px solid #dfe4ea!important;
+  border-left:6px solid #8A4653!important;
+  border-bottom:2px solid #8A4653!important;
+  border-radius:10px!important;
+}
+
+/* フォーカス時も左・下の色を維持 */
+.field.dim input:focus,
+.field.dim select:focus{
+  border-left:6px solid #8fc9ef!important;
+  border-bottom:2px solid #8fc9ef!important;
+  box-shadow:0 0 0 3px rgba(115,185,232,.14)!important;
+}
+.field.cond input:focus,
+.field.cond select:focus{
+  border-left:6px solid #9fd0aa!important;
+  border-bottom:2px solid #9fd0aa!important;
+  box-shadow:0 0 0 3px rgba(159,208,170,.16)!important;
+}
+.field.price input:focus,
+.field.price select:focus{
+  border-left:6px solid #8A4653!important;
+  border-bottom:2px solid #8A4653!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+}
+</style>
+
+
+
+<style id="firetank-v140-guide-u-gutter-exact">
+/* U型側溝 Ver1.4.0 と同じ入力案内 */
+.ms-v140-guide{
+  display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+  margin:0 0 10px;padding:7px 8px;
+  border:1px solid #d5dde7;border-radius:12px;background:#f8fafc;
+  box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(15,23,42,.10);
+}
+.ms-v140-guide span{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  min-height:30px;flex:1;padding:5px 8px 5px 14px;
+  border-top:1px solid #eef2f6;border-right:1px solid #d8dee7;
+  border-bottom:3px solid #c7d0dc;border-left:6px solid #c7d0dc;
+  border-radius:8px;background:linear-gradient(180deg,#fff,#f8fafc);
+  color:#334155;font-size:11px;font-weight:600;text-align:center;
+  white-space:nowrap;box-shadow:0 2px 4px rgba(15,23,42,.10);
+}
+.ms-v140-guide span:nth-child(1){
+  border-left-color:#8fc9ef!important;
+  border-bottom-color:#8fc9ef!important;
+}
+.ms-v140-guide span:nth-child(2){
+  border-left-color:#8A4653!important;
+  border-bottom-color:#8A4653!important;
+}
+.ms-v140-guide span:nth-child(3){
+  border-left-color:#9fd0aa!important;
+  border-bottom-color:#9fd0aa!important;
+}
+@media(max-width:700px){
+  .ms-v140-guide{gap:5px;padding:6px}
+  .ms-v140-guide span{font-size:10px;padding-left:10px}
+}
+@media print{.ms-v140-guide{display:none!important}}
+</style>
+
+<style id="firetank-dimension-highlight-final">
+/* 防火水槽：寸法記号は常に通常ウェイト */
+#longSvg .dimmark,
+#pitSvg .dimmark,
+#longSvg .dim-token,
+#pitSvg .dim-token{
+  font-weight:400!important;
+}
+
+/* 選択した記号だけ、赤く大きく。太字にはしない */
+#longSvg text.dimmark.active,
+#pitSvg text.dimmark.active,
+#longSvg tspan.dim-token.active,
+#pitSvg tspan.dim-token.active{
+  fill:#d32f2f!important;
+  font-weight:400!important;
+  font-size:46px!important;
+}
+
+/* L1×W1 / L3×W3 の未選択側は必ず通常表示 */
+#longSvg tspan.dim-token:not(.active){
+  fill:#111!important;
+  font-weight:400!important;
+  font-size:34px!important;
+}
+
+/* 汎用 .active が線や文字を太くする旧指定を寸法文字では無効化 */
+#longSvg text.active,
+#pitSvg text.active,
+#longSvg tspan.active,
+#pitSvg tspan.active{
+  font-weight:400!important;
+}
+</style>
+
+
+<style id="firetank-select-edit-mode-style">
+/* 形状選択：スペースで編集モード中はえんじ色 */
+#PitShape.ms-select-editing{
+  background:#fff7f8!important;
+  color:#7a263a!important;
+  border-left:6px solid #8A4653!important;
+  border-bottom:2px solid #8A4653!important;
+  box-shadow:0 0 0 3px rgba(138,70,83,.14)!important;
+  font-weight:400!important;
+}
+</style>
+
+
+
+
+<style id="firetank-result-u-gutter-pixel-match">
+/* ===== U型側溝 Ver1.4.0 結果欄と同じ表示 ===== */
+.card h2{
+  font-size:14px;
+  margin:0;
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.body{padding:14px}
+
+.table-wrap{margin-top:12px;overflow-x:hidden}
+
+.result-table{
+  table-layout:fixed;
+  width:100%;
+  min-width:0;
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  overflow:hidden!important;
+  border:1px solid var(--border)!important;
+  border-radius:14px!important;
+  background:white!important;
+}
+
+.result-table th,
+.result-table td{
+  padding:9px 4px!important;
+  font-size:13px!important;
+  line-height:1.28!important;
+  vertical-align:middle!important;
+  white-space:normal!important;
+  border:0!important;
+  border-bottom:1px solid var(--border)!important;
+}
+
+.result-table th{
+  background:#f2f7ff!important;
+  color:#0f172a!important;
+  text-align:left;
+  font-weight:800!important;
+}
+
+.result-table tbody tr:last-child td{border-bottom:none!important}
+
+.result-table th:nth-child(1),.result-table td:nth-child(1){width:18%!important;text-align:left!important}
+.result-table th:nth-child(2),.result-table td:nth-child(2){width:11%!important;text-align:right!important}
+.result-table th:nth-child(3),.result-table td:nth-child(3){width:6%!important;text-align:center!important}
+.result-table th:nth-child(4),.result-table td:nth-child(4){width:13%!important;text-align:right!important}
+.result-table th:nth-child(5),.result-table td:nth-child(5){width:14%!important;text-align:right!important}
+.result-table th:nth-child(6),.result-table td:nth-child(6){width:17%!important;text-align:right!important;color:#0647a5!important}
+.result-table th:nth-child(7),.result-table td:nth-child(7){width:21%!important;text-align:right!important;color:#0647a5!important;font-weight:800!important}
+
+.result-table .mono{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace!important;
+}
+
+.result-table tbody tr.total-row td{
+  font-size:17px!important;
+  font-weight:800!important;
+  background:#fbfdff!important;
+}
+.result-table tbody tr.total-row td b{
+  font-size:18px!important;
+  font-weight:900!important;
+}
+.result-table tbody tr.total-row td:nth-child(7){
+  color:#0647a5!important;
+}
+
+/* U型側溝と同じ折りたたみ */
+.ms-collapse{
+  margin:10px 0 0;
+  border:2px solid #8fc0ed!important;
+  border-radius:12px!important;
+  background:#fbfdff!important;
+  overflow:hidden!important;
+  box-shadow:0 4px 12px rgba(0,112,192,.09)!important;
+}
+.ms-collapse>summary{
+  list-style:none!important;
+  cursor:pointer!important;
+  display:block!important;
+  padding:11px 12px!important;
+  margin:0!important;
+  color:#0647a5!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  line-height:1.35!important;
+  background:linear-gradient(180deg,#eef7ff,#e2f0ff)!important;
+  user-select:none!important;
+}
+.ms-collapse>summary::-webkit-details-marker{display:none!important}
+.ms-collapse>summary:before{content:"▶ ";font-weight:950!important}
+.ms-collapse[open]>summary:before{content:"▼ "}
+.ms-collapse[open]>summary{border-bottom:1px solid #cfe3f7!important}
+.ms-collapse-body{padding:10px 12px 12px}
+.ms-collapse .result-memo-box{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
+.ms-collapse .result-memo-title{display:none!important}
+
+.result-memo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 18px;
+  font-size:12px;
+  line-height:1.45;
+  color:var(--muted);
+}
+.result-memo-item{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:8px;
+  border-bottom:1px dotted #dbe3ec;
+  padding:4px 0;
+}
+.result-memo-item b{color:#334155;font-weight:800}
+
+@media(max-width:700px){
+  .result-memo-grid{grid-template-columns:1fr}
+  .result-memo-item{grid-template-columns:105px 1fr}
+}
+</style>
+
+<style id="firetank-new-input-product-orange">
+.new-input-wrap{
+  margin:0 0 10px;
+  display:flex;
+  justify-content:flex-end;
+}
+#newInputBtn{
+  width:auto!important;
+  min-width:150px!important;
+  padding:7px 12px!important;
+  background:#eef6ff!important;
+  color:#0647a5!important;
+  border:1px solid #bad8f4!important;
+  border-radius:9px!important;
+  white-space:nowrap!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+#newInputBtn:hover{background:#e2f0ff!important}
+@media(max-width:700px){
+  #newInputBtn{
+    min-width:132px!important;
+    font-size:11px!important;
+    padding:7px 8px!important;
+  }
+}
+@media print{#newInputBtn{display:none!important}}
+</style>
+
+<style id="firetank-product-outline-orange">
+/* 製品外形：Ver1.4.0の製品情報系と同じオレンジ系 */
+.input-card .section h3.product-outline-title,
+.input-card .section.product-outline-section h3{
+  margin-top:10px!important;
+  padding:8px 12px!important;
+  border-left:6px solid #d59a52!important;
+  border-bottom:2px solid #e5c79e!important;
+  border-radius:7px!important;
+  background:linear-gradient(180deg,#fffaf2 0%,#f8ead6 100%)!important;
+  box-shadow:0 2px 5px rgba(92,61,25,.12)!important;
+  color:#6f4b22!important;
+  font-weight:900!important;
+}
+.input-card .section.product-outline-section .secbody{
+  margin-top:6px!important;
+  padding:10px 10px 8px!important;
+  border:1px solid #ead8bd!important;
+  border-radius:9px!important;
+  background:#fffaf3!important;
+}
+</style>
+
+
+<style id="firetank-u-gutter-header">
+header{
+  background:linear-gradient(135deg,var(--blue),#2b8ae2)!important;
+  color:#fff!important;
+  padding:18px 16px!important;
+}
+header .wrap{
+  max-width:1500px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  gap:12px!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  flex-wrap:wrap!important;
+}
+header h1{
+  font-size:18px!important;
+  margin:0!important;
+  color:#fff!important;
+}
+header .sub{
+  font-size:12px!important;
+  opacity:.95!important;
+  color:#fff!important;
+}
+header .pill{
+  display:inline-block!important;
+  padding:2px 10px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.18)!important;
+  color:#fff!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  margin:2px!important;
+}
+.home-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  min-width:150px!important;
+  height:38px!important;
+  padding:0 14px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.18)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.55)!important;
+  text-decoration:none!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  box-shadow:0 6px 14px rgba(0,0,0,.12)!important;
+  white-space:nowrap!important;
+}
+.home-link:hover{background:rgba(255,255,255,.28)!important}
+@media(max-width:700px){.home-link{width:100%!important;margin-top:8px!important}}
+@media print{.home-link{display:none!important}}
+</style>
+
+
+<style id="firetank-defaults-modal-style">
+#fireTankDefaultsModal{
+  display:none;position:fixed;inset:0;z-index:99995;
+  background:rgba(8,24,48,.58);align-items:center;justify-content:center;padding:18px
+}
+#fireTankDefaultsModal.show{display:flex}
+.firetank-defaults-box{
+  width:min(620px,100%);background:#fff;border:1px solid #cfe3f7;
+  border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.30);overflow:hidden
+}
+.firetank-defaults-head{
+  padding:17px 20px;background:linear-gradient(135deg,#063f91,#075fbd);color:#fff
+}
+.firetank-defaults-title{font-size:21px;font-weight:950}
+.firetank-defaults-sub{font-size:12px;line-height:1.6;margin-top:4px;color:#eaf4ff}
+.firetank-defaults-body{padding:18px 20px;color:#23364d;font-size:14px;line-height:1.7}
+.firetank-defaults-status{
+  padding:10px 12px;border:1px solid #cfe3f7;border-radius:10px;
+  background:#f7fbff;color:#0647a5;font-weight:900;margin-bottom:13px
+}
+.firetank-defaults-actions{display:grid;gap:9px}
+.firetank-defaults-actions button{height:40px;width:100%}
+.firetank-defaults-save{background:#0647a5;color:#fff}
+.firetank-defaults-close{background:#f1f5f9;color:#334155}
+</style>
+
+
+<style id="firetank-calc-symbol-note">
+.calc-symbol-note{
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dotted #dbe3ec;
+  font-size:11px;
+  line-height:1.55;
+  color:#64748b;
+}
+</style>
+
+
+<style id="firetank-calc-memo-weight-adjust">
+.result-memo-item b{
+  font-weight:600!important;
+}
+</style>
+
+
+<style id="firetank-lwall-print-unified">
+/* L型擁壁アプリ準拠：印刷ボタン */
+#printBtn,#resultPrintBtn{width:140px!important;min-width:140px!important;padding:8px 6px!important;border-radius:10px!important;font-size:13px!important;font-weight:700!important}
+.topbar{justify-content:flex-end!important}
+/* L型擁壁アプリ準拠：A4縦帳票 */
+#printSheet{display:none;font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#printSheet .print-header{display:grid;grid-template-columns:1fr 1fr auto;gap:5mm;align-items:end;color:#111;border-bottom:2px solid #111;padding-bottom:2mm;margin-bottom:3mm;font-size:15px;font-weight:400;line-height:1.1}
+#printSheet .print-date{font-size:12px;text-align:right;align-self:start}
+#printSheet .print-main-table{table-layout:fixed;width:100%;border-collapse:collapse;border:1.4px solid #222;background:#fff}
+#printSheet .print-main-table th,#printSheet .print-main-table td{border:1px solid #333;padding:0 1.2mm;font-size:11px;height:9mm;line-height:1.15}
+#printSheet .print-main-table th{background:#eaf4ff!important;text-align:center;font-weight:400}
+#printSheet .print-main-table th:nth-child(1),#printSheet .print-main-table td:nth-child(1){width:24%;text-align:left}
+#printSheet .print-main-table th:nth-child(2),#printSheet .print-main-table td:nth-child(2){width:11%;text-align:right}
+#printSheet .print-main-table th:nth-child(3),#printSheet .print-main-table td:nth-child(3){width:7%;text-align:center}
+#printSheet .print-main-table th:nth-child(4),#printSheet .print-main-table td:nth-child(4){width:12%;text-align:right}
+#printSheet .print-main-table th:nth-child(5),#printSheet .print-main-table td:nth-child(5){width:13%;text-align:right}
+#printSheet .print-main-table th:nth-child(6),#printSheet .print-main-table td:nth-child(6){width:14%;text-align:right}
+#printSheet .print-main-table th:nth-child(7),#printSheet .print-main-table td:nth-child(7){width:19%;text-align:right}
+#printSheet .print-main-table tfoot th,#printSheet .print-main-table tfoot td{height:9mm;background:#fff!important;font-size:15px;font-weight:400}
+#printSheet .print-bottom{display:grid;grid-template-columns:1.1fr .9fr;gap:3mm;margin-top:4mm;break-inside:avoid;page-break-inside:avoid}
+#printSheet .print-drawing-box,#printSheet .print-dim-box{border:1.2px solid #333;background:#fff;overflow:hidden}
+#printSheet .print-title{background:#eaf4ff!important;border-bottom:1px solid #333;text-align:center;color:#111;font-size:14px;font-weight:900;padding:1.8mm}
+#printSheet .print-diagram-body{padding:1.5mm 2mm 0}
+#printSheet .print-diagram-subtitle{text-align:center;font-size:11px;font-weight:700;margin:1mm 0 .5mm}
+#printSheet .print-diagram-body svg{display:block;width:100%;height:47mm;margin:0 auto}
+#printSheet .print-dim-table{table-layout:fixed;width:100%;border-collapse:collapse;border:none}
+#printSheet .print-dim-table th,#printSheet .print-dim-table td{border:1px solid #444;font-size:11px;height:7.4mm;padding:.7mm 1.5mm;line-height:1.1}
+#printSheet .print-dim-table th{background:#fff!important;text-align:center;font-weight:400}
+#printSheet .print-dim-table th:nth-child(1),#printSheet .print-dim-table td:nth-child(1){width:18%;text-align:center}
+#printSheet .print-dim-table th:nth-child(2),#printSheet .print-dim-table td:nth-child(2){width:52%}
+#printSheet .print-dim-table th:nth-child(3),#printSheet .print-dim-table td:nth-child(3){width:30%;text-align:right}
+#printSheet .print-spec{margin:3mm;padding:3mm;border:1px solid #9bbce0;font-size:10.5px;line-height:1.55}
+@media print{
+ @page{size:A4 portrait;margin:5mm}
+ html,body{width:210mm;min-height:297mm;background:#fff!important}
+ body>*:not(#printSheet){display:none!important}
+ body{margin:0!important}
+ #printSheet{display:block!important;width:200mm!important;min-height:287mm!important;margin:0 auto!important;padding:4mm!important;border:1px solid #111!important;overflow:hidden!important;color:#111!important}
+}
+</style>
+
+<style id="firetank-print-margin-blue-final">
+/* 印刷：上下左右15mm余白、見出しブルーをL型擁壁寄りに濃く */
+@media print{
+  @page{size:A4 portrait;margin:15mm!important;}
+  html,body{width:auto!important;height:auto!important;margin:0!important;padding:0!important;background:#fff!important;}
+  #fireTankPrintWrap,#svgPrintWrap,.svg-print-wrap{
+    width:180mm!important;max-width:180mm!important;height:auto!important;min-height:0!important;
+    margin:0 auto!important;padding:0!important;box-shadow:none!important;border:none!important;
+  }
+  #fireTankPrintSheet,#svgPrintSheet,.svg-print-sheet-svg{
+    width:180mm!important;max-width:180mm!important;height:auto!important;min-height:0!important;
+    margin:0 auto!important;box-shadow:none!important;
+  }
+}
+.print-main-table th,.print-dim-table th,.print-title{background:#d9ebfb!important;}
+.print-main-table tfoot tr:last-child th,.print-main-table tfoot tr:last-child td{background:#d9ebfb!important;}
+</style>
+
+<style id="firetank-print-blue-border-final">
+/* 印刷：見出しブルーを濃く、一番外側の帳票枠は表示しない */
+@media screen, print {
+  #svgPrintSheet .print-head-fill,
+  #svgPrintSheet .print-title-fill { fill:#cfe6fa !important; }
+}
+@media print {
+  #svgPrintSheet { border:none !important; outline:none !important; box-shadow:none !important; }
+  .svg-print-sheet-svg { border:none !important; outline:none !important; box-shadow:none !important; }
+  #svgPrintWrap { border:none !important; outline:none !important; box-shadow:none !important; }
+}
+</style>
+
+<style id="firetank-print-onepage-no-outer-border-final">
+/* 最終印刷調整：A4縦1枚・上下左右15mm・帳票外枠なし */
+@media print{
+  @page{size:A4 portrait;margin:15mm!important;}
+  html,body{
+    width:auto!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+  }
+  body>*:not(#printSheet){display:none!important;}
+  #printSheet{
+    display:block!important;
+    width:180mm!important;
+    max-width:180mm!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0 auto!important;
+    padding:0!important;
+    border:0!important;
+    outline:0!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+    break-before:auto!important;
+    break-after:auto!important;
+    page-break-before:auto!important;
+    page-break-after:auto!important;
+  }
+  #printSheet::before,#printSheet::after{display:none!important;content:none!important;}
+  #printSheet .print-header,
+  #printSheet .print-main-table,
+  #printSheet .print-bottom,
+  #printSheet .print-drawing-box,
+  #printSheet .print-dim-box{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  #svgPrintWrap,#fireTankPrintWrap,.svg-print-wrap,#svgPrintSheet,#fireTankPrintSheet{
+    display:none!important;
+  }
+}
+</style>
+
+<style id="firetank-print-onepage-fit-final">
+/* 防火水槽：A4縦・上下左右15mmで表＋断面図＋寸法一覧を必ず1ページに収める */
+@media print{
+  @page{size:A4 portrait;margin:15mm!important;}
+  #printSheet{
+    width:180mm!important;max-width:180mm!important;
+    margin:0 auto!important;padding:0!important;
+    border:0!important;box-shadow:none!important;overflow:visible!important;
+  }
+  #printSheet .print-header{
+    margin-bottom:2mm!important;padding-bottom:1.5mm!important;
+    font-size:13px!important;line-height:1.05!important;
+  }
+  #printSheet .print-date{font-size:10px!important;}
+
+  /* 上段の積算表を少し詰める */
+  #printSheet .print-main-table th,
+  #printSheet .print-main-table td{
+    height:7mm!important;min-height:0!important;
+    padding:0 .9mm!important;font-size:10px!important;line-height:1.05!important;
+  }
+  #printSheet .print-main-table tfoot th,
+  #printSheet .print-main-table tfoot td{
+    height:7mm!important;font-size:12px!important;
+  }
+
+  /* 下段は1ブロックのまま、十分小さくして1ページ内へ */
+  #printSheet .print-bottom{
+    margin-top:2.5mm!important;gap:2.5mm!important;
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  #printSheet .print-title{font-size:11px!important;padding:1.2mm!important;}
+  #printSheet .print-diagram-body{padding:1mm 1.2mm 0!important;}
+  #printSheet .print-diagram-subtitle{font-size:9px!important;margin:.5mm 0 .2mm!important;line-height:1!important;}
+  #printSheet .print-diagram-body svg{
+    width:100%!important;height:35mm!important;max-height:35mm!important;margin:0 auto!important;
+  }
+
+  /* 寸法一覧は行数が多いので高さを抑える */
+  #printSheet .print-dim-table th,
+  #printSheet .print-dim-table td{
+    height:5.2mm!important;min-height:0!important;
+    padding:.35mm 1mm!important;font-size:9px!important;line-height:1.0!important;
+  }
+  #printSheet .print-spec{
+    margin:1.5mm!important;padding:1.5mm!important;
+    font-size:8.5px!important;line-height:1.3!important;
+  }
+
+  /* 表そのものは途中で割らず、下段が次ページへ送られないだけの余裕を確保 */
+  #printSheet .print-main-table{
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+}
+</style>
+
+
+<style id="firetank-print-balance-final-v2">
+/* 印刷バランス最終調整：下余白を減らし、積算表の行を厚くする */
+@media print{
+  @page{size:A4 portrait;margin:15mm!important;}
+  #printSheet{width:180mm!important;max-width:180mm!important;margin:0 auto!important;padding:0!important;}
+
+  /* 表の行を少し厚くして、ページ下側の空きを減らす */
+  #printSheet .print-main-table th,
+  #printSheet .print-main-table td{
+    height:8.2mm!important;
+    padding:0 1.1mm!important;
+    font-size:10.5px!important;
+    line-height:1.08!important;
+  }
+  #printSheet .print-main-table tfoot th,
+  #printSheet .print-main-table tfoot td{
+    height:8.2mm!important;
+    font-size:12.5px!important;
+  }
+
+  /* 下段も少しだけ大きくして、全体を縦方向に均等配置 */
+  #printSheet .print-bottom{margin-top:3mm!important;gap:2.5mm!important;}
+  #printSheet .print-title{font-size:11.5px!important;padding:1.4mm!important;}
+  #printSheet .print-diagram-body{padding:1.2mm 1.3mm .4mm!important;}
+  #printSheet .print-diagram-body svg{height:38mm!important;max-height:38mm!important;}
+  #printSheet .print-dim-table th,
+  #printSheet .print-dim-table td{
+    height:5.5mm!important;
+    padding:.4mm 1mm!important;
+    font-size:9.2px!important;
+  }
+  #printSheet .print-spec{margin:1.8mm!important;padding:1.6mm!important;font-size:8.7px!important;line-height:1.35!important;}
+}
+</style>
+
+
+<style id="firetank-print-dim-row-balance-v3">
+/* 寸法一覧の行を厚くして、下余白を減らす */
+@media print{
+  #printSheet .print-dim-table th,
+  #printSheet .print-dim-table td{
+    height:6.6mm!important;
+    min-height:6.6mm!important;
+    padding:.7mm 1mm!important;
+    font-size:9.4px!important;
+    line-height:1.15!important;
+    vertical-align:middle!important;
+  }
+  #printSheet .print-bottom{margin-top:3mm!important;}
+  #printSheet .print-spec{margin:1.5mm!important;padding:1.4mm!important;}
+}
+</style>
+
+
+<style id="firetank-print-dim-row-height-final">
+/* 印刷：寸法一覧をもう少し厚くして下余白とのバランスを調整 */
+@media print {
+  .print-dim-table th,
+  .print-dim-table td{
+    height:8.4mm!important;
+    padding:1.15mm 1.5mm!important;
+    vertical-align:middle!important;
+  }
+}
+.print-preview-mode .print-dim-table th,
+.print-preview-mode .print-dim-table td{
+  height:8.4mm!important;
+  padding:1.15mm 1.5mm!important;
+  vertical-align:middle!important;
+}
+</style>
+
+
+<style id="firetank-print-spacing-balance-final">
+/* 印刷：積算表→下段、断面図→寸法一覧の間隔を広げる */
+@media print {
+  .print-bottom{
+    margin-top:7mm!important;
+    gap:6mm!important;
+  }
+}
+.print-preview-mode .print-bottom{
+  margin-top:7mm!important;
+  gap:6mm!important;
+}
+</style>
+
+
+<style id="firetank-print-only-table-bottom-spacing">
+@media print {
+  .print-bottom{
+    margin-top:9mm!important;
+  }
+}
+.print-preview-mode .print-bottom{
+  margin-top:9mm!important;
+}
+</style>
+
+
+<style id="firetank-print-spacer-caption-style">
+.print-section-caption{display:none;}
+@media print{
+  .print-section-caption{
+    display:block!important;
+    height:8mm!important;
+    line-height:8mm!important;
+    margin:0!important;
+    padding:0!important;
+    text-align:left!important;
+    font-size:10px!important;
+    font-weight:400!important;
+    color:#555!important;
+    white-space:nowrap!important;
+  }
+}
+.print-preview-mode .print-section-caption{
+  display:block!important;
+  height:8mm!important;
+  line-height:8mm!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:left!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  color:#555!important;
+}
+</style>
+
+
+<style id="firetank-unit-kpi-added">
+.firetank-unit-kpi{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:0 0 12px;
+}
+.firetank-unit-kpi .box{
+  min-height:64px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:8px 14px;
+  border:2px solid #bad8f4;
+  border-radius:14px;
+  background:linear-gradient(180deg,#fbfdff,#eef6ff);
+}
+.firetank-unit-kpi .t{font-size:13px;color:#475569}
+.firetank-unit-kpi .v{margin-top:2px;color:#0647a5;font-size:22px;font-weight:950;line-height:1.15}
+.firetank-unit-kpi .u{font-size:12px;color:#60758d;margin-left:6px}
+@media(max-width:700px){.firetank-unit-kpi{grid-template-columns:1fr}}
+@media print{.firetank-unit-kpi{display:none!important}}
+</style>
+
+
+<style id="firetank-unit-kpi-font-soften">
+.firetank-unit-kpi .t{
+  font-weight:400!important;
+}
+.firetank-unit-kpi .v{
+  font-weight:600!important;
+}
+.firetank-unit-kpi .u{
+  font-weight:400!important;
+}
+</style>
+
+
+<style id="firetank-manage-one-column-final">
+/* 管理欄：工事名→積算データ保存→製品単価マスター→共有単価マスターを1列表示 */
+.firetank-manage-grid{
+  grid-template-columns:1fr!important;
+}
+.firetank-manage-grid>.manage-cell{
+  width:100%!important;
+}
+</style>
+
+</head>
+<body>
+<header><div class="wrap">
+  <div>
+    <h1 id="fireTankDefaultsTrigger" title="防火水槽工積算">防火水槽工 積算アプリ Ver.1.0.0</h1>
+    <div class="sub">掘削／埋戻し／残土処理／床付け／基礎砕石／敷モルタル／基礎コンクリート／型枠／製品／据付を自動算出</div>
+  </div>
+  <div>
+    <span class="pill">製品外形=L1×W1×H1</span>
+    <span class="pill">基礎=L3×W3</span>
+    <span class="pill">掘削余裕=e</span>
+    <span class="pill">法面=1:n</span>
+  </div>
+  <a class="home-link" href="index.html">🏠 メイン画面に戻る</a>
+</div></header>
+<main>
+  <div class="topbar" style="display:none"><button class="ghost" id="printBtn">印刷</button></div>
+  <div class="layout">
+    <section class="card input-card">
+      <div class="card-title"><span class="dot"></span>入力</div>
+      <div class="card-body">
+<div class="new-input-wrap"><button class="primary" id="newInputBtn" type="button">新しい入力を開始</button></div>
+        <div class="ms-v140-guide" aria-label="入力順の案内">
+  <span>📐 寸法</span><span>💴 単価</span><span>⚙ 条件</span>
+</div>
+        <div style="display:none">
+          <input id="ProductManufacturer"><input id="ProductName" value="耐震性防火水槽">
+          <input id="ProductCapacity" value="40t"><input id="ProductModelCode" value="TC2524-40-">
+          <input id="ProductMasterId" type="hidden"><input id="ProductMasterUpdatedAt" type="hidden">
+        </div>
+
+        <div class="section product-outline-section"><h3 class="product-outline-title">製品外形</h3><div class="secbody grid3">
+          <div class="field dim"><label><b>L1</b> 本体長さ(m)</label><input id="L1" autofocus data-dim="l1" value="6.83"></div>
+          <div class="field dim"><label><b>W1</b> 本体幅(m)</label><input id="W1" data-dim="w1" value="2.50"></div>
+          <div class="field dim"><label><b>H1</b> 本体高さ(m)</label><input id="H1" data-dim="h1" value="2.80"></div>
+        </div></div>
+
+        <div class="section"><h3>設置条件</h3><div class="secbody grid3">
+          <div class="field cond"><label><b>TH</b> 土被り(m)</label><input id="TH" data-dim="th" value="1.00"></div>
+          <div class="field cond"><label><b>e</b> 掘削余裕(m)</label><input id="E" data-dim="e" value="0.60"></div>
+          <div class="field cond"><label><b>n</b> 法面 1:n</label><input id="N" data-dim="n" value="0.50"></div>
+        </div></div>
+        <div class="section"><h3>基礎材寸法</h3><div class="secbody">
+          <div class="grid2">
+            <div class="field dim"><label><b>L3</b> 長さ(m)</label><input id="L3" data-dim="l3" value="7.83"></div>
+            <div class="field dim"><label><b>W3</b> 幅(m)</label><input id="W3" data-dim="w3" value="3.30"></div>
+          </div>
+          <div class="grid3" style="margin-top:7px">
+            <div class="field dim"><label><b>HM</b> 敷モル厚(m)</label><input id="HM" data-dim="hm" value="0.03"></div>
+            <div class="field dim"><label><b>H3</b> 基礎Co厚(m)</label><input id="H3" data-dim="h3" value="0.20"></div>
+            <div class="field dim"><label><b>H2</b> 砕石厚(m)</label><input id="H2" data-dim="h2" value="0.25"></div>
+          </div>
+        </div></div>
+
+        <div class="section"><h3>マンホール</h3><div class="secbody grid2">
+          <div class="field dim"><label><b>MD</b> 外径(m)</label><input id="MD" data-dim="md" value="1.20"></div>
+          <div class="field cond"><label><b>MN</b> 個数</label><input id="MN" value="2"></div>
+        </div></div>
+
+        <div class="section"><h3>ピット</h3><div class="secbody">
+          <div class="grid2"><div class="field cond"><label>形状</label><select id="PitShape"><option value="circle" selected>円形</option><option value="rect">角形</option><option value="none">なし</option><option value="special">特殊（数量直接入力）</option></select></div><div class="field cond"><label><b>PN</b> 個数</label><input id="PN" value="2"></div></div>
+          <div id="pitCircle" class="grid2" style="margin-top:7px">
+            <div class="field dim"><label><b>PD1</b> 外径(m)</label><input id="PD1" data-dim="pd1" value="1.60"></div>
+            <div class="field dim"><label><b>PD2</b> 内径(m)</label><input id="PD2" data-dim="pd2" value="1.20"></div>
+            <div class="field dim"><label><b>PH1</b> 外深さ(m)</label><input id="PH1" data-dim="ph1" value="0.73"></div>
+            <div class="field dim"><label><b>PH2</b> 内深さ(m)</label><input id="PH2" data-dim="ph2" value="0.53"></div>
+          </div>
+          <div id="pitRect" class="grid2 hidden" style="margin-top:7px">
+            <div class="field dim"><label>外長さ(m)</label><input id="PLO" value="1.60"></div><div class="field dim"><label>外幅(m)</label><input id="PWO" value="1.60"></div>
+            <div class="field dim"><label>内長さ(m)</label><input id="PLI" value="1.20"></div><div class="field dim"><label>内幅(m)</label><input id="PWI" value="1.20"></div>
+            <div class="field dim"><label>外深さ(m)</label><input id="PRH1" value="0.73"></div><div class="field dim"><label>内深さ(m)</label><input id="PRH2" value="0.53"></div>
+          </div>
+          <div id="pitSpecial" class="grid2 hidden" style="margin-top:7px">
+            <div class="field dim"><label>基礎開口面積(m²/箇所)</label><input id="PSOpen" value="0"></div><div class="field dim"><label>ピットCo量(m³/箇所)</label><input id="PSConc" value="0"></div>
+            <div class="field dim"><label>型枠(m²/箇所)</label><input id="PSForm" value="0"></div><div class="field dim"><label>増掘(m³/箇所)</label><input id="PSExc" value="0"></div>
+            <div class="field dim"><label>内部空洞(m³/箇所)</label><input id="PSVoid" value="0"></div>
+          </div>
+        </div></div>
+
+        <div class="section"><h3>単価</h3><div class="secbody grid2">
+          <div class="field price"><label>掘削 円/m³</label><input id="Pexc" class="money" value="2,500"></div><div class="field price"><label>埋戻し 円/m³</label><input id="Pback" class="money" value="2,000"></div>
+          <div class="field price"><label>残土処理 円/m³</label><input id="Pspoil" class="money" value="4,000"></div><div class="field price"><label>床付け 円/m²</label><input id="Pbed" class="money" value="500"></div>
+          <div class="field price"><label>基礎砕石 円/m³</label><input id="Pstone" class="money" value="7,000"></div><div class="field price"><label>敷モルタル 円/m³</label><input id="Pmortar" class="money" value="30,000"></div>
+          <div class="field price"><label>基礎型枠 円/m²</label><input id="Pform" class="money" value="7,000"></div><div class="field price"><label>基礎Co 円/m³</label><input id="Pconc" class="money" value="30,000"></div>
+          <div class="field price"><label>製品価格 円/基</label><input id="ProdPrice" class="money" value="0"></div><div class="field price"><label>据付費 円/基</label><input id="Pset" class="money" value="0"></div>
+        </div></div>
+        
+        <div class="section"><h3>共通条件</h3><div class="secbody">
+          <div class="grid2">
+            <div class="field cond"><label><b>利益率</b> (%)</label><input id="ProfitRate" class="money" value="20.0" inputmode="decimal"></div>
+          </div>
+          <div class="muted" style="margin-top:6px">※ 見積単価＝原価単価÷(1－利益率)。</div>
+        </div></div>
+
+      </div>
+    </section>
+
+    
+<section class="card diagram-card">
+  <div class="card-title"><span class="dot"></span>断面</div>
+  <div class="svg-wrap">
+    <div class="diagram-vertical-title">長手方向立面</div>
+    <div class="illust-box">
+      <svg id="longSvg" class="diagram" viewBox="0 0 1180 1000" xmlns="http://www.w3.org/2000/svg" aria-label="防火水槽 長手方向立面図">
+            <defs>
+              <marker id="dimDotStart" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="3.8" fill="#111"/></marker>
+              <marker id="dimDotEnd" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="3.8" fill="#111"/></marker>
+              <linearGradient id="tankGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#edf4f7"/><stop offset="1" stop-color="#cfdde3"/></linearGradient>
+              <linearGradient id="concGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eeeeee"/><stop offset="1" stop-color="#cfcfcf"/></linearGradient>
+              <pattern id="stoneHatch" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M-4 19 L7 8 M5 26 L26 5 M17 28 L28 17" stroke="#8b8174" stroke-width="2.5"/><circle cx="6" cy="17" r="2.2" fill="#8b8174"/><circle cx="17" cy="7" r="2" fill="#9a8e80"/></pattern>
+            </defs>
+            <rect width="1180" height="780" fill="#fff"/>
+            <path id="longExc" class="excavation" d="M53 145 L1067 145 L992 661 L128 661 Z"/>
+            <line id="longGround" class="ground" x1="25" y1="145" x2="1095" y2="145"/>
+            <text x="86" y="132" class="subtxt">GL</text>
+
+            <path id="longTank" class="tank" d="M270 260 L850 260 L850 570 L835 585 L285 585 L270 570 Z"/>
+            <path id="longInner" d="M300 290 L820 290 L820 545 L807 556 L313 556 L300 545 Z" fill="#fff" stroke="#71838c" stroke-width="2.5"/>
+            <rect id="longMh1" class="mhfill" x="365" y="170" width="100" height="90"/>
+            <rect id="longMh2" class="mhfill" x="655" y="170" width="100" height="90"/>
+            <ellipse id="longMhTop1" cx="415" cy="170" rx="50" ry="10" fill="#eef3f5" stroke="#425762" stroke-width="4"/>
+            <ellipse id="longMhTop2" cx="705" cy="170" rx="50" ry="10" fill="#eef3f5" stroke="#425762" stroke-width="4"/>
+
+            <rect id="longConc" class="concrete" x="210" y="585" width="700" height="34"/>
+            <rect id="longMortar" class="mortar" x="210" y="578" width="700" height="7"/>
+            <rect id="longStone" class="stone-shape" x="210" y="619" width="700" height="42"/>
+            <g id="longCirclePits">
+              <path id="longPitOuter1" class="concrete" d="M350 585 L480 585 L480 720 L350 720 Z"/>
+              <path id="longPitVoid1" class="pitvoid-open" d="M370 583 L460 583 L460 692 L370 692 Z"/>
+              <path id="longPitVoidEdge1" class="pitvoid-edge" d="M370 585 L370 692 L460 692 L460 585"/>
+              <path id="longPitOuter2" class="concrete" d="M640 585 L770 585 L770 720 L640 720 Z"/>
+              <path id="longPitVoid2" class="pitvoid-open" d="M660 583 L750 583 L750 692 L660 692 Z"/>
+              <path id="longPitVoidEdge2" class="pitvoid-edge" d="M660 585 L660 692 L750 692 L750 585"/>
+            </g>
+            <g id="longRectPits" class="hidden">
+              <rect id="longRPitOuter1" class="concrete" x="350" y="585" width="130" height="135"/>
+              <rect id="longRPitVoid1" class="pitvoid-open" x="370" y="583" width="90" height="109"/>
+              <path id="longRPitVoidEdge1" class="pitvoid-edge" d="M370 585 L370 692 L460 692 L460 585"/>
+              <rect id="longRPitOuter2" class="concrete" x="640" y="585" width="130" height="135"/>
+              <rect id="longRPitVoid2" class="pitvoid-open" x="660" y="583" width="90" height="109"/>
+              <path id="longRPitVoidEdge2" class="pitvoid-edge" d="M660 585 L660 692 L750 692 L750 585"/>
+            </g>
+            <text x="560" y="410" text-anchor="middle" class="partlabel">防火水槽本体</text>
+            <text id="longTankText" x="560" y="445" text-anchor="middle" class="subtxt">防火水槽本体</text>
+            <text x="560" y="642" text-anchor="middle" class="subtxt">基礎</text>
+
+            <line id="dimLongL1ExtL" x1="270" y1="610" x2="270" y2="790" class="extline"/><line id="dimLongL1ExtR" x1="850" y1="610" x2="850" y2="790" class="extline"/>
+            <line id="dimLongL1" x1="270" y1="790" x2="850" y2="790" class="dimline dim-l1"/><text x="560" y="777" text-anchor="middle" class="dimmark dim-lw1"><tspan class="dim-token dim-l1">L1</tspan><tspan class="dim-sep">×</tspan><tspan class="dim-token dim-w1">W1</tspan></text>
+            <line x1="210" y1="661" x2="210" y2="835" class="extline"/><line x1="910" y1="661" x2="910" y2="835" class="extline"/>
+            <line x1="210" y1="619" x2="210" y2="835" class="extline"/><line x1="910" y1="619" x2="910" y2="835" class="extline"/>
+            <line id="dimLongL3" x1="210" y1="835" x2="910" y2="835" class="dimline dim-l3"/><text x="560" y="822" text-anchor="middle" class="dimmark dim-lw3"><tspan class="dim-token dim-l3">L3</tspan><tspan class="dim-sep">×</tspan><tspan class="dim-token dim-w3">W3</tspan></text>
+
+            <line x1="875" y1="260" x2="1080" y2="260" class="extline"/><line x1="875" y1="578" x2="1080" y2="578" class="extline"/>
+            <line x1="1080" y1="260" x2="1080" y2="585" class="dimline dim-h1"/><text x="1098" y="430" class="dimmark dim-h1">H1</text>
+            <line x1="865" y1="145" x2="1080" y2="145" class="extline"/><line x1="865" y1="260" x2="1080" y2="260" class="extline"/>
+            <line x1="1080" y1="145" x2="1080" y2="260" class="dimline dim-th"/><text x="1098" y="210" class="dimmark dim-th">TH</text>
+            <line x1="885" y1="578" x2="1080" y2="578" class="extline"/><line x1="885" y1="585" x2="1080" y2="585" class="extline"/>
+
+            
+            <line x1="910" y1="578" x2="1080" y2="578" class="extline dim-hm"/>
+            <line x1="910" y1="585" x2="1080" y2="585" class="extline dim-hm"/>
+            <line x1="1080" y1="578" x2="1080" y2="585" class="dimline dim-hm"/>
+            <text x="1098" y="576" class="dimmark dim-hm">HM</text>
+
+            <line x1="1080" y1="585" x2="1080" y2="619" class="dimline dim-h3"/><text x="1098" y="613" class="dimmark dim-h3">H3</text>
+            <line x1="910" y1="619" x2="1080" y2="619" class="extline"/><line x1="910" y1="661" x2="1080" y2="661" class="extline"/>
+            <line x1="1080" y1="619" x2="1080" y2="661" class="dimline dim-h2"/><text x="1098" y="657" class="dimmark dim-h2">H2</text>
+
+            <line x1="204" y1="661" x2="129" y2="665" class="dimline dim-e"/><text x="164" y="700" text-anchor="middle" class="dimmark dim-e">e</text>
+            <text x="112" y="330" class="dimmark dim-n">1:n</text>
+            <line x1="365" y1="155" x2="465" y2="155" class="dimline dim-md"/><text x="415" y="140" text-anchor="middle" class="dimmark dim-md">MD</text>
+          </svg>
+    </div>
+
+    <div class="diagram-vertical-title second">ピット詳細</div>
+    <div class="illust-box">
+      
+<svg id="pitSvg" class="diagram" viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg" aria-label="防火水槽 ピット詳細図">
+  <defs>
+    <marker id="pitDimDotStart" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="3.8" fill="#111"/></marker>
+    <marker id="pitDimDotEnd" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="3.8" fill="#111"/></marker>
+    <linearGradient id="pitConcGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eeeeee"/><stop offset="1" stop-color="#cfcfcf"/></linearGradient>
+  </defs>
+  <rect width="1120" height="620" fill="#fff"/>
+
+  <text x="285" y="52" text-anchor="middle" class="partlabel">平面</text>
+  <text x="820" y="52" text-anchor="middle" class="partlabel">断面</text>
+
+  <g id="pitCircleDetail">
+    <!-- 平面 -->
+    <circle id="pitPlanOuterCircle" cx="285" cy="275" r="150" fill="url(#pitConcGrad)" stroke="#5b6268" stroke-width="4"/>
+    <circle id="pitPlanInnerCircle" cx="285" cy="275" r="105" fill="#fff" stroke="#475b66" stroke-width="3"/>
+    <line id="pitPlanPd1" x1="135" y1="520" x2="435" y2="520" class="pit-dimline dim-pd1"/>
+    <line x1="135" y1="275" x2="135" y2="520" class="extline"/><line x1="435" y1="275" x2="435" y2="520" class="extline"/>
+    <text x="285" y="505" text-anchor="middle" class="dimmark dim-pd1">PD1</text>
+    <line id="pitPlanPd2" x1="180" y1="470" x2="390" y2="470" class="pit-dimline dim-pd2"/>
+    <line x1="180" y1="275" x2="180" y2="470" class="extline"/><line x1="390" y1="275" x2="390" y2="470" class="extline"/>
+    <text x="285" y="455" text-anchor="middle" class="dimmark dim-pd2">PD2</text>
+
+    <!-- 断面：上部開口、下面フラット -->
+    <path id="pitSectionOuterCircle" d="M690 145 L950 145 L950 470 L690 470 Z" fill="url(#pitConcGrad)" stroke="#5b6268" stroke-width="4"/>
+    <rect id="pitSectionVoidCircle" x="735" y="140" width="170" height="285" class="pitvoid-open"/>
+    <path id="pitSectionVoidEdgeCircle" d="M735 145 L735 425 L905 425 L905 145" class="pitvoid-edge"/>
+    <text x="820" y="126" text-anchor="middle" class="subtxt">上部開口</text>
+    <line x1="950" y1="145" x2="1060" y2="145" class="extline"/><line x1="950" y1="470" x2="1060" y2="470" class="extline"/>
+    <line id="pitPh1Line" x1="1040" y1="145" x2="1040" y2="470" class="pit-dimline dim-ph1"/>
+    <text x="1058" y="318" class="dimmark dim-ph1">PH1</text>
+    <line x1="905" y1="145" x2="1000" y2="145" class="extline"/><line x1="905" y1="425" x2="1000" y2="425" class="extline"/>
+    <line id="pitPh2Line" x1="975" y1="145" x2="975" y2="425" class="pit-dimline dim-ph2"/>
+    <text x="993" y="294" class="dimmark dim-ph2">PH2</text>
+  </g>
+
+  <g id="pitRectDetail" class="hidden">
+    <!-- 平面 -->
+    <rect id="pitPlanOuterRect" x="115" y="145" width="340" height="260" fill="url(#pitConcGrad)" stroke="#5b6268" stroke-width="4"/>
+    <rect id="pitPlanInnerRect" x="175" y="195" width="220" height="160" fill="#fff" stroke="#475b66" stroke-width="3"/>
+    <line id="pitPlanPl1" x1="115" y1="520" x2="455" y2="520" class="pit-dimline dim-pl1"/>
+    <line x1="115" y1="145" x2="115" y2="520" class="extline"/><line x1="455" y1="145" x2="455" y2="520" class="extline"/>
+    <text x="285" y="505" text-anchor="middle" class="dimmark dim-pl1">PL1</text>
+    <line id="pitPlanPl2" x1="175" y1="470" x2="395" y2="470" class="pit-dimline dim-pl2"/>
+    <line x1="175" y1="195" x2="175" y2="470" class="extline"/><line x1="395" y1="195" x2="395" y2="470" class="extline"/>
+    <text x="285" y="455" text-anchor="middle" class="dimmark dim-pl2">PL2</text>
+
+    <!-- 断面 -->
+    <path id="pitSectionOuterRect" d="M690 145 L950 145 L950 470 L690 470 Z" fill="url(#pitConcGrad)" stroke="#5b6268" stroke-width="4"/>
+    <rect id="pitSectionVoidRect" x="735" y="140" width="170" height="285" class="pitvoid-open"/>
+    <path id="pitSectionVoidEdgeRect" d="M735 145 L735 425 L905 425 L905 145" class="pitvoid-edge"/>
+    <text x="820" y="126" text-anchor="middle" class="subtxt">上部開口</text>
+    <line x1="950" y1="145" x2="1060" y2="145" class="extline"/><line x1="950" y1="470" x2="1060" y2="470" class="extline"/>
+    <line x1="1040" y1="145" x2="1040" y2="470" class="pit-dimline dim-ph1"/>
+    <text x="1058" y="318" class="dimmark dim-ph1">PH1</text>
+    <line x1="905" y1="145" x2="1000" y2="145" class="extline"/><line x1="905" y1="425" x2="1000" y2="425" class="extline"/>
+    <line x1="975" y1="145" x2="975" y2="425" class="pit-dimline dim-ph2"/>
+    <text x="993" y="294" class="dimmark dim-ph2">PH2</text>
+  </g>
+
+  <g id="pitSpecialDetail" class="hidden">
+    <rect x="170" y="150" width="780" height="300" rx="16" fill="#f8fafc" stroke="#9aa9b5" stroke-width="3"/>
+    <text x="560" y="275" text-anchor="middle" class="partlabel">特殊形状ピット</text>
+    <text x="560" y="330" text-anchor="middle" class="subtxt">数量を直接入力</text>
+  </g>
+</svg>
+
+    </div>
+
+    <div class="svg-note">長手方向図は本体平面寸法を L1×W1、基礎平面寸法を L3×W3 で表示。ピット寸法は下のピット詳細図で確認します。入力欄を選ぶと該当寸法記号が赤く大きく表示されます。</div>
+    <div class="firetank-manage-grid">
+      <div class="manage-cell estimate-panel">
+        <div class="sectionTitle">工事名</div>
+        <div class="save-line">
+          <label>工事名</label>
+          <input id="projectName" type="text" placeholder="例：○○様邸 外構工事">
+        </div>
+      </div>
+
+      <div class="manage-cell control-block estimate-block">
+        <div class="sectionTitle">積算データ保存</div>
+        <div class="save-line"><label>積算名称</label><input id="estimateName" type="text" value="40t 耐震性防火水槽" placeholder="例：40t 防火水槽"></div>
+        <div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div>
+        <div class="save-btns"><button class="primary" id="saveEstimateBtn" type="button">保存</button><button class="ghost" id="loadEstimateBtn" type="button">呼出</button><button class="danger" id="deleteEstimateBtn" type="button">削除</button></div>
+        <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+      </div>
+
+      <div class="manage-cell product-master-box">
+        <div class="product-master-head"><div class="product-master-title">製品単価マスター</div></div>
+        <div id="selectedProductMaster" class="product-master-current">製品は選択されていません。</div>
+        <div class="product-master-actions"><button class="primary" id="openProductMasterBtn" type="button">製品を選択</button><button class="ghost" id="registerCurrentProductBtn" type="button">現在値を登録</button><button class="danger" id="clearProductBtn" type="button">選択解除</button></div>
+      </div>
+
+      <div class="manage-cell control-block price-block">
+        <div class="sectionTitle">共有単価マスター（呼び出し専用）</div>
+        <div class="save-line"><label>使用する単価</label><select id="ftCommonPriceList"><option value="">共有単価なし</option></select></div>
+        <div class="save-btns" style="grid-template-columns:1fr"><button class="primary" id="ftApplyCommonPriceBtn" type="button">今回の積算だけに反映</button></div>
+        <div class="note" id="ftCommonPriceNote">共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section class="card"><h2><span class="dot"></span>結果</h2><div class="body">
+  <div class="btns" style="grid-template-columns:repeat(3,1fr);margin:0 0 12px;max-width:420px">
+    <button class="primary" id="resultPrintBtn" type="button">印刷</button>
+  </div>
+
+  <div class="firetank-unit-kpi" aria-label="1基あたり単価">
+    <div class="box">
+      <div class="t">1基あたり単価</div>
+      <div><span class="v" id="unitCostPerTank">0</span><span class="u">円/基</span></div>
+    </div>
+    <div class="box">
+      <div class="t">見積1基あたり単価</div>
+      <div><span class="v" id="unitEstimatePerTank">0</span><span class="u">円/基</span></div>
+    </div>
+  </div>
+
+  <div class="table-wrap"><table class="result-table">
+    <thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead>
+    <tbody id="resultBody"></tbody>
+  </table></div>
+
+  <details class="ms-collapse" id="calculationMemoDetails" open>
+    <summary>計算式・計算メモ</summary>
+    <div class="ms-collapse-body">
+      <div class="result-memo-box" aria-label="計算メモ">
+        <div class="result-memo-title">計算メモ</div>
+        <div class="result-memo-grid" id="calcMemo"></div>
+        <div class="calc-symbol-note">
+          D：掘削深さ　BL・BW：掘削底面長さ・幅　TL・TW：地表面長さ・幅　
+          Ve：通常掘削　Vpe：ピット増掘　Vexc：掘削　
+          Ab：床付け　Vs：基礎砕石　Vm：敷モルタル　Vc：基礎Co　
+          Af：基礎型枠　Vd：残土処理　Vr：埋戻し
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <div id="fireTankLegacyResultActions" style="display:none!important">
+    <button id="calcBtn" type="button">再計算</button>
+    <button id="resetBtn" type="button">初期値へ戻す</button>
+  </div>
+</div></section>
+  </div>
+</main>
+
+<section id="printSheet" aria-label="防火水槽工 積算印刷帳票">
+  <div class="print-header">
+    <div>工事名：<span id="pProject">-</span></div>
+    <div>積算名称：<span id="pEstimate">-</span></div>
+    <div class="print-date" id="pDate"></div>
+  </div>
+  <table class="print-main-table">
+    <thead><tr><th>項目</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>見積単価</th><th>見積金額</th></tr></thead>
+    <tbody id="pRows"></tbody>
+    <tfoot><tr><th colspan="5">合計</th><td id="pTotal"></td><td id="pEstimateTotal"></td></tr></tfoot>
+  </table>
+  <div class="print-section-caption">【断面図・寸法一覧】</div>
+<div class="print-bottom">
+    <div class="print-drawing-box">
+      <div class="print-title">断面図（寸法図）</div>
+      <div class="print-diagram-body" id="pDiagram"></div>
+    </div>
+    <div class="print-dim-box">
+      <div class="print-title">寸法一覧</div>
+      <table class="print-dim-table"><thead><tr><th>記号</th><th>名称</th><th>寸法</th></tr></thead><tbody id="pDims"></tbody></table>
+      <div class="print-spec" id="pFoot"></div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="productMasterModal"><div class="dialog"><div class="dialog-head"><h3>防火水槽 製品単価マスター</h3><button class="ghost small" id="closeProductMasterBtn">閉じる</button></div><div class="dialog-body"><div class="grid2"><input id="productKeyword" placeholder="メーカー・製品名・容量・型式で検索"><button class="ghost" id="clearProductFilterBtn">検索クリア</button></div><div id="productMasterList"></div></div></div></div>
+<div class="modal" id="productRegisterModal"><div class="dialog" style="max-width:650px"><div class="dialog-head"><h3>現在の製品価格をマスターへ登録</h3><button class="ghost small" id="closeProductRegisterBtn">閉じる</button></div><div class="dialog-body"><div class="register-grid"><label>メーカー名</label><input id="registerManufacturer"><label>製品名 *</label><input id="registerProductName"><label>容量</label><input id="registerCapacity"><label>型式</label><input id="registerModelCode"><label>製品価格（円/基）</label><input id="registerProductPrice"><label>据付費（円/基）</label><input id="registerSetPrice"></div><div class="prod-actions" style="grid-template-columns:1fr 1fr;margin-top:12px"><button class="ghost" id="cancelProductRegisterBtn">キャンセル</button><button class="primary" id="saveProductRegisterBtn">登録</button></div></div></div></div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const raw=id=>String($(id)?.value??'').replace(/,/g,'').trim();
+const num=id=>{const v=parseFloat(raw(id));return Number.isFinite(v)?v:0};
+const fmt=(x,d=3)=>Number.isFinite(x)?x.toFixed(d):(0).toFixed(d);
+const yen=x=>Number.isFinite(x)?Math.round(x).toLocaleString('ja-JP'):'0';
+const areaCircle=d=>Math.PI*Math.pow(d/2,2);
+const circ=d=>Math.PI*d;
+function setMoney(el){if(!el)return;const v=parseFloat(String(el.value).replace(/,/g,''));el.value=Number.isFinite(v)?Math.round(v).toLocaleString('ja-JP'):'0'}
+function roundEstimateUnit(v){
+  v=Number(v)||0;
+  return v<1000 ? Math.round(v/10)*10 : Math.round(v/100)*100;
+}
+
+const ROWS=[
+ ['exc','掘削','m³','Pexc'],['back','埋戻し','m³','Pback'],['spoil','残土処理','m³','Pspoil'],['bed','床付け','m²','Pbed'],['stone','基礎砕石','m³','Pstone'],['mortar','敷モルタル','m³','Pmortar'],['form','基礎コンクリート型枠','m²','Pform'],['conc','基礎コンクリート','m³','Pconc'],['product','防火水槽製品','基','ProdPrice'],['set','据付費','基','Pset']
+];
+
+function pitData(){
+ const shape=$('PitShape').value,pn=Math.max(0,num('PN'));
+ if(shape==='none')return {shape,pn:0,openArea:0,conc:0,form:0,extraExc:0,void:0,outerPlan:0};
+ if(shape==='circle'){
+   const od=num('PD1'),id=num('PD2'),oh=num('PH1'),ih=num('PH2'),drop=Math.max(0,oh-num('H3'));
+   const ao=areaCircle(od),ai=areaCircle(id);
+   return {shape,pn,openArea:ao*pn,conc:(ao*oh-ai*ih)*pn,form:(circ(od)*drop+circ(id)*ih)*pn,extraExc:ao*drop*pn,void:ai*ih*pn,outerPlan:ao*pn,drop};
+ }
+ if(shape==='rect'){
+   const lo=num('PLO'),wo=num('PWO'),li=num('PLI'),wi=num('PWI'),oh=num('PRH1'),ih=num('PRH2'),drop=Math.max(0,oh-num('H3'));
+   const ao=lo*wo,ai=li*wi,po=2*(lo+wo),pi=2*(li+wi);
+   return {shape,pn,openArea:ao*pn,conc:(ao*oh-ai*ih)*pn,form:(po*drop+pi*ih)*pn,extraExc:ao*drop*pn,void:ai*ih*pn,outerPlan:ao*pn,drop};
+ }
+ return {shape,pn,openArea:num('PSOpen')*pn,conc:num('PSConc')*pn,form:num('PSForm')*pn,extraExc:num('PSExc')*pn,void:num('PSVoid')*pn,outerPlan:num('PSOpen')*pn};
+}
+
+function calcValues(){
+ const L1=num('L1'),W1=num('W1'),H1=num('H1'),TH=num('TH'),e=num('E'),n=num('N');
+ const L3=num('L3'),W3=num('W3'),H2=num('H2'),H3=num('H3'),HM=num('HM');
+ const D=TH+H1+H3+H2; // 今回の方針：敷モルタル厚は掘削深さへ加えない
+ const BL=L3+2*e,BW=W3+2*e,TL=BL+2*D*n,TW=BW+2*D*n;
+ const Ab=BL*BW,At=TL*TW;
+ const Vfrustum=D/3*(Ab+At+Math.sqrt(Math.max(0,Ab*At)));
+ const pit=pitData();
+ const Vexc=Vfrustum+pit.extraExc;
+ const Vstone=L3*W3*H2;
+ const Vmortar=L3*W3*HM;
+ const VslabGross=L3*W3*H3;
+ const Vslab=VslabGross-pit.openArea*H3;
+ const Vconc=Vslab+pit.conc;
+ const Aform=2*(L3+W3)*H3+pit.form;
+ const Abed=L3*W3;
+ const Vtank=L1*W1*H1;
+ const Vmh=areaCircle(num('MD'))*TH*Math.max(0,num('MN'));
+ const Vspoil=Vstone+Vconc+Vmortar+Vtank+Vmh+pit.void;
+ const Vback=Vexc-Vspoil;
+ return {D,BL,BW,TL,TW,Ab,At,Vfrustum,pit,Vexc,Vstone,Vmortar,VslabGross,Vslab,Vconc,Aform,Abed,Vtank,Vmh,Vspoil,Vback,
+   vals:{exc:Vexc,back:Vback,spoil:Vspoil,bed:Abed,stone:Vstone,mortar:Vmortar,form:Aform,conc:Vconc,product:1,set:1}};
+}
+
+function calc(){
+ const c=calcValues(),rate=Math.max(0,Math.min(99.9,num('ProfitRate'))),div=1-rate/100;
+ let total=0,estTotal=0,html='';
+ ROWS.forEach((r,i)=>{
+   const [key,name,unit,pid]=r,q=c.vals[key],p=num(pid),amt=q*p,eu=div>0?roundEstimateUnit(p/div):p,eamt=q*eu;
+   total+=amt;estTotal+=eamt;
+   html+=`<tr>
+     <td>${i+1}. ${name}</td>
+     <td class="mono">${key==='product'||key==='set'?fmt(q,0):fmt(q)}</td>
+     <td>${unit}</td>
+     <td class="mono">${yen(p)}</td>
+     <td class="mono">${yen(amt)}</td>
+     <td class="mono estimate-value">${yen(eu)}</td>
+     <td class="mono estimate-value">${yen(eamt)}</td>
+   </tr>`;
+ });
+ html+=`<tr class="total-row">
+   <td><b>合計</b></td><td></td><td></td><td></td>
+   <td class="mono" id="totalCost"><b>${yen(total)}</b></td>
+   <td></td>
+   <td class="mono estimate-value" id="totalEstimate"><b>${yen(estTotal)}</b></td>
+ </tr>`;
+ $('resultBody').innerHTML=html;
+
+ const p=c.pit;
+ $('calcMemo').innerHTML=
+   `<div class="result-memo-item"><b>掘削</b><span>基礎外形＋eを底面とし、四方を1:nで広げた四角錐台＋ピット増掘。</span></div>`+
+    `<div class="result-memo-item"><b>残土</b><span>砕石＋基礎Co＋敷モルタル＋本体外形＋マンホール突出部＋ピット内部空洞。</span></div>`+
+    `<div class="result-memo-item"><b>掘削深さ D</b><span>D＝TH＋H1＋H3＋H2＝${fmt(c.D)} m</span></div>`+
+   `<div class="result-memo-item"><b>掘削底面 BL×BW</b><span>BL＝L3＋2e、BW＝W3＋2e → ${fmt(c.BL)}×${fmt(c.BW)} m</span></div>`+
+   `<div class="result-memo-item"><b>地表面 TL×TW</b><span>TL＝BL＋2Dn、TW＝BW＋2Dn → ${fmt(c.TL)}×${fmt(c.TW)} m</span></div>`+
+   `<div class="result-memo-item"><b>通常掘削 Ve</b><span>Ve＝D/3×(BL×BW＋TL×TW＋√((BL×BW)(TL×TW)))＝${fmt(c.Vfrustum)} m³</span></div>`+
+   `<div class="result-memo-item"><b>ピット増掘 Vpe</b><span>Vpe＝${fmt(p.extraExc)} m³</span></div>`+
+   `<div class="result-memo-item"><b>掘削 Vexc</b><span>Vexc＝Ve＋Vpe＝${fmt(c.Vexc)} m³</span></div>`+
+   `<div class="result-memo-item"><b>床付け Ab</b><span>Ab＝L3×W3＝${fmt(c.Abed)} m²</span></div>`+
+   `<div class="result-memo-item"><b>基礎砕石 Vs</b><span>Vs＝L3×W3×H2＝${fmt(c.Vstone)} m³</span></div>`+
+   `<div class="result-memo-item"><b>敷モルタル Vm</b><span>Vm＝L3×W3×HM＝${fmt(c.Vmortar)} m³</span></div>`+
+   `<div class="result-memo-item"><b>基礎Co Vc</b><span>Vc＝L3×W3×H3＋Vpc＝${fmt(c.Vconc)} m³</span></div>`+
+   `<div class="result-memo-item"><b>基礎型枠 Af</b><span>Af＝2(L3＋W3)×H3＋Apf＝${fmt(c.Aform)} m²</span></div>`+
+   `<div class="result-memo-item"><b>残土処理 Vd</b><span>Vd＝Vs＋Vc＋Vm＋Vt＋Vmh＝${fmt(c.Vspoil)} m³</span></div>`+
+   `<div class="result-memo-item"><b>埋戻し Vr</b><span>Vr＝Vexc－Vd＝${fmt(c.Vback)} m³</span></div>`;
+
+ updateSvg(c);updateSelected();
+ return {c,total,estTotal};
+}
+
+function updateSvg(c){
+  const pit=$('PitShape').value;
+  const L1=Math.max(num('L1'),.1), W1=Math.max(num('W1'),.1), H1=Math.max(num('H1'),.1);
+  const L3=Math.max(num('L3'),L1), W3=Math.max(num('W3'),W1);
+  const H2=Math.max(num('H2'),.01), H3=Math.max(num('H3'),.01), TH=Math.max(num('TH'),0), E=Math.max(num('E'),0), N=Math.max(num('N'),0);
+
+  // 長手方向：承認済み図面の配置を保ちながら入力値へ連動
+  $('longTankText').textContent='防火水槽本体';
+
+  const xC=560, groundY=145, tankTop=260, tankBottom=585;
+  const tankW=Math.min(620,Math.max(360,L1/Math.max(L3,.1)*700));
+  const baseW=700;
+  const tankX=xC-tankW/2, baseX=xC-baseW/2;
+  const mhW=Math.max(62,Math.min(112,num('MD')/Math.max(W1,.1)*420));
+  const mhTop=Math.max(155,tankTop-Math.max(70,TH/(TH+H1)*170));
+  const mhH=tankTop-mhTop;
+
+  const lt=$('longTank');
+  lt.setAttribute('d',`M ${tankX} ${tankTop} L ${tankX+tankW} ${tankTop} L ${tankX+tankW} ${tankBottom-15} L ${tankX+tankW-15} ${tankBottom} L ${tankX+15} ${tankBottom} L ${tankX} ${tankBottom-15} Z`);
+  const li=$('longInner');
+  li.setAttribute('d',`M ${tankX+30} ${tankTop+30} L ${tankX+tankW-30} ${tankTop+30} L ${tankX+tankW-30} ${tankBottom-40} L ${tankX+tankW-43} ${tankBottom-29} L ${tankX+43} ${tankBottom-29} L ${tankX+30} ${tankBottom-40} Z`);
+
+  ['longStone','longConc','longMortar'].forEach(id=>{const el=$(id); if(el){el.setAttribute('x',baseX);el.setAttribute('width',baseW);}});
+  const mhs=[xC-tankW*.25,xC+tankW*.25];
+  mhs.forEach((cx,i)=>{
+    const r=$('longMh'+(i+1)),e=$('longMhTop'+(i+1));
+    if(r){r.setAttribute('x',cx-mhW/2);r.setAttribute('y',mhTop);r.setAttribute('width',mhW);r.setAttribute('height',mhH);}
+    if(e){e.setAttribute('cx',cx);e.setAttribute('cy',mhTop);e.setAttribute('rx',mhW/2);}
+  });
+
+  // 長手方向ピット：初期図と同じ「上部開口・下面フラット」
+  const pitOuterW=Math.max(70,Math.min(150,num('PD1')/Math.max(W1,.1)*220));
+  const pitInnerW=Math.max(42,Math.min(pitOuterW-18,num('PD2')/Math.max(num('PD1'),.01)*pitOuterW));
+  const pitDrop=Math.max(62,Math.min(145,num('PH1')/Math.max(H1,.1)*350));
+  const pitVoidDrop=Math.max(35,Math.min(pitDrop-18,num('PH2')/Math.max(num('PH1'),.01)*pitDrop));
+  const pcenters=[xC-tankW*.25,xC+tankW*.25];
+
+  if(pit==='circle'){
+    $('longCirclePits').classList.remove('hidden');$('longRectPits').classList.add('hidden');
+    pcenters.forEach((cx,i)=>{
+      const po=$('longPitOuter'+(i+1)),pv=$('longPitVoid'+(i+1)),pe=$('longPitVoidEdge'+(i+1));
+      const outerL=cx-pitOuterW/2, outerR=cx+pitOuterW/2, innerL=cx-pitInnerW/2, innerR=cx+pitInnerW/2;
+      const outerB=tankBottom+pitDrop, innerB=tankBottom+pitVoidDrop;
+      if(po)po.setAttribute('d',`M ${outerL} ${tankBottom} L ${outerR} ${tankBottom} L ${outerR} ${outerB} L ${outerL} ${outerB} Z`);
+      if(pv)pv.setAttribute('d',`M ${innerL} ${tankBottom-3} L ${innerR} ${tankBottom-3} L ${innerR} ${innerB} L ${innerL} ${innerB} Z`);
+      if(pe)pe.setAttribute('d',`M ${innerL} ${tankBottom} L ${innerL} ${innerB} L ${innerR} ${innerB} L ${innerR} ${tankBottom}`);
+    });
+  }else if(pit==='rect'){
+    $('longCirclePits').classList.add('hidden');$('longRectPits').classList.remove('hidden');
+    pcenters.forEach((cx,i)=>{
+      const po=$('longRPitOuter'+(i+1)),pv=$('longRPitVoid'+(i+1)),pe=$('longRPitVoidEdge'+(i+1));
+      const outerW=Math.max(70,Math.min(150,num('PL1')/Math.max(W1,.1)*150));
+      const innerW=Math.max(42,Math.min(outerW-18,num('PL2')/Math.max(num('PL1'),.01)*outerW));
+      const innerL=cx-innerW/2,innerR=cx+innerW/2,innerB=tankBottom+pitVoidDrop;
+      if(po){po.setAttribute('x',cx-outerW/2);po.setAttribute('y',tankBottom);po.setAttribute('width',outerW);po.setAttribute('height',pitDrop);}
+      if(pv){pv.setAttribute('x',innerL);pv.setAttribute('y',tankBottom-3);pv.setAttribute('width',innerW);pv.setAttribute('height',Math.max(8,pitVoidDrop+3));}
+      if(pe)pe.setAttribute('d',`M ${innerL} ${tankBottom} L ${innerL} ${innerB} L ${innerR} ${innerB} L ${innerR} ${tankBottom}`);
+    });
+  }else{
+    $('longCirclePits').classList.add('hidden');$('longRectPits').classList.add('hidden');
+  }
+
+  // 掘削線：承認済み図面を基準に e と 1:n を反映
+  const depth=Math.max(.1,c.D), sideSpread=55+Math.min(115,N*depth*35), bottomInset=55+Math.min(75,E*40);
+  $('longExc').setAttribute('d',`M ${Math.max(25,baseX-bottomInset-sideSpread)} ${groundY} L ${Math.min(1095,baseX+baseW+bottomInset+sideSpread)} ${groundY} L ${Math.min(1060,baseX+baseW+bottomInset)} 661 L ${Math.max(60,baseX-bottomInset)} 661 Z`);
+
+  // L1 / L3 寸法線
+  const l1=$('dimLongL1'),l3=$('dimLongL3');
+  const l1el=$('dimLongL1ExtL'), l1er=$('dimLongL1ExtR');
+  if(l1){
+    l1.setAttribute('x1',tankX); l1.setAttribute('x2',tankX+tankW);
+    if(l1el){l1el.setAttribute('x1',tankX);l1el.setAttribute('x2',tankX);}
+    if(l1er){l1er.setAttribute('x1',tankX+tankW);l1er.setAttribute('x2',tankX+tankW);}
+  }
+  if(l3){l3.setAttribute('x1',baseX);l3.setAttribute('x2',baseX+baseW);}
+
+  // ピット詳細図：形状切替のみ。図の大きさは固定して見やすさを優先
+  $('pitCircleDetail').classList.toggle('hidden',pit!=='circle');
+  $('pitRectDetail').classList.toggle('hidden',pit!=='rect');
+  $('pitSpecialDetail').classList.toggle('hidden',pit!=='special' && pit!=='none');
+  if(pit==='none'){
+    const t=$('pitSpecialDetail').querySelector('.partlabel');
+    const s=$('pitSpecialDetail').querySelector('.subtxt');
+    if(t)t.textContent='ピットなし'; if(s)s.textContent='';
+  }else if(pit==='special'){
+    const t=$('pitSpecialDetail').querySelector('.partlabel');
+    const s=$('pitSpecialDetail').querySelector('.subtxt');
+    if(t)t.textContent='特殊形状ピット'; if(s)s.textContent='数量を直接入力';
+  }
+}
+function togglePit(){const s=$('PitShape').value;$('pitCircle').classList.toggle('hidden',s!=='circle');$('pitRect').classList.toggle('hidden',s!=='rect');$('pitSpecial').classList.toggle('hidden',s!=='special');calc()}
+function updateSelected(){const maker=$('ProductManufacturer').value.trim(),name=$('ProductName').value.trim(),cap=$('ProductCapacity').value.trim(),model=$('ProductModelCode').value.trim();$('selectedProductMaster').innerHTML=name?`<b>${[maker,name,cap,model].filter(Boolean).join(' ／ ')}</b><br>製品 ${yen(num('ProdPrice'))}円/基 ・ 据付 ${yen(num('Pset'))}円/基`:'製品単価マスターは未選択です。'}
+
+function clearProduct(){['ProductManufacturer','ProductName','ProductCapacity','ProductModelCode','ProductMasterId','ProductMasterUpdatedAt'].forEach(id=>$(id).value='');$('ProdPrice').value='0';$('Pset').value='0';setMoney($('ProdPrice'));setMoney($('Pset'));updateSelected();calc()}
+async function getProducts(){if(window.MS?.ProductMaster?.list){return await MS.ProductMaster.list({category:'fire_tank',enabledOnly:true})}try{return JSON.parse(localStorage.getItem('FireTank_product_master_v1')||'[]')}catch(e){return[]}}
+async function renderProducts(){const q=$('productKeyword').value.trim().toLowerCase(),rows=await getProducts(),box=$('productMasterList');const f=(rows||[]).filter(r=>[r.manufacturer,r.productName,r.capacity,r.specification,r.modelCode].join(' ').toLowerCase().includes(q));box.innerHTML=f.length?'':'<div class="selected-product">登録製品がありません。</div>';f.forEach(r=>{const d=document.createElement('div');d.className='master-item';d.innerHTML=`<div><div class="master-name">${[r.manufacturer,r.productName,r.capacity||r.specification].filter(Boolean).join(' ／ ')}</div><div class="master-meta">${r.modelCode||''}<br>製品 ${yen(Number(r.productPrice||0))}円/基 ・ 据付 ${yen(Number(r.installationPrice||0))}円/基</div></div><button class="primary">選択</button>`;d.querySelector('button').onclick=()=>selectProduct(r);box.appendChild(d)})}
+function selectProduct(r){$('ProductMasterId').value=r.id||'';$('ProductMasterUpdatedAt').value=r.updatedAt||'';$('ProductManufacturer').value=r.manufacturer||'';$('ProductName').value=r.productName||'';$('ProductCapacity').value=r.capacity||r.specification||'';$('ProductModelCode').value=r.modelCode||'';$('ProdPrice').value=Number(r.productPrice||0);$('Pset').value=Number(r.installationPrice||0);setMoney($('ProdPrice'));setMoney($('Pset'));$('productMasterModal').classList.remove('show');updateSelected();calc()}
+function openRegister(){$('registerManufacturer').value=$('ProductManufacturer').value;$('registerProductName').value=$('ProductName').value;$('registerCapacity').value=$('ProductCapacity').value;$('registerModelCode').value=$('ProductModelCode').value;$('registerProductPrice').value=raw('ProdPrice');$('registerSetPrice').value=raw('Pset');$('productRegisterModal').classList.add('show')}
+async function saveProduct(){const input={category:'fire_tank',manufacturer:$('registerManufacturer').value.trim(),productName:$('registerProductName').value.trim(),capacity:$('registerCapacity').value.trim(),specification:$('registerCapacity').value.trim(),modelCode:$('registerModelCode').value.trim(),productUnit:'基',productPrice:parseFloat($('registerProductPrice').value.replace(/,/g,''))||0,installationPrice:parseFloat($('registerSetPrice').value.replace(/,/g,''))||0,installationUnit:'基',enabled:true};if(!input.productName){alert('製品名を入力してください。');return}if(window.MS?.ProductMaster?.saveFromApp){let result=await MS.ProductMaster.saveFromApp(input);if(result?.saved===false&&result.duplicate){if(!confirm('同じ製品が登録されています。現在の価格で上書きしますか？'))return;result=await MS.ProductMaster.saveFromApp({...input,id:result.duplicate.id},{overwrite:true})}if(result?.row)selectProduct(result.row)}else{const a=await getProducts();const i=a.findIndex(x=>x.manufacturer===input.manufacturer&&x.productName===input.productName&&x.modelCode===input.modelCode);const row={...input,id:i>=0?a[i].id:'local-'+Date.now(),updatedAt:new Date().toISOString()};if(i>=0)a[i]=row;else a.push(row);localStorage.setItem('FireTank_product_master_v1',JSON.stringify(a));selectProduct(row)}$('productRegisterModal').classList.remove('show');alert('製品単価マスターへ登録しました。')}
+
+function preparePrint(){
+ const r=calc();
+ $('pProject').textContent=($('projectName').value||'-');
+ $('pEstimate').textContent=($('estimateName').value||'-');
+ $('pDate').textContent='作成日：'+new Date().toLocaleDateString('ja-JP');
+ const tmp=document.createElement('tbody');
+ [...$('resultBody').querySelectorAll('tr')].forEach(tr=>{if(!tr.classList.contains('total-row'))tmp.appendChild(tr.cloneNode(true));});
+ $('pRows').innerHTML=tmp.innerHTML;
+ $('pTotal').textContent=yen(r.total);
+ $('pEstimateTotal').textContent=yen(r.estTotal);
+ $('pDiagram').innerHTML='';
+ ['longSvg','pitSvg'].forEach((id,i)=>{
+   const title=document.createElement('div'); title.className='print-diagram-subtitle'; title.textContent=i===0?'長手方向立面':'ピット詳細'; $('pDiagram').appendChild(title);
+   const clone=$(id).cloneNode(true); clone.removeAttribute('class'); clone.querySelectorAll('.active').forEach(x=>x.classList.remove('active')); $('pDiagram').appendChild(clone);
+ });
+ const pitShape=$('PitShape').value;
+ const dims=[
+  ['L1','本体長さ',num('L1').toFixed(2)+' m'],['W1','本体幅',num('W1').toFixed(2)+' m'],['H1','本体高さ',num('H1').toFixed(2)+' m'],
+  ['TH','土被り',num('TH').toFixed(2)+' m'],['L3','基礎長さ',num('L3').toFixed(2)+' m'],['W3','基礎幅',num('W3').toFixed(2)+' m'],
+  ['HM','敷モル厚',num('HM').toFixed(2)+' m'],['H3','基礎Co厚',num('H3').toFixed(2)+' m'],['H2','砕石厚',num('H2').toFixed(2)+' m'],
+  ['MD','マンホール外径',num('MD').toFixed(2)+' m'],['e','掘削余裕',num('E').toFixed(2)+' m'],['n','法面勾配','1:'+num('N').toFixed(2)]
+ ];
+ if(pitShape==='circle')dims.push(['PD1','ピット外径',num('PD1').toFixed(2)+' m'],['PD2','ピット内径',num('PD2').toFixed(2)+' m'],['PH1','ピット外深さ',num('PH1').toFixed(2)+' m'],['PH2','ピット内深さ',num('PH2').toFixed(2)+' m']);
+ else if(pitShape==='rect')dims.push(['PL1','ピット外長さ',num('PLO').toFixed(2)+' m'],['PW1','ピット外幅',num('PWO').toFixed(2)+' m'],['PH1','ピット外深さ',num('PRH1').toFixed(2)+' m'],['PH2','ピット内深さ',num('PRH2').toFixed(2)+' m']);
+ $('pDims').innerHTML=dims.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('');
+ $('pFoot').innerHTML=`<div><b>製品</b>：${[$('ProductManufacturer').value,$('ProductName').value,$('ProductCapacity').value,$('ProductModelCode').value].filter(Boolean).join(' ／ ')||'-'}</div><div><b>ピット</b>：${pitShape==='circle'?'円形':pitShape==='rect'?'角形':pitShape==='special'?'特殊':'なし'}　${num('PN').toFixed(0)}箇所</div><div><b>利益率</b>：${num('ProfitRate').toFixed(1)}%</div>`;
+ window.print();
+}
+window.preparePrint=preparePrint;
+
+const allInputs=[...document.querySelectorAll('input,select')];allInputs.forEach(el=>{el.addEventListener('input',()=>{if(el.classList.contains('money'))return;calc()});el.addEventListener('change',()=>{if(el.classList.contains('money'))setMoney(el);calc()})});document.querySelectorAll('.money').forEach(el=>{setMoney(el);el.addEventListener('focus',()=>{el.value=el.value.replace(/,/g,'');el.select()});el.addEventListener('blur',()=>{setMoney(el);calc()})});
+document.querySelectorAll('[data-dim]').forEach(el=>{
+  const cls='.dim-'+el.dataset.dim;
+  const targets=()=>[...document.querySelectorAll(cls)].filter(x=>{
+    const tag=(x.tagName||'').toLowerCase();
+    return tag==='text'||tag==='tspan';
+  });
+  el.addEventListener('focus',()=>targets().forEach(x=>x.classList.add('active')));
+  el.addEventListener('blur',()=>targets().forEach(x=>x.classList.remove('active')));
+});
+$('PitShape').addEventListener('change',togglePit);
+$('calcBtn').onclick=calc;$('resetBtn').onclick=()=>{if(confirm('入力内容を初期値へ戻しますか？'))location.reload()};$('printBtn').onclick=preparePrint;
+$('openProductMasterBtn').onclick=()=>{$('productMasterModal').classList.add('show');renderProducts()};$('closeProductMasterBtn').onclick=()=>$('productMasterModal').classList.remove('show');$('clearProductFilterBtn').onclick=()=>{$('productKeyword').value='';renderProducts()};$('productKeyword').addEventListener('input',renderProducts);$('registerCurrentProductBtn').onclick=openRegister;$('closeProductRegisterBtn').onclick=()=>$('productRegisterModal').classList.remove('show');$('cancelProductRegisterBtn').onclick=()=>$('productRegisterModal').classList.remove('show');$('saveProductRegisterBtn').onclick=saveProduct;$('clearProductBtn').onclick=clearProduct;
+
+// 起動時は最初の寸法へフォーカス
+window.addEventListener('DOMContentLoaded',()=>{
+  togglePit();
+  calc();
+  setTimeout(()=>{
+    const first=$('L1');
+    if(first){
+      first.focus({preventScroll:true});
+      try{first.select();}catch(e){}
+    }
+  },120);
+});
+</script>
+<script id="firetank-u-gutter-manage-functions">
+(function(window,document){
+  "use strict";
+
+  var APP_TYPE = "fire_tank";
+  var $ = function(id){ return document.getElementById(id); };
+  var SAVE_KEY = "MS_FireTank_Estimates_v1"; // MS未接続時だけ使う互換用
+  var PRICE_IDS = ["Pexc","Pback","Pspoil","Pbed","Pstone","Pmortar","Pform","Pconc","ProdPrice","Pset"];
+  var VALUE_IDS = [
+    "L1","W1","H1","TH","E","N","L3","W3","HM","H3","H2",
+    "MD","MN","PitShape","PN","PD1","PD2","PH1","PH2",
+    "PLO","PWO","PLI","PWI","PRH1","PRH2","PSOpen","PSConc","PSForm","PSExc","PSVoid",
+    "ProfitRate","ProductManufacturer","ProductName","ProductCapacity","ProductModelCode",
+    "ProductMasterId","ProductMasterUpdatedAt"
+  ].concat(PRICE_IDS);
+
+  function clone(v){ try{return JSON.parse(JSON.stringify(v));}catch(e){return v;} }
+  function text(v){ return v===null || v===undefined ? "" : String(v).trim(); }
+  function number(v){ var n=Number(String(v===undefined?"":v).replace(/,/g,"")); return Number.isFinite(n)?n:0; }
+
+  function legacyRows(){
+    try{return JSON.parse(localStorage.getItem(SAVE_KEY)||"[]")||[];}
+    catch(e){return [];}
+  }
+  function legacyWriteRows(v){
+    try{localStorage.setItem(SAVE_KEY,JSON.stringify(v||[]));}catch(e){}
+  }
+
+  function collect(){
+    var o={};
+    VALUE_IDS.forEach(function(id){
+      var el=$(id);
+      if(el)o[id]=el.value;
+    });
+    return o;
+  }
+
+  function collectPrices(){
+    var o={};
+    PRICE_IDS.forEach(function(id){
+      var el=$(id);
+      if(el)o[id]=number(el.value);
+    });
+    return o;
+  }
+
+  function applyValues(o){
+    Object.keys(o||{}).forEach(function(id){
+      var el=$(id);
+      if(el)el.value=o[id];
+    });
+    document.querySelectorAll(".money").forEach(function(el){
+      if(typeof window.setMoney==="function")window.setMoney(el);
+    });
+    if(typeof window.togglePit==="function")window.togglePit();
+    if(typeof window.calc==="function")window.calc();
+    if(typeof window.updateSelected==="function")window.updateSelected();
+  }
+
+  async function readyMS(){
+    if(!window.MS)return false;
+    try{
+      if(MS.ready && typeof MS.ready.then==="function")await MS.ready;
+      if(typeof MS.init==="function")await MS.init();
+      return true;
+    }catch(e){
+      console.warn("防火水槽：MS共通ライブラリ初期化失敗",e);
+      return false;
+    }
+  }
+
+  async function getCurrentProject(){
+    if(!(await readyMS()))return null;
+    if(typeof MS.getCurrentProject==="function")return await MS.getCurrentProject();
+    if(MS.Project && typeof MS.Project.getCurrent==="function")return await MS.Project.getCurrent();
+    return null;
+  }
+
+  async function syncProjectFromMain(){
+    var p=await getCurrentProject();
+    if(!p)return null;
+
+    var projectName=text(p.name||p.projectName);
+    if($("projectName") && projectName)$("projectName").value=projectName;
+
+    if($("ProfitRate") && p.profitRate!==undefined && p.profitRate!==null && p.profitRate!==""){
+      $("ProfitRate").value=Number(p.profitRate).toFixed(1);
+      if(typeof window.setMoney==="function")window.setMoney($("ProfitRate"));
+    }
+    return p;
+  }
+
+  async function listCurrentEstimates(){
+    if(await readyMS()){
+      var p=await getCurrentProject();
+      if(!p)return [];
+      try{
+        if(typeof MS.listEstimates==="function"){
+          return await MS.listEstimates(p.id,APP_TYPE);
+        }
+        if(MS.Estimate && typeof MS.Estimate.listByProjectAndApp==="function"){
+          return await MS.Estimate.listByProjectAndApp(p.id,APP_TYPE);
+        }
+      }catch(e){
+        console.warn("防火水槽：保存一覧取得失敗",e);
+      }
+    }
+
+    var project=text($("projectName") && $("projectName").value);
+    return legacyRows().filter(function(r){return !project || r.projectName===project;});
+  }
+
+  async function refreshEstimateList(selectedId){
+    var sel=$("savedEstimateList");
+    if(!sel)return;
+
+    var list=await listCurrentEstimates();
+    sel.innerHTML='<option value="">保存データなし</option>';
+
+    list.forEach(function(r){
+      var op=document.createElement("option");
+      op.value=r.id;
+      op.textContent=r.name||r.estimateName||"名称なし";
+      sel.appendChild(op);
+    });
+
+    if(selectedId)sel.value=selectedId;
+  }
+
+  async function saveProjectMeta(){
+    if(!(await readyMS()))return null;
+
+    var project=await getCurrentProject();
+    var name=text($("projectName") && $("projectName").value) || "未名称工事";
+    var profit=number($("ProfitRate") && $("ProfitRate").value);
+
+    if(!project && typeof MS.createProject==="function"){
+      project=await MS.createProject({
+        name:name,
+        projectName:name,
+        profitRate:profit
+      });
+    }else if(project && typeof MS.saveProject==="function"){
+      var next=clone(project);
+      next.name=name;
+      next.projectName=name;
+      next.profitRate=profit;
+      project=await MS.saveProject(next,{forceUpdate:true});
+    }
+    return project;
+  }
+
+  async function saveEstimate(){
+    var projectName=text($("projectName") && $("projectName").value);
+    var name=text($("estimateName") && $("estimateName").value);
+
+    if(!projectName){alert("工事名を入力してください。");return;}
+    if(!name){alert("積算名称を入力してください。");return;}
+
+    if(await readyMS()){
+      try{
+        await saveProjectMeta();
+
+        var values=collect();
+        var result=(typeof window.calc==="function") ? window.calc() : null;
+        var payload={
+          name:name,
+          estimateName:name,
+          values:values,
+          data:{values:values},
+          amount:result && Number.isFinite(Number(result.total)) ? Number(result.total) : 0,
+          prices:collectPrices(),
+          printData:{
+            projectName:projectName,
+            estimateName:name
+          }
+        };
+
+        var saved;
+        if(typeof MS.saveEstimate==="function"){
+          saved=await MS.saveEstimate(APP_TYPE,name,payload);
+        }else if(MS.Estimate && typeof MS.Estimate.save==="function"){
+          saved=await MS.Estimate.save(APP_TYPE,payload);
+        }
+
+        await refreshEstimateList(saved && saved.id);
+        alert("積算データを保存しました。");
+        return;
+      }catch(e){
+        console.error(e);
+        alert("積算データの保存に失敗しました。");
+        return;
+      }
+    }
+
+    // 共通ライブラリが使えない場合のみ旧方式
+    var list=legacyRows();
+    var id="firetank-"+Date.now();
+    var item={id:id,projectName:projectName,estimateName:name,values:collect(),updatedAt:new Date().toISOString()};
+    list.push(item);
+    legacyWriteRows(list);
+    await refreshEstimateList(id);
+    alert("積算データを保存しました。");
+  }
+
+  async function getEstimateById(id){
+    if(!id)return null;
+
+    if(await readyMS()){
+      try{
+        if(typeof MS.loadEstimate==="function")return await MS.loadEstimate(id);
+        if(MS.Estimate && typeof MS.Estimate.load==="function")return await MS.Estimate.load(id);
+      }catch(e){
+        console.warn(e);
+      }
+    }
+
+    return legacyRows().find(function(x){return x.id===id;})||null;
+  }
+
+  async function applyEstimate(item){
+    if(!item)return false;
+
+    if(item.projectId && await readyMS()){
+      try{
+        if(typeof MS.setCurrentProjectId==="function")MS.setCurrentProjectId(item.projectId);
+        var p=await getCurrentProject();
+        if(p && $("projectName"))$("projectName").value=text(p.name||p.projectName);
+      }catch(e){}
+    }else if(item.projectName && $("projectName")){
+      $("projectName").value=item.projectName||"";
+    }
+
+    if($("estimateName"))$("estimateName").value=item.name||item.estimateName||"";
+
+    var values=item.values ||
+      (item.data && item.data.values) ||
+      (item.data && item.data.data && item.data.data.values) ||
+      item.data ||
+      {};
+
+    applyValues(values);
+    await refreshEstimateList(item.id);
+    return true;
+  }
+
+  async function loadEstimate(){
+    var id=$("savedEstimateList") && $("savedEstimateList").value;
+    if(!id){alert("保存データを選択してください。");return;}
+
+    var item=await getEstimateById(id);
+    if(!item){alert("保存データが見つかりません。");return;}
+    await applyEstimate(item);
+  }
+
+  async function deleteEstimate(){
+    var id=$("savedEstimateList") && $("savedEstimateList").value;
+    if(!id){alert("削除する保存データを選択してください。");return;}
+    if(!confirm("選択中の積算データを削除しますか？"))return;
+
+    if(await readyMS()){
+      try{
+        if(typeof MS.deleteEstimate==="function")await MS.deleteEstimate(id);
+        else if(MS.Estimate && typeof MS.Estimate.delete==="function")await MS.Estimate.delete(id);
+        await refreshEstimateList();
+        return;
+      }catch(e){
+        console.error(e);
+        alert("削除に失敗しました。");
+        return;
+      }
+    }
+
+    legacyWriteRows(legacyRows().filter(function(x){return x.id!==id;}));
+    await refreshEstimateList();
+  }
+
+  function renderCommonPrice(){
+    var sel=$("ftCommonPriceList"), note=$("ftCommonPriceNote");
+    if(!sel)return;
+
+    if(!window.MSPriceMaster){
+      sel.innerHTML='<option value="">共有単価マスター未接続</option>';
+      if(note)note.textContent="共有単価マスターを利用できません。";
+      return;
+    }
+
+    try{
+      MSPriceMaster.ensureMasters();
+      var list=MSPriceMaster.list();
+      var active=MSPriceMaster.getActive();
+      sel.innerHTML=list.map(function(x){return '<option value="'+x.id+'">'+x.name+'</option>';}).join("");
+      if(active)sel.value=active.id;
+      if(note)note.textContent=(active&&active.name ? "現在使用中："+active.name+"　" : "")+
+        "共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。";
+    }catch(e){
+      console.warn(e);
+    }
+  }
+
+  function applyCommonPrice(){
+    if(!window.MSPriceMaster){alert("共有単価マスターを利用できません。");return;}
+    var sel=$("ftCommonPriceList");
+    var item=MSPriceMaster.list().find(function(x){return x.id===sel.value;}) || MSPriceMaster.getActive();
+    if(!item)return;
+
+    var prices=clone(item.prices||{});
+    if(typeof MSPriceMaster.applyFields==="function"){
+      try{MSPriceMaster.applyFields(prices);}catch(e){}
+    }
+    PRICE_IDS.forEach(function(id){
+      var el=$(id);
+      if(el && prices[id]!==undefined)el.value=prices[id];
+    });
+    document.querySelectorAll(".money").forEach(function(el){
+      if(typeof window.setMoney==="function")window.setMoney(el);
+    });
+    if(typeof window.calc==="function")window.calc();
+
+    var note=$("ftCommonPriceNote");
+    if(note)note.textContent="今回使用中："+(item.name||"標準")+"　共有単価の編集はメイン画面で行ってください。";
+  }
+
+  async function loadRequestedEstimate(){
+    var id="";
+    try{
+      var p=new URLSearchParams(location.search);
+      id=p.get("estimateId")||"";
+      if(!id)id=localStorage.getItem("ms_open_estimate_id")||"";
+      if(!id)id=localStorage.getItem("ms_load_estimate_id")||"";
+    }catch(e){}
+
+    if(!id)return false;
+
+    var item=await getEstimateById(id);
+    if(!item)return false;
+
+    await applyEstimate(item);
+
+    try{
+      ["ms_open_estimate_id","ms_load_estimate_id","loadEstimateId","currentEstimateId"].forEach(function(k){
+        localStorage.removeItem(k);
+      });
+    }catch(e){}
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded",async function(){
+    await syncProjectFromMain();
+    renderCommonPrice();
+    await refreshEstimateList();
+
+    $("saveEstimateBtn")&&$("saveEstimateBtn").addEventListener("click",saveEstimate);
+    $("loadEstimateBtn")&&$("loadEstimateBtn").addEventListener("click",loadEstimate);
+    $("deleteEstimateBtn")&&$("deleteEstimateBtn").addEventListener("click",deleteEstimate);
+
+    $("projectName")&&$("projectName").addEventListener("change",function(){
+      refreshEstimateList();
+    });
+
+    $("savedEstimateList")&&$("savedEstimateList").addEventListener("change",async function(){
+      var id=$("savedEstimateList").value;
+      if(!id)return;
+      var list=await listCurrentEstimates();
+      var item=list.find(function(x){return x.id===id;});
+      if(item&&$("estimateName"))$("estimateName").value=item.name||item.estimateName||"";
+    });
+
+    $("ftApplyCommonPriceBtn")&&$("ftApplyCommonPriceBtn").addEventListener("click",applyCommonPrice);
+
+    $("ftCommonPriceList")&&$("ftCommonPriceList").addEventListener("change",function(){
+      if(!window.MSPriceMaster)return;
+      var item=MSPriceMaster.list().find(function(x){return x.id===$("ftCommonPriceList").value;});
+      var note=$("ftCommonPriceNote");
+      if(note&&item)note.textContent="選択中："+item.name+"　※まだ反映していません。";
+    });
+
+    await loadRequestedEstimate();
+  });
+
+  window.addEventListener("ms-price-master-changed",renderCommonPrice);
+})(window,document);
+</script>
+
+<script id="firetank-v140-key-navigation-fixed">
+(function(){
+  "use strict";
+
+  const order = [
+    "L1","W1","H1",
+    "TH","E","N",
+    "L3","W3","HM","H3","H2",
+    "MD","MN",
+    "PitShape","PN","PD1","PD2","PH1","PH2",
+    "PLO","PWO","PLI","PWI","PRH1","PRH2",
+    "PSOpen","PSConc","PSForm","PSExc","PSVoid",
+    "Pexc","Pback","Pspoil","Pbed","Pstone","Pmortar","Pform","Pconc","ProdPrice","Pset",
+    "ProfitRate"
+  ];
+
+  let selectEditing = false;
+
+  function visibleControl(id){
+    const el=document.getElementById(id);
+    if(!el || el.disabled || el.type==="hidden") return null;
+    if(el.closest(".hidden")) return null;
+    return el;
+  }
+
+  function controls(){
+    return order.map(visibleControl).filter(Boolean);
+  }
+
+  function moveFrom(el, step){
+    const a=controls();
+    const i=a.indexOf(el);
+    if(i<0) return false;
+    const next=a[i+step];
+    if(!next) return false;
+
+    // 形状選択から離れるときは編集モード解除
+    if(el.id==="PitShape"){
+      selectEditing=false;
+      el.classList.remove("ms-select-editing");
+    }
+
+    next.focus({preventScroll:false});
+    if(next.tagName==="INPUT"){
+      try{next.select();}catch(e){}
+    }
+    return true;
+  }
+
+  function setSelectEditing(el, on){
+    selectEditing=!!on;
+    el.classList.toggle("ms-select-editing",selectEditing);
+  }
+
+  function cycleSelect(el, step){
+    const opts=[...el.options].filter(o=>!o.disabled);
+    if(!opts.length) return;
+    const current=opts.findIndex(o=>o.value===el.value);
+    let next=current+step;
+    if(next<0) next=opts.length-1;
+    if(next>=opts.length) next=0;
+    el.value=opts[next].value;
+
+    // 形状変更処理を即反映
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+    if(typeof window.togglePit==="function") window.togglePit();
+    if(typeof window.calc==="function") window.calc();
+  }
+
+  document.addEventListener("keydown",function(e){
+    const el=e.target;
+    if(!el || order.indexOf(el.id)<0) return;
+
+    // ===== ピット形状：スペースで選択モード =====
+    if(el.id==="PitShape"){
+      if(e.key===" " || e.code==="Space"){
+        e.preventDefault();
+        setSelectEditing(el,!selectEditing);
+        return;
+      }
+
+      if(selectEditing){
+        // 編集モード中は上下矢印で選択肢変更
+        if(e.key==="ArrowDown"){
+          e.preventDefault();
+          cycleSelect(el,1);
+          return;
+        }
+        if(e.key==="ArrowUp"){
+          e.preventDefault();
+          cycleSelect(el,-1);
+          return;
+        }
+
+        // Enterでも決定可
+        if(e.key==="Enter"){
+          e.preventDefault();
+          setSelectEditing(el,false);
+          return;
+        }
+
+        // 編集中はTab移動させない（誤操作防止）
+        if(e.key==="Tab"){
+          e.preventDefault();
+          return;
+        }
+      }else{
+        // 未編集時は下矢印/Enter/Tabで次へ
+        if(e.key==="Enter" || e.key==="ArrowDown"){
+          if(moveFrom(el,1)) e.preventDefault();
+          return;
+        }
+        if(e.key==="ArrowUp"){
+          if(moveFrom(el,-1)) e.preventDefault();
+          return;
+        }
+        if(e.key==="Tab"){
+          if(moveFrom(el,e.shiftKey?-1:1)) e.preventDefault();
+          return;
+        }
+      }
+      return;
+    }
+
+    // ===== 通常入力 =====
+    if(e.key==="Enter" || e.key==="ArrowDown"){
+      if(moveFrom(el,1)) e.preventDefault();
+      return;
+    }
+
+    if(e.key==="ArrowUp"){
+      if(moveFrom(el,-1)) e.preventDefault();
+      return;
+    }
+
+    if(e.key==="Tab"){
+      if(moveFrom(el,e.shiftKey?-1:1)) e.preventDefault();
+    }
+  },true);
+
+  // マウスで別項目へ移動した場合も編集モード解除
+  document.addEventListener("focusin",function(e){
+    const pit=document.getElementById("PitShape");
+    if(pit && e.target!==pit){
+      selectEditing=false;
+      pit.classList.remove("ms-select-editing");
+    }
+  });
+
+  // 起動時はL1
+  window.addEventListener("load",function(){
+    setTimeout(function(){
+      const first=document.getElementById("L1");
+      if(first){
+        first.focus({preventScroll:true});
+        try{first.select();}catch(e){}
+      }
+    },180);
+  });
+})();
+</script>
+
+
+<script id="firetank-result-print-link">
+window.addEventListener("DOMContentLoaded",function(){
+  var b=document.getElementById("resultPrintBtn");
+  if(b && typeof window.preparePrint==="function") b.addEventListener("click",window.preparePrint);
+  else if(b){
+    b.addEventListener("click",function(){
+      var top=document.getElementById("printBtn");
+      if(top) top.click();
+    });
+  }
+});
+</script>
+
+
+<div id="fireTankDefaultsModal" role="dialog" aria-modal="true" aria-labelledby="fireTankDefaultsTitle">
+  <div class="firetank-defaults-box">
+    <div class="firetank-defaults-head">
+      <div class="firetank-defaults-title" id="fireTankDefaultsTitle">防火水槽工　初期値管理</div>
+      <div class="firetank-defaults-sub">管理用の隠し設定です。単価・利益率・工事名・積算名称・製品単価マスター情報は初期値に含まれません。</div>
+    </div>
+    <div class="firetank-defaults-body">
+      <div class="firetank-defaults-status" id="fireTankDefaultsStatus">現在の画面に入力されている寸法・設置条件・基礎材寸法・マンホール・ピット条件を、今後の初期値として登録します。</div>
+      <div class="firetank-defaults-actions">
+        <button class="firetank-defaults-save" id="fireTankDefaultsSave" type="button">現在の画面を初期値として登録</button>
+        <button class="firetank-defaults-close" id="fireTankDefaultsClose" type="button">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="fireTankInitialDefaultsScript">
+(function(){
+"use strict";
+
+var STORAGE_KEY="MS_v140_initial_values_fire_tank";
+var IDS=[
+  "L1","W1","H1","TH","E","N",
+  "L3","W3","HM","H3","H2",
+  "MD","MN",
+  "PitShape","PN","PD1","PD2","PH1","PH2",
+  "PLO","PWO","PLI","PWI","PRH1","PRH2",
+  "PSOpen","PSConc","PSForm","PSExc","PSVoid"
+];
+
+function byId(id){return document.getElementById(id)}
+function collect(){
+  var out={};
+  IDS.forEach(function(id){
+    var el=byId(id);
+    if(el)out[id]=el.value;
+  });
+  return out;
+}
+var BUILTIN=collect();
+
+function stored(){
+  try{
+    var v=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+    return v&&typeof v==="object"?v:null;
+  }catch(e){return null}
+}
+
+function apply(values,clearNames){
+  values=values||BUILTIN;
+  IDS.forEach(function(id){
+    var el=byId(id);
+    if(!el||values[id]===undefined)return;
+    el.value=values[id];
+    el.dispatchEvent(new Event("input",{bubbles:true}));
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+  });
+  if(clearNames){
+    var n=byId("estimateName");
+    if(n)n.value="";
+  }
+  var sel=byId("savedEstimateList");
+  if(sel){sel.value="";if(sel.options&&sel.options.length)sel.selectedIndex=0}
+  if(typeof window.togglePit==="function")window.togglePit();
+  if(typeof window.calc==="function")window.calc();
+}
+
+function updateStatus(){
+  var el=byId("fireTankDefaultsStatus");
+  if(!el)return;
+  el.textContent=stored()
+    ?"現在は、管理者が登録した初期値を使用しています。画面の入力内容を変更して再登録すると、その内容に上書きされます。"
+    :"現在は、アプリ標準の初期値を使用しています。画面の入力内容を登録すると、次回からその内容が初期値になります。";
+}
+
+function openModal(){
+  var m=byId("fireTankDefaultsModal");
+  if(m){updateStatus();m.classList.add("show")}
+}
+function closeModal(){
+  var m=byId("fireTankDefaultsModal");
+  if(m)m.classList.remove("show");
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  var trigger=byId("fireTankDefaultsTrigger"),clicks=0,timer=0;
+  if(trigger)trigger.addEventListener("click",function(){
+    clicks++;
+    clearTimeout(timer);
+    timer=setTimeout(function(){clicks=0},3000);
+    if(clicks>=5){clicks=0;openModal()}
+  });
+
+  var save=byId("fireTankDefaultsSave");
+  if(save)save.addEventListener("click",function(){
+    if(!confirm("現在の画面に入力されている寸法・設置条件・基礎材寸法・マンホール・ピット条件を、今後の初期値として登録します。\nすでに登録されている初期値は上書きされます。よろしいですか？"))return;
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(collect()));
+    updateStatus();
+    alert("現在の画面を初期値として登録しました。\n次回の新規入力と『新しい入力を開始』から、この初期値が使用されます。");
+    closeModal();
+  });
+
+  var close=byId("fireTankDefaultsClose");
+  if(close)close.addEventListener("click",closeModal);
+
+  var modal=byId("fireTankDefaultsModal");
+  if(modal)modal.addEventListener("click",function(e){
+    if(e.target===this)closeModal();
+  });
+
+  var newBtn=byId("newInputBtn");
+  if(newBtn)newBtn.addEventListener("click",function(){
+    if(!confirm("現在の入力内容を初期値に戻します。\n保存していない内容は失われます。\nよろしいですか？"))return;
+    apply(stored()||BUILTIN,true);
+
+    try{
+      localStorage.removeItem("ms_open_estimate_id");
+    }catch(e){}
+
+    window.scrollTo({top:0,behavior:"smooth"});
+    setTimeout(function(){
+      var first=byId("L1");
+      if(first){
+        first.focus();
+        try{first.select()}catch(e){}
+      }
+    },120);
+  });
+});
+
+window.addEventListener("load",function(){
+  var fromSaved=false;
+  try{
+    var p=new URLSearchParams(location.search);
+    if(p.get("loadEstimate")==="1")fromSaved=true;
+    if(localStorage.getItem("ms_open_estimate_id"))fromSaved=true;
+  }catch(e){}
+  if(!fromSaved&&stored()){
+    setTimeout(function(){apply(stored(),false)},140);
+  }
+});
+})();
+</script>
+
+
+<script id="firetank-print-outer-frame-remove">
+(function(){
+ function tune(){
+   var svg=document.getElementById('svgPrintSheet'); if(!svg) return;
+   svg.querySelectorAll('rect').forEach(function(r){
+     var x=parseFloat(r.getAttribute('x')||0), y=parseFloat(r.getAttribute('y')||0);
+     var w=parseFloat(r.getAttribute('width')||0), h=parseFloat(r.getAttribute('height')||0);
+     if(x<=2 && y<=2 && w>=790 && h>=1100){ r.setAttribute('stroke','none'); r.setAttribute('fill','white'); }
+   });
+ }
+ document.addEventListener('DOMContentLoaded',tune);
+ document.addEventListener('click',function(e){if(e.target && /print/i.test(e.target.id||'')) setTimeout(tune,50);});
+ window.addEventListener('beforeprint',tune);
+})();
+</script>
+
+<script id="firetank-unit-kpi-script">
+(function(){
+  function toNum(s){
+    var n = Number(String(s == null ? "" : s).replace(/[^\d.\-]/g,""));
+    return Number.isFinite(n) ? n : 0;
+  }
+  function fmt(n){ return Math.round(n).toLocaleString("ja-JP"); }
+
+  function updateUnitKpi(){
+    var body = document.getElementById("resultBody");
+    var costEl = document.getElementById("unitCostPerTank");
+    var estEl = document.getElementById("unitEstimatePerTank");
+    if(!body || !costEl || !estEl) return;
+
+    var rows = Array.from(body.querySelectorAll("tr"));
+    var totalRow = rows.find(function(tr){
+      var first = tr.querySelector("td,th");
+      return first && /合計/.test(first.textContent || "");
+    });
+
+    var cost = 0, est = 0;
+    if(totalRow){
+      var cells = totalRow.querySelectorAll("td,th");
+      if(cells.length >= 7){
+        cost = toNum(cells[4].textContent);
+        est  = toNum(cells[6].textContent);
+      }
+    }
+
+    // If the total is rendered outside tbody, use the print totals as a safe fallback.
+    if(!cost){
+      var p = document.getElementById("pTotal");
+      if(p) cost = toNum(p.textContent);
+    }
+    if(!est){
+      var p2 = document.getElementById("pEstimateTotal");
+      if(p2) est = toNum(p2.textContent);
+    }
+
+    costEl.textContent = fmt(cost);
+    estEl.textContent = fmt(est);
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    updateUnitKpi();
+    var body = document.getElementById("resultBody");
+    if(body && window.MutationObserver){
+      new MutationObserver(updateUnitKpi).observe(body,{childList:true,subtree:true,characterData:true});
+    }
+    document.addEventListener("input", function(){ setTimeout(updateUnitKpi,0); });
+    document.addEventListener("change", function(){ setTimeout(updateUnitKpi,0); });
+    setTimeout(updateUnitKpi,100);
+  });
+})();
+</script>
+
+
+<script id="firetank-decimal-two-format">
+(function(){
+  "use strict";
+
+  /* Ver1.4.0方式：.1 → 0.10、2 → 2.00 */
+  var DECIMAL_IDS = [
+    "L1","W1","H1","TH","E","N",
+    "L3","W3","HM","H3","H2",
+    "MD",
+    "PD1","PD2","PH1","PH2",
+    "PLO","PWO","PLI","PWI","PRH1","PRH2"
+  ];
+
+  function format2(el){
+    if(!el)return;
+    var s=String(el.value==null?"":el.value).replace(/,/g,"").trim();
+    if(s==="")return;
+    var n=Number(s);
+    if(Number.isFinite(n)){
+      el.value=n.toFixed(2);
+    }
+  }
+
+  function bind(){
+    DECIMAL_IDS.forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el)return;
+
+      /* 入力中は .1 のまま打てるようにし、項目を離れた時に 0.10 へ整形 */
+      el.addEventListener("blur",function(){
+        format2(el);
+        if(typeof window.calc==="function")window.calc();
+      });
+
+      /* Enterで次へ進む既存操作でも、先に2桁へ整形 */
+      el.addEventListener("keydown",function(ev){
+        if(ev.key==="Enter"){
+          format2(el);
+        }
+      });
+    });
+
+    /* 起動時の初期値も小数2桁に統一 */
+    DECIMAL_IDS.forEach(function(id){
+      format2(document.getElementById(id));
+    });
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",bind);
+  }else{
+    bind();
+  }
+})();
+</script>
+
+</body>
+</html>
