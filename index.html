@@ -972,7 +972,17 @@
   window.renderMSVideoGuide = function(){
     const list = document.getElementById('msVideoGuideList');
     if(!list) return;
-    const videos = Array.isArray(window.MS_VIDEO_LIST) ? window.MS_VIDEO_LIST : [];
+    const videos = Array.isArray(window.MS_VIDEO_LIST) ? window.MS_VIDEO_LIST.slice() : [];
+    // L型擁壁アプリ操作編（2026-08-15追加）
+    const lWallVideo = {
+      title: 'L型擁壁アプリ編',
+      description: 'L型擁壁アプリの基本的な入力方法から積算結果の確認までを説明しています。',
+      items: ['L型擁壁アプリの開き方', '断面寸法・単価・条件の入力', '鉄筋・付帯工の入力操作', '積算結果・印刷内容の確認'],
+      url: 'https://youtu.be/Th8cXFidN54'
+    };
+    if(!videos.some(function(v){ return v && v.url === lWallVideo.url; })){
+      videos.push(lWallVideo);
+    }
     if(!videos.length){
       list.innerHTML = '<div class="ms-video-empty">現在、登録されている操作動画はありません。</div>';
       return;

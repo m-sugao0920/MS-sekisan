@@ -12,6 +12,16 @@ window.MS_VIDEO_LIST = [
       "メイン画面の基本操作"
     ],
     url: "https://youtu.be/gbGw7qtHgNk"
+  },
+  {
+    title: "L型擁壁アプリ編",
+    description: "L型擁壁アプリの基本的な使い方を説明しています。",
+    items: [
+      "L型擁壁アプリの画面の見方",
+      "入力方法",
+      "積算結果の確認"
+    ],
+    url: "https://youtu.be/Th8cXFidN54"
   }
 
   /* 追加例
