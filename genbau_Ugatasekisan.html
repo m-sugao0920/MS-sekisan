@@ -740,6 +740,50 @@ section.card:nth-of-type(2) .sectionTitle:first-of-type{
 }
 </style>
 
+
+<style id="genbau-u-price-green-final-20260815">
+.estimate-panel .control-block.price-block{
+  border-color:#a9d9b5!important;
+  background:#eef9f1!important;
+}
+.estimate-panel .control-block.price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .control-block.price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
+
+<style id="genbau-u-price-label-final-20260815">
+.estimate-panel .control-block.price-block .save-line label{
+  color:#334155!important;
+  font-weight:700!important;
+  opacity:1!important;
+}
+</style>
+
+
+<style id="genbau-u-price-final-fix-20260815">
+/* 今回使用単価：ラベルと反映ボタンを見やすく */
+.estimate-panel .control-block.price-block .save-line label{
+  color:#334155!important;
+  font-weight:700!important;
+  opacity:1!important;
+}
+
+</style>
+
+
+<style id="genbau-u-common-button-match-20260815">
+#guApplyCommonPriceBtn{
+  opacity:1!important;
+  width:100%!important;
+  min-width:0!important;
+  height:36px!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="genbauUDefaultsTrigger">現場打U型側溝 積算アプリ Ver.1.4.0</h1><div class="sub">掘削／残土処理／埋戻し／砕石／均しコンクリート／現場打コンクリート／型枠／床付け／mあたり単価を自動算出</div></div><div><span class="pill">W1・W3=側壁厚</span><span class="pill">W2=内幅</span><span class="pill">W4=床付け・砕石幅</span><span class="pill">H2=底版厚</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -1854,9 +1898,9 @@ window.addEventListener('load',async()=>{ensureDefaultPricePreset();refreshPrice
 
     block.innerHTML=
       '<div class="sectionTitle">今回の積算で使用する単価</div>'+
-      '<div class="save-line"><label>今回の積算で使用する単価</label><select id="guCommonPriceList"></select></div>'+
+      '<div class="save-line"><label>使用する単価</label><select id="guCommonPriceList"></select></div>'+
       '<div class="save-btns" style="grid-template-columns:1fr">'+
-      '<button class="ghost" id="guApplyCommonPriceBtn" type="button">今回の積算だけに反映</button>'+
+      '<button class="primary" id="guApplyCommonPriceBtn" type="button">今回の積算だけに反映</button>'+
       '</div>'+
       '<div class="note" id="guCommonPriceNote">共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。</div>';
 

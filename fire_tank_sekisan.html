@@ -1903,6 +1903,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     var item=MSPriceMaster.list().find(function(x){return x.id===sel.value;}) || MSPriceMaster.getActive();
     if(!item)return;
 
+    if(!confirm("選択した単価「"+(item.name||"標準")+"」を\n今回の積算だけに反映しますか？"))return;
+
     var prices=clone(item.prices||{});
     if(typeof MSPriceMaster.applyFields==="function"){
       try{MSPriceMaster.applyFields(prices);}catch(e){}

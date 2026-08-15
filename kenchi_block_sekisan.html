@@ -2926,8 +2926,19 @@ select[data-keyboard-mode='true']{
     const sel=$("priceMaster"); if(!sel||!window.MSPriceMaster) return;
     try{ MSPriceMaster.ensureMasters(); const list=MSPriceMaster.list()||[], active=MSPriceMaster.getActive(); sel.innerHTML=""; list.forEach(m=>{const o=document.createElement("option");o.value=m.id;o.textContent=m.name||"標準";sel.appendChild(o);}); if(active) sel.value=active.id; }catch(e){console.warn(e);}
   }
-  function applySelectedPrice(){
-    if(!window.MSPriceMaster) return; try{ const id=$("priceMaster")?.value; const list=MSPriceMaster.list()||[]; const m=list.find(x=>x.id===id)||MSPriceMaster.getActive(); if(m&&m.prices) applySnapshot(m.prices); }catch(e){console.warn(e);}
+  function applySelectedPrice(skipConfirm){
+    if(!window.MSPriceMaster) return;
+    try{
+      const id=$("priceMaster")?.value;
+      const list=MSPriceMaster.list()||[];
+      const m=list.find(x=>x.id===id)||MSPriceMaster.getActive();
+      if(!m||!m.prices) return;
+
+      if(!skipConfirm){
+        if(!confirm("選択した単価「"+(m.name||"標準")+"」を\n今回の積算だけに反映しますか？")) return;
+      }
+      applySnapshot(m.prices);
+    }catch(e){console.warn(e);}
   }
   window.addEventListener("load",async()=>{
     if(!hasMS()) return;
@@ -2936,8 +2947,8 @@ select[data-keyboard-mode='true']{
       populatePriceMasters();
       const openId=localStorage.getItem("ms_open_estimate_id")||"";
       if(openId){ const item=(MS.Estimate&&MS.Estimate.get)?await MS.Estimate.get(openId):await MS.getEstimate(openId); localStorage.removeItem("ms_open_estimate_id"); if(item&&(item.appType===APP_TYPE||item.app===APP_TYPE)){ await loadItem(item); await refreshList(openId); } else await refreshList(); }
-      else { applySelectedPrice(); await refreshList(); }
-      $("saveEstimateBtn")?.addEventListener("click",saveEstimate); $("loadEstimateBtn")?.addEventListener("click",loadEstimate); $("deleteEstimateBtn")?.addEventListener("click",deleteEstimate); $("applyPriceMasterBtn")?.addEventListener("click",applySelectedPrice);
+      else { applySelectedPrice(true); await refreshList(); }
+      $("saveEstimateBtn")?.addEventListener("click",saveEstimate); $("loadEstimateBtn")?.addEventListener("click",loadEstimate); $("deleteEstimateBtn")?.addEventListener("click",deleteEstimate); $("applyPriceMasterBtn")?.addEventListener("click",function(){applySelectedPrice(false);});
     }catch(e){ console.warn("間知ブロック連携初期化エラー",e); }
   });
 })();
