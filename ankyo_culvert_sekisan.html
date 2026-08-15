@@ -869,6 +869,54 @@ section.card:nth-of-type(2) #ProdPrice:focus{
 .product-info-v140 .sectionTitle{color:#b75a0a;margin-top:0}
 .product-info-v140 .sectionTitle::before{background:#f59e0b!important}
 </style>
+
+<style id="ankyo-management-unify-20260815">
+/* 管理画面統一：製品単価マスター＝オレンジ、今回使用単価＝グリーン */
+.estimate-panel .product-master-box{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+  border-radius:14px!important;
+  padding:10px!important;
+  margin:10px 0!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.03)!important;
+}
+.estimate-panel .product-master-head{
+  justify-content:flex-start!important;
+  margin-bottom:8px!important;
+}
+.estimate-panel .product-master-title{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#c2410c!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+.estimate-panel .product-master-title::before{
+  content:""!important;
+  width:8px!important;
+  height:8px!important;
+  flex:0 0 8px!important;
+  border-radius:999px!important;
+  background:#f97316!important;
+  display:inline-block!important;
+}
+.estimate-panel .product-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="ankyoDefaultsTrigger" title="暗渠・カルバート工積算">暗渠・カルバート工 積算アプリ Ver.1.4.0</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -1018,7 +1066,7 @@ section.card:nth-of-type(2) #ProdPrice:focus{
   </div>
 
   <div class="control-block price-block">
-    <div class="sectionTitle">単価マスター</div>
+    <div class="sectionTitle">今回の積算で使用する単価</div>
     <div class="save-line">
       <label>単価名</label>
       <input id="pricePresetName" type="text" placeholder="例：標準 / U300 静岡県 / U240 民間">
@@ -2619,7 +2667,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     block.dataset.commonDone="1";
     block.innerHTML=
-      '<div class="sectionTitle">共通単価マスター</div>'+
+      '<div class="sectionTitle">今回の積算で使用する単価</div>'+
       '<div class="save-line"><label>今回の積算で使用する単価</label><select id="ankyoCommonPriceList"></select></div>'+
       '<div class="save-btns" style="grid-template-columns:1fr">'+
       '<button class="primary" id="ankyoApplyCommonPriceBtn" type="button">今回の積算だけに反映</button>'+

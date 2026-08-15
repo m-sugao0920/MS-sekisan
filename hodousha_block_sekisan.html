@@ -587,7 +587,8 @@
 /* ===== 製品単価マスター選択 ===== */
 .product-master-box{border:1px solid #bad8f4;border-radius:14px;background:#f7fbff;padding:10px;margin:0 0 12px}
 .product-master-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.product-master-title{font-size:13px;font-weight:900;color:#0647a5}
+.product-master-title{font-size:13px;font-weight:900;color:#0647a5;display:flex;align-items:center;gap:8px}
+    .product-master-title::before{content:"";width:8px;height:8px;border-radius:999px;background:#f97316;display:inline-block;flex:0 0 8px}
 .product-master-current{font-size:12px;color:#475569;line-height:1.55;background:#fff;border:1px solid #dbeafe;border-radius:10px;padding:8px 10px;min-height:38px}
 .product-master-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
 .product-master-actions button{min-width:120px}
@@ -877,6 +878,45 @@
 #ProdLen{border-left:6px solid #8fc9ef!important;border-bottom:2px solid #8fc9ef!important}
 #ProdPrice,#Pset{border-left:6px solid #8A4653!important;border-bottom:2px solid #8A4653!important}
 </style>
+
+<style id="management-panel-unify-20260815">
+/* 管理画面：標準配色へ統一 */
+.product-master-box{border-color:#fed7aa!important;background:#fffaf4!important;}
+.product-master-title{color:#c2410c!important;}
+.product-master-title::before{background:#f97316!important;}
+.product-master-current{border-color:#fed7aa!important;background:#fff!important;}
+.price-block{border-color:#c5ead0!important;background:#f7fff9!important;}
+.price-block .sectionTitle{color:#087d10!important;}
+.price-block .sectionTitle::before{background:#12a150!important;}
+</style>
+
+<style id="pedestrian-management-complete-fix-20260815">
+.estimate-panel .product-master-box{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+}
+.estimate-panel .product-master-title{
+  color:#c2410c!important;
+}
+.estimate-panel .product-master-title::before{
+  background:#f97316!important;
+}
+.estimate-panel .product-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="pedestrianDefaultsTrigger" title="歩車道ブロック工積算">歩車道ブロック工 積算アプリ Ver.1.4.0</h1><div class="sub">掘削／残土処理／埋戻し／床付け／砕石／均し型枠／均しコンクリート／敷モルタル／歩車道ブロック／据付を自動算出</div></div><div><span class="pill">掘削=(W2+2e)×(H1+H2+H3+H4)</span><span class="pill">残土=歩車道ブロック埋設部+モルタル+均しCo+砕石</span><span class="pill">法面勾配なし</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -2293,7 +2333,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 
 <style id="pedestrian-block-common-price-readonly-style">
-/* ===== 歩車道ブロック：共有単価マスターは呼び出し専用 ===== */
+/* ===== 歩車道ブロック：今回の積算で使用する単価は呼び出し専用 ===== */
 #ugSaveToCommonPriceBtn,
 #ugSaveAsCommonPriceBtn,
 #ugRenameCommonPriceBtn,
@@ -2330,7 +2370,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var block = select.closest('.price-block');
     if(block){
       var title = block.querySelector('.sectionTitle');
-      if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+      if(title) title.textContent = '今回の積算で使用する単価';
 
       var actions = block.querySelector('.save-btns');
       if(actions){

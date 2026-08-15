@@ -409,6 +409,14 @@ section.card:nth-of-type(2) #Pexc,section.card:nth-of-type(2) #Pback,section.car
 .product-info-v140 #Nlidwork[readonly]{background:#f3f4f6!important;color:#94a3b8!important;border-color:#d9dee5!important;box-shadow:none!important}
 </style>
 
+
+<style id="genbau-pit-management-unify-20260815">
+.panel.orange .sectionTitle{color:#c2410c!important;}
+.panel.orange .sectionTitle::before{background:#f97316!important;}
+.panel.green .sectionTitle{color:#087d10!important;}
+.panel.green .sectionTitle::before{background:#12a150!important;}
+</style>
+
 </head><body>
 <header><div class="wrap"><div><h1 id="genbauPitDefaultsTrigger">現場打排水桝 積算アプリ Ver.1.4.0</h1><div class="sub">内寸法・外寸法・基数から、土工／地業／コンクリート／型枠／蓋を自動算出</div></div><a class="home" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main><div class="grid">
@@ -514,9 +522,9 @@ section.card:nth-of-type(2) #Pexc,section.card:nth-of-type(2) #Pback,section.car
   <line x1="895" y1="840" x2="895" y2="910" class="ext"/>
   <text x="600" y="878" text-anchor="middle" class="dimText dim-w5 dim-w6">W5×W6</text>
 </svg><div class="note">W2×W3＝内寸法、W5×W6＝床付け・均し・砕石の外寸法です。奥行方向の前後壁厚は、左右壁厚W1・W4と同じとして計算します。</div>
-<div class="panel blue"><div class="save-line"><label>現場名</label><input id="projectName" placeholder="例：○○様邸 外構工事"></div><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：現場打排水桝 600×600 1基"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div></div>
-<div class="panel green price-block"><div class="sectionTitle">共有単価マスター</div><div class="save-line"><label>使用する単価</label><select id="commonPriceList"></select></div><div class="btns"><button class="ghost" id="applyCommonPriceBtn">今回の積算だけに反映</button><button class="primary" id="saveCommonPriceBtn">保存</button><button class="ghost" id="saveAsCommonPriceBtn">名前保存</button></div><div class="note" id="commonPriceNote">共有単価を読み込みます。</div></div>
-<div class="panel orange"><div class="sectionTitle">蓋 製品単価マスター</div><div class="current" id="selectedProductMaster">製品は選択されていません。</div><div class="btns"><button class="primary" id="openProductMasterBtn">製品を選択</button><button class="ghost" id="registerCurrentProductBtn">現在値を登録</button><button class="danger" id="clearProductMasterBtn">選択解除</button></div><input type="hidden" id="ProductMasterId"><input type="hidden" id="ProductName"><input type="hidden" id="ProductManufacturer"><input type="hidden" id="ProductSpecification"></div>
+<div class="panel blue"><div class="save-line"><label>工事名</label><input id="projectName" placeholder="例：○○様邸 外構工事"></div><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：現場打排水桝 600×600 1基"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div></div>
+<div class="panel orange"><div class="sectionTitle">製品単価マスター</div><div class="current" id="selectedProductMaster">製品は選択されていません。</div><div class="btns"><button class="primary" id="openProductMasterBtn">製品を選択</button><button class="ghost" id="registerCurrentProductBtn">現在値を登録</button><button class="danger" id="clearProductMasterBtn">選択解除</button></div><input type="hidden" id="ProductMasterId"><input type="hidden" id="ProductName"><input type="hidden" id="ProductManufacturer"><input type="hidden" id="ProductSpecification"></div>
+<div class="panel green price-block"><div class="sectionTitle">今回の積算で使用する単価</div><div class="save-line"><label>使用する単価</label><select id="commonPriceList"></select></div><div class="btns"><button class="ghost" id="applyCommonPriceBtn">今回の積算だけに反映</button><button class="primary" id="saveCommonPriceBtn">保存</button><button class="ghost" id="saveAsCommonPriceBtn">名前保存</button></div><div class="note" id="commonPriceNote">使用する単価を読み込みます。</div></div>
 
 </div></section>
 <section class="card"><h2 class="ms-input-card-head"><span class="ms-head-title"><span class="dot"></span>入力</span><button class="ms-new-input-btn" id="newInputBtn" type="button">新しい入力を開始</button></h2><div class="body">
@@ -1017,8 +1025,8 @@ window.addEventListener('load',async()=>{try{
   function byId(id){return document.getElementById(id)}
   function standardize(){
     var block=byId("commonPriceList")?.closest(".price-block");if(!block)return;
-    var title=block.querySelector(".sectionTitle");if(title)title.textContent="共通単価マスター";
-    var label=block.querySelector(".save-line label");if(label)label.textContent="今回の積算で使用する単価";
+    var title=block.querySelector(".sectionTitle");if(title)title.textContent="今回の積算で使用する単価";
+    var label=block.querySelector(".save-line label");if(label)label.textContent="使用する単価";
     ["saveCommonPriceBtn","saveAsCommonPriceBtn","renameCommonPriceBtn","deleteCommonPriceBtn"].forEach(id=>{var e=byId(id);if(e)e.remove()});
     var btn=byId("applyCommonPriceBtn");if(btn){btn.textContent="今回の積算だけに反映";btn.classList.remove("ghost");btn.classList.add("primary");btn.style.width="100%"}
     var actions=block.querySelector(".btns");if(actions)actions.style.gridTemplateColumns="1fr";

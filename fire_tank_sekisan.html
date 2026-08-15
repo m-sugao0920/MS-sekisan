@@ -930,12 +930,56 @@ header .pill{
 
 
 <style id="firetank-manage-one-column-final">
-/* 管理欄：工事名→積算データ保存→製品単価マスター→共有単価マスターを1列表示 */
+/* 管理欄：工事名→積算データ保存→製品単価マスター→今回の積算で使用する単価を1列表示 */
 .firetank-manage-grid{
   grid-template-columns:1fr!important;
 }
 .firetank-manage-grid>.manage-cell{
   width:100%!important;
+}
+</style>
+
+
+<style id="firetank-management-complete-unify-20260815">
+/* 管理画面統一：製品単価マスター＝オレンジ、今回使用単価＝薄い緑 */
+.firetank-manage-grid .product-master-box{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+  border-radius:14px!important;
+  padding:10px!important;
+  margin:0!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.03)!important;
+}
+.firetank-manage-grid .product-master-title{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#c2410c!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+.firetank-manage-grid .product-master-title::before{
+  content:""!important;
+  width:8px!important;
+  height:8px!important;
+  flex:0 0 8px!important;
+  border-radius:999px!important;
+  background:#f97316!important;
+  display:inline-block!important;
+}
+.firetank-manage-grid .product-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.firetank-manage-grid .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.firetank-manage-grid .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.firetank-manage-grid .price-block .sectionTitle::before{
+  background:#12a150!important;
 }
 </style>
 
@@ -1209,10 +1253,10 @@ header .pill{
       </div>
 
       <div class="manage-cell control-block price-block">
-        <div class="sectionTitle">共有単価マスター（呼び出し専用）</div>
-        <div class="save-line"><label>使用する単価</label><select id="ftCommonPriceList"><option value="">共有単価なし</option></select></div>
+        <div class="sectionTitle">今回の積算で使用する単価</div>
+        <div class="save-line"><label>使用する単価</label><select id="ftCommonPriceList"><option value="">使用単価なし</option></select></div>
         <div class="save-btns" style="grid-template-columns:1fr"><button class="primary" id="ftApplyCommonPriceBtn" type="button">今回の積算だけに反映</button></div>
-        <div class="note" id="ftCommonPriceNote">共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。</div>
+        <div class="note" id="ftCommonPriceNote">単価の登録・編集・名前変更・削除は、メイン画面で行ってください。</div>
       </div>
     </div>
   </div>
@@ -1835,8 +1879,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(!sel)return;
 
     if(!window.MSPriceMaster){
-      sel.innerHTML='<option value="">共有単価マスター未接続</option>';
-      if(note)note.textContent="共有単価マスターを利用できません。";
+      sel.innerHTML='<option value="">使用単価マスター未接続</option>';
+      if(note)note.textContent="今回の積算で使用する単価を利用できません。";
       return;
     }
 
@@ -1847,14 +1891,14 @@ window.addEventListener('DOMContentLoaded',()=>{
       sel.innerHTML=list.map(function(x){return '<option value="'+x.id+'">'+x.name+'</option>';}).join("");
       if(active)sel.value=active.id;
       if(note)note.textContent=(active&&active.name ? "現在使用中："+active.name+"　" : "")+
-        "共有単価の登録・編集・名前変更・削除は、メイン画面で行ってください。";
+        "単価の登録・編集・名前変更・削除は、メイン画面で行ってください。";
     }catch(e){
       console.warn(e);
     }
   }
 
   function applyCommonPrice(){
-    if(!window.MSPriceMaster){alert("共有単価マスターを利用できません。");return;}
+    if(!window.MSPriceMaster){alert("今回の積算で使用する単価を利用できません。");return;}
     var sel=$("ftCommonPriceList");
     var item=MSPriceMaster.list().find(function(x){return x.id===sel.value;}) || MSPriceMaster.getActive();
     if(!item)return;
@@ -1873,7 +1917,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(typeof window.calc==="function")window.calc();
 
     var note=$("ftCommonPriceNote");
-    if(note)note.textContent="今回使用中："+(item.name||"標準")+"　共有単価の編集はメイン画面で行ってください。";
+    if(note)note.textContent="今回使用中："+(item.name||"標準")+"　単価の編集はメイン画面で行ってください。";
   }
 
   async function loadRequestedEstimate(){

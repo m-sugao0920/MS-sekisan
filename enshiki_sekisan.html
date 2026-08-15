@@ -587,7 +587,8 @@
 /* ===== 製品単価マスター選択 ===== */
 .product-master-box{border:1px solid #bad8f4;border-radius:14px;background:#f7fbff;padding:10px;margin:0 0 12px}
 .product-master-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.product-master-title{font-size:13px;font-weight:900;color:#0647a5}
+.product-master-title{font-size:13px;font-weight:900;color:#0647a5;display:flex;align-items:center;gap:8px}
+.product-master-title::before{content:"";width:8px;height:8px;border-radius:999px;background:#f97316;display:inline-block;flex:0 0 8px}
 .product-master-current{font-size:12px;color:#475569;line-height:1.55;background:#fff;border:1px solid #dbeafe;border-radius:10px;padding:8px 10px;min-height:38px}
 .product-master-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
 .product-master-actions button{min-width:120px}
@@ -955,6 +956,16 @@
 .product-info-v140 .sectionTitle::before{background:#f59e0b!important}
 #ProdLen{border-left:6px solid #8fc9ef!important;border-bottom:2px solid #8fc9ef!important}
 #ProdPrice,#Pset{border-left:6px solid #8A4653!important;border-bottom:2px solid #8A4653!important}
+</style>
+
+<style id="management-panel-unify-20260815">
+/* 管理画面：間知ブロックアプリと同じ配色へ統一 */
+.product-master-box{border-color:#fed7aa!important;background:#fffaf4!important;}
+.product-master-title{color:#c2410c!important;}
+.product-master-current{border-color:#fed7aa!important;background:#fff!important;}
+.price-block{border-color:#c5ead0!important;background:#f7fff9!important;}
+.price-block .sectionTitle{color:#087d10!important;}
+.price-block .sectionTitle::before{background:#12a150!important;}
 </style>
 </head>
 <body>

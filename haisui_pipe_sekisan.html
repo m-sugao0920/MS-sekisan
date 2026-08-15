@@ -911,6 +911,49 @@ section.card:nth-of-type(2) .sectionTitle + .input-color-guide{
 .product-info-v140 .sectionTitle::before{background:#f59e0b!important}
 .product-info-v140 #SocketQtyDisplay[readonly]{background:#f3f4f6!important;color:#94a3b8!important;border-color:#d9dee5!important;box-shadow:none!important}
 </style>
+
+<style id="drainage-pipe-management-unify-20260815">
+.estimate-panel .product-master-box{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+  border-radius:14px!important;
+  padding:10px!important;
+  margin:10px 0!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.03)!important;
+}
+.estimate-panel .product-master-title{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#c2410c!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+.estimate-panel .product-master-title::before{
+  content:""!important;
+  width:8px!important;
+  height:8px!important;
+  border-radius:999px!important;
+  background:#f97316!important;
+  display:inline-block!important;
+  flex:0 0 8px!important;
+}
+.estimate-panel .product-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="drainagePipeDefaultsTrigger" title="排水管工積算">排水管工 積算アプリ Ver.1.4.0</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -1015,7 +1058,7 @@ section.card:nth-of-type(2) .sectionTitle + .input-color-guide{
 <input id="ProductSpecification" type="hidden"/>
 </div>
 <div class="control-block price-block">
-<div class="sectionTitle">単価マスター</div>
+<div class="sectionTitle">今回の積算で使用する単価</div>
 <div class="save-line">
 <label>単価名</label>
 <input id="pricePresetName" placeholder="例：標準 / U300 静岡県 / U240 民間" type="text"/>
@@ -2914,7 +2957,7 @@ body.svg-preview-mode020 .svg-print-actions020{display:flex!important;}
 })();
 </script>
 <style id="drainage-pipe-common-price-readonly-style">
-/* ===== 排水管工：共有単価マスターは呼び出し専用 ===== */
+/* ===== 排水管工：今回の積算で使用する単価は呼び出し専用 ===== */
 #pricePresetName,
 #savePriceBtn,
 #deletePriceBtn,
@@ -2961,7 +3004,7 @@ body.svg-preview-mode020 .svg-print-actions020{display:flex!important;}
     if(!block) return false;
 
     var title = block.querySelector('.sectionTitle');
-    if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+    if(title) title.textContent = '今回の積算で使用する単価';
 
     [
       'pricePresetName',
@@ -3216,8 +3259,8 @@ body.svg-preview-mode020 .svg-print-actions020{display:flex!important;}
 
     block.dataset.commonDone="1";
     block.innerHTML=
-      '<div class="sectionTitle">共通単価マスター</div>'+
-      '<div class="save-line"><label>今回の積算で使用する単価</label><select id="pipeCommonPriceList"></select></div>'+
+      '<div class="sectionTitle">今回の積算で使用する単価</div>'+
+      '<div class="save-line"><label>使用する単価</label><select id="pipeCommonPriceList"></select></div>'+
       '<div class="save-btns" style="grid-template-columns:1fr">'+
       '<button class="primary" id="pipeApplyCommonPriceBtn" type="button">今回の積算だけに反映</button>'+
       '</div>'+

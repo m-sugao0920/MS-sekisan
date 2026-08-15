@@ -842,6 +842,87 @@
 #ProdLen{border-left:6px solid #8fc9ef!important;border-bottom:2px solid #8fc9ef!important}
 #ProdPrice,#Pset{border-left:6px solid #8A4653!important;border-bottom:2px solid #8A4653!important}
 </style>
+
+<style id="management-panel-unify-20260815">
+/* 管理画面統一：製品単価マスター＝オレンジ、今回使用単価＝グリーン */
+.estimate-panel .product-master-box{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+  border-radius:14px!important;
+  padding:10px!important;
+  margin:10px 0!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.03)!important;
+}
+.estimate-panel .product-master-head{
+  justify-content:flex-start!important;
+  margin-bottom:8px!important;
+}
+.estimate-panel .product-master-title{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#c2410c!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+.estimate-panel .product-master-title::before{
+  content:""!important;
+  width:8px!important;
+  height:8px!important;
+  flex:0 0 8px!important;
+  border-radius:999px!important;
+  background:#f97316!important;
+  display:inline-block!important;
+}
+.estimate-panel .product-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{color:#087d10!important;}
+.estimate-panel .price-block .sectionTitle::before{background:#12a150!important;}
+</style>
+
+
+<style id="l-gutter-management-complete-fix-20260815">
+.estimate-panel .product-master-box{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+}
+.estimate-panel .product-master-title{
+  color:#c2410c!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+.estimate-panel .product-master-title::before{
+  content:""!important;
+  width:8px!important;
+  height:8px!important;
+  border-radius:999px!important;
+  background:#f97316!important;
+  display:inline-block!important;
+  flex:0 0 8px!important;
+}
+.estimate-panel .product-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="lGutterDefaultsTrigger" title="L型側溝工積算">L型側溝工 積算アプリ Ver.1.4.0</h1><div class="sub">掘削／残土処理／埋戻し／床付け／砕石／均し型枠／均しコンクリート／敷モルタル／L型側溝／据付を自動算出</div></div><div><span class="pill">掘削=(W2+2e)×(H1+H2+H3+H4)</span><span class="pill">残土=L型側溝埋設部+モルタル+均しCo+砕石</span><span class="pill">法面勾配なし</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -971,7 +1052,7 @@
   </div>
 
   <div class="control-block price-block">
-    <div class="sectionTitle">単価マスター</div>
+    <div class="sectionTitle">今回の積算で使用する単価</div>
     <div class="save-line">
       <label>単価名</label>
       <input id="pricePresetName" type="text" placeholder="例：標準 / U300 静岡県 / U240 民間">
@@ -2224,7 +2305,7 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
   function renderSelect(){const sel=$('ugCommonPriceList'); if(!sel||!window.MSPriceMaster) return; const cur=sel.value||MSPriceMaster.activeId(); sel.innerHTML=MSPriceMaster.list().map(x=>'<option value="'+x.id+'">'+x.name+'</option>').join(''); sel.value=cur; if(!sel.value) sel.value=MSPriceMaster.activeId(); const note=$('ugCommonPriceNote'); if(note){const m=MSPriceMaster.getActive(); note.textContent='現在使用中：'+(m.name||'標準')+'（積算保存時に単価も固定保存します）';}}
   function rebuildPanel(){
     const old=$('savedPriceList'); const block=old ? old.closest('.price-block') : null; if(!block||block.dataset.commonDone) return; block.dataset.commonDone='1';
-    block.innerHTML='<div class="sectionTitle">共通単価マスター</div>'+
+    block.innerHTML='<div class="sectionTitle">今回の積算で使用する単価</div>'+
       '<div class="save-line"><label>使用する単価</label><select id="ugCommonPriceList"></select></div>'+
       '<div class="save-btns" style="grid-template-columns:1fr 1fr">'+
       '<button class="ghost" id="ugApplyCommonPriceBtn" type="button">読込</button>'+
@@ -2371,7 +2452,7 @@ document.addEventListener('DOMContentLoaded',function(){
     if(!block) return false;
 
     var title = block.querySelector('.sectionTitle');
-    if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+    if(title) title.textContent = '今回の積算で使用する単価';
 
     /* 編集用の入力欄とボタンはDOMからも取り除きます */
     [

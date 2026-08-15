@@ -707,6 +707,39 @@ section.card:nth-of-type(2) .sectionTitle:first-of-type{
 })();
 </script>
 
+
+<style id="genbau-u-management-unify-20260815">
+/* 管理画面統一：製品単価マスター＝オレンジ、今回使用単価＝グリーン */
+.estimate-panel .product-master-block{
+  border:1px solid #fed7aa!important;
+  background:#fffaf4!important;
+  border-radius:14px!important;
+  padding:10px!important;
+  margin:10px 0!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.03)!important;
+}
+.estimate-panel .product-master-block .sectionTitle{
+  color:#c2410c!important;
+}
+.estimate-panel .product-master-block .sectionTitle::before{
+  background:#f97316!important;
+}
+.estimate-panel .cover-master-current{
+  border-color:#fed7aa!important;
+  background:#fff!important;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="genbauUDefaultsTrigger">現場打U型側溝 積算アプリ Ver.1.4.0</h1><div class="sub">掘削／残土処理／埋戻し／砕石／均しコンクリート／現場打コンクリート／型枠／床付け／mあたり単価を自動算出</div></div><div><span class="pill">W1・W3=側壁厚</span><span class="pill">W2=内幅</span><span class="pill">W4=床付け・砕石幅</span><span class="pill">H2=底版厚</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -829,7 +862,7 @@ section.card:nth-of-type(2) .sectionTitle:first-of-type{
   </div>
 
   <div class="control-block price-block">
-    <div class="sectionTitle">単価マスター</div>
+    <div class="sectionTitle">今回の積算で使用する単価</div>
     <div class="save-line"><label>単価名</label><input id="pricePresetName" type="text" placeholder="例：標準 / U300現場打 / 民間工事"></div>
     <div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div>
     <div class="save-btns"><button class="ghost" id="savePriceBtn" type="button">保存</button><button class="ghost" id="loadPriceBtn" type="button">呼出</button><button class="danger" id="deletePriceBtn" type="button">削除</button></div>
@@ -1493,7 +1526,7 @@ window.addEventListener('load',async()=>{ensureDefaultPricePreset();refreshPrice
     try{
       await MS.init();
 
-      // 共通単価マスター：index.htmlで「呼出」した使用中単価を最優先で読む
+      // 今回の積算で使用する単価：index.htmlで「呼出」した使用中単価を最優先で読む
       if(window.MSPriceMaster){
         MSPriceMaster.ensureMasters();
         const active = MSPriceMaster.getActive();
@@ -1820,7 +1853,7 @@ window.addEventListener('load',async()=>{ensureDefaultPricePreset();refreshPrice
     block.dataset.commonDone="1";
 
     block.innerHTML=
-      '<div class="sectionTitle">共通単価マスター</div>'+
+      '<div class="sectionTitle">今回の積算で使用する単価</div>'+
       '<div class="save-line"><label>今回の積算で使用する単価</label><select id="guCommonPriceList"></select></div>'+
       '<div class="save-btns" style="grid-template-columns:1fr">'+
       '<button class="ghost" id="guApplyCommonPriceBtn" type="button">今回の積算だけに反映</button>'+

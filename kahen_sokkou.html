@@ -188,10 +188,10 @@
 
 
 /* ===== 製品単価マスター選択 ===== */
-.product-master-box{border:1px solid #bad8f4;border-radius:14px;background:#f7fbff;padding:10px;margin:10px 0}
+.product-master-box{border:1px solid #fed7aa;border-radius:14px;background:#fffaf4;padding:10px;margin:10px 0;box-shadow:0 3px 10px rgba(0,0,0,.03)}
 .product-master-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.product-master-title{font-size:13px;font-weight:900;color:#0647a5}
-.product-master-current{font-size:12px;color:#475569;line-height:1.55;background:#fff;border:1px solid #dbeafe;border-radius:10px;padding:8px 10px;min-height:38px}
+.product-master-title{font-size:12px;font-weight:900;color:#c2410c;display:flex;align-items:center;gap:8px}
+.product-master-current{font-size:12px;color:#475569;line-height:1.55;background:#fff;border:1px solid #fed7aa;border-radius:10px;padding:8px 10px;min-height:38px}
 .product-master-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
 .pm-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.46);z-index:1000;align-items:center;justify-content:center;padding:18px}
 .pm-modal.show{display:flex}
@@ -427,6 +427,24 @@ section.card:nth-of-type(2) #NlidWork[readonly]{
 .product-info-v140 .sectionTitle::before{background:#f59e0b!important}
 .product-info-v140 #NlidWork[readonly]{background:#f3f4f6!important;color:#94a3b8!important;border-color:#d9dee5!important;box-shadow:none!important}
 </style>
+
+<style id="kahen-management-unify-20260815">
+/* 管理画面統一 */
+.product-master-title::before{
+  content:"";width:8px;height:8px;border-radius:999px;background:#f97316;display:inline-block;
+}
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="kahenDefaultsTrigger" title="可変側溝積算">可変側溝 積算アプリ Ver.1.4.0</h1><div class="sub">掘削／地業／インバートコンクリート／可変側溝製品／蓋を自動算出</div></div><div><span class="pill">W1〜W4</span><span class="pill">H1〜H5</span><span class="pill">単価マスター対応</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -559,7 +577,7 @@ section.card:nth-of-type(2) #NlidWork[readonly]{
         <input id="ProductManufacturer" type="hidden">
         <input id="ProductSpecification" type="hidden">
       </div>
-      <div class="control-block price-block"><div class="sectionTitle">共通単価マスター</div><div class="save-line"><label>単価名</label><input id="pricePresetName" type="text" placeholder="例：標準 / 可変300 / 民間工事"></div><div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div><div class="save-btns"><button class="ghost" id="savePriceBtn" type="button">保存</button><button class="ghost" id="loadPriceBtn" type="button">今回の積算だけに反映</button><button class="danger" id="deletePriceBtn" type="button">削除</button></div><div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div></div>
+      <div class="control-block price-block"><div class="sectionTitle">今回の積算で使用する単価</div><div class="save-line"><label>単価名</label><input id="pricePresetName" type="text" placeholder="例：標準 / 可変300 / 民間工事"></div><div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div><div class="save-btns"><button class="ghost" id="savePriceBtn" type="button">保存</button><button class="ghost" id="loadPriceBtn" type="button">今回の積算だけに反映</button><button class="danger" id="deletePriceBtn" type="button">削除</button></div><div class="note">「標準」は自動で用意します。よく使う単価は名前を付けて保存できます。</div></div>
       
     </div>
   </div></section>
@@ -1048,7 +1066,7 @@ window.addEventListener('load',()=>{ensureStandardPrice();refreshPriceList();ref
 
 
 
-<!-- ===== MS共通保存・共通単価マスター対応：可変側溝 v1 ===== -->
+<!-- ===== MS共通保存・今回使用単価対応：可変側溝 v1 ===== -->
 <script id="ms-common-kahen-adapter">
 (function(window, document){
   'use strict';
@@ -1292,8 +1310,8 @@ window.addEventListener('load',()=>{ensureStandardPrice();refreshPriceList();ref
 
     block.dataset.commonDone='1';
     block.innerHTML=
-      '<div class="sectionTitle">共通単価マスター</div>'+
-      '<div class="save-line"><label>今回の積算で使用する単価</label><select id="khCommonPriceList"></select></div>'+
+      '<div class="sectionTitle">今回の積算で使用する単価</div>'+
+      '<div class="save-line"><label>使用する単価</label><select id="khCommonPriceList"></select></div>'+
       '<div class="save-btns" style="grid-template-columns:1fr">'+
       '<button class="primary" id="khApplyCommonPriceBtn" type="button">今回の積算だけに反映</button>'+
       '</div>'+
@@ -1358,7 +1376,7 @@ window.addEventListener('load',()=>{ensureStandardPrice();refreshPriceList();ref
 
 
 <style id="variable-gutter-common-price-readonly-style">
-/* ===== 可変側溝：共有単価マスターは呼び出し専用 ===== */
+/* ===== 可変側溝：今回の積算で使用する単価は呼び出し専用 ===== */
 #pricePresetName,
 #savePriceBtn,
 #deletePriceBtn,
@@ -1406,7 +1424,7 @@ window.addEventListener('load',()=>{ensureStandardPrice();refreshPriceList();ref
     if(!block) return false;
 
     var title = block.querySelector('.sectionTitle');
-    if(title) title.textContent = '共有単価マスター（呼び出し専用）';
+    if(title) title.textContent = '今回の積算で使用する単価';
 
     [
       'pricePresetName',

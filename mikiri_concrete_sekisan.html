@@ -279,6 +279,21 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 }
 </style>
 
+
+<style id="mikiri-management-unify-20260815">
+/* 管理画面統一：製品単価マスター＝オレンジ、今回の積算で使用する単価＝薄い緑 */
+.estimate-panel .price-block{
+  border-color:#c5ead0!important;
+  background:#f7fff9!important;
+}
+.estimate-panel .price-block .sectionTitle{
+  color:#087d10!important;
+}
+.estimate-panel .price-block .sectionTitle::before{
+  background:#12a150!important;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="mikiriDefaultsTrigger" title="見切コンクリート積算">見切コンクリート積算アプリ Ver.1.4.0</h1><div class="sub">土工／砕石／コンクリート／型枠／鉄筋（縦筋＋横筋）を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -320,7 +335,7 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 </div>
 <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
 </div>
-<div class="control-block price-block"><div class="sectionTitle">単価保存</div><div class="save-line"><label>単価名</label><input id="pricePresetName" placeholder="例：標準"></div><div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div><div class="btns"><button class="ghost" id="savePriceBtn">保存</button><button class="ghost" id="loadPriceBtn">呼出</button><button class="danger" id="deletePriceBtn">削除</button></div></div>
+<div class="control-block price-block"><div class="sectionTitle">今回の積算で使用する単価</div><div class="save-line"><label>単価名</label><input id="pricePresetName" placeholder="例：標準"></div><div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div><div class="btns"><button class="ghost" id="savePriceBtn">保存</button><button class="ghost" id="loadPriceBtn">呼出</button><button class="danger" id="deletePriceBtn">削除</button></div></div>
 
 </div>
 </div></section>
