@@ -22,6 +22,16 @@ window.MS_VIDEO_LIST = [
       "積算結果の確認"
     ],
     url: "https://youtu.be/Th8cXFidN54"
+  },
+  {
+    title: "プレキャストL型擁壁アプリ編",
+    description: "プレキャストL型擁壁アプリの基本的な使い方を説明しています。",
+    items: [
+      "プレキャストL型擁壁アプリの画面の見方",
+      "入力方法",
+      "積算結果の確認"
+    ],
+    url: "https://youtu.be/_w1qE8nc8OY"
   }
 
   /* 追加例
