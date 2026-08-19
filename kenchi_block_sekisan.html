@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>間知ブロック積工 積算アプリ Ver.1.4.0 試作版 v15</title>
+<title>間知ブロック積工 積算アプリ Ver.1.6.0 積算テンプレート統合版</title>
 <style>
 :root{
   --blue:#0070C0;
@@ -941,44 +941,6 @@ select.is-selecting{
   }
 }
 </style>
-
-
-<style id="kenchi-product-master-ui-v140">
-.product-master-block{border-color:#d7e7f7;background:#fbfdff}
-.selected-product{font-size:11px;line-height:1.45;color:#475569;background:#f8fafc;border:1px solid #d7e3ef;border-radius:9px;padding:7px 8px;margin-bottom:7px}
-.product-master-actions{gap:6px!important}
-.product-master-actions button{min-width:0!important;height:31px!important;padding:4px 5px!important;font-size:10.5px!important;white-space:nowrap}
-#kenchiProductMasterModal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(8,24,48,.42);align-items:center;justify-content:center;padding:18px}
-#kenchiProductMasterModal.show{display:flex}
-.kenchi-pm-box{width:min(760px,100%);max-height:82vh;display:flex;flex-direction:column;background:#fff;border:1px solid #cfe3f7;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.25);overflow:hidden}
-.kenchi-pm-head{padding:13px 15px;background:#eef6ff;color:#0647a5;font-weight:950}
-.kenchi-pm-tools{padding:10px 12px;border-bottom:1px solid #e1edf8}
-.kenchi-pm-tools input{height:34px!important;font-size:12px!important}
-.kenchi-pm-list{padding:8px 12px 12px;overflow:auto;display:grid;gap:6px}
-.kenchi-pm-row{border:1px solid #d7e7f7;border-radius:10px;background:#fbfdff;padding:8px 9px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
-.kenchi-pm-name{font-size:12px;font-weight:900;color:#122033}
-.kenchi-pm-meta{font-size:10px;color:#60758d;margin-top:2px}
-.kenchi-pm-row button{width:auto!important;min-width:62px;height:29px;padding:3px 9px;background:#0647a5;color:#fff;font-size:11px}
-.kenchi-pm-foot{padding:9px 12px;border-top:1px solid #e1edf8;display:flex;justify-content:flex-end}
-.kenchi-pm-foot button{width:auto!important;min-width:90px;background:#eef6ff;color:#0647a5}
-</style>
-
-
-<style id="kenchi-register-product-dialog-v140">
-#kenchiRegisterProductModal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(8,24,48,.44);align-items:center;justify-content:center;padding:18px}
-#kenchiRegisterProductModal.show{display:flex}
-.kenchi-register-box{width:min(520px,100%);background:#fff;border:1px solid #cfe3f7;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.28);overflow:hidden}
-.kenchi-register-head{padding:13px 15px;background:#eef6ff;color:#0647a5;font-weight:950}
-.kenchi-register-body{padding:13px 15px}
-.kenchi-register-body label{font-size:11px;margin:8px 0 4px}
-.kenchi-register-body input{height:36px!important;font-size:13px!important}
-.kenchi-register-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.kenchi-register-actions button{height:34px!important;font-size:12px!important}
-#kenchiRegisterConfirmBtn{background:#0647a5;color:#fff}
-#kenchiRegisterCancelBtn{background:#eef6ff;color:#0647a5;border:1px solid #bad8f4}
-</style>
-
-
 <style id="kenchi-left-guidance-small-v140">
 /* 左側の補助案内は、既存アプリ同様に控えめなサイズ */
 .manage-card .estimate-block .note,
@@ -996,56 +958,6 @@ select.is-selecting{
   padding:5px 7px!important;
 }
 </style>
-
-
-<style id="kenchi-product-master-modal-font-v140">
-#kenchiProductMasterModal .kenchi-pm-head{font-size:16px!important}
-#kenchiProductMasterModal .kenchi-pm-tools input{font-size:13px!important}
-#kenchiProductMasterModal .kenchi-pm-name{font-size:14px!important;line-height:1.35!important}
-#kenchiProductMasterModal .kenchi-pm-meta{font-size:12px!important;line-height:1.4!important}
-#kenchiProductMasterModal .kenchi-pm-row button{font-size:12px!important;min-width:82px!important}
-#kenchiProductMasterModal .kenchi-pm-foot button{font-size:12px!important}
-</style>
-
-
-<style id="kenchi-product-master-modal-font-v140-larger">
-#kenchiProductMasterModal .kenchi-pm-head{font-size:18px!important}
-#kenchiProductMasterModal .kenchi-pm-tools input{font-size:15px!important}
-#kenchiProductMasterModal .kenchi-pm-name{font-size:16px!important;line-height:1.4!important}
-#kenchiProductMasterModal .kenchi-pm-meta{font-size:14px!important;line-height:1.45!important}
-#kenchiProductMasterModal .kenchi-pm-row button{font-size:14px!important;min-width:96px!important;height:34px!important}
-#kenchiProductMasterModal .kenchi-pm-foot button{font-size:14px!important}
-</style>
-
-
-<style id="kenchi-selected-product-font-larger">
-/* 左側「製品単価マスター」の 選択中／未選択 表示を大きく */
-.manage-card .product-master-block .selected-product,
-#selectedProductMaster{
-  font-size:13px!important;
-  line-height:1.45!important;
-  font-weight:700!important;
-  padding:7px 8px!important;
-}
-</style>
-
-
-<style id="kenchi-selected-product-like-u-gutter">
-.manage-card .product-master-block .selected-product,
-#selectedProductMaster{
-  font-size:12px!important;
-  color:#475569!important;
-  line-height:1.55!important;
-  font-weight:400!important;
-  background:#fff!important;
-  border:1px solid #dbeafe!important;
-  border-radius:10px!important;
-  padding:8px 10px!important;
-  min-height:38px!important;
-}
-</style>
-
-
 <style id="kenchi-product-info-exact-u-gutter-v140">
 /* U型側溝 Ver1.4.0 の「製品情報」配色に合わせる */
 
@@ -1177,40 +1089,35 @@ select.is-selecting{
 <style id="kenchi-section-color-legend-v1">
 .section-color-legend{display:flex;flex-wrap:wrap;gap:5px 9px;margin-top:5px;padding:5px 6px;border:1px solid #e1e7ee;border-radius:8px;background:#fff;font-size:8.5px;color:#526174;line-height:1.2}.section-color-legend span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.section-color-legend i{display:inline-block;width:11px;height:8px;border:1px solid rgba(60,70,80,.22);border-radius:2px}@media print{.section-color-legend{display:none!important}}
 </style>
+<style id="kenchi-template-note-standard-v160">
+.manage-card .template-master-note{font-size:8px!important;line-height:1.35!important;margin-top:5px!important;color:#7b8796!important;font-weight:500!important}
+</style>
 
-<style id="kenchi-management-color-standard-20260815">
-/* ===== 管理画面標準：製品単価=オレンジ／今回使用単価=薄い緑 ===== */
-.manage-card .product-master-block{
-  background:#fffaf3!important;
-  border-color:#ead8bd!important;
+<style id="kenchi-template-rebar-source-v160">
+#rebarInputDetails #rebarVerticalD.template-source,
+#rebarInputDetails #rebarVerticalPitch.template-source,
+#rebarInputDetails #rebarHorizontalD.template-source,
+#rebarInputDetails #rebarHorizontalPitch.template-source{
+ background:#fbf9ff!important;color:var(--text)!important;
+ border-top:1px solid #ded3ef!important;border-right:1px solid #ded3ef!important;
+ border-left:6px solid #8b5cc7!important;border-bottom:2px solid #8b5cc7!important;
 }
-.manage-card .product-master-block .sectionTitle{
-  color:#6f4b22!important;
-}
-.manage-card .product-master-block .sectionTitle::before{
-  background:#d59a52!important;
-}
-.manage-card .product-master-block .selected-product{
-  background:#fff!important;
-  border-color:#ead8bd!important;
-}
-.manage-card .price-block{
-  background:#f7fff9!important;
-  border-color:#c5ead0!important;
-}
-.manage-card .price-block .sectionTitle{
-  color:#087d10!important;
-}
-.manage-card .price-block .sectionTitle::before{
-  background:#12a150!important;
+#rebarInputDetails #rebarVerticalD.template-source-edited,
+#rebarInputDetails #rebarVerticalPitch.template-source-edited,
+#rebarInputDetails #rebarHorizontalD.template-source-edited,
+#rebarInputDetails #rebarHorizontalPitch.template-source-edited{
+ background:#fffdf4!important;color:var(--text)!important;
+ border-top:1px solid #eadcae!important;border-right:1px solid #eadcae!important;
+ border-left:6px solid #e3b341!important;border-bottom:2px solid #e3b341!important;
 }
 </style>
+
 </head>
 <body>
 <header>
   <div class="wrap">
     <div>
-      <h1>間知ブロック積工 積算アプリ Ver.1.4.0</h1>
+      <h1>間知ブロック積工 積算アプリ Ver.1.6.0</h1>
       <div class="sub">間知ブロック積数量式確定反映版 ／ L型擁壁UI準拠</div>
     </div>
     <div class="sub">
@@ -1223,6 +1130,12 @@ select.is-selecting{
 </header>
 
 <main>
+<div id="estimateTemplateContentEditBanner" class="template-content-edit-banner">
+  <div><b>積算テンプレート内容を編集中</b><br><span id="estimateTemplateContentEditName"></span></div>
+  <button id="saveTemplateContentOverwriteBtn" type="button">テンプレートへ上書き保存</button>
+</div>
+<div id="pastEstimateCopyBanner" class="past-estimate-copy-banner"></div>
+<div id="estimateMasterDuplicateBanner" class="em-duplicate-edit-banner">積算テンプレートの複製を編集中です。内容を修正後、「現積算テンプレート登録」で新しいテンプレートとして保存してください。</div>
   <div class="grid">
     <div class="left-stack">
 <!-- 左：断面 -->
@@ -1370,18 +1283,23 @@ select.is-selecting{
               <button class="danger" id="deleteEstimateBtn" type="button">削除</button>
             </div>
             <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+            <div class="other-project-copy-actions"><button id="openOtherProjectCopyBtn" type="button">過去積算を呼出</button></div>
           </div>
-          <div class="control-block product-master-block">
-            <div class="sectionTitle">製品単価マスター</div>
-            <div id="selectedProductMaster" class="selected-product">製品は選択されていません。</div>
-            <div class="save-btns product-master-actions" style="grid-template-columns:repeat(3,1fr)">
-              <button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
-              <button class="ghost" id="registerCurrentProductBtn" type="button">現在値を登録</button>
-              <button class="danger" id="clearProductMasterBtn" type="button">選択解除</button>
+          <div class="control-block estimate-master-block">
+            <div class="sectionTitle">積算テンプレート</div>
+            <div class="note template-master-note">製品情報・寸法・単価・施工条件をまとめて登録し、呼出時に「すべて」または「製品のみ」を選べます。</div>
+            <div class="estimate-master-actions">
+              <button class="primary" id="registerEstimateMasterBtn" type="button">現積算テンプレート登録</button>
+              <button class="ghost" id="openEstimateMasterBtn" type="button">テンプレート呼出</button>
             </div>
-            <input id="ProductMasterId" type="hidden"/>
-            <input id="ProductMasterUpdatedAt" type="hidden"/>
-            <div class="note">間知ブロックのメーカー・製品名・規格・寸法・使用個数・製品単価を登録・呼出します。</div>
+            <div id="selectedEstimateTemplateBox" class="selected-template-box" data-mode="none">
+              <div class="selected-template-head">
+                <span class="selected-template-dot"></span>
+                <span>選択中の積算テンプレート</span>
+                <span id="selectedEstimateTemplateMode" class="selected-template-mode"></span>
+              </div>
+              <div id="selectedEstimateTemplateContent" class="selected-template-content selected-template-empty">積算テンプレートは選択されていません。</div>
+            </div>
           </div>
           <div class="control-block price-block">
             <div class="sectionTitle">今回の積算で使用する単価</div>
@@ -2286,8 +2204,7 @@ select.is-selecting{
     $("L").value="10.00"; $("profitRate").value="20.0"; $("e").value="0.30"; $("n").value="0.50";
     $("rebarVerticalD").value="D13"; $("rebarVerticalPitch").value="500";
     $("rebarHorizontalD").value="D13"; $("rebarHorizontalPitch").value="150";
-    if($("blockManufacturer")) $("blockManufacturer").value=""; $("blockProductName").value=""; $("blockProductSpec").value=""; if($("ProductMasterId")) $("ProductMasterId").value=""; if($("ProductMasterUpdatedAt")) $("ProductMasterUpdatedAt").value=""; if($("selectedProductMaster")) $("selectedProductMaster").textContent="製品は選択されていません。";
-    ["blockUnitPrice","PblockWork","PbodyConcrete","Pback","Ptop","Prebar","Pexc","PearthBack","Pspoil","Pbed","Pstone","Pbase","PbaseForm"].forEach(id=>{ if($(id)) $(id).value="0"; });
+    if($("blockManufacturer")) $("blockManufacturer").value=""; $("blockProductName").value=""; $("blockProductSpec").value=""; ["blockUnitPrice","PblockWork","PbodyConcrete","Pback","Ptop","Prebar","Pexc","PearthBack","Pspoil","Pbed","Pstone","Pbase","PbaseForm"].forEach(id=>{ if($(id)) $(id).value="0"; });
     Object.entries({blockUnitPrice:"1,100",PblockWork:"12,500",PbodyConcrete:"32,000",Pback:"8,500",Ptop:"33,500",Prebar:"200",Pexc:"1,500",PearthBack:"2,000",Pspoil:"9,500",Pbed:"400",Pstone:"8,500",Pbase:"33,500",PbaseForm:"5,500"}).forEach(([id,v])=>{if($(id)) $(id).value=v;});
     $("blockFaceW").value="400"; $("blockFaceH").value="250"; $("blockDepth").value="350"; $("blockUsePerM2").value="10.00"; $("blockUnitPrice").value="1,100"; $("bodyConcretePerM2").value="0.200"; blockUseManuallyEdited=false;
     const defaultDims={W1:"0.40",W2:"0.80",W3:"0.60",W4:"0.15",W5:"0.60",W6:"0.80",H2:"0.60",H3:"0.45",H4:"0.15",H5:"0.20",H6:"0.20",H7:"0.05"};
@@ -2478,7 +2395,11 @@ select.is-selecting{
   // マウス等で折りたたみ内へフォーカスした場合は、その欄を開いたままにする
   [productDetails,rebarDetails,priceDetails].forEach(d=>{
     if(!d) return;
-    d.addEventListener("focusin",()=>{ d.open=true; });
+    d.addEventListener("focusin",(ev)=>{
+      const t=ev.target;
+      if(!t || t.tagName==="SUMMARY") return;
+      if(t.matches && t.matches("input,select,textarea,button")) d.open=true;
+    });
   });
 
   function focusFirstH1(){
@@ -2747,7 +2668,8 @@ select[data-keyboard-mode='true']{
 
 
 \n\n
-</body></html>`;
+
+`;
 
     const frame=document.createElement('iframe');
     frame.style.position='fixed';
@@ -2904,7 +2826,7 @@ select[data-keyboard-mode='true']{
       const item={id:existingId||undefined,name,values,csvRows,priceMasterId:($("priceMaster")?.value||"manual"),priceMasterName:($("priceMaster")?.selectedOptions?.[0]?.textContent||"手入力単価"),priceSnapshot,amount,totalAmount:amount,data:{values,csvRows,priceSnapshot,priceMasterId:($("priceMaster")?.value||"manual"),priceMasterName:($("priceMaster")?.selectedOptions?.[0]?.textContent||"手入力単価"),amount,totalAmount:amount}};
       const saved=(MS.Estimate&&MS.Estimate.save)?await MS.Estimate.save(APP_TYPE,item):await MS.saveEstimate(APP_TYPE,name,item);
       await refreshList(saved.id);
-      if(window.MS&&MS.toast) MS.toast("積算データを保存しました"); else alert("保存しました");
+      alert("積算データを保存しました"); if(typeof window.MSClearPastEstimateCopyEditing==="function")window.MSClearPastEstimateCopyEditing();
     }catch(e){ console.error(e); alert(e.message||"保存できませんでした"); }
   }
   async function loadItem(item){
@@ -2953,237 +2875,6 @@ select[data-keyboard-mode='true']{
   });
 })();
 </script>
-
-<div id="kenchiProductMasterModal" aria-hidden="true">
-  <div class="kenchi-pm-box">
-    <div class="kenchi-pm-head">製品単価マスター ― 間知ブロック製品を選択</div>
-    <div class="kenchi-pm-tools"><input id="kenchiPmKeyword" type="text" placeholder="メーカー・製品名・規格で検索"/></div>
-    <div class="kenchi-pm-list" id="kenchiPmList"></div>
-    <div class="kenchi-pm-foot"><button type="button" id="kenchiPmCloseBtn">閉じる</button></div>
-  </div>
-</div>
-
-
-<script id="kenchi-product-master-adapter-v140-standard">
-(function(){
-  "use strict";
-  const $m=id=>document.getElementById(id);
-  let selectedMasterId="";
-
-  function val(id){ return ($m(id)?.value||"").trim(); }
-  function numv(id){ const n=Number(String($m(id)?.value||"").replace(/,/g,"")); return Number.isFinite(n)?n:0; }
-  function comma(n){ return Math.round(Number(n)||0).toLocaleString("ja-JP"); }
-
-  function setStatus(text){
-    const el=$m("selectedProductMaster");
-    if(el) el.textContent=text;
-  }
-
-  function currentMasterData(){
-    return {
-      id:selectedMasterId || undefined,
-      category:"kenchi_block",
-      manufacturer:val("blockManufacturer"),
-      productName:val("blockProductName"),
-      specification:val("blockProductSpec"),
-      productPrice:numv("blockUnitPrice"),
-      productUnit:"個",
-      blockFaceWidth:numv("blockFaceW"),
-      blockFaceHeight:numv("blockFaceH"),
-      blockDepth:numv("blockDepth"),
-      blockUsePerM2:numv("blockUsePerM2")
-    };
-  }
-
-  async function saveMasterConfirmed(){
-    try{
-      if(!window.MS || !MS.ProductMaster) throw new Error("製品単価マスターを利用できません。");
-      const data=currentMasterData();
-      if(!data.productName){ alert("製品名を入力してください。"); $m("blockProductName")?.focus(); return; }
-      const result=await MS.ProductMaster.saveFromApp(data,{overwrite:!!selectedMasterId});
-      if(!result.saved && result.duplicate){
-        if(confirm("同じ製品が登録されています。上書きしますか？")){
-          data.id=result.duplicate.id;
-          const row=await MS.ProductMaster.save(data);
-          selectedMasterId=row.id;
-          if($m("ProductMasterId")) $m("ProductMasterId").value=row.id||"";
-          if($m("ProductMasterUpdatedAt")) $m("ProductMasterUpdatedAt").value=row.updatedAt||"";
-          setStatus("選択中："+[row.manufacturer,row.productName,row.specification].filter(Boolean).join(" ／ "));
-        }
-        return;
-      }
-      const row=result.row;
-      selectedMasterId=row.id;
-      if($m("ProductMasterId")) $m("ProductMasterId").value=row.id||"";
-      if($m("ProductMasterUpdatedAt")) $m("ProductMasterUpdatedAt").value=row.updatedAt||"";
-      setStatus("選択中："+[row.manufacturer,row.productName,row.specification].filter(Boolean).join(" ／ "));
-      if(window.MS && MS.toast) MS.toast("製品単価マスターへ保存しました");
-    }catch(e){ alert(e.message||"製品単価マスターへ保存できませんでした。"); }
-  }
-
-  function applyMaster(row){
-    if(!row) return;
-    selectedMasterId=row.id||"";
-    if($m("ProductMasterId")) $m("ProductMasterId").value=row.id||"";
-    if($m("ProductMasterUpdatedAt")) $m("ProductMasterUpdatedAt").value=row.updatedAt||"";
-    if($m("blockManufacturer")) $m("blockManufacturer").value=row.manufacturer||"";
-    if($m("blockProductName")) $m("blockProductName").value=row.productName||"";
-    if($m("blockProductSpec")) $m("blockProductSpec").value=row.specification||"";
-    if($m("blockFaceW") && row.blockFaceWidth) $m("blockFaceW").value=row.blockFaceWidth;
-    if($m("blockFaceH") && row.blockFaceHeight) $m("blockFaceH").value=row.blockFaceHeight;
-    if($m("blockDepth") && row.blockDepth) $m("blockDepth").value=row.blockDepth;
-    if($m("blockUsePerM2") && row.blockUsePerM2) $m("blockUsePerM2").value=Number(row.blockUsePerM2).toFixed(2);
-    if($m("blockUnitPrice")) $m("blockUnitPrice").value=comma(row.productPrice||0);
-    setStatus("選択中："+[row.manufacturer,row.productName,row.specification].filter(Boolean).join(" ／ "));
-    if(typeof window.applyInputFormats==="function") window.applyInputFormats();
-    if(typeof window.updateCalculations==="function") window.updateCalculations();
-  }
-
-
-  function openRegisterModal(){
-    const modal=$m("kenchiRegisterProductModal"); if(!modal) return;
-    if($m("registerBlockManufacturer")) $m("registerBlockManufacturer").value=val("blockManufacturer");
-    if($m("registerBlockProductName")) $m("registerBlockProductName").value=val("blockProductName");
-    if($m("registerBlockProductSpec")) $m("registerBlockProductSpec").value=val("blockProductSpec");
-    modal.classList.add("show"); modal.setAttribute("aria-hidden","false");
-    setTimeout(()=>{$m("registerBlockManufacturer")?.focus();},0);
-  }
-  function closeRegisterModal(){
-    const modal=$m("kenchiRegisterProductModal"); if(!modal) return;
-    modal.classList.remove("show"); modal.setAttribute("aria-hidden","true");
-  }
-  async function confirmRegister(){
-    const manufacturer=($m("registerBlockManufacturer")?.value||"").trim();
-    const productName=($m("registerBlockProductName")?.value||"").trim();
-    const spec=($m("registerBlockProductSpec")?.value||"").trim();
-    if(!productName){
-      alert("製品名を入力してください。");
-      $m("registerBlockProductName")?.focus();
-      return;
-    }
-    if($m("blockManufacturer")) $m("blockManufacturer").value=manufacturer;
-    if($m("blockProductName")) $m("blockProductName").value=productName;
-    if($m("blockProductSpec")) $m("blockProductSpec").value=spec;
-    closeRegisterModal();
-    await saveMasterConfirmed();
-  }
-
-  async function renderMasterList(){
-    const listEl=$m("kenchiPmList"); if(!listEl) return;
-    try{
-      await MS.init();
-      const keyword=val("kenchiPmKeyword").toLowerCase();
-      const allRows=await MS.ProductMaster.list({includeDisabled:true});
-      const categoryAliases=new Set(["kenchi_block","間知ブロック","間知ブロック積み","間知ブロック積工"]);
-      const rows=(allRows||[]).filter(row=>{
-        if(row.enabled===false) return false;
-        if(!categoryAliases.has(String(row.category||"").trim())) return false;
-        if(!keyword) return true;
-        const hay=[row.manufacturer,row.productName,row.specification,row.modelCode,row.note]
-          .map(v=>String(v||"")).join(" ").toLowerCase();
-        return hay.includes(keyword);
-      });
-      listEl.innerHTML="";
-      if(!rows.length){
-        listEl.innerHTML='<div class="kenchi-pm-meta">登録された間知ブロック製品はありません。</div>';
-        return;
-      }
-      rows.forEach(row=>{
-        const div=document.createElement("div");
-        div.className="kenchi-pm-row";
-        const info=document.createElement("div");
-        const nm=document.createElement("div"); nm.className="kenchi-pm-name";
-        nm.textContent=[row.manufacturer,row.productName,row.specification].filter(Boolean).join(" ／ ");
-        const meta=document.createElement("div"); meta.className="kenchi-pm-meta";
-        const depth=row.blockDepth?("控え "+row.blockDepth+"mm"):"";
-        const use=row.blockUsePerM2?("使用 "+Number(row.blockUsePerM2).toFixed(2)+"個/m²"):"";
-        meta.textContent=[depth,use,"単価 "+comma(row.productPrice||0)+"円/個"].filter(Boolean).join("　");
-        info.append(nm,meta);
-        const btn=document.createElement("button"); btn.type="button"; btn.textContent="製品を選択";
-        btn.addEventListener("click",()=>{ applyMaster(row); closeModal(); });
-        div.append(info,btn); listEl.appendChild(div);
-      });
-    }catch(e){ listEl.textContent=e.message||"製品一覧を読み込めませんでした。"; }
-  }
-
-  function openModal(){
-    const modal=$m("kenchiProductMasterModal"); if(!modal) return;
-    modal.classList.add("show"); modal.setAttribute("aria-hidden","false");
-    if($m("kenchiPmKeyword")) $m("kenchiPmKeyword").value="";
-    renderMasterList();
-  }
-  function closeModal(){
-    const modal=$m("kenchiProductMasterModal"); if(!modal) return;
-    modal.classList.remove("show"); modal.setAttribute("aria-hidden","true");
-  }
-  function clearMaster(){
-    selectedMasterId="";
-    if($m("ProductMasterId")) $m("ProductMasterId").value="";
-    if($m("ProductMasterUpdatedAt")) $m("ProductMasterUpdatedAt").value="";
-    if($m("blockManufacturer")) $m("blockManufacturer").value="";
-    if($m("blockProductName")) $m("blockProductName").value="";
-    if($m("blockProductSpec")) $m("blockProductSpec").value="";
-    setStatus("製品は選択されていません。");
-  }
-
-  window.addEventListener("load",()=>{
-    $m("registerCurrentProductBtn")?.addEventListener("click",openRegisterModal);
-    $m("openProductMasterBtn")?.addEventListener("click",openModal);
-    $m("clearProductMasterBtn")?.addEventListener("click",clearMaster);
-    $m("kenchiPmCloseBtn")?.addEventListener("click",closeModal);
-    $m("kenchiPmKeyword")?.addEventListener("input",renderMasterList);
-    $m("kenchiRegisterConfirmBtn")?.addEventListener("click",confirmRegister);
-    $m("kenchiRegisterCancelBtn")?.addEventListener("click",closeRegisterModal);
-    $m("kenchiRegisterProductModal")?.addEventListener("click",e=>{ if(e.target===$m("kenchiRegisterProductModal")) closeRegisterModal(); });
-    $m("kenchiProductMasterModal")?.addEventListener("click",e=>{ if(e.target===$m("kenchiProductMasterModal")) closeModal(); });
-  });
-})();
-</script>
-
-
-<div id="kenchiRegisterProductModal" aria-hidden="true">
-  <div class="kenchi-register-box">
-    <div class="kenchi-register-head">現在値を製品単価マスターへ登録</div>
-    <div class="kenchi-register-body">
-      <label>メーカー名</label>
-      <input id="registerBlockManufacturer" type="text" placeholder="メーカー名"/>
-      <label>製品名</label>
-      <input id="registerBlockProductName" type="text" placeholder="間知ブロック"/>
-      <label>規格</label>
-      <input id="registerBlockProductSpec" type="text" placeholder="例：35型"/>
-      <div class="kenchi-register-actions">
-        <button type="button" id="kenchiRegisterConfirmBtn">登録</button>
-        <button type="button" id="kenchiRegisterCancelBtn">キャンセル</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<script id="kenchi-product-details-oneclick-v140">
-(function(){
-  window.addEventListener("load",()=>{
-    const details=document.getElementById("blockProductDetails");
-    const summary=details && details.querySelector("summary");
-    if(!details || !summary) return;
-    summary.addEventListener("click",(e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      details.open=!details.open;
-      if(details.open){
-        const first=details.querySelector("input:not([type='hidden']):not([readonly]), select");
-        if(first){
-          setTimeout(()=>{
-            try{ first.focus(); if(typeof first.select==="function") first.select(); }catch(_){}
-          },0);
-        }
-      }
-    },true);
-  });
-})();
-</script>
-
-
 <style id="kenchi-hidden-initial-defaults-style">
 #kenchiInitialDefaultsModal{
   display:none;position:fixed;inset:0;z-index:12000;background:rgba(8,24,48,.48);
@@ -3239,7 +2930,9 @@ select[data-keyboard-mode='true']{
     "useW1","useW2","useW3","useW4","useW5","useW6",
     "useH2","useH3","useH4","useH5","useH6","useH7",
     "rebarVerticalD","rebarVerticalPitch","rebarHorizontalD","rebarHorizontalPitch",
-    "L","blockFaceW","blockFaceH","blockDepth","blockUsePerM2","bodyConcretePerM2"
+    "L","blockFaceW","blockFaceH","blockDepth","blockUsePerM2","bodyConcretePerM2",
+    "blockUnitPrice","PblockWork","PbodyConcrete","Pback","Ptop","Prebar",
+    "Pexc","PearthBack","Pspoil","Pbed","Pstone","Pbase","PbaseForm"
   ];
   const $=id=>document.getElementById(id);
 
@@ -3451,6 +3144,206 @@ select[data-keyboard-mode='true']{
     obs.observe(document.body,{childList:true,subtree:true});
   });
 })();
+</script>
+
+
+<div id="estimateMasterRegisterModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog em-dialog-small">
+    <div class="em-head"><div><h3>積算テンプレートに登録</h3><div class="em-head-sub">現在の間知ブロック積工の入力内容を保存します。</div></div><button id="closeEstimateMasterRegisterBtn" type="button">閉じる</button></div>
+    <div class="em-body">
+      <div class="em-form">
+        <label>工種</label><input type="text" value="間知ブロック積み" readonly>
+        <label>マスター名</label><input id="estimateMasterName" type="text" placeholder="積算名称を入力">
+        <label>検索メモ</label><textarea id="estimateMasterMemo" placeholder="任意"></textarea>
+      </div>
+      <div id="estimateMasterRegisterSummary" class="em-summary"></div>
+      <div class="em-buttons"><button id="cancelEstimateMasterBtn" class="ghost" type="button">キャンセル</button><button id="saveEstimateMasterBtn" class="primary" type="button">登録</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="estimateMasterListModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog">
+    <div class="em-head"><div><h3>間知ブロック積み　積算テンプレート</h3><div class="em-head-sub">「すべて」または「製品のみ」を選んで呼び出します。</div></div><button id="closeEstimateMasterListBtn" type="button">閉じる</button></div>
+    <div class="em-search"><input id="estimateMasterSearch" type="search" placeholder="マスター名・検索メモから検索"><button id="clearEstimateMasterSearchBtn" type="button">クリア</button></div>
+    <div id="estimateMasterList" class="em-list"></div>
+  </div>
+</div>
+
+<div id="otherProjectCopyModal" class="opc-modal" aria-hidden="true">
+  <div class="opc-dialog">
+    <div class="opc-head"><div><h3>過去積算を呼出</h3><div style="font-size:12px;margin-top:3px;opacity:.92">過去の間知ブロック積算を、積算名称または工事名から検索して呼び出します。</div></div><button id="closeOtherProjectCopyBtn" class="opc-close" type="button">閉じる</button></div>
+    <div class="opc-tools"><input id="otherProjectCopySearch" type="search" placeholder="積算名称・工事名から検索"></div>
+    <div id="otherProjectCopyList" class="opc-list"></div>
+  </div>
+</div>
+
+<style id="kenchi-template-v160-style">
+.estimate-master-block{border-color:#d8c9f2!important;background:#fdfbff!important}
+.estimate-master-block .sectionTitle{color:#5a35a3!important}.estimate-master-block .sectionTitle:before{background:#8b5cc7!important}
+.estimate-master-actions{display:grid;grid-template-columns:1.25fr 1fr;gap:7px;margin-top:8px}
+.estimate-master-actions button{min-width:0!important;width:100%!important;padding:8px 5px!important;font-size:11px!important;white-space:nowrap}
+.estimate-master-actions .primary{background:#7c4cc4!important;color:#fff!important}.estimate-master-actions .ghost{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}
+.selected-template-box{margin-top:8px;border:1px solid #d8c9f2;border-radius:10px;background:#fff;overflow:hidden}
+.selected-template-head{display:flex;align-items:center;gap:6px;padding:7px 9px;background:#f3edff;border-bottom:1px solid #e2d7f5;color:#5a35a3;font-size:10.5px;font-weight:900}
+.selected-template-dot{width:7px;height:7px;border-radius:50%;background:#8b5cc7}.selected-template-mode{margin-left:auto;padding:1px 7px;border:1px solid #d8c9f2;border-radius:999px;background:#fff;font-size:9.5px}
+.selected-template-content{padding:8px 9px;color:#4d3a67;font-size:10.5px;line-height:1.55}.selected-template-empty{color:#8a7a9d}.selected-template-name{font-size:12px;font-weight:950;color:#5a35a3;margin-bottom:5px}.selected-template-row{border-bottom:1px dotted #eadff8;padding:2px 0}.selected-template-row:last-child{border-bottom:none}
+.em-modal{display:none;position:fixed;inset:0;background:rgba(31,18,55,.46);z-index:12000;align-items:center;justify-content:center;padding:18px}.em-modal.show{display:flex}
+.em-dialog{width:min(860px,100%);max-height:88vh;background:#fff;border:1px solid #d8c9f2;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}.em-dialog-small{width:min(640px,100%)}
+.em-head{padding:15px 18px;background:linear-gradient(135deg,#6f48b5,#563493);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px}.em-head h3{margin:0;font-size:20px}.em-head-sub{font-size:11px;opacity:.9;margin-top:3px}.em-head button{width:auto!important;min-width:70px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.45)}
+.em-body{padding:14px 18px;overflow:auto}.em-form{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}.em-form label{margin:0;font-weight:800}.em-form textarea{height:76px}.em-summary{margin-top:12px;border:1px solid #e2d7f5;border-radius:10px;background:#fdfcff;padding:10px;font-size:12px;line-height:1.6;color:#4d3a67}
+.em-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.em-buttons button{width:auto;min-width:90px}.em-search{padding:11px 18px;border-bottom:1px solid #eadff8;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fbf9ff}.em-search input{height:36px}.em-search button{width:auto;min-width:72px;background:#f3edff;color:#5a35a3;border:1px solid #d8c9f2}
+.em-list{padding:12px 18px;overflow:auto;display:grid;gap:8px}.em-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #dfe5ee;border-radius:12px;padding:10px;background:#fff}.em-item:hover{background:#f8fbff;border-color:#b9c7d9}
+.em-item-name{font-weight:950;color:#334155}.em-item-meta,.em-item-memo,.em-date{font-size:11px;color:#60758d;line-height:1.5;margin-top:2px}.em-item-detail{font-size:11.5px;color:#52637a;line-height:1.65;margin-top:5px;padding:6px 8px;background:#f8fafc;border-radius:8px;border:1px solid #edf1f6}
+.em-item-actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;width:300px}.em-item-actions button{min-width:0!important;width:100%!important;height:29px!important;padding:0 3px!important;font-size:10px!important;border-radius:7px!important;white-space:nowrap}
+.em-load-all{grid-column:span 3;background:#6d3fb3!important;color:#fff!important}.em-load-product{grid-column:span 3;background:#f3edff!important;color:#5a35a3!important;border:1px solid #cdbcf2!important}.em-copy,.em-delete{grid-column:span 3}.em-copy{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}.em-delete{background:#fff1f2!important;color:#b42318!important;border:1px solid #f1c9cd!important}.em-empty{padding:18px;text-align:center;color:#6f6280;border:1px dashed #d8c9f2;border-radius:12px}
+.template-content-edit-banner,.em-duplicate-edit-banner{display:none;max-width:1500px;margin:0 auto 12px;border-radius:12px;padding:10px 14px}.template-content-edit-banner.show{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f3edff;border:1px solid #cdbcf2;color:#4d3568}.template-content-edit-banner button{width:auto!important;min-width:180px!important;background:#6d3fb3!important;color:#fff!important}.em-duplicate-edit-banner.show{display:block;background:#fff8e7;border:1px solid #e8cc75;color:#765d13;font-size:12px;font-weight:800}
+.other-project-copy-actions{margin-top:8px}.other-project-copy-actions button{width:100%!important;height:34px!important;border:1px solid #cfe3f7!important;background:#eef6ff!important;color:#0647a5!important;border-radius:9px!important;font-size:12px!important;font-weight:900!important}
+.opc-modal{display:none;position:fixed;inset:0;z-index:12030;background:rgba(8,24,48,.48);align-items:center;justify-content:center;padding:18px}.opc-modal.show{display:flex}.opc-dialog{width:min(900px,100%);max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}
+.opc-head{padding:15px 17px;background:linear-gradient(135deg,#0647a5,#1673d1);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.opc-head h3{margin:0;font-size:19px}.opc-close{width:auto!important;min-width:72px!important;background:#fff!important;color:#0647a5!important}.opc-tools{padding:10px 14px;border-bottom:1px solid #dbeafe}.opc-tools input{width:100%;height:36px;border:1px solid #cfe3f7;border-radius:9px;padding:7px 10px}.opc-list{padding:12px 14px;overflow:auto;display:grid;gap:7px}.opc-empty{padding:16px;text-align:center;color:#64748b;border:1px dashed #cfe3f7;border-radius:10px}
+.opc-flat-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;padding:0 10px 4px;color:#60758d;font-size:10.5px;font-weight:900}.opc-flat-head span:nth-child(3){text-align:right}.opc-estimate-flat{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid #d7e7f7;border-radius:10px;background:#fff}.opc-estimate-flat:hover{background:#f8fbff;border-color:#9fc7ed}.opc-flat-name{font-size:13px;font-weight:950;color:#122033;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-project{font-size:12px;color:#52637a;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-date{font-size:10.5px;color:#7b8da3;white-space:nowrap;text-align:right}.opc-flat-copy{width:auto!important;min-width:76px!important;background:#0647a5!important;color:#fff!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner{position:relative!important;display:none;max-width:1500px!important;margin:0 auto 12px!important;padding:25px 16px 12px 50px!important;border:1px solid #f0c36a!important;border-left:7px solid #f59e0b!important;border-radius:12px!important;background:linear-gradient(90deg,#fff7df 0%,#fffaf0 100%)!important;color:#7a4a05!important;font-size:12.5px!important;font-weight:800!important;line-height:1.6!important;box-shadow:0 5px 14px rgba(180,110,0,.12)!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner.show{display:block!important}#pastEstimateCopyBanner.past-estimate-copy-banner::before{content:"📋"!important;position:absolute!important;left:15px!important;top:50%!important;transform:translateY(-50%)!important;font-size:22px!important}#pastEstimateCopyBanner.past-estimate-copy-banner::after{content:"過去積算からコピー中"!important;display:block!important;position:absolute!important;left:49px!important;top:8px!important;color:#b45f06!important;font-size:10.5px!important;font-weight:950!important;letter-spacing:.04em!important}
+/* テンプレートから参照した製品欄 */
+#blockFaceW.template-source,#blockFaceH.template-source,#blockDepth.template-source,#blockUsePerM2.template-source,#blockUnitPrice.template-source,#bodyConcretePerM2.template-source,#H1.template-source,#useH2.template-source,#useH3.template-source,#useH4.template-source,#useH5.template-source,#useH6.template-source,#useH7.template-source,#useW1.template-source,#useW2.template-source,#useW3.template-source,#useW4.template-source,#useW5.template-source,#useW6.template-source,#slope.template-source,#soil.template-source,#cutfill.template-source{background:#fbf9ff!important;border-left:6px solid #8b5cc7!important;border-bottom:2px solid #8b5cc7!important}
+#blockFaceW.template-source-edited,#blockFaceH.template-source-edited,#blockDepth.template-source-edited,#blockUsePerM2.template-source-edited,#blockUnitPrice.template-source-edited,#bodyConcretePerM2.template-source-edited,#H1.template-source-edited,#useH2.template-source-edited,#useH3.template-source-edited,#useH4.template-source-edited,#useH5.template-source-edited,#useH6.template-source-edited,#useH7.template-source-edited,#useW1.template-source-edited,#useW2.template-source-edited,#useW3.template-source-edited,#useW4.template-source-edited,#useW5.template-source-edited,#useW6.template-source-edited,#slope.template-source-edited,#soil.template-source-edited,#cutfill.template-source-edited{background:#fffdf4!important;border-left:6px solid #e3b341!important;border-bottom:2px solid #e3b341!important}
+@media(max-width:700px){.em-form{grid-template-columns:1fr}.em-item{grid-template-columns:1fr}.em-item-actions{width:100%}.opc-flat-head{display:none}.opc-estimate-flat{grid-template-columns:1fr auto}.opc-flat-project,.opc-flat-date{grid-column:1/-1}.opc-flat-date{text-align:left}.opc-flat-copy{grid-column:2;grid-row:1}}
+</style>
+
+<script id="kenchi-template-v160-script">
+(function(window,document){
+"use strict";
+const APP_TYPE="kenchi_block",APP_LABEL="間知ブロック積み";
+const PRODUCT_IDS=new Set(["blockFaceW","blockFaceH","blockDepth","blockUsePerM2","blockUnitPrice","bodyConcretePerM2"]);
+const DIM_SOURCE_IDS=new Set(["H1","useH2","useH3","useH4","useH5","useH6","useH7","useW1","useW2","useW3","useW4","useW5","useW6"]);
+const CONDITION_SOURCE_IDS=new Set(["slope","soil","cutfill"]);
+const REBAR_SOURCE_IDS=new Set(["rebarVerticalD","rebarVerticalPitch","rebarHorizontalD","rebarHorizontalPitch"]);
+const SOURCE_IDS=[...PRODUCT_IDS,...DIM_SOURCE_IDS,...CONDITION_SOURCE_IDS,...REBAR_SOURCE_IDS];
+const EXCLUDE=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","priceMaster","blockAutoPerM2","e"]);
+const SOURCE_KEY="MS_KENCHI_TEMPLATE_PRODUCT_SOURCE_V160";
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const val=id=>String($(id)?.value||"").trim();
+const num=v=>{const n=Number(String(v==null?"":v).replace(/,/g,""));return Number.isFinite(n)?n:0};
+const dim=v=>num(v).toFixed(2),money=v=>Math.round(num(v)).toLocaleString("ja-JP");
+async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テンプレート共通機能を読み込めません。ms_common.jsをVer.1.6.0対応版にしてください。");await MS.init();}
+function collect(){const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(e=>{if(!e.id||EXCLUDE.has(e.id)||e.closest(".em-modal")||e.closest(".opc-modal"))return;if(["button","submit","file"].includes(e.type))return;o[e.id]=(e.type==="checkbox"||e.type==="radio")?!!e.checked:e.value;});return o;}
+function applyValue(id,v){const e=$(id);if(!e)return;if(e.type==="checkbox"||e.type==="radio")e.checked=!!v;else e.value=v;try{e.dispatchEvent(new Event("input",{bubbles:true}));e.dispatchEvent(new Event("change",{bubbles:true}));}catch(x){}}
+function priceName(){const e=$("priceMaster");if(e&&e.selectedIndex>=0)return String(e.options[e.selectedIndex]?.textContent||"").trim()||"手入力単価";return"手入力単価";}
+function meta(){return {H1:val("H1"),H2:val("useH2"),H3:val("useH3"),H4:val("useH4"),H5:val("useH5"),H6:val("useH6"),H7:val("useH7"),W1:val("useW1"),W2:val("useW2"),W3:val("useW3"),W4:val("useW4"),W5:val("useW5"),W6:val("useW6"),slope:val("slope"),soil:val("soil"),cutfill:val("cutfill"),L:val("L"),priceName:priceName()};}
+function slopeText(v){return v==="0.3"?"1：0.3":v==="0.5"?"1：0.5":"1：0.4";}
+function soilText(v){return v==="1"?"第一種":v==="3"?"第三種":"第二種";}
+function cutfillText(v){return v==="cut"?"切土":"盛土";}
+function clearSource(){SOURCE_IDS.forEach(id=>{const e=$(id);if(e){e.classList.remove("template-source","template-source-edited");delete e.dataset.templateSourceValue;}});try{sessionStorage.removeItem(SOURCE_KEY);}catch(e){}}
+function setSource(values,mode="all"){clearSource();const ids=mode==="product"?PRODUCT_IDS:new Set(SOURCE_IDS);const sv={};SOURCE_IDS.forEach(id=>{if(!ids.has(id))return;const e=$(id);if(!e||!Object.prototype.hasOwnProperty.call(values||{},id))return;const v=values[id];e.dataset.templateSourceValue=String(v??"");e.classList.remove("template-source-edited");e.classList.add("template-source");sv[id]=String(v??"");});try{sessionStorage.setItem(SOURCE_KEY,JSON.stringify(sv));}catch(e){}}
+window.MSKenchiClearTemplateProductSource=clearSource;
+document.addEventListener("input",ev=>{const e=ev.target;if(!e||!SOURCE_IDS.includes(e.id))return;const base=e.dataset.templateSourceValue;if(base===undefined)return;const edited=String(e.value)!==String(base);e.classList.toggle("template-source",!edited);e.classList.toggle("template-source-edited",edited);},true);
+function clearSelected(){clearSource();const c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(m)m.textContent="";if(c){c.className="selected-template-content selected-template-empty";c.textContent="積算テンプレートは選択されていません。";}}
+function renderSelected(item,mode){const v=item.values||{},c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(!c)return;if(m)m.textContent=mode==="product"?"製品のみ":mode==="edit"?"編集中":"すべて";c.className="selected-template-content";let html='<div class="selected-template-name">'+esc(item.name||"名称未設定")+'</div><div class="selected-template-row"><b>製品</b> '+num(v.blockFaceW)+'×'+num(v.blockFaceH)+'　控え '+num(v.blockDepth)+'mm　使用 '+dim(v.blockUsePerM2)+'個/m²　単価 '+money(v.blockUnitPrice)+'円/個</div>';if(mode!=="product"){html+='<div class="selected-template-row"><b>寸法</b> W1 '+dim(v.useW1)+' / W2 '+dim(v.useW2)+' / W3 '+dim(v.useW3)+' / W4 '+dim(v.useW4)+' / W5 '+dim(v.useW5)+' / W6 '+dim(v.useW6)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.useH2)+' / H3 '+dim(v.useH3)+' / H4 '+dim(v.useH4)+' / H5 '+dim(v.useH5)+' / H6 '+dim(v.useH6)+' / H7 '+dim(v.useH7)+' m</div><div class="selected-template-row"><b>条件</b> 前面勾配 '+slopeText(String(v.slope||""))+' / 土質 '+soilText(String(v.soil||""))+' / '+cutfillText(String(v.cutfill||""))+'</div>';html+='<div class="selected-template-row"><b>鉄筋</b> 縦筋 '+esc(v.rebarVerticalD||'-')+' @'+esc(v.rebarVerticalPitch||'-')+' / 横筋 '+esc(v.rebarHorizontalD||'-')+' @'+esc(v.rebarHorizontalPitch||'-')+'</div>';}c.innerHTML=html;}
+function suggested(){return val("estimateName")||("間知ブロック H"+(val("H1")||"-"));}
+function openRegister(){let dn="",dm="";try{dn=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname)||"";dm=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname)||"";}catch(e){}$("estimateMasterName").value=dn||suggested();$("estimateMasterMemo").value=dm||"";const v=collect();$("estimateMasterRegisterSummary").innerHTML='<b>製品：</b>'+num(v.blockFaceW)+'×'+num(v.blockFaceH)+'　控え '+num(v.blockDepth)+'mm　使用 '+dim(v.blockUsePerM2)+'個/m²　単価 '+money(v.blockUnitPrice)+'円/個<br><b>寸法：</b>W1 '+dim(v.useW1)+' / W2 '+dim(v.useW2)+' / W3 '+dim(v.useW3)+' / W4 '+dim(v.useW4)+' / W5 '+dim(v.useW5)+' / W6 '+dim(v.useW6)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.useH2)+' / H3 '+dim(v.useH3)+' / H4 '+dim(v.useH4)+' / H5 '+dim(v.useH5)+' / H6 '+dim(v.useH6)+' / H7 '+dim(v.useH7)+' m<br><b>条件：</b>前面勾配 '+slopeText(String(v.slope||""))+' / 土質 '+soilText(String(v.soil||""))+' / '+cutfillText(String(v.cutfill||""));$("estimateMasterRegisterModal").classList.add("show");}
+function closeRegister(){$("estimateMasterRegisterModal")?.classList.remove("show");}
+async function saveMaster(){await ensure();const name=val("estimateMasterName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("estimateMasterMemo"),meta:meta(),values:collect()});try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname);sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname);}catch(e){}$("estimateMasterDuplicateBanner")?.classList.remove("show");closeRegister();alert("積算テンプレートに登録しました。");}
+function dateText(v){if(!v)return"登録日不明";const d=new Date(v);return Number.isNaN(d.getTime())?"登録日不明":d.toLocaleString("ja-JP");}
+async function render(){await ensure();const rows=await MS.EstimateMaster.search(val("estimateMasterSearch"),APP_TYPE),all=await MS.EstimateMaster.list(APP_TYPE),box=$("estimateMasterList");if(!rows.length){box.innerHTML='<div class="em-empty">'+(all.length?"検索条件に一致するテンプレートがありません。":"まだ積算テンプレートが登録されていません。")+'</div>';return;}box.innerHTML=rows.map(item=>{const v=item.values||{},m=item.meta||{};return '<div class="em-item"><div><div class="em-item-name">'+esc(item.name||"名称未設定")+'</div><div class="em-item-meta">'+esc(m.priceName||"単価情報なし")+'</div><div class="em-item-detail"><b>製品</b> '+num(v.blockFaceW)+'×'+num(v.blockFaceH)+'　控え '+num(v.blockDepth)+'mm<br><b>寸法</b> W1 '+dim(v.useW1)+'　W2 '+dim(v.useW2)+'　W3 '+dim(v.useW3)+'　W4 '+dim(v.useW4)+'　W5 '+dim(v.useW5)+'　W6 '+dim(v.useW6)+'　H1 '+dim(v.H1)+'　H2 '+dim(v.useH2)+'　H3 '+dim(v.useH3)+'　H4 '+dim(v.useH4)+'　H5 '+dim(v.useH5)+'　H6 '+dim(v.useH6)+'　H7 '+dim(v.useH7)+' m<br><b>条件</b> 前面勾配 '+slopeText(String(v.slope||""))+'　土質 '+soilText(String(v.soil||""))+'　'+cutfillText(String(v.cutfill||""))+'<br><b>鉄筋</b> 縦筋 '+esc(v.rebarVerticalD||"-")+' @'+esc(v.rebarVerticalPitch||"-")+'　横筋 '+esc(v.rebarHorizontalD||"-")+' @'+esc(v.rebarHorizontalPitch||"-")+'</div>'+(item.memo?'<div class="em-item-memo">検索メモ：'+esc(item.memo)+'</div>':'')+'<div class="em-date">登録日：'+esc(dateText(item.createdAt))+'</div></div><div class="em-item-actions"><button class="em-load-all" data-load-all="'+esc(item.id)+'">すべて</button><button class="em-load-product" data-load-product="'+esc(item.id)+'">製品のみ</button><button class="em-copy" data-copy="'+esc(item.id)+'">複製</button><button class="em-delete" data-del="'+esc(item.id)+'">削除</button></div></div>';}).join("");}
+async function openList(){await render();$("estimateMasterListModal")?.classList.add("show");}
+function closeList(){$("estimateMasterListModal")?.classList.remove("show");}
+async function loadMaster(id,mode){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;if(mode==="product"&&!PRODUCT_IDS.has(fid))return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=mode==="all"?(item.name||"間知ブロック積み"):ke;if(typeof window.applyInputFormats==="function")window.applyInputFormats();if(typeof window.updateCalculations==="function")window.updateCalculations();setSource(item.values||{},mode);renderSelected(item,mode);closeList();alert('積算テンプレートから「'+(mode==="product"?"製品情報だけ":"登録内容をすべて")+'」を呼び出しました。');}
+async function duplicateMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}if(typeof window.updateCalculations==="function")window.updateCalculations();closeList();$("estimateMasterDuplicateBanner")?.classList.add("show");}
+async function removeMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;if(!confirm("「"+(item.name||"このテンプレート")+"」を削除しますか？"))return;await MS.EstimateMaster.remove(id);await render();}
+async function loadContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&fid!=="e")applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if(typeof window.applyInputFormats==="function")window.applyInputFormats();if(typeof window.updateCalculations==="function")window.updateCalculations();setSource(item.values||{},"all");renderSelected(item,"edit");$("estimateTemplateContentEditBanner")?.classList.add("show");if($("estimateTemplateContentEditName"))$("estimateTemplateContentEditName").textContent=item.name||"名称未設定";}
+async function overwriteContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;item.values=collect();item.meta=meta();await MS.EstimateMaster.save(item);try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}clearSource();$("estimateTemplateContentEditBanner")?.classList.remove("show");alert("積算テンプレートを上書き保存しました。");let ret=false;try{ret=sessionStorage.getItem("MS_RETURN_TO_ESTIMATE_MASTER_ADMIN")==="1";}catch(e){}if(ret){try{sessionStorage.setItem("MS_REOPEN_ESTIMATE_MASTER_ADMIN","1");}catch(e){}location.href="index.html";return;}await openList();}
+function applyIndexDuplicate(){let raw="";try{raw=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD")||"";}catch(e){}if(!raw)return;let item=null;try{item=JSON.parse(raw);}catch(e){}if(!item||item.appType!==APP_TYPE)return;try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD");}catch(e){}const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}$("estimateMasterDuplicateBanner")?.classList.add("show");}
+document.addEventListener("DOMContentLoaded",()=>{clearSelected();$("registerEstimateMasterBtn")?.addEventListener("click",openRegister);$("openEstimateMasterBtn")?.addEventListener("click",()=>openList().catch(console.error));$("closeEstimateMasterRegisterBtn")?.addEventListener("click",closeRegister);$("cancelEstimateMasterBtn")?.addEventListener("click",closeRegister);$("saveEstimateMasterBtn")?.addEventListener("click",()=>saveMaster().catch(e=>alert(e.message||e)));$("closeEstimateMasterListBtn")?.addEventListener("click",closeList);$("estimateMasterSearch")?.addEventListener("input",()=>render().catch(console.error));$("clearEstimateMasterSearchBtn")?.addEventListener("click",()=>{$("estimateMasterSearch").value="";render().catch(console.error)});$("estimateMasterList")?.addEventListener("click",e=>{let b=e.target.closest("[data-load-all]");if(b)return loadMaster(b.dataset.loadAll,"all").catch(console.error);b=e.target.closest("[data-load-product]");if(b)return loadMaster(b.dataset.loadProduct,"product").catch(console.error);b=e.target.closest("[data-copy]");if(b)return duplicateMaster(b.dataset.copy).catch(console.error);b=e.target.closest("[data-del]");if(b)return removeMaster(b.dataset.del).catch(console.error)});$("saveTemplateContentOverwriteBtn")?.addEventListener("click",()=>overwriteContentEdit().catch(console.error));$("resetBtn")?.addEventListener("click",()=>{clearSelected();try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname);sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname);}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");$("estimateMasterDuplicateBanner")?.classList.remove("show");},true);setTimeout(()=>loadContentEdit().catch(console.error),700);setTimeout(applyIndexDuplicate,800);});
+})(window,document);
+</script>
+
+<script id="kenchi-past-estimate-v160-script">
+(function(window,document){
+"use strict";
+const APP_TYPE="kenchi_block",APP_LABEL="間知ブロック積み",$=id=>document.getElementById(id);
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function ready(){if(!window.MS)throw new Error("ms_common.jsを読み込めません。");if(MS.init)await MS.init();}
+async function projects(){if(MS.Project&&typeof MS.Project.listActive==="function")return await MS.Project.listActive();if(typeof MS.listProjects==="function")return await MS.listProjects();return[];}
+async function estimates(pid){if(MS.Estimate?.listByProjectAndApp)return MS.Estimate.listByProjectAndApp(pid,APP_TYPE);if(MS.listEstimates)return MS.listEstimates(pid,APP_TYPE);return[];}
+async function getEstimate(id){if(MS.Estimate?.get)return MS.Estimate.get(id);if(MS.getEstimate)return MS.getEstimate(id);return null;}
+const pn=p=>p?.name||p?.projectName||"名称未設定",en=e=>e?.name||e?.estimateName||"名称未設定";
+function dateText(v){if(!v)return"日付不明";const d=new Date(v);return Number.isNaN(d.getTime())?"日付不明":d.toLocaleString("ja-JP");}
+let cached=[];
+async function load(){await ready();const cur=MS.getCurrentProjectId?MS.getCurrentProjectId():"",ps=await projects(),rows=[];for(const p of ps){if(cur&&p.id===cur)continue;const es=await estimates(p.id);for(const e of(es||[]))rows.push({project:p,estimate:e,projectName:pn(p),estimateName:en(e),updatedAt:e.updatedAt||e.createdAt||""});}rows.sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")));cached=rows;render();}
+function render(){const q=String($("otherProjectCopySearch")?.value||"").toLowerCase().trim(),ws=q.split(/\s+/).filter(Boolean),box=$("otherProjectCopyList"),rows=cached.filter(r=>{const h=(r.estimateName+" "+r.projectName).toLowerCase();return ws.every(w=>h.includes(w));});if(!rows.length){box.innerHTML='<div class="opc-empty">コピーできる過去の間知ブロック積算がありません。</div>';return;}box.innerHTML='<div class="opc-flat-head"><span>積算名称</span><span>工事名</span><span>更新日</span><span></span></div>'+rows.map(r=>'<div class="opc-estimate-flat"><div class="opc-flat-name">'+esc(r.estimateName)+'</div><div class="opc-flat-project">'+esc(r.projectName)+'</div><div class="opc-flat-date">'+esc(dateText(r.updatedAt))+'</div><button class="opc-flat-copy" data-id="'+esc(r.estimate.id)+'" data-project="'+esc(r.projectName)+'">コピー</button></div>').join("");}
+function close(){$("otherProjectCopyModal")?.classList.remove("show");}
+async function open(){$("otherProjectCopyModal")?.classList.add("show");$("otherProjectCopySearch").value="";$("otherProjectCopyList").innerHTML='<div class="opc-empty">読込中...</div>';try{await load();setTimeout(()=>$("otherProjectCopySearch")?.focus(),0);}catch(e){$("otherProjectCopyList").innerHTML='<div class="opc-empty">保存データを読み込めませんでした。</div>';}}
+function applyVals(vals){Object.entries(vals||{}).forEach(([fid,v])=>{if(fid==="projectName")return;const el=$(fid);if(!el)return;if(el.type==="checkbox"||el.type==="radio")el.checked=!!v;else el.value=v;try{el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}catch(e){}});}
+async function copy(id,sourceName){const item=await getEstimate(id);if(!item)return alert("コピー元が見つかりません。");if(!confirm("現在入力中の内容を、過去物件「"+sourceName+"」の「"+en(item)+"」で置き換えますか？"))return;const kp=$("projectName")?.value||"";applyVals(item.values||(item.data&&item.data.values)||{});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=en(item);if(typeof window.applyInputFormats==="function")window.applyInputFormats();if(typeof window.updateCalculations==="function")window.updateCalculations();if(typeof window.MSKenchiClearTemplateProductSource==="function")window.MSKenchiClearTemplateProductSource();const b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+sourceName+'」の「'+en(item)+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}try{sessionStorage.setItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE,JSON.stringify({sourceProjectName:sourceName,estimateName:en(item)}));}catch(e){}close();}
+function restore(){try{const raw=sessionStorage.getItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE);if(!raw)return;const d=JSON.parse(raw),b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+(d.sourceProjectName||"過去物件")+'」の「'+(d.estimateName||APP_LABEL)+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}}catch(e){}}
+window.MSClearPastEstimateCopyEditing=function(){try{sessionStorage.removeItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE);}catch(e){}$("pastEstimateCopyBanner")?.classList.remove("show");};
+document.addEventListener("DOMContentLoaded",()=>{$("openOtherProjectCopyBtn")?.addEventListener("click",()=>open());$("closeOtherProjectCopyBtn")?.addEventListener("click",close);$("otherProjectCopySearch")?.addEventListener("input",render);$("otherProjectCopyList")?.addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(!b)return;copy(b.dataset.id,b.dataset.project||"過去物件").catch(console.error);});$("resetBtn")?.addEventListener("click",window.MSClearPastEstimateCopyEditing,true);restore();});
+})(window,document);
+</script>
+
+
+<style id="kenchi-template-product-source-strong-v160">
+/* 積算テンプレートから参照した間知ブロック製品情報 */
+#blockProductDetails #blockFaceW.template-source,
+#blockProductDetails #blockFaceH.template-source,
+#blockProductDetails #blockDepth.template-source,
+#blockProductDetails #blockUsePerM2.template-source,
+#blockProductDetails #blockUnitPrice.template-source,
+#blockProductDetails #bodyConcretePerM2.template-source{
+  background:#fbf9ff!important;
+  color:var(--text)!important;
+  border-top:1px solid #ded3ef!important;
+  border-right:1px solid #ded3ef!important;
+  border-left:6px solid #8b5cc7!important;
+  border-bottom:2px solid #8b5cc7!important;
+}
+#blockProductDetails #blockFaceW.template-source-edited,
+#blockProductDetails #blockFaceH.template-source-edited,
+#blockProductDetails #blockDepth.template-source-edited,
+#blockProductDetails #blockUsePerM2.template-source-edited,
+#blockProductDetails #blockUnitPrice.template-source-edited,
+#blockProductDetails #bodyConcretePerM2.template-source-edited{
+  background:#fffdf4!important;
+  color:var(--text)!important;
+  border-top:1px solid #eadcae!important;
+  border-right:1px solid #eadcae!important;
+  border-left:6px solid #e3b341!important;
+  border-bottom:2px solid #e3b341!important;
+}
+</style>
+
+<script id="kenchi-template-session-cleanup-v160">
+(function(window,document){
+  "use strict";
+  function clearTemplateSession(){
+    try{
+      /* このファイルにはテンプレート参照用sessionStorageキーが見つかりませんでした。 */
+
+      if(typeof window['MSKenchiClearTemplateProductSource']==="function"){
+        window['MSKenchiClearTemplateProductSource']();
+      }
+
+      if(typeof window['MSKenchiClearTemplateProductSource']==="function"){
+        window['MSKenchiClearTemplateProductSource']();
+      }
+
+      document.querySelectorAll(".template-source,.template-source-edited").forEach(function(el){
+        el.classList.remove("template-source","template-source-edited");
+        delete el.dataset.templateSourceValue;
+        el.title="";
+      });
+      var mode=document.getElementById("selectedEstimateTemplateMode");
+      var content=document.getElementById("selectedEstimateTemplateContent");
+      if(mode)mode.textContent="";
+      if(content){
+        content.className="selected-template-content selected-template-empty";
+        content.textContent="積算テンプレートは選択されていません。";
+      }
+    }catch(e){}
+  }
+  window.addEventListener("pagehide",clearTemplateSession);
+})(window,document);
 </script>
 
 </body>

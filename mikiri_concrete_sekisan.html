@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>見切コンクリート積算アプリ Ver.1.4.0</title>
+<title>見切コンクリート積算アプリ Ver.1.6.0 積算テンプレート統合版</title>
 <style>
 :root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
@@ -294,10 +294,50 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 }
 </style>
 
+
+
+
+<style id="mikiri-template-source-standard-v161">
+/* 積算テンプレート参照色：見切工の既存ID指定より優先 */
+#W1.template-source,#W2.template-source,#H1.template-source,#H2.template-source,#H3.template-source,#cover.template-source,#Dv.template-source,#Pv.template-source,#Dh.template-source,#Ph.template-source{
+  background:#fbf9ff!important;
+  color:var(--text)!important;
+  border-left:6px solid #8b5cc7!important;
+  border-bottom:2px solid #8b5cc7!important;
+}
+#W1.template-source-edited,#W2.template-source-edited,#H1.template-source-edited,#H2.template-source-edited,#H3.template-source-edited,#cover.template-source-edited,#Dv.template-source-edited,#Pv.template-source-edited,#Dh.template-source-edited,#Ph.template-source-edited{
+  background:#fffdf4!important;
+  color:var(--text)!important;
+  border-left:6px solid #e3b341!important;
+  border-bottom:2px solid #e3b341!important;
+}
+</style>
+
+
+<style id="mikiri-template-rebar-source-v160">
+.no-rebar-toggle:has(#noRebar.template-source){
+  background:#fbf9ff!important;
+  border-color:#cdbcf2!important;
+  box-shadow:0 0 0 2px rgba(139,92,199,.08)!important;
+}
+.no-rebar-toggle:has(#noRebar.template-source-edited){
+  background:#fffdf4!important;
+  border-color:#e3b341!important;
+  box-shadow:0 0 0 2px rgba(227,179,65,.08)!important;
+}
+</style>
+
 </head>
 <body>
-<header><div class="wrap"><div><h1 id="mikiriDefaultsTrigger" title="見切コンクリート積算">見切コンクリート積算アプリ Ver.1.4.0</h1><div class="sub">土工／砕石／コンクリート／型枠／鉄筋（縦筋＋横筋）を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<header><div class="wrap"><div><h1 id="mikiriDefaultsTrigger" title="見切コンクリート積算">見切コンクリート積算アプリ Ver.1.6.0</h1><div class="sub">土工／砕石／コンクリート／型枠／鉄筋（縦筋＋横筋）を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main>
+<div id="pastEstimateCopyBanner" class="past-estimate-copy-banner"></div>
+<div id="mikiriTemplateEditBanner" class="ms-v160-banner">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%">
+    <div><b>積算テンプレート内容を編集中</b><br><span id="mikiriTemplateEditName"></span></div>
+    <button id="mikiriTemplateOverwriteBtn" type="button">テンプレートへ上書き保存</button>
+  </div>
+</div>
 <div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body">
 <div class="illust-box">
@@ -333,8 +373,25 @@ main{max-width:1500px;margin:16px auto;padding:0 16px 28px}.grid{display:grid;gr
 <button class="ghost" id="loadEstimateBtn" type="button">呼出</button>
 <button class="danger" id="deleteEstimateBtn" type="button">削除</button>
 </div>
-<div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+<div class="note">工事名ごとに保存済み一覧を分けて表示します。</div><div class="other-project-copy-actions"><button id="openOtherProjectCopyBtn" type="button">過去積算を呼出</button></div>
 </div>
+<div class="control-block estimate-master-block">
+  <div class="sectionTitle">積算テンプレート</div>
+  <div class="note template-master-note">寸法・単価・施工条件をまとめて登録し、必要なときに呼び出します。</div>
+  <div class="estimate-master-actions">
+    <button class="primary" id="registerEstimateMasterBtn" type="button">現積算テンプレート登録</button>
+    <button class="ghost" id="openEstimateMasterBtn" type="button">テンプレート呼出</button>
+  </div>
+  <div id="selectedEstimateTemplateBox" class="selected-template-box" data-mode="none">
+    <div class="selected-template-head">
+      <span class="selected-template-dot"></span>
+      <span>選択中の積算テンプレート</span>
+      <span id="selectedEstimateTemplateMode" class="selected-template-mode"></span>
+    </div>
+    <div id="selectedEstimateTemplateContent" class="selected-template-content selected-template-empty">積算テンプレートは選択されていません。</div>
+  </div>
+</div>
+
 <div class="control-block price-block"><div class="sectionTitle">今回の積算で使用する単価</div><div class="save-line"><label>単価名</label><input id="pricePresetName" placeholder="例：標準"></div><div class="save-line"><label>保存済み単価</label><select id="savedPriceList"><option value="">保存単価なし</option></select></div><div class="btns"><button class="ghost" id="savePriceBtn">保存</button><button class="ghost" id="loadPriceBtn">呼出</button><button class="danger" id="deletePriceBtn">削除</button></div></div>
 
 </div>
@@ -506,7 +563,7 @@ function buildSvgDiagram(){
  // 旧図の約60%サイズ
  const cx=x+49, top=y+34, bodyW=12, bodyH=40, stoneW=21, stoneH=8.5;
  s+=`<rect x="${cx-bodyW/2}" y="${top}" width="${bodyW}" height="${bodyH}" fill="#e4d5be" stroke="#333" stroke-width=".4"/>`;
- s+=`<rect x="${cx-stoneW/2}" y="${top+bodyH}" width="${stoneW}" height="${stoneH}" fill="url(#stone)" stroke="#333" stroke-width=".32"/>`;
+ s+=`<rect x="${cx-stoneW/2}" y="${top+bodyH}" width="${stoneW}" height="${stoneH}" fill="url(#mikiriPrint1Stone)" stroke="#333" stroke-width=".32"/>`;
 
  const groundY=top+bodyH-num('H3')/Math.max(num('H1'),.001)*bodyH;
  s+=sxLine(cx+bodyW/2,groundY,x+w-12,groundY,.3);
@@ -587,7 +644,7 @@ function buildSvgReport(){
  calc();
  const project=$('projectName').value||'-', estimate=$('estimateName').value||'-', today=new Date().toLocaleDateString('ja-JP');
  let s='<svg class="svg-print-sheet-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 296">';
- s+='<defs><linearGradient id="headGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef7ff"/><stop offset="1" stop-color="#dcecff"/></linearGradient><pattern id="stone" patternUnits="userSpaceOnUse" width="4" height="4"><circle cx="1" cy="1" r=".7" fill="none" stroke="#111" stroke-width=".16"/><circle cx="3" cy="2.8" r=".7" fill="none" stroke="#111" stroke-width=".16"/></pattern></defs>';
+ s+='<defs><linearGradient id="headGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef7ff"/><stop offset="1" stop-color="#dcecff"/></linearGradient><pattern id="mikiriPrint1Stone" patternUnits="userSpaceOnUse" width="4" height="4"><circle cx="1" cy="1" r=".7" fill="none" stroke="#111" stroke-width=".16"/><circle cx="3" cy="2.8" r=".7" fill="none" stroke="#111" stroke-width=".16"/></pattern></defs>';
  s+='<rect width="210" height="296" fill="#fff"/><g font-family="Noto Sans JP,Yu Gothic,Meiryo,sans-serif" fill="#111">';
  s+=sxText(15,22,'工事名：'+project,4.2,400);s+=sxText(93,22,'積算名称：'+estimate,4.2,400);s+=sxText(195,18.5,'作成日：'+today,2.6,400,'end');s+=sxLine(15,26,195,26,.5);
  s+=buildSvgMainTable();
@@ -629,7 +686,7 @@ $('closeSvgPreviewBtn').onclick=()=>document.body.classList.remove('svg-preview-
 $('svgPrintNowBtn').onclick=printSvgReport;
 window.addEventListener('beforeprint',()=>{if(!svgPrinting)updateSvgReport();});
 const localKey='mikiri_concrete_estimates',priceKey='mikiri_concrete_prices';function getLocal(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[]}}function setLocal(k,v){localStorage.setItem(k,JSON.stringify(v))}function refresh(){const a=getLocal(localKey);$('savedEstimateList').innerHTML='<option value="">保存データなし</option>'+a.map((x,i)=>`<option value="${i}">${x.name}</option>`).join('');const p=getLocal(priceKey);$('savedPriceList').innerHTML='<option value="">保存単価なし</option>'+p.map((x,i)=>`<option value="${i}">${x.name}</option>`).join('')}
-$('saveEstimateBtn').onclick=async()=>{const name=$('estimateName').value.trim()||'見切コンクリート';const v=values();try{if(window.MS?.Estimate?.save){await MS.Estimate.save({appType:APP_TYPE,name,values:v});alert('保存しました')}else{const a=getLocal(localKey);a.push({name,values:v});setLocal(localKey,a);refresh();alert('保存しました')}}catch(e){alert('保存に失敗しました：'+e.message)}};$('loadEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;applyValues(getLocal(localKey)[Number(i)]?.values)};$('deleteEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;const a=getLocal(localKey);a.splice(Number(i),1);setLocal(localKey,a);refresh()};
+$('saveEstimateBtn').onclick=async()=>{const name=$('estimateName').value.trim()||'見切コンクリート';const v=values();try{if(window.MS?.Estimate?.save){await MS.Estimate.save({appType:APP_TYPE,name,values:v});alert('保存しました')}else{const a=getLocal(localKey);a.push({name,values:v});setLocal(localKey,a);refresh();alert('保存しました')}if(typeof window.MSClearPastEstimateCopyEditing==='function')window.MSClearPastEstimateCopyEditing();}catch(e){alert('保存に失敗しました：'+e.message)}};$('loadEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;applyValues(getLocal(localKey)[Number(i)]?.values)};$('deleteEstimateBtn').onclick=()=>{const i=$('savedEstimateList').value;if(i==='')return;const a=getLocal(localKey);a.splice(Number(i),1);setLocal(localKey,a);refresh()};
 const priceIds=['Pexc','Pwaste','Pback','Pbed','Pstone','Pconc','Pform','Prebar','profit'];$('savePriceBtn').onclick=()=>{const name=$('pricePresetName').value.trim()||'標準';const v={};priceIds.forEach(id=>v[id]=$(id).value);const a=getLocal(priceKey);a.push({name,values:v});setLocal(priceKey,a);refresh()};$('loadPriceBtn').onclick=()=>{const i=$('savedPriceList').value;if(i==='')return;const v=getLocal(priceKey)[Number(i)]?.values||{};priceIds.forEach(id=>{if(v[id]!=null)$(id).value=v[id]});calc()};$('deletePriceBtn').onclick=()=>{const i=$('savedPriceList').value;if(i==='')return;const a=getLocal(priceKey);a.splice(Number(i),1);setLocal(priceKey,a);refresh()};
 
 async function loadCurrentProjectName(){
@@ -774,6 +831,7 @@ calc();
     if(!hasMS()){
       const name=$('estimateName').value.trim()||DEFAULT_NAME;
       const a=getLocal(localKey);a.push({name,values:values()});setLocal(localKey,a);refresh();alert('保存しました');
+      if(typeof window.MSClearPastEstimateCopyEditing==='function')window.MSClearPastEstimateCopyEditing();
       return;
     }
     try{
@@ -821,6 +879,7 @@ calc();
         : await MS.saveEstimate(APP_TYPE,name,item);
       await refreshSharedEstimates(saved?.id);
       if(MS.toast) MS.toast('積算データを保存しました'); else alert('積算データを保存しました');
+      if(typeof window.MSClearPastEstimateCopyEditing==='function')window.MSClearPastEstimateCopyEditing();
     }catch(e){ alert(e.message||'保存できませんでした'); }
   }
 
@@ -1664,6 +1723,249 @@ calc();
   else setup();
   window.addEventListener("ms-price-master-changed",function(){queueMicrotask(formatAll);});
 })();
+</script>
+<div id="mikiriPastBanner" class="ms-v160-banner"></div>
+<div id="estimateMasterRegisterModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog em-dialog-small">
+    <div class="em-head">
+      <div><h3>積算テンプレートに登録</h3><div class="em-head-sub">現在の見切工の入力内容を保存します。</div></div>
+      <button id="closeEstimateMasterRegisterBtn" type="button">閉じる</button>
+    </div>
+    <div class="em-body">
+      <div class="em-form">
+        <label>工種</label><input type="text" value="見切工" readonly>
+        <label>マスター名</label><input id="estimateMasterName" type="text" placeholder="積算名称を入力">
+        <label>検索メモ</label><textarea id="estimateMasterMemo" placeholder="任意"></textarea>
+      </div>
+      <div id="estimateMasterRegisterSummary" class="em-summary"></div>
+      <div class="em-buttons">
+        <button id="cancelEstimateMasterBtn" class="ghost" type="button">キャンセル</button>
+        <button id="saveEstimateMasterBtn" class="primary" type="button">登録</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="estimateMasterListModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog">
+    <div class="em-head">
+      <div><h3>見切工　積算テンプレート</h3><div class="em-head-sub">登録済みの積算テンプレートから「すべて」を呼び出します。</div></div>
+      <button id="closeEstimateMasterListBtn" type="button">閉じる</button>
+    </div>
+    <div class="em-search">
+      <input id="estimateMasterSearch" type="search" placeholder="マスター名・検索メモから検索">
+      <button id="clearEstimateMasterSearchBtn" type="button">クリア</button>
+    </div>
+    <div id="estimateMasterList" class="em-list"></div>
+  </div>
+</div>
+
+<script id="mikiri-template-standard-v160-script">
+(function(window,document){
+"use strict";
+const APP_TYPE="mikiri_concrete",APP_LABEL="見切工";
+const EXCLUDE=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","savedPriceList","pricePresetName","e"]);
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const val=id=>String($(id)?.value||"").trim();
+const num=v=>{const n=Number(String(v==null?"":v).replace(/,/g,""));return Number.isFinite(n)?n:0};
+const dim=v=>num(v).toFixed(3);
+async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テンプレート共通機能を読み込めません。ms_common.jsをVer.1.6.0対応版にしてください。");await MS.init();}
+function collect(){const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(e=>{if(!e.id||EXCLUDE.has(e.id)||e.closest(".em-modal")||e.closest(".opc-modal"))return;if(["button","submit","file","hidden"].includes(e.type))return;o[e.id]=(e.type==="checkbox"||e.type==="radio")?!!e.checked:e.value;});return o;}
+function applyValue(id,v){const e=$(id);if(!e)return;if(e.type==="checkbox"||e.type==="radio")e.checked=!!v;else e.value=v;try{e.dispatchEvent(new Event("input",{bubbles:true}));e.dispatchEvent(new Event("change",{bubbles:true}));}catch(x){}}
+function meta(){return {priceName:val("pricePresetName")||"手入力単価"};}
+function clearSelected(){const c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(m)m.textContent="";if(c){c.className="selected-template-content selected-template-empty";c.textContent="積算テンプレートは選択されていません。";}}
+function renderSelected(item,mode){const v=item.values||{},c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(!c)return;if(m)m.textContent=mode==="edit"?"編集中":"すべて";c.className="selected-template-content";c.innerHTML='<div class="selected-template-name">'+esc(item.name||"名称未設定")+'</div><div class="selected-template-row"><b>寸法</b> W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / かぶり '+dim(v.cover)+' m</div><div class="selected-template-row"><b>鉄筋</b> '+(v.noRebar?'無筋':'縦筋 D'+String(v.Dv||'')+' @'+dim(v.Pv)+'m / 横筋 D'+String(v.Dh||'')+' @'+dim(v.Ph)+'m')+'</div>';}
+function suggested(){return val("estimateName")||"見切工";}
+function openRegister(){let dn="",dm="";try{dn=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname)||"";dm=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname)||"";}catch(e){}$("estimateMasterName").value=dn||suggested();$("estimateMasterMemo").value=dm||"";const v=collect();$("estimateMasterRegisterSummary").innerHTML='<b>寸法：</b>W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / かぶり '+dim(v.cover)+' m<br><b>鉄筋：</b>'+(v.noRebar?'無筋':'縦筋 D'+String(v.Dv||'')+' @'+dim(v.Pv)+'m / 横筋 D'+String(v.Dh||'')+' @'+dim(v.Ph)+'m');$("estimateMasterRegisterModal").classList.add("show");}
+function closeRegister(){$("estimateMasterRegisterModal")?.classList.remove("show");}
+async function saveMaster(){await ensure();const name=val("estimateMasterName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("estimateMasterMemo"),meta:meta(),values:collect()});try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname);sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname);}catch(e){}$("estimateMasterDuplicateBanner")?.classList.remove("show");closeRegister();alert("積算テンプレートに登録しました。");}
+function formatDate(v){if(!v)return"登録日不明";const d=new Date(v);return Number.isNaN(d.getTime())?"登録日不明":d.toLocaleString("ja-JP");}
+async function render(){await ensure();const rows=await MS.EstimateMaster.search(val("estimateMasterSearch"),APP_TYPE),all=await MS.EstimateMaster.list(APP_TYPE),box=$("estimateMasterList");if(!rows.length){box.innerHTML='<div class="em-empty">'+(all.length?"検索条件に一致するテンプレートがありません。":"まだ積算テンプレートが登録されていません。")+'</div>';return;}box.innerHTML=rows.map(item=>{const v=item.values||{},m=item.meta||{};return '<div class="em-item"><div><div class="em-item-name">'+esc(item.name||"名称未設定")+'</div><div class="em-item-meta">'+esc(m.priceName||"単価情報なし")+'</div><div class="em-item-detail"><b>寸法</b> W1 '+dim(v.W1)+'　W2 '+dim(v.W2)+'　H1 '+dim(v.H1)+'　H2 '+dim(v.H2)+'　H3 '+dim(v.H3)+'　かぶり '+dim(v.cover)+' m<br><b>鉄筋</b> '+(v.noRebar?'無筋':'縦筋 D'+String(v.Dv||'')+' @'+dim(v.Pv)+'m　横筋 D'+String(v.Dh||'')+' @'+dim(v.Ph)+'m')+'</div>'+(item.memo?'<div class="em-item-memo">検索メモ：'+esc(item.memo)+'</div>':'')+'<div class="em-date">登録日：'+esc(formatDate(item.createdAt))+(item.updatedAt&&item.updatedAt!==item.createdAt?'　更新：'+esc(formatDate(item.updatedAt)):'')+'</div></div><div class="em-item-actions"><button class="em-load-all" data-load="'+esc(item.id)+'">すべて</button><button class="em-copy" data-copy="'+esc(item.id)+'">複製</button><button class="em-delete" data-del="'+esc(item.id)+'">削除</button></div></div>';}).join("");}
+async function openList(){await render();$("estimateMasterListModal")?.classList.add("show");}
+function closeList(){$("estimateMasterListModal")?.classList.remove("show");}
+async function loadMaster(id){$("estimateTemplateContentEditBanner")?.classList.remove("show");await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=item.name||"見切工 積算";try{if(typeof syncNoRebar==="function")syncNoRebar();if(typeof calc==="function")calc();}catch(e){}renderSelected(item,"all");if(typeof window.MSMikiriSetTemplateSource==="function")window.MSMikiriSetTemplateSource(item.values||{});closeList();alert("積算テンプレートを呼び出しました。");}
+async function duplicateMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}try{if(typeof syncNoRebar==="function")syncNoRebar();if(typeof calc==="function")calc();}catch(e){}closeList();$("estimateMasterDuplicateBanner")?.classList.add("show");}
+async function removeMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;if(!confirm("「"+(item.name||"このテンプレート")+"」を削除しますか？"))return;await MS.EstimateMaster.remove(id);await render();}
+async function loadContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}
+if(!req||req.appType!==APP_TYPE||!req.id){
+  $("estimateTemplateContentEditBanner")?.classList.remove("show");
+  return;
+}
+await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&fid!=="e")applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;try{if(typeof syncNoRebar==="function")syncNoRebar();if(typeof calc==="function")calc();}catch(e){}renderSelected(item,"edit");$("estimateTemplateContentEditBanner")?.classList.add("show");if($("estimateTemplateContentEditName"))$("estimateTemplateContentEditName").textContent=item.name||"名称未設定";}
+async function overwriteContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;item.values=collect();item.meta=meta();await MS.EstimateMaster.save(item);try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");alert("積算テンプレートを上書き保存しました。");let ret=false;try{ret=sessionStorage.getItem("MS_RETURN_TO_ESTIMATE_MASTER_ADMIN")==="1";}catch(e){}if(ret){try{sessionStorage.setItem("MS_REOPEN_ESTIMATE_MASTER_ADMIN","1");}catch(e){}location.href="index.html";return;}await openList();}
+document.addEventListener("DOMContentLoaded",()=>{clearSelected();$("registerEstimateMasterBtn")?.addEventListener("click",openRegister);$("openEstimateMasterBtn")?.addEventListener("click",()=>{try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");openList().catch(console.error);});$("closeEstimateMasterRegisterBtn")?.addEventListener("click",closeRegister);$("cancelEstimateMasterBtn")?.addEventListener("click",closeRegister);$("saveEstimateMasterBtn")?.addEventListener("click",()=>saveMaster().catch(e=>alert(e.message||e)));$("closeEstimateMasterListBtn")?.addEventListener("click",closeList);$("estimateMasterSearch")?.addEventListener("input",()=>render().catch(console.error));$("clearEstimateMasterSearchBtn")?.addEventListener("click",()=>{$("estimateMasterSearch").value="";render().catch(console.error)});$("estimateMasterList")?.addEventListener("click",e=>{let b=e.target.closest("[data-load]");if(b)return loadMaster(b.dataset.load).catch(console.error);b=e.target.closest("[data-copy]");if(b)return duplicateMaster(b.dataset.copy).catch(console.error);b=e.target.closest("[data-del]");if(b)return removeMaster(b.dataset.del).catch(console.error)});$("saveTemplateContentOverwriteBtn")?.addEventListener("click",()=>overwriteContentEdit().catch(console.error));$("newInputBtn")?.addEventListener("click",()=>{clearSelected();try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");$("estimateMasterDuplicateBanner")?.classList.remove("show");},true);setTimeout(()=>loadContentEdit().catch(console.error),700);});
+})(window,document);
+</script>
+<style id="mikiri-template-standard-v160-style">
+
+
+.estimate-master-block{border-color:#d8c9f2!important;background:#fdfbff!important}
+.estimate-master-block .sectionTitle{color:#5a35a3!important}.estimate-master-block .sectionTitle:before{background:#8b5cc7!important}
+.estimate-master-actions{display:grid;grid-template-columns:1.25fr 1fr;gap:7px;margin-top:8px}
+.estimate-master-actions button{min-width:0!important;width:100%!important;padding:8px 5px!important;font-size:11px!important;white-space:nowrap}
+.estimate-master-actions .primary{background:#7c4cc4!important;color:#fff!important}.estimate-master-actions .ghost{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}
+.selected-template-box{margin-top:8px;border:1px solid #d8c9f2;border-radius:10px;background:#fff;overflow:hidden}
+.selected-template-head{display:flex;align-items:center;gap:6px;padding:7px 9px;background:#f3edff;border-bottom:1px solid #e2d7f5;color:#5a35a3;font-size:10.5px;font-weight:900}
+.selected-template-dot{width:7px;height:7px;border-radius:50%;background:#8b5cc7}.selected-template-mode{margin-left:auto;padding:1px 7px;border:1px solid #d8c9f2;border-radius:999px;background:#fff;font-size:9.5px}
+.selected-template-content{padding:8px 9px;color:#4d3a67;font-size:10.5px;line-height:1.55}.selected-template-empty{color:#8a7a9d}.selected-template-name{font-size:12px;font-weight:950;color:#5a35a3;margin-bottom:5px}.selected-template-row{border-bottom:1px dotted #eadff8;padding:2px 0}.selected-template-row:last-child{border-bottom:none}
+.em-modal{display:none;position:fixed;inset:0;background:rgba(31,18,55,.46);z-index:12000;align-items:center;justify-content:center;padding:18px}.em-modal.show{display:flex}
+.em-dialog{width:min(860px,100%);max-height:88vh;background:#fff;border:1px solid #d8c9f2;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}.em-dialog-small{width:min(640px,100%)}
+.em-head{padding:15px 18px;background:#f8f5ff;color:#5a35a3;border-bottom:1px solid #e2d7f5;display:flex;align-items:center;justify-content:space-between;gap:10px}.em-head h3{margin:0;font-size:20px;color:#5a35a3}.em-head-sub{font-size:11px;color:#746384;margin-top:3px}.em-head button{width:auto!important;min-width:70px;background:#f3edff;color:#5a35a3;border:1px solid #d8c9f2}
+.em-body{padding:14px 18px;overflow:auto}.em-form{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}.em-form label{margin:0;font-weight:800}.em-form textarea{height:76px}.em-summary{margin-top:12px;border:1px solid #e2d7f5;border-radius:10px;background:#fdfcff;padding:10px;font-size:12px;line-height:1.6;color:#4d3a67}
+.em-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.em-buttons button{width:auto;min-width:90px}.em-search{padding:11px 18px;border-bottom:1px solid #eadff8;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fbf9ff}.em-search input{height:36px}.em-search button{width:auto;min-width:72px;background:#f3edff;color:#5a35a3;border:1px solid #d8c9f2}
+.em-list{padding:12px 18px;overflow:auto;display:grid;gap:8px}.em-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #dfe5ee;border-radius:12px;padding:10px;background:#fff}.em-item:hover{background:#f8fbff;border-color:#b9c7d9}
+.em-item-name{font-weight:950;color:#334155}.em-item-meta,.em-item-memo,.em-date{font-size:11px;color:#60758d;line-height:1.5;margin-top:2px}.em-item-detail{font-size:11.5px;color:#52637a;line-height:1.65;margin-top:5px;padding:6px 8px;background:#f8fafc;border-radius:8px;border:1px solid #edf1f6}
+.em-item-actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;width:300px}.em-item-actions button{min-width:0!important;width:100%!important;height:29px!important;padding:0 3px!important;font-size:10px!important;border-radius:7px!important;white-space:nowrap}
+.em-load-all{grid-column:span 3;background:#6d3fb3!important;color:#fff!important}.em-load-product{grid-column:span 3;background:#f3edff!important;color:#5a35a3!important;border:1px solid #cdbcf2!important}.em-copy,.em-delete{grid-column:span 3}.em-copy{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}.em-delete{background:#fff1f2!important;color:#b42318!important;border:1px solid #f1c9cd!important}.em-empty{padding:18px;text-align:center;color:#6f6280;border:1px dashed #d8c9f2;border-radius:12px}
+.template-content-edit-banner,.em-duplicate-edit-banner{display:none;max-width:1500px;margin:0 auto 12px;border-radius:12px;padding:10px 14px}.template-content-edit-banner.show{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f3edff;border:1px solid #cdbcf2;color:#4d3568}.template-content-edit-banner button{width:auto!important;min-width:180px!important;background:#6d3fb3!important;color:#fff!important}.em-duplicate-edit-banner.show{display:block;background:#fff8e7;border:1px solid #e8cc75;color:#765d13;font-size:12px;font-weight:800}
+.other-project-copy-actions{margin-top:8px}.other-project-copy-actions button{width:100%!important;height:34px!important;border:1px solid #cfe3f7!important;background:#eef6ff!important;color:#0647a5!important;border-radius:9px!important;font-size:12px!important;font-weight:900!important}
+.opc-modal{display:none;position:fixed;inset:0;z-index:12030;background:rgba(8,24,48,.48);align-items:center;justify-content:center;padding:18px}.opc-modal.show{display:flex}.opc-dialog{width:min(900px,100%);max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}
+.opc-head{padding:15px 17px;background:linear-gradient(135deg,#0647a5,#1673d1);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.opc-head h3{margin:0;font-size:19px}.opc-close{width:auto!important;min-width:72px!important;background:#fff!important;color:#0647a5!important}.opc-tools{padding:10px 14px;border-bottom:1px solid #dbeafe}.opc-tools input{width:100%;height:36px;border:1px solid #cfe3f7;border-radius:9px;padding:7px 10px}.opc-list{padding:12px 14px;overflow:auto;display:grid;gap:7px}.opc-empty{padding:16px;text-align:center;color:#64748b;border:1px dashed #cfe3f7;border-radius:10px}
+.opc-flat-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;padding:0 10px 4px;color:#60758d;font-size:10.5px;font-weight:900}.opc-flat-head span:nth-child(3){text-align:right}.opc-estimate-flat{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid #d7e7f7;border-radius:10px;background:#fff}.opc-estimate-flat:hover{background:#f8fbff;border-color:#9fc7ed}.opc-flat-name{font-size:13px;font-weight:950;color:#122033;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-project{font-size:12px;color:#52637a;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-date{font-size:10.5px;color:#7b8da3;white-space:nowrap;text-align:right}.opc-flat-copy{width:auto!important;min-width:76px!important;background:#0647a5!important;color:#fff!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner{position:relative!important;display:none;max-width:1500px!important;margin:0 auto 12px!important;padding:25px 16px 12px 50px!important;border:1px solid #f0c36a!important;border-left:7px solid #f59e0b!important;border-radius:12px!important;background:linear-gradient(90deg,#fff7df 0%,#fffaf0 100%)!important;color:#7a4a05!important;font-size:12.5px!important;font-weight:800!important;line-height:1.6!important;box-shadow:0 5px 14px rgba(180,110,0,.12)!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner.show{display:block!important}#pastEstimateCopyBanner.past-estimate-copy-banner::before{content:"📋"!important;position:absolute!important;left:15px!important;top:50%!important;transform:translateY(-50%)!important;font-size:22px!important}#pastEstimateCopyBanner.past-estimate-copy-banner::after{content:"過去積算からコピー中"!important;display:block!important;position:absolute!important;left:49px!important;top:8px!important;color:#b45f06!important;font-size:10.5px!important;font-weight:950!important;letter-spacing:.04em!important}
+/* テンプレートから参照した製品欄 */
+#blockFaceW.template-source,#blockFaceH.template-source,#blockDepth.template-source,#blockUsePerM2.template-source,#blockUnitPrice.template-source,#bodyConcretePerM2.template-source{background:#fbf9ff!important;border-left:6px solid #8b5cc7!important;border-bottom:2px solid #8b5cc7!important}
+#blockFaceW.template-source-edited,#blockFaceH.template-source-edited,#blockDepth.template-source-edited,#blockUsePerM2.template-source-edited,#blockUnitPrice.template-source-edited,#bodyConcretePerM2.template-source-edited{background:#fffdf4!important;border-left:6px solid #e3b341!important;border-bottom:2px solid #e3b341!important}
+@media(max-width:700px){.em-form{grid-template-columns:1fr}.em-item{grid-template-columns:1fr}.em-item-actions{width:100%}.opc-flat-head{display:none}.opc-estimate-flat{grid-template-columns:1fr auto}.opc-flat-project,.opc-flat-date{grid-column:1/-1}.opc-flat-date{text-align:left}.opc-flat-copy{grid-column:2;grid-row:1}}
+
+
+
+
+
+.em-item-actions{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:5px!important;
+  width:300px!important;
+}
+.em-item-actions .em-load-all{
+  grid-column:1 / -1!important;
+}
+.em-item-actions .em-copy{grid-column:span 3!important}
+.em-item-actions .em-delete{grid-column:span 3!important}
+
+</style>
+
+
+<!-- 見切コンクリート：過去積算呼出 -->
+<div id="otherProjectCopyModal" class="opc-modal" aria-hidden="true">
+  <div class="opc-dialog" role="dialog" aria-modal="true">
+    <div class="opc-head">
+      <div><h3>過去積算を呼出</h3><div class="opc-sub">他の工事で保存した見切コンクリート積算をコピーします。</div></div>
+      <button id="closeOtherProjectCopyBtn" class="opc-close" type="button">閉じる</button>
+    </div>
+    <div class="opc-tools"><input id="otherProjectCopySearch" type="search" placeholder="積算名称・工事名から検索"></div>
+    <div id="otherProjectCopyList" class="opc-list"><div class="opc-empty">読込中...</div></div>
+  </div>
+</div>
+<style id="mikiri-past-estimate-copy-style">
+.other-project-copy-actions{margin-top:8px}.other-project-copy-actions button{width:100%!important;height:34px!important;border:1px solid #cfe3f7!important;background:#eef6ff!important;color:#0647a5!important;border-radius:9px!important;font-size:12px!important;font-weight:900!important}
+.opc-modal{display:none;position:fixed;inset:0;z-index:10040;background:rgba(8,24,48,.48);align-items:center;justify-content:center;padding:18px}.opc-modal.show{display:flex}
+.opc-dialog{width:min(900px,100%);max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}
+.opc-head{padding:15px 17px;background:linear-gradient(135deg,#0647a5,#1673d1);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.opc-head h3{margin:0;font-size:19px}.opc-close{width:auto!important;min-width:72px!important;background:#fff!important;color:#0647a5!important}
+.opc-tools{padding:10px 14px;border-bottom:1px solid #dbeafe}.opc-tools input{width:100%;height:36px;border:1px solid #cfe3f7;border-radius:9px;padding:7px 10px}.opc-list{padding:12px 14px;overflow:auto;display:grid;gap:7px}
+.opc-empty{padding:16px;text-align:center;color:#64748b;border:1px dashed #cfe3f7;border-radius:10px}
+.opc-flat-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;padding:0 10px 4px;color:#60758d;font-size:10.5px;font-weight:900}.opc-flat-head span:nth-child(3){text-align:right}
+.opc-estimate-flat{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid #d7e7f7;border-radius:10px;background:#fff}.opc-estimate-flat:hover{background:#f8fbff;border-color:#9fc7ed}
+.opc-flat-name{font-size:13px;font-weight:950;color:#122033;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-project{font-size:12px;color:#52637a;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-date{font-size:10.5px;color:#7b8da3;white-space:nowrap;text-align:right}.opc-flat-copy{width:auto!important;min-width:76px!important;background:#0647a5!important;color:#fff!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner{position:relative!important;display:none;max-width:1500px!important;margin:0 auto 12px!important;padding:25px 16px 12px 50px!important;border:1px solid #f0c36a!important;border-left:7px solid #f59e0b!important;border-radius:12px!important;background:linear-gradient(90deg,#fff7df 0%,#fffaf0 100%)!important;color:#7a4a05!important;font-size:12.5px!important;font-weight:800!important;line-height:1.6!important;box-shadow:0 5px 14px rgba(180,110,0,.12)!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner.show{display:block!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner::before{content:"📋"!important;position:absolute!important;left:15px!important;top:50%!important;transform:translateY(-50%)!important;font-size:22px!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner::after{content:"過去積算からコピー中"!important;display:block!important;position:absolute!important;left:49px!important;top:8px!important;color:#b45f06!important;font-size:10.5px!important;font-weight:950!important;letter-spacing:.04em!important}
+@media(max-width:760px){.opc-flat-head{display:none}.opc-estimate-flat{grid-template-columns:1fr auto}.opc-flat-project,.opc-flat-date{grid-column:1/-1}.opc-flat-date{text-align:left}.opc-flat-copy{grid-column:2;grid-row:1}}
+</style>
+<script id="mikiri-past-estimate-copy-v160">
+(function(window,document){
+"use strict";
+const APP_TYPE="mikiri_concrete",APP_LABEL="見切コンクリート",$=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function ready(){if(!window.MS)throw new Error("ms_common.js が読み込まれていません。");await MS.init();}
+async function listProjects(){if(MS.Project&&typeof MS.Project.list==="function")return await MS.Project.list();if(typeof MS.listProjects==="function")return await MS.listProjects();return [];}
+async function listEstimates(projectId){if(MS.Estimate&&typeof MS.Estimate.listByProjectAndApp==="function")return await MS.Estimate.listByProjectAndApp(projectId,APP_TYPE);const all=typeof MS.listEstimates==="function"?await MS.listEstimates(projectId):[];return(all||[]).filter(e=>String(e.appType||e.app||"")===APP_TYPE);}
+async function getEstimate(id){if(MS.Estimate&&typeof MS.Estimate.get==="function")return await MS.Estimate.get(id);if(typeof MS.getEstimate==="function")return await MS.getEstimate(id);return null;}
+const projectName=p=>(p&&(p.name||p.projectName))||"名称未設定の工事",estimateName=e=>(e&&(e.name||e.estimateName))||"名称未設定";
+function dateText(v){if(!v)return"日付不明";const d=new Date(v);return Number.isNaN(d.getTime())?"日付不明":d.toLocaleString("ja-JP");}
+let cached=[];
+async function load(){await ready();const currentProjectId=typeof MS.getCurrentProjectId==="function"?MS.getCurrentProjectId():"";const projects=await listProjects(),rows=[];for(const p of projects){if(currentProjectId&&p.id===currentProjectId)continue;const es=await listEstimates(p.id);for(const e of(es||[]))rows.push({project:p,estimate:e,projectName:projectName(p),estimateName:estimateName(e),updatedAt:e.updatedAt||e.createdAt||""});}rows.sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")));cached=rows;render();}
+function render(){const box=$("otherProjectCopyList");if(!box)return;const q=String($("otherProjectCopySearch")?.value||"").trim().toLowerCase(),words=q.split(/\s+/).filter(Boolean),rows=cached.filter(r=>{const hay=(r.estimateName+" "+r.projectName).toLowerCase();return words.every(w=>hay.includes(w));});if(!rows.length){box.innerHTML='<div class="opc-empty">コピーできる過去の見切コンクリート積算がありません。</div>';return;}box.innerHTML='<div class="opc-flat-head"><span>積算名称</span><span>工事名</span><span>更新日</span><span></span></div>'+rows.map(r=>'<div class="opc-estimate-flat"><div class="opc-flat-name">'+esc(r.estimateName)+'</div><div class="opc-flat-project">'+esc(r.projectName)+'</div><div class="opc-flat-date">'+esc(dateText(r.updatedAt))+'</div><button class="opc-flat-copy" type="button" data-opc-id="'+esc(r.estimate.id)+'" data-opc-project="'+esc(r.projectName)+'">コピー</button></div>').join("");}
+function closeModal(){const m=$("otherProjectCopyModal");if(m){m.classList.remove("show");m.setAttribute("aria-hidden","true");}}
+async function openModal(){const m=$("otherProjectCopyModal");if(!m)return;m.classList.add("show");m.setAttribute("aria-hidden","false");if($("otherProjectCopySearch"))$("otherProjectCopySearch").value="";if($("otherProjectCopyList"))$("otherProjectCopyList").innerHTML='<div class="opc-empty">読込中...</div>';try{await load();setTimeout(()=>$("otherProjectCopySearch")?.focus(),0);}catch(e){console.error(e);if($("otherProjectCopyList"))$("otherProjectCopyList").innerHTML='<div class="opc-empty">保存データを読み込めませんでした。</div>';}}
+function applyValues(values){Object.entries(values||{}).forEach(([fid,v])=>{if(fid==="projectName")return;const el=$(fid);if(!el)return;if(el.type==="checkbox")el.checked=!!v;else el.value=v;try{el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}catch(e){}});}
+async function copyEstimate(id,sourceProjectName){const item=await getEstimate(id);if(!item)return alert("コピー元の積算データが見つかりません。");if(!confirm('現在入力中の内容を、過去物件「'+sourceProjectName+'」の「'+estimateName(item)+'」で置き換えますか？\n\nコピー後に内容を確認・修正してから「積算データ保存」で保存してください。'))return;const keepProject=$("projectName")?.value||"";applyValues(item.values||(item.data&&item.data.values)||{});if($("projectName"))$("projectName").value=keepProject;if($("estimateName"))$("estimateName").value=estimateName(item);try{if(typeof window.MSMikiriCommaDisplayChange==="function")window.MSMikiriCommaDisplayChange();if(typeof syncNoRebar==="function")syncNoRebar();if(typeof calc==="function")calc();}catch(e){}const b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+sourceProjectName+'」の「'+estimateName(item)+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}closeModal();}
+function applyMainCopyPayload(){let p=null;try{p=JSON.parse(sessionStorage.getItem("MS_PAST_ESTIMATE_COPY_PAYLOAD")||"null");}catch(e){}if(!p||String(p.appType||"")!==APP_TYPE)return;try{sessionStorage.removeItem("MS_PAST_ESTIMATE_COPY_PAYLOAD");}catch(e){}const keepProject=$("projectName")?.value||"";applyValues(p.values||{});if($("projectName"))$("projectName").value=keepProject;if($("estimateName")&&p.estimateName)$("estimateName").value=p.estimateName;try{if(typeof window.MSMikiriCommaDisplayChange==="function")window.MSMikiriCommaDisplayChange();if(typeof syncNoRebar==="function")syncNoRebar();if(typeof calc==="function")calc();}catch(e){}const b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+(p.sourceProjectName||"過去物件")+'」の「'+(p.estimateName||APP_LABEL)+'」からコピーした積算です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}}
+document.addEventListener("DOMContentLoaded",()=>{$("openOtherProjectCopyBtn")?.addEventListener("click",()=>openModal());$("closeOtherProjectCopyBtn")?.addEventListener("click",closeModal);$("otherProjectCopySearch")?.addEventListener("input",render);$("otherProjectCopyList")?.addEventListener("click",e=>{const b=e.target.closest("[data-opc-id]");if(!b)return;copyEstimate(b.getAttribute("data-opc-id"),b.getAttribute("data-opc-project")||"過去物件").catch(err=>{console.error(err);alert("コピーに失敗しました。");});});$("otherProjectCopyModal")?.addEventListener("click",e=>{if(e.target===$("otherProjectCopyModal"))closeModal();});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});$("newInputBtn")?.addEventListener("click",()=>{$("pastEstimateCopyBanner")?.classList.remove("show");},true);setTimeout(applyMainCopyPayload,600);});
+})(window,document);
+</script>
+<script id="mikiri-past-estimate-copy-clear-v160">
+(function(window,document){
+  "use strict";
+  window.MSClearPastEstimateCopyEditing=function(){
+    try{sessionStorage.removeItem("MS_PAST_ESTIMATE_COPY_EDITING_mikiri_concrete");}catch(e){}
+    const b=document.getElementById("pastEstimateCopyBanner");
+    if(b)b.classList.remove("show");
+  };
+})(window,document);
+</script>
+
+
+<script id="mikiri-template-source-standard-script-v161">
+(function(window,document){
+"use strict";
+const SOURCE_KEY="MS_MIKIRI_TEMPLATE_DIM_SOURCE_V161";
+const DIM_IDS=["W1","W2","H1","H2","H3","cover","noRebar","Dv","Pv","Dh","Ph"];
+
+function byId(id){return document.getElementById(id);}
+function n(v){
+  const x=Number(String(v==null?"":v).replace(/,/g,""));
+  return Number.isFinite(x)?x:0;
+}
+function same(a,b){return Math.abs(n(a)-n(b))<0.000001;}
+
+function clearSource(){
+  DIM_IDS.forEach(function(id){
+    const el=byId(id);
+    if(!el)return;
+    el.classList.remove("template-source","template-source-edited");
+    delete el.dataset.templateSourceValue;
+    el.title="";
+  });
+  try{sessionStorage.removeItem(SOURCE_KEY);}catch(e){}
+}
+function setSource(values){
+  const saved={};
+  DIM_IDS.forEach(function(id){
+    const el=$(id);
+    if(!el)return;
+    if(!values || !Object.prototype.hasOwnProperty.call(values,id))return;
+    const v=values[id];
+    el.dataset.templateSourceValue=String(v==null?"":v);
+    el.classList.remove("template-source-edited");
+    el.classList.add("template-source");
+    el.title="積算テンプレートから反映された値です";
+    saved[id]=String(v==null?"":v);
+  });
+  try{sessionStorage.setItem(SOURCE_KEY,JSON.stringify(saved));}catch(e){}
+}
+window.MSMikiriSetTemplateSource=setSource;
+window.MSMikiriClearTemplateSource=clearSource;
+
+/* U型側溝と同じ：ページを離れたら参照色解除 */
+window.addEventListener("pagehide",clearSource);
+})(window,document);
+</script>
+
+
+<script id="mikiri-template-source-reset-hook-v161">
+document.addEventListener("DOMContentLoaded",function(){
+  const b=document.getElementById("newInputBtn");
+  if(b)b.addEventListener("click",function(){
+    if(typeof window.MSMikiriClearTemplateSource==="function"){
+      window.MSMikiriClearTemplateSource();
+    }
+  },true);
+});
 </script>
 
 </body></html>

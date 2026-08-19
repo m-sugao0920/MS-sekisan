@@ -39,11 +39,13 @@
 
   MS.__initialized = true;
 
-  MS.VERSION = "1.2.4";
+  MS.VERSION = "1.2.8";
+  MS.RELEASE_VERSION = "1.6.0";
+  MS.RELEASE_NAME = "積算テンプレート統合版";
 
   MS.CONFIG = {
     dbName: "MS_SEKISAN_SYSTEM_DB",
-    dbVersion: 2,
+    dbVersion: 3,
 
     stores: {
       projects: "projects",
@@ -51,7 +53,8 @@
       settings: "settings",
       prices: "prices",
       logs: "logs",
-      productMasters: "productMasters"
+      productMasters: "productMasters",
+      estimateMasters: "estimateMasters"
     },
 
     currentProjectKey: "ms_current_project_id",
@@ -75,6 +78,32 @@
       KENCHI_BLOCK: "kenchi_block",
       FIRE_TANK: "fire_tank"
     }
+  };
+
+
+  /*
+============================================================
+ [STANDARD] 積算テンプレート
+ 新規標準では製品情報・寸法・単価・施工条件をここへ統合します。
+============================================================
+*/
+/*
+   * Ver.1.2.6 マスター標準方針
+   * - 新しい標準：MS.EstimateMaster（積算テンプレート）に一本化
+   * - MS.ProductMaster は未移行アプリ専用の互換層
+   * - index・U型側溝・可変側溝など移行済み画面からは参照しない
+   * - 全アプリ移行完了後に、この互換層と productMasters ストアだけを削除する
+   */
+  MS.MASTER_POLICY = {
+    primary: "estimateMasters",
+    primaryLabel: "積算テンプレート",
+    legacyProductMaster: true,
+    legacyProductMasterReadWrite: true /* 未移行アプリ専用。新規標準からは使用しない */,
+    migrationPhase: "v1.6.0_rollout"
+  };
+
+  MS.isLegacyProductMasterMode = function(){
+    return !!(MS.MASTER_POLICY && MS.MASTER_POLICY.legacyProductMaster);
   };
 
   MS._state = {
@@ -211,6 +240,16 @@
       productStore.createIndex("category_manufacturer", ["category", "manufacturer"], { unique: false });
       productStore.createIndex("updatedAt", "updatedAt", { unique: false });
       productStore.createIndex("createdAt", "createdAt", { unique: false });
+    }
+
+    if(stores.estimateMasters && !db.objectStoreNames.contains(stores.estimateMasters)){
+      const estimateMasterStore = db.createObjectStore(stores.estimateMasters, {
+        keyPath: "id"
+      });
+      estimateMasterStore.createIndex("appType", "appType", { unique: false });
+      estimateMasterStore.createIndex("name", "name", { unique: false });
+      estimateMasterStore.createIndex("updatedAt", "updatedAt", { unique: false });
+      estimateMasterStore.createIndex("createdAt", "createdAt", { unique: false });
     }
 
     if(!db.objectStoreNames.contains(stores.logs)){
@@ -4149,7 +4188,7 @@
 
 /*
 ============================================================
- MS積算システム 製品単価マスター Ver.1.0
+ [LEGACY / 互換専用] MS積算システム 製品単価マスター Ver.1.0
  - 全アプリ共通の製品・施工単価データベース
  - カテゴリ／メーカー／製品名検索
  - CSV入出力
@@ -4260,6 +4299,10 @@
 
       transportPrice: number(src.transportPrice !== undefined ? src.transportPrice : old.transportPrice),
       lossRate: number(src.lossRate !== undefined ? src.lossRate : old.lossRate),
+
+      // 製品固有寸法（アプリごとの記号を柔軟に保持）
+      // 例：プレキャストL型擁壁 {H1,H2,W1,W2,W3,H5}
+      dimensions: clone(src.dimensions !== undefined ? src.dimensions : (old.dimensions || {})),
 
       // 間知ブロック製品専用（他カテゴリでは未使用のまま保持）
       blockFaceWidth: number(src.blockFaceWidth !== undefined ? src.blockFaceWidth : old.blockFaceWidth),
@@ -4428,6 +4471,7 @@
       installationPrice: item.installationPrice,
       socketPrice: item.socketPrice,
       socketUnit: item.socketUnit,
+      productDimensions: clone(item.dimensions || {}),
       productMasterSnapshot: clone(item)
     };
     if(type === "kenchi_block"){
@@ -4543,6 +4587,7 @@
   MS.ProductMaster.CSV_FIELDS = [
     "id","category","manufacturer","productName","specification","modelCode",
     "productPrice","productUnit","unitLength","productPricePerMeter",
+    "dimension_H1","dimension_H2","dimension_W1","dimension_W2","dimension_W3","dimension_H5",
     "installationPrice","installationUnit","socketPrice","socketUnit",
     "concreteCoverPrice","concreteCoverUnit","concreteCoverLength",
     "gratingCoverPrice","gratingCoverUnit","gratingCoverLength",
@@ -4554,7 +4599,13 @@
     const rows = await MS.ProductMaster.list(Object.assign({}, options || {}, {includeDisabled:true}));
     const fields = MS.ProductMaster.CSV_FIELDS;
     return "\uFEFF" + [fields.join(",")].concat(rows.map(function(row){
-      return fields.map(function(field){ return csvEscape(row[field]); }).join(",");
+      return fields.map(function(field){
+        if(field.indexOf("dimension_") === 0){
+          const key=field.slice("dimension_".length);
+          return csvEscape(row.dimensions && row.dimensions[key] !== undefined ? row.dimensions[key] : "");
+        }
+        return csvEscape(row[field]);
+      }).join(",");
     })).join("\r\n");
   };
 
@@ -4588,6 +4639,7 @@
       "据付単位":"installationUnit", "継手ソケット":"socketPrice", "継手ソケット単位":"socketUnit", "コンクリート蓋":"concreteCoverPrice", "コンクリート蓋長さ":"concreteCoverLength",
       "グレーチング蓋":"gratingCoverPrice", "グレーチング蓋長さ":"gratingCoverLength",
       "蓋設置費":"coverInstallationPrice", "備考":"note",
+      "H1":"dimension_H1", "H2":"dimension_H2", "W1":"dimension_W1", "W2":"dimension_W2", "W3":"dimension_W3", "H5":"dimension_H5",
       "登録日":"registeredDate", "更新日":"updatedDate"
     };
     const keys = headers.map(function(h){ return aliases[h] || h; });
@@ -4605,6 +4657,14 @@
       else if(raw.enabled !== undefined) raw.enabled = true;
       try{
         if(!text(raw.category) || !text(raw.productName)){ skipped++; continue; }
+        const dimKeys=["H1","H2","W1","W2","W3","H5"];
+        const dims={};let hasDims=false;
+        dimKeys.forEach(function(k){
+          const key="dimension_"+k;
+          if(raw[key] !== undefined && text(raw[key]) !== ""){ dims[k]=number(raw[key]);hasDims=true; }
+          delete raw[key];
+        });
+        if(hasDims) raw.dimensions=dims;
         await MS.ProductMaster.save(raw);
         saved++;
       }catch(error){
@@ -4903,3 +4963,140 @@
 
 })(window, document);
 
+
+
+/* ============================================================
+   積算物件マスター 共通管理 Ver.1.0
+   ============================================================ */
+(function(window){
+  "use strict";
+  const MS = window.MS;
+  if(!MS) return;
+
+  MS.EstimateMaster = MS.EstimateMaster || {};
+  const EM = MS.EstimateMaster;
+
+  EM.storeName = function(){ return MS.CONFIG.stores.estimateMasters; };
+
+  EM.normalize = function(data){
+    const now = MS.now();
+    const src = MS.clone(data || {});
+    return {
+      id: src.id || MS.createId("em"),
+      appType: String(src.appType || ""),
+      appLabel: String(src.appLabel || ""),
+      name: String(src.name || "").trim(),
+      memo: String(src.memo || "").trim(),
+      meta: MS.clone(src.meta || {}),
+      values: MS.clone(src.values || {}),
+      createdAt: src.createdAt || now,
+      updatedAt: src.updatedAt || now
+    };
+  };
+
+  EM.save = async function(data){
+    await MS.init();
+    const row = EM.normalize(data);
+    const old = row.id ? await MS.DB.get(EM.storeName(), row.id) : null;
+    if(old && old.createdAt) row.createdAt = old.createdAt;
+    row.updatedAt = MS.now();
+    await MS.DB.put(EM.storeName(), row);
+    return row;
+  };
+
+  EM.list = async function(appType){
+    await MS.init();
+    let rows;
+    if(appType){
+      rows = await MS.DB.getAllByIndex(EM.storeName(), "appType", appType);
+    }else{
+      rows = await MS.DB.getAll(EM.storeName());
+    }
+    return MS.sortByUpdatedDesc(rows);
+  };
+
+  EM.get = async function(id){
+    await MS.init();
+    return MS.DB.get(EM.storeName(), id);
+  };
+
+  EM.remove = async function(id){
+    await MS.init();
+    return MS.DB.delete(EM.storeName(), id);
+  };
+
+  EM.duplicate = async function(id, newName){
+    const src = await EM.get(id);
+    if(!src) throw new MS.Error("複製元の積算物件マスターが見つかりません。");
+    const now = MS.now();
+    const copy = MS.clone(src);
+    copy.id = MS.createId("em");
+    copy.name = String(newName || ((src.name || "名称未設定") + " コピー")).trim();
+    copy.createdAt = now;
+    copy.updatedAt = now;
+    await MS.DB.put(EM.storeName(), copy);
+    return copy;
+  };
+
+  EM.searchText = function(row){
+    const m = row && row.meta ? row.meta : {};
+    const v = row && row.values ? row.values : {};
+    return [
+      row && row.name, row && row.memo, row && row.appLabel,
+      m.priceName, v.estimateName,
+      /* 旧テンプレート互換検索 */ m.manufacturer, m.productName, m.specification
+    ].filter(Boolean).join(" ").toLowerCase();
+  };
+
+  EM.search = async function(keyword, appType){
+    const rows = await EM.list(appType);
+    const words = String(keyword || "").toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if(!words.length) return rows;
+    return rows.filter(function(row){
+      const s = EM.searchText(row);
+      return words.every(function(w){ return s.indexOf(w) !== -1; });
+    });
+  };
+
+  EM.exportRows = async function(){
+    return EM.list();
+  };
+
+  EM.importRows = async function(rows){
+    await MS.init();
+    if(!Array.isArray(rows)) throw new MS.Error("積算物件マスターの読込形式が正しくありません。");
+    const normalized = rows.map(function(row){
+      const n = EM.normalize(row);
+      if(!n.name) n.name = "名称未設定";
+      return n;
+    });
+    await MS.DB.putMany(EM.storeName(), normalized);
+    return normalized.length;
+  };
+
+  // U型側溝の旧試作版(localStorage)を一度だけ共通DBへ移行
+  EM.migrateLegacyUGutter = async function(){
+    const flag = "MS_estimate_master_migrated_u_gutter_v1";
+    if(MS.Storage.getText(flag, "") === "1") return 0;
+    let rows = [];
+    try{
+      rows = JSON.parse(window.localStorage.getItem("MS_estimate_item_master_u_gutter_v1") || "[]");
+    }catch(e){ rows = []; }
+    if(!Array.isArray(rows) || !rows.length){
+      MS.Storage.setText(flag, "1");
+      return 0;
+    }
+    await MS.init();
+    const existing = await EM.list("u_gutter");
+    const ids = new Set(existing.map(function(x){return x.id;}));
+    const add = rows.filter(function(x){return x && !ids.has(x.id);}).map(function(x){
+      x.appType = "u_gutter";
+      x.appLabel = x.appLabel || "U型側溝";
+      return EM.normalize(x);
+    });
+    if(add.length) await MS.DB.putMany(EM.storeName(), add);
+    MS.Storage.setText(flag, "1");
+    return add.length;
+  };
+
+})(window);

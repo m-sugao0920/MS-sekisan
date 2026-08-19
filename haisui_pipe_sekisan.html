@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>排水管工 積算アプリ Ver.1.4.0</title>
+<title>排水管工 積算アプリ Ver.1.6.0 積算テンプレート統合版</title>
 <style>
     :root{
       --blue:#0070C0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px;
@@ -954,10 +954,132 @@ section.card:nth-of-type(2) .sectionTitle + .input-color-guide{
 }
 </style>
 
+
+<style id="drain-pipe-template-standard-v160">
+.estimate-master-block{border-color:#d8c9f2!important;background:#fbf9ff!important}
+.estimate-master-block .sectionTitle{color:#5a35a3!important}
+.estimate-master-block .sectionTitle::before{background:#7c4cc4!important}
+.estimate-master-actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:6px!important;width:100%!important;margin-top:8px!important}
+.estimate-master-actions button{width:100%!important;min-width:0!important;max-width:100%!important;height:31px!important;padding:0 5px!important;font-size:10.5px!important;border-radius:8px!important;white-space:nowrap!important;box-sizing:border-box!important;letter-spacing:-.15px!important}
+#registerEstimateMasterBtn{background:#6d3fb3!important;color:#fff!important;border:1px solid #6d3fb3!important}
+#openEstimateMasterBtn{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}
+.selected-template-box{margin-top:9px;border:1px solid #e2d7f5;border-radius:10px;background:#fdfcff;padding:8px 10px;font-size:11px;color:#4d3a67}
+.selected-template-head{display:flex;align-items:center;gap:6px;font-weight:900;color:#5a35a3}
+.selected-template-dot{width:7px;height:7px;border-radius:999px;background:#8b5cc7;display:inline-block}
+.selected-template-mode{margin-left:auto;padding:2px 7px;border-radius:999px;background:#f3edff;color:#5a35a3;font-size:10px}
+.selected-template-content{margin-top:5px;line-height:1.55}.selected-template-empty{color:#8a7a9d}.selected-template-name{font-size:12px;font-weight:950;color:#5a35a3;margin-bottom:4px}
+
+.other-project-copy-actions{margin-top:8px}.other-project-copy-actions button{width:100%!important;height:34px!important;border:1px solid #cfe3f7!important;background:#eef6ff!important;color:#0647a5!important;border-radius:9px!important;font-size:12px!important;font-weight:900!important}
+.opc-modal{display:none;position:fixed;inset:0;z-index:10040;background:rgba(8,24,48,.48);align-items:center;justify-content:center;padding:18px}.opc-modal.show{display:flex}
+.opc-dialog{width:min(900px,100%);max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}
+.opc-head{padding:15px 17px;background:linear-gradient(135deg,#0647a5,#1673d1);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.opc-head h3{margin:0;font-size:19px}.opc-close{width:auto!important;min-width:72px!important;background:#fff!important;color:#0647a5!important}
+.opc-tools{padding:10px 14px;border-bottom:1px solid #dbeafe}.opc-tools input{width:100%;height:36px;border:1px solid #cfe3f7;border-radius:9px;padding:7px 10px}
+.opc-list{padding:12px 14px;overflow:auto;display:grid;gap:7px}.opc-empty{padding:16px;text-align:center;color:#64748b;border:1px dashed #cfe3f7;border-radius:10px}
+.opc-flat-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;padding:0 10px 4px;color:#60758d;font-size:10.5px;font-weight:900}
+.opc-estimate-flat{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid #d7e7f7;border-radius:10px;background:#fff}.opc-estimate-flat:hover{background:#f8fbff;border-color:#9fc7ed}
+.opc-flat-name{font-size:13px;font-weight:950;color:#122033;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-project{font-size:12px;color:#52637a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-date{font-size:10.5px;color:#7b8da3;text-align:right;white-space:nowrap}.opc-flat-copy{width:auto!important;min-width:76px!important;background:#0647a5!important;color:#fff!important}
+
+.past-estimate-copy-banner,.em-duplicate-edit-banner,.template-content-edit-banner{display:none;max-width:1500px;margin:0 auto 10px;padding:10px 14px;border-radius:11px;font-size:12px;font-weight:800;line-height:1.55}
+.past-estimate-copy-banner.show{display:block;background:#fff7ed;border:1px solid #fdba74;color:#9a3412}
+.em-duplicate-edit-banner.show{display:block;background:#faf5ff;border:1px solid #d8b4fe;color:#6b21a8}
+.template-content-edit-banner.show{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#faf5ff;border:1px solid #d8b4fe;color:#5b21b6}
+.template-content-edit-banner button{width:auto!important;min-width:190px!important;white-space:nowrap!important;background:#6d3fb3!important;color:#fff!important;padding:8px 12px!important}
+
+.em-modal{display:none;position:fixed;inset:0;z-index:12000;background:rgba(30,20,45,.48);align-items:center;justify-content:center;padding:18px}.em-modal.show{display:flex}
+.em-dialog{width:min(820px,100%);max-height:90vh;background:#fff;border:1px solid #d8c9f2;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}.em-register-dialog{width:min(620px,100%)}
+.em-dialog-head{padding:14px 16px;background:#f8f5ff;border-bottom:1px solid #e2d7f5;display:flex;align-items:center;justify-content:space-between;gap:12px}.em-dialog-head h3{margin:0;color:#5a35a3;font-size:19px}.em-dialog-sub{font-size:11px;color:#746384;margin-top:3px}.em-close{width:auto!important;min-width:72px!important;background:#f3edff!important;color:#5a35a3!important}
+.em-register-body{padding:15px 17px;overflow:auto}.em-form-grid{display:grid;grid-template-columns:110px 1fr;gap:9px 11px;align-items:center}.em-form-grid label{margin:0;min-height:0;font-weight:800}.em-form-grid input,.em-form-grid textarea{width:100%;border:1px solid #d8c9f2;border-radius:9px;padding:8px 9px}.em-form-grid textarea{min-height:70px;resize:vertical}
+.em-summary{margin-top:12px;border:1px solid #e2d7f5;border-radius:10px;background:#fdfcff;padding:9px 10px;color:#4d3a67;font-size:11px;line-height:1.65}.em-register-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.em-light{background:#f3edff!important;color:#5a35a3!important}.em-purple{background:#6d3fb3!important;color:#fff!important}
+.em-list-tools{padding:10px 14px;border-bottom:1px solid #e2d7f5;display:grid;grid-template-columns:1fr auto;gap:8px}.em-list-tools input{height:36px;border:1px solid #d8c9f2;border-radius:9px;padding:7px 10px}.em-list{padding:12px 14px;overflow:auto;display:grid;gap:8px}
+.em-item{border:1px solid #e2d7f5;border-radius:12px;background:#fdfcff;padding:10px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.em-item:hover{border-color:#cdbcf2;background:#fbf9ff}.em-item-name{font-size:14px;font-weight:950;color:#5a35a3}.em-item-memo{font-size:11px;color:#746384;line-height:1.55;margin-top:3px}.em-item-detail{font-size:11px;line-height:1.6;margin-top:6px;padding:6px 8px;background:#fbf9ff;border:1px solid #e2d7f5;border-radius:8px;color:#4d3a67}
+.em-item-actions{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;min-width:216px;max-width:240px}.em-item-actions button{width:100%!important;min-width:0!important;height:27px!important;padding:0 6px!important;font-size:10.5px!important;border-radius:7px!important}.em-item-actions button[data-em-load-all]{grid-column:span 3;background:#6d3fb3!important;color:#fff!important}.em-item-actions button[data-em-load-product]{grid-column:span 3;background:#f3edff!important;color:#5a35a3!important;border:1px solid #cdbcf2!important}.em-item-actions .em-edit,.em-item-actions .em-copy,.em-item-actions .em-delete{grid-column:span 2!important}.em-item-actions .em-edit,.em-item-actions .em-copy{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}.em-item-actions .em-delete{background:#fff1f2!important;color:#b42318!important}
+.em-empty{padding:18px;text-align:center;color:#7c6e8b;border:1px dashed #d8c9f2;border-radius:10px}
+
+/* Standard reference colors: template=purple, edited=yellow */
+input[data-dim].template-source{background:#fbf9ff!important;color:var(--text)!important;border-top:1px solid #ded3ef!important;border-right:1px solid #ded3ef!important;border-left:6px solid #8b5cc7!important;border-bottom:2px solid #8b5cc7!important;box-shadow:none!important}
+input[data-dim].template-source-edited{background:#fffdf4!important;color:var(--text)!important;border-top:1px solid #eadcae!important;border-right:1px solid #eadcae!important;border-left:6px solid #e3b341!important;border-bottom:2px solid #e3b341!important;box-shadow:none!important}
+@media(max-width:760px){.opc-flat-head{display:none}.opc-estimate-flat{grid-template-columns:1fr auto}.em-item{grid-template-columns:1fr}.em-form-grid{grid-template-columns:1fr}.template-content-edit-banner.show{display:block}}
+@media print{.estimate-master-block,.em-modal,.opc-modal,.past-estimate-copy-banner,.em-duplicate-edit-banner,.template-content-edit-banner,.other-project-copy-actions{display:none!important}}
+</style>
+
+
+<style id="drain-pipe-template-reference-color-fix">
+/* 他アプリ標準：テンプレート参照値は通常の寸法水色より紫を優先 */
+section.card:nth-of-type(2) input[data-dim].template-source,
+section.card:nth-of-type(2) #w3.template-source{
+  background:#fbf9ff!important;
+  color:var(--text)!important;
+  font-weight:400!important;
+  border-top:1px solid #ded3ef!important;
+  border-right:1px solid #ded3ef!important;
+  border-left:6px solid #8b5cc7!important;
+  border-bottom:2px solid #8b5cc7!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+section.card:nth-of-type(2) input[data-dim].template-source:focus,
+section.card:nth-of-type(2) #w3.template-source:focus{
+  border-top:1px solid #cdbcf2!important;
+  border-right:1px solid #cdbcf2!important;
+  border-left:6px solid #8b5cc7!important;
+  border-bottom:2px solid #8b5cc7!important;
+  box-shadow:0 0 0 3px rgba(139,92,199,.12)!important;
+}
+
+/* テンプレート参照後に手入力変更した値は黄色 */
+section.card:nth-of-type(2) input[data-dim].template-source-edited,
+section.card:nth-of-type(2) #w3.template-source-edited{
+  background:#fffdf4!important;
+  color:var(--text)!important;
+  font-weight:400!important;
+  border-top:1px solid #eadcae!important;
+  border-right:1px solid #eadcae!important;
+  border-left:6px solid #e3b341!important;
+  border-bottom:2px solid #e3b341!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+section.card:nth-of-type(2) input[data-dim].template-source-edited:focus,
+section.card:nth-of-type(2) #w3.template-source-edited:focus{
+  border-top:1px solid #dfcb87!important;
+  border-right:1px solid #dfcb87!important;
+  border-left:6px solid #e3b341!important;
+  border-bottom:2px solid #e3b341!important;
+  box-shadow:0 0 0 3px rgba(227,179,65,.12)!important;
+}
+</style>
+
+
+<style id="drainage-pipe-template-product-source-v160">
+section.card:nth-of-type(2) #ProdLen.template-source,
+section.card:nth-of-type(2) #ProdPrice.template-source,
+section.card:nth-of-type(2) #Pset.template-source,
+section.card:nth-of-type(2) #Psocket.template-source{
+  background:#fbf9ff!important;color:var(--text)!important;
+  border-top:1px solid #ded3ef!important;border-right:1px solid #ded3ef!important;
+  border-left:6px solid #8b5cc7!important;border-bottom:2px solid #8b5cc7!important;
+}
+section.card:nth-of-type(2) #ProdLen.template-source-edited,
+section.card:nth-of-type(2) #ProdPrice.template-source-edited,
+section.card:nth-of-type(2) #Pset.template-source-edited,
+section.card:nth-of-type(2) #Psocket.template-source-edited{
+  background:#fffdf4!important;color:var(--text)!important;
+  border-top:1px solid #eadcae!important;border-right:1px solid #eadcae!important;
+  border-left:6px solid #e3b341!important;border-bottom:2px solid #e3b341!important;
+}
+</style>
+
 </head>
 <body>
-<header><div class="wrap"><div><h1 id="drainagePipeDefaultsTrigger" title="排水管工積算">排水管工 積算アプリ Ver.1.4.0</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
-<main><div class="grid">
+<header><div class="wrap"><div><h1 id="drainagePipeDefaultsTrigger" title="排水管工積算">排水管工 積算アプリ Ver.1.6.0</h1><div class="sub">土被り・掘削余裕・法面勾配から、掘削／地業／製品／据付／残土／mあたり単価を自動算出</div></div><div><span class="pill">掘削深さ=H1+H2+H3+H4+H5</span><span class="pill">掘削底幅=W2+2e</span><span class="pill">法面勾配=1:n</span></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<main>
+<div id="drainPipeTemplateEditBanner" class="template-content-edit-banner">
+  <div><b>積算テンプレート内容を編集中</b><br><span id="drainPipeTemplateEditName"></span></div>
+  <button id="drainPipeTemplateOverwriteBtn" type="button">テンプレートへ上書き保存</button>
+</div>
+<div id="pastEstimateCopyBanner" class="past-estimate-copy-banner"></div>
+<div id="estimateMasterDuplicateBanner" class="em-duplicate-edit-banner">積算テンプレートの複製を編集中です。内容を修正後、「現積算テンプレート登録」で新しいテンプレートとして保存してください。</div>
+<div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body"><div class="illust-box">
 <svg aria-label="排水管工断面図" class="illust-svg" id="pipeSectionSvg" preserveaspectratio="xMidYMid meet" viewbox="0 0 1180 780">
 <defs>
@@ -1040,22 +1162,31 @@ section.card:nth-of-type(2) .sectionTitle + .input-color-guide{
 <button class="danger" id="deleteEstimateBtn" type="button">削除</button>
 </div>
 <div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+<div class="other-project-copy-actions">
+  <button id="openOtherProjectCopyBtn" type="button">過去積算を呼出</button>
 </div>
-<div class="product-master-box">
-<div class="product-master-head">
-<div class="product-master-title">製品単価マスター</div>
 </div>
-<div class="product-master-current" id="selectedProductMaster">製品は選択されていません。</div>
-<div class="product-master-actions">
-<button class="primary" id="openProductMasterBtn" type="button">製品を選択</button>
-<button class="ghost" id="registerCurrentProductBtn" type="button">現在値を登録</button>
-<button class="danger" id="clearProductMasterBtn" type="button">選択解除</button>
-</div>
-<input id="ProductMasterId" type="hidden"/>
-<input id="ProductMasterUpdatedAt" type="hidden"/>
-<input id="ProductName" type="hidden"/>
-<input id="ProductManufacturer" type="hidden"/>
-<input id="ProductSpecification" type="hidden"/>
+
+<div class="control-block estimate-master-block">
+  <div class="sectionTitle">積算テンプレート</div>
+  <div class="note template-master-note">工法・製品情報・寸法・単価・施工条件をまとめて登録し、呼出時に「すべて」または「製品のみ」を選べます。</div>
+  <div class="estimate-master-actions">
+    <button class="primary" id="registerEstimateMasterBtn" type="button">現積算テンプレート登録</button>
+    <button class="ghost" id="openEstimateMasterBtn" type="button">テンプレート呼出</button>
+  </div>
+  <div id="selectedEstimateTemplateBox" class="selected-template-box" data-mode="none">
+    <div class="selected-template-head">
+      <span class="selected-template-dot"></span>
+      <span>選択中の積算テンプレート</span>
+      <span id="selectedEstimateTemplateMode" class="selected-template-mode"></span>
+    </div>
+    <div id="selectedEstimateTemplateContent" class="selected-template-content selected-template-empty">積算テンプレートは選択されていません。</div>
+  </div>
+  <input id="ProductMasterId" type="hidden"/>
+  <input id="ProductMasterUpdatedAt" type="hidden"/>
+  <input id="ProductName" type="hidden"/>
+  <input id="ProductManufacturer" type="hidden"/>
+  <input id="ProductSpecification" type="hidden"/>
 </div>
 <div class="control-block price-block">
 <div class="sectionTitle">今回の積算で使用する単価</div>
@@ -2447,6 +2578,7 @@ window.addEventListener('load',()=>{migrateOldPriceIfNeeded();refreshPriceList()
         : await MS.saveEstimate(APP_TYPE, name, item);
       await msRefreshEstimateList(saved.id);
       if(window.MS && MS.toast) MS.toast('積算データを保存しました'); else alert('積算データを保存しました');
+      if(typeof window.MSClearPastEstimateCopyEditing==='function')window.MSClearPastEstimateCopyEditing();
     }catch(e){ alert(e.message || '保存できませんでした'); }
   }
   function applyCommonPriceForEstimate(item){
@@ -3892,6 +4024,207 @@ document.addEventListener('DOMContentLoaded',function(){
   }
   window.addEventListener("ms-price-master-changed",formatAll);
 })();
+</script>
+
+
+<div id="estimateMasterRegisterModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog em-register-dialog">
+    <div class="em-dialog-head"><div><h3>積算テンプレートに登録</h3><div class="em-dialog-sub">現在の排水管工の入力内容をテンプレートとして保存します。</div></div><button id="closeEstimateMasterRegisterBtn" class="em-close" type="button">閉じる</button></div>
+    <div class="em-register-body">
+      <div class="em-form-grid"><label>工種</label><input value="排水管工" readonly><label>マスター名</label><input id="estimateMasterName" type="text"><label>検索メモ</label><textarea id="estimateMasterMemo"></textarea></div>
+      <div id="estimateMasterRegisterSummary" class="em-summary"></div>
+      <div class="em-register-buttons"><button id="cancelEstimateMasterBtn" class="em-light" type="button">キャンセル</button><button id="saveEstimateMasterBtn" class="em-purple" type="button">登録</button></div>
+    </div>
+  </div>
+</div>
+<div id="estimateMasterListModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog">
+    <div class="em-dialog-head"><div><h3>積算テンプレート呼出</h3><div class="em-dialog-sub">「すべて」または「製品のみ」を選んで呼び出します。</div></div><button id="closeEstimateMasterListBtn" class="em-close" type="button">閉じる</button></div>
+    <div class="em-list-tools"><input id="estimateMasterSearch" type="search" placeholder="マスター名・検索メモから検索"><button id="clearEstimateMasterSearchBtn" class="em-light" type="button">クリア</button></div>
+    <div id="estimateMasterList" class="em-list"></div>
+  </div>
+</div>
+<div id="otherProjectCopyModal" class="opc-modal" aria-hidden="true">
+  <div class="opc-dialog"><div class="opc-head"><div><h3>過去積算を呼出</h3><div style="font-size:12px;margin-top:3px;opacity:.92">過去の工事から排水管工の積算を選び、現在の入力画面へ呼び出します。</div></div><button id="closeOtherProjectCopyBtn" class="opc-close" type="button">閉じる</button></div><div class="opc-tools"><input id="otherProjectCopySearch" type="search" placeholder="工事名・積算名称から検索"></div><div id="otherProjectCopyList" class="opc-list"></div></div>
+</div>
+
+<script id="drain-pipe-estimate-template-v160">
+(function(window,document){
+"use strict";
+const APP_TYPE="drainage_pipe",APP_LABEL="排水管工",$=id=>document.getElementById(id);
+const EXCLUDE=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","savedPriceList","pricePresetName","E"]);
+/* 製品のみ：製品そのものに属する項目。工法・施工条件は含めない */
+const PRODUCT_IDS=new Set(["ProdLen","ProdPrice","Pset","Psocket","ProductMasterId","ProductMasterUpdatedAt","ProductName","ProductManufacturer","ProductSpecification"]);
+const DIM_IDS=["W1","W2","w3","H1","H2","H3","H4","H5","N","ProdLen","ProdPrice","Pset","Psocket"];
+const SOURCE_KEY="MS_DRAIN_PIPE_TEMPLATE_DIM_SOURCE_V160";
+let pendingDuplicate=null,editingContentId="";
+
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const txt=id=>String($(id)?.value||"").trim();
+async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テンプレート共通機能を読み込めません。ms_common.jsを最新版にしてください。");await MS.init();}
+function collect(){const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{if(!el.id||EXCLUDE.has(el.id)||el.closest(".em-modal"))return;if(["button","submit","file"].includes(el.type))return;o[el.id]=el.type==="checkbox"?!!el.checked:el.value;});return o;}
+function applyOne(id,v){const el=$(id);if(!el)return;if(el.type==="checkbox"){el.checked=!!v;}else{el.value=v;}try{el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}catch(e){}}
+function sourceNum(v){
+  const x=Number(String(v==null?"":v).replace(/,/g,""));
+  return Number.isFinite(x)?x:0;
+}
+function sourceSame(a,b){
+  return Math.abs(sourceNum(a)-sourceNum(b))<0.000001;
+}
+function clearSource(){
+  DIM_IDS.forEach(id=>{
+    const e=$(id);
+    if(!e)return;
+    e.classList.remove("template-source","template-source-edited");
+    delete e.dataset.templateSourceValue;
+    e.title="";
+  });
+  try{sessionStorage.removeItem(SOURCE_KEY);}catch(e){}
+}
+function setSource(values,mode="all"){
+  clearSource();
+  const target=mode==="product"?PRODUCT_IDS:new Set(DIM_IDS);
+  const saved={};
+  DIM_IDS.forEach(id=>{
+    if(!target.has(id))return;
+    const e=$(id);
+    if(!e||!Object.prototype.hasOwnProperty.call(values||{},id))return;
+    const v=values[id];
+    e.dataset.templateSourceValue=String(v??"");
+    e.classList.remove("template-source-edited");
+    e.classList.add("template-source");
+    e.title="積算テンプレートから反映された値です";
+    saved[id]=String(v??"");
+  });
+  try{sessionStorage.setItem(SOURCE_KEY,JSON.stringify(saved));}catch(e){}
+}
+document.addEventListener("input",function(ev){
+  const e=ev.target;
+  if(!e||!DIM_IDS.includes(e.id))return;
+  const base=e.dataset.templateSourceValue;
+  if(base===undefined)return;
+  const edited=!sourceSame(e.value,base);
+  e.classList.toggle("template-source",!edited);
+  e.classList.toggle("template-source-edited",edited);
+  e.title=edited
+    ?"積算テンプレートから反映後に手入力で変更した寸法です"
+    :"積算テンプレートから反映された寸法です";
+},true);
+function formatNow(){try{if(typeof calc==="function")calc();}catch(e){}try{if(typeof window.updateSelectedProductDisplay==="function")window.updateSelectedProductDisplay();}catch(e){}}
+function selected(r,mode){
+  const c=$("selectedEstimateTemplateContent"),b=$("selectedEstimateTemplateMode");
+  if(b)b.textContent=mode==="product"?"製品のみ":mode==="edit"?"編集中":"すべて";
+  if(c){
+    const v=r.values||{};
+    c.className="selected-template-content";
+    let html='<div class="selected-template-name">'+esc(r.name||"名称未設定")+'</div>';
+    html+='<div><b>製品：</b>長さ '+esc(v.ProdLen||"-")+' m ／ 価格 '+esc(v.ProdPrice||"0")+' 円 ／ 据付 '+esc(v.Pset||"0")+' 円/m ／ ソケット '+esc(v.Psocket||"0")+' 円</div>';
+    if(mode!=="product"){
+      html+='<div><b>工法：</b>'+esc(v.method||"-")+'</div>';
+      html+='<div><b>寸法：</b>W1 '+esc(v.W1||"-")+' / W2 '+esc(v.W2||"-")+' / W3 '+esc(v.w3||"-")+' / H1 '+esc(v.H1||"-")+' / H2 '+esc(v.H2||"-")+' / H3 '+esc(v.H3||"-")+' / H4 '+esc(v.H4||"-")+' / H5 '+esc(v.H5||"-")+'</div>';
+    }
+    c.innerHTML=html;
+  }
+}
+function resetSelected(){const c=$("selectedEstimateTemplateContent"),b=$("selectedEstimateTemplateMode");if(b)b.textContent="";if(c){c.className="selected-template-content selected-template-empty";c.textContent="積算テンプレートは選択されていません。";}clearSource();}
+function openRegister(name,memo){$("estimateMasterName").value=name!=null?name:(txt("estimateName")||"");$("estimateMasterMemo").value=memo||"";$("estimateMasterRegisterSummary").innerHTML="<b>積算名称：</b>"+esc(txt("estimateName")||"未設定")+"<br><b>工法：</b>"+esc(txt("method")||"-")+"<br><b>寸法：</b>W1 "+esc(txt("W1")||"-")+" / W2 "+esc(txt("W2")||"-")+" / W3 "+esc(txt("w3")||"-")+" / H1 "+esc(txt("H1")||"-")+" / H2 "+esc(txt("H2")||"-")+" / H3 "+esc(txt("H3")||"-")+" / H4 "+esc(txt("H4")||"-")+" / H5 "+esc(txt("H5")||"-")+"<br><b>製品：</b>長さ "+esc(txt("ProdLen")||"-")+" m　価格 "+esc(txt("ProdPrice")||"0")+" 円　据付 "+esc(txt("Pset")||"0")+" 円/m　ソケット "+esc(txt("Psocket")||"0")+" 円";$("estimateMasterRegisterModal").classList.add("show");}
+function closeRegister(){$("estimateMasterRegisterModal")?.classList.remove("show");}
+async function saveMaster(){await ensure();const name=txt("estimateMasterName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:txt("estimateMasterMemo"),meta:{source:"estimate-template"},values:collect()});pendingDuplicate=null;$("estimateMasterDuplicateBanner")?.classList.remove("show");closeRegister();alert("積算テンプレートに登録しました。");}
+async function renderList(){
+  await ensure();
+  const rows=await MS.EstimateMaster.search(txt("estimateMasterSearch"),APP_TYPE),box=$("estimateMasterList");
+  if(!rows.length){box.innerHTML='<div class="em-empty">積算テンプレートが登録されていません。</div>';return;}
+  box.innerHTML=rows.map(r=>{
+    const v=r.values||{};
+    return '<div class="em-item"><div><div class="em-item-name">'+esc(r.name||"名称未設定")+'</div>'+
+      '<div class="em-item-detail"><b>工法</b> '+esc(v.method||"-")+
+      '<br><b>寸法</b> W1 '+esc(v.W1||"-")+' / W2 '+esc(v.W2||"-")+' / W3 '+esc(v.w3||"-")+' / H1 '+esc(v.H1||"-")+' / H2 '+esc(v.H2||"-")+' / H3 '+esc(v.H3||"-")+' / H4 '+esc(v.H4||"-")+' / H5 '+esc(v.H5||"-")+
+      '<br><b>製品</b> 長さ '+esc(v.ProdLen||"-")+' m ／ 価格 '+esc(v.ProdPrice||"0")+' 円 ／ 据付 '+esc(v.Pset||"0")+' 円/m ／ ソケット '+esc(v.Psocket||"0")+' 円</div>'+
+      (r.memo?'<div class="em-item-memo">検索メモ：'+esc(r.memo)+'</div>':'')+
+      '</div><div class="em-item-actions"><button data-em-load-all="'+esc(r.id)+'">すべて</button><button data-em-load-product="'+esc(r.id)+'">製品のみ</button><button class="em-edit" data-em-edit="'+esc(r.id)+'">編集</button><button class="em-copy" data-em-copy="'+esc(r.id)+'">複製</button><button class="em-delete" data-em-delete="'+esc(r.id)+'">削除</button></div></div>';
+  }).join("");
+}
+async function openList(){await ensure();$("estimateMasterListModal").classList.add("show");await renderList();}
+function closeList(){$("estimateMasterListModal")?.classList.remove("show");}
+async function applyMaster(id,mode){await ensure();const r=await MS.EstimateMaster.get(id);if(!r)return;const keepP=txt("projectName"),keepE=txt("estimateName");Object.entries(r.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="E"||fid==="SocketQtyDisplay")return;if(mode==="product"&&!PRODUCT_IDS.has(fid))return;applyOne(fid,v);});if($("projectName"))$("projectName").value=keepP;if($("estimateName"))$("estimateName").value=mode==="all"?(r.name||keepE):keepE;formatNow();selected(r,mode);setSource(r.values||{},mode);closeList();alert('積算テンプレートから「'+(mode==="product"?"製品情報だけ":"登録内容をすべて")+'」を呼び出しました。');}
+async function editContent(id){await ensure();const r=await MS.EstimateMaster.get(id);if(!r)return;const keep=txt("projectName");Object.entries(r.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&fid!=="E"&&fid!=="SocketQtyDisplay")applyOne(fid,v);});if($("projectName"))$("projectName").value=keep;editingContentId=id;$("drainPipeTemplateEditName").textContent=r.name||"名称未設定";$("drainPipeTemplateEditBanner").classList.add("show");formatNow();setSource(r.values||{},"all");closeList();}
+async function overwriteLocal(){if(!editingContentId)return;await ensure();const r=await MS.EstimateMaster.get(editingContentId);if(!r)return;r.values=collect();await MS.EstimateMaster.save(r);$("drainPipeTemplateEditBanner")?.classList.remove("show");editingContentId="";clearSource();alert("積算テンプレートへ上書き保存しました。");await openList();}
+async function duplicate(id){await ensure();const r=await MS.EstimateMaster.get(id);if(!r)return;const keepP=txt("projectName"),keepE=txt("estimateName");Object.entries(r.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&fid!=="estimateName"&&fid!=="E"&&fid!=="SocketQtyDisplay")applyOne(fid,v);});if($("projectName"))$("projectName").value=keepP;if($("estimateName"))$("estimateName").value=keepE;pendingDuplicate=r;$("estimateMasterDuplicateBanner").classList.add("show");formatNow();setSource(r.values||{},"all");closeList();}
+async function removeMaster(id){await ensure();const r=await MS.EstimateMaster.get(id);if(r&&confirm("「"+(r.name||"このテンプレート")+"」を削除しますか？")){await MS.EstimateMaster.remove(id);await renderList();}}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  $("registerEstimateMasterBtn")?.addEventListener("click",()=>openRegister(pendingDuplicate?(pendingDuplicate.name||"")+" コピー":undefined,pendingDuplicate?.memo||""));
+  $("openEstimateMasterBtn")?.addEventListener("click",()=>openList().catch(e=>alert(e.message||e)));
+  $("closeEstimateMasterRegisterBtn")?.addEventListener("click",closeRegister);$("cancelEstimateMasterBtn")?.addEventListener("click",closeRegister);$("saveEstimateMasterBtn")?.addEventListener("click",()=>saveMaster().catch(e=>alert(e.message||e)));
+  $("closeEstimateMasterListBtn")?.addEventListener("click",closeList);$("estimateMasterSearch")?.addEventListener("input",()=>renderList().catch(console.error));$("clearEstimateMasterSearchBtn")?.addEventListener("click",()=>{if($("estimateMasterSearch"))$("estimateMasterSearch").value="";renderList().catch(console.error);});
+  $("estimateMasterList")?.addEventListener("click",e=>{const a=e.target.closest("[data-em-load-all]");if(a)return applyMaster(a.dataset.emLoadAll,"all");const p=e.target.closest("[data-em-load-product]");if(p)return applyMaster(p.dataset.emLoadProduct,"product");const ed=e.target.closest("[data-em-edit]");if(ed)return editContent(ed.dataset.emEdit);const cp=e.target.closest("[data-em-copy]");if(cp)return duplicate(cp.dataset.emCopy);const d=e.target.closest("[data-em-delete]");if(d)return removeMaster(d.dataset.emDelete);});
+  $("drainPipeTemplateOverwriteBtn")?.addEventListener("click",()=>overwriteLocal().catch(e=>alert(e.message||e)));
+  $("newInputBtn")?.addEventListener("click",()=>{pendingDuplicate=null;editingContentId="";$("estimateMasterDuplicateBanner")?.classList.remove("show");$("drainPipeTemplateEditBanner")?.classList.remove("show");resetSelected();},true);
+});
+window.MSDrainPipeResetSelectedEstimateTemplate=resetSelected;
+window.MSDrainPipeSetTemplateSource=setSource;
+window.MSDrainPipeClearTemplateSource=clearSource;
+
+document.addEventListener("DOMContentLoaded",function(){
+  try{
+    const saved=JSON.parse(sessionStorage.getItem(SOURCE_KEY)||"null");
+    if(saved&&typeof saved==="object")setTimeout(()=>setSource(saved),300);
+  }catch(e){}
+  $("newInputBtn")?.addEventListener("click",clearSource,true);
+});
+})(window,document);
+</script>
+
+<script id="drain-pipe-past-estimate-copy-v160">
+(function(window,document){
+"use strict";
+const APP_TYPE="drainage_pipe",APP_LABEL="排水管工",$=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function ready(){if(!window.MS)throw new Error("ms_common.js が読み込まれていません。");await MS.init();}
+async function listProjects(){if(MS.Project?.list)return await MS.Project.list();if(typeof MS.listProjects==="function")return await MS.listProjects();return [];}
+async function listEstimates(pid){if(MS.Estimate?.listByProjectAndApp)return await MS.Estimate.listByProjectAndApp(pid,APP_TYPE);const all=typeof MS.listEstimates==="function"?await MS.listEstimates(pid):[];return(all||[]).filter(e=>String(e.appType||e.app||"")===APP_TYPE);}
+async function getEstimate(id){if(MS.Estimate?.get)return await MS.Estimate.get(id);if(typeof MS.getEstimate==="function")return await MS.getEstimate(id);return null;}
+const pName=p=>(p&&(p.name||p.projectName))||"名称未設定の工事", eName=e=>(e&&(e.name||e.estimateName))||"名称未設定";
+function dateText(v){if(!v)return"日付不明";const d=new Date(v);return Number.isNaN(d.getTime())?"日付不明":d.toLocaleString("ja-JP");}
+let cached=[];
+async function load(){await ready();const current=typeof MS.getCurrentProjectId==="function"?MS.getCurrentProjectId():"",projects=await listProjects(),rows=[];for(const p of projects){if(current&&p.id===current)continue;for(const e of(await listEstimates(p.id)||[]))rows.push({estimate:e,projectName:pName(p),estimateName:eName(e),updatedAt:e.updatedAt||e.createdAt||""});}rows.sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));cached=rows;render();}
+function render(){const box=$("otherProjectCopyList");if(!box)return;const q=String($("otherProjectCopySearch")?.value||"").trim().toLowerCase(),words=q.split(/\s+/).filter(Boolean),rows=cached.filter(r=>{const h=(r.estimateName+" "+r.projectName).toLowerCase();return words.every(w=>h.includes(w));});if(!rows.length){box.innerHTML='<div class="opc-empty">コピーできる過去の排水管工積算がありません。</div>';return;}box.innerHTML='<div class="opc-flat-head"><span>積算名称</span><span>工事名</span><span>更新日</span><span></span></div>'+rows.map(r=>'<div class="opc-estimate-flat"><div class="opc-flat-name">'+esc(r.estimateName)+'</div><div class="opc-flat-project">'+esc(r.projectName)+'</div><div class="opc-flat-date">'+esc(dateText(r.updatedAt))+'</div><button class="opc-flat-copy" type="button" data-opc-id="'+esc(r.estimate.id)+'" data-opc-project="'+esc(r.projectName)+'">コピー</button></div>').join("");}
+function closeModal(){$("otherProjectCopyModal")?.classList.remove("show");}
+async function openModal(){$("otherProjectCopyModal")?.classList.add("show");$("otherProjectCopyList").innerHTML='<div class="opc-empty">読込中...</div>';await load();}
+function applyValues(values){Object.entries(values||{}).forEach(([id,v])=>{if(id==="projectName")return;const el=$(id);if(!el)return;if(el.type==="checkbox")el.checked=!!v;else el.value=v;try{el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}catch(e){}});}
+async function copyEstimate(id,source){const item=await getEstimate(id);if(!item)return alert("コピー元の積算データが見つかりません。");if(!confirm('現在入力中の内容を、過去物件「'+source+'」の「'+eName(item)+'」で置き換えますか？'))return;const keep=$("projectName")?.value||"";applyValues(item.values||(item.data&&item.data.values)||{});if($("projectName"))$("projectName").value=keep;if($("estimateName"))$("estimateName").value=eName(item);try{if(typeof calc==="function")calc();}catch(e){}if(typeof window.MSDrainPipeResetSelectedEstimateTemplate==="function")window.MSDrainPipeResetSelectedEstimateTemplate();const b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+source+'」の「'+eName(item)+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}try{sessionStorage.setItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE,JSON.stringify({sourceProjectName:source,estimateName:eName(item)}));}catch(e){}closeModal();}
+function restore(){try{const d=JSON.parse(sessionStorage.getItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE)||"null");if(!d)return;const b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+d.sourceProjectName+'」の「'+d.estimateName+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}}catch(e){}}
+window.MSClearPastEstimateCopyEditing=function(){try{sessionStorage.removeItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE);}catch(e){}$("pastEstimateCopyBanner")?.classList.remove("show");};
+document.addEventListener("DOMContentLoaded",()=>{$("openOtherProjectCopyBtn")?.addEventListener("click",()=>openModal().catch(e=>alert(e.message||e)));$("closeOtherProjectCopyBtn")?.addEventListener("click",closeModal);$("otherProjectCopySearch")?.addEventListener("input",render);$("otherProjectCopyList")?.addEventListener("click",e=>{const b=e.target.closest("[data-opc-id]");if(b)copyEstimate(b.dataset.opcId,b.dataset.opcProject||"過去物件").catch(e=>alert(e.message||e));});$("newInputBtn")?.addEventListener("click",window.MSClearPastEstimateCopyEditing,true);restore();});
+})(window,document);
+</script>
+
+<script id="drain-pipe-template-content-edit-from-index">
+(function(window,document){
+"use strict";
+const APP_TYPE="drainage_pipe",$=id=>document.getElementById(id);
+async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テンプレート共通機能を読み込めません。");await MS.init();}
+function applyValue(id,v){const el=$(id);if(!el)return;if(el.type==="checkbox")el.checked=!!v;else el.value=v;try{el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}catch(e){}}
+function collectValues(){const ex=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","savedPriceList","pricePresetName"]);const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{if(!el.id||ex.has(el.id)||el.closest(".em-modal")||["button","submit","file"].includes(el.type))return;o[el.id]=el.type==="checkbox"?!!el.checked:el.value;});return o;}
+async function loadFromIndex(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}const p=new URLSearchParams(location.search);if(p.get("templateEdit")!=="1"||!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;const keep=$("projectName")?.value||"";Object.entries(item.values||{}).forEach(([id,v])=>{if(id!=="projectName")applyValue(id,v);});if($("projectName"))$("projectName").value=keep;try{if(typeof calc==="function")calc();}catch(e){}if(typeof window.MSDrainPipeSetTemplateSource==="function")window.MSDrainPipeSetTemplateSource(item.values||{});$("drainPipeTemplateEditName").textContent=item.name||req.name||"名称未設定";$("drainPipeTemplateEditBanner").classList.add("show");window.__MS_DRAIN_PIPE_INDEX_TEMPLATE_EDIT_ID=req.id;}
+async function overwriteFromIndex(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;item.values=collectValues();await MS.EstimateMaster.save(item);try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("drainPipeTemplateEditBanner")?.classList.remove("show");alert("積算テンプレートを上書き保存しました。");let ret=false;try{ret=sessionStorage.getItem("MS_RETURN_TO_ESTIMATE_MASTER_ADMIN")==="1";}catch(e){}if(ret){try{sessionStorage.removeItem("MS_RETURN_TO_ESTIMATE_MASTER_ADMIN");sessionStorage.setItem("MS_REOPEN_ESTIMATE_MASTER_ADMIN","1");}catch(e){}location.href="index.html";}}
+document.addEventListener("DOMContentLoaded",()=>{const btn=$("drainPipeTemplateOverwriteBtn");btn?.addEventListener("click",e=>{let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(err){}if(!req||req.appType!==APP_TYPE||!req.id)return;e.preventDefault();e.stopImmediatePropagation();overwriteFromIndex().catch(err=>alert(err.message||"上書き保存に失敗しました。"));},true);$("newInputBtn")?.addEventListener("click",()=>{try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("drainPipeTemplateEditBanner")?.classList.remove("show");},true);setTimeout(()=>loadFromIndex().catch(console.error),700);});
+})(window,document);
+</script>
+
+
+<script id="drain-pipe-template-session-cleanup-v160">
+(function(window){
+  "use strict";
+  window.addEventListener("pagehide",function(){
+    try{
+      sessionStorage.removeItem("MS_DRAIN_PIPE_TEMPLATE_DIM_SOURCE_V160");
+      if(typeof window.MSDrainPipeClearTemplateSource==="function"){
+        window.MSDrainPipeClearTemplateSource();
+      }
+    }catch(e){}
+  });
+})(window);
 </script>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>重力式擁壁 積算アプリ Ver.1.4.0</title>
+<title>重力式擁壁 積算アプリ Ver.1.6.0 積算テンプレート統合版</title>
 <style>
 :root{--blue:#0070c0;--bg:#f6f8fb;--card:#fff;--text:#1b1f24;--muted:#6b7280;--border:#e5e7eb;--shadow:0 10px 24px rgba(0,0,0,.07);--radius:16px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text)}
@@ -383,10 +383,35 @@ section.card:nth-of-type(2) #profit{
 #accessoryDetails #Pfilter{border-left:6px solid #8A4653!important;border-bottom-color:#8A4653!important;}
 @media(max-width:700px){#accessoryDetails .accessory-choice{grid-template-columns:1fr!important;}}
 </style>
+
+<style id="gravity-template-source-standard-v160">
+section.card:nth-of-type(2) input.template-source,
+section.card:nth-of-type(2) select.template-source{
+  background:#fbf9ff!important;
+  color:var(--text)!important;
+  border-left:6px solid #8b5cc7!important;
+  border-bottom:2px solid #8b5cc7!important;
+}
+section.card:nth-of-type(2) input.template-source-edited,
+section.card:nth-of-type(2) select.template-source-edited{
+  background:#fffdf4!important;
+  color:var(--text)!important;
+  border-left:6px solid #e3b341!important;
+  border-bottom:2px solid #e3b341!important;
+}
+</style>
+
 </head>
 <body>
-<header><div class="wrap"><div><h1 id="gravityDefaultsTrigger" title="重力式擁壁積算">重力式擁壁 積算アプリ Ver.1.4.0</h1><div class="sub">土工／地業／擁壁／止水・水抜き・裏込め工を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
-<main><div class="grid">
+<header><div class="wrap"><div><h1 id="gravityDefaultsTrigger" title="重力式擁壁積算">重力式擁壁 積算アプリ Ver.1.6.0</h1><div class="sub">土工／地業／擁壁／止水・水抜き・裏込め工を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
+<main>
+<div id="estimateTemplateContentEditBanner" class="template-content-edit-banner">
+  <div><b>積算テンプレート内容を編集中</b><br><span id="estimateTemplateContentEditName"></span></div>
+  <button id="saveTemplateContentOverwriteBtn" type="button">テンプレートへ上書き保存</button>
+</div>
+<div id="pastEstimateCopyBanner" class="past-estimate-copy-banner"></div>
+<div id="estimateMasterDuplicateBanner" class="em-duplicate-edit-banner">積算テンプレートの複製を編集中です。内容を修正後、「現積算テンプレート登録」で新しいテンプレートとして保存してください。</div>
+<div class="grid">
 <section class="card"><h2><span class="dot"></span>断面</h2><div class="body">
 <div class="illust-box"><svg id="wallSvg" class="illust-svg" viewBox="0 0 1100 1000" xmlns="http://www.w3.org/2000/svg">
 <defs><pattern id="filterHatch" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M-4 16 L16 -4 M4 20 L20 4" stroke="#777" stroke-width="2"/></pattern><linearGradient id="gc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efe6d6"/><stop offset="1" stop-color="#d8c8ae"/></linearGradient><linearGradient id="lc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f4f4"/><stop offset="1" stop-color="#d9d9d9"/></linearGradient><pattern id="sp" width="34" height="26" patternUnits="userSpaceOnUse"><rect width="34" height="26" fill="#d7c09e"/><circle cx="6" cy="6" r="2.4" fill="#7a5a32"/><circle cx="17" cy="4" r="1.8" fill="#92744b"/><circle cx="28" cy="8" r="2.5" fill="#6e512c"/><circle cx="10" cy="17" r="2.8" fill="#87683e"/><circle cx="23" cy="16" r="2.2" fill="#74562f"/></pattern></defs>
@@ -425,16 +450,9 @@ section.card:nth-of-type(2) #profit{
 </g>
 <line x1="510" y1="90" x2="640" y2="90" class="dimline"/>
 <!-- 付帯工表示 -->
-<g id="waterstopGroup">
-  <rect x="640" y="590" width="90" height="30" fill="#c8d7e8" stroke="#555" stroke-width="2"/>
-  <text x="685" y="580" class="matText" style="font-size:22px">止水Co</text>
-</g>
-<g id="backfillStoneGroup">
-  <rect x="640" y="250" width="48" height="340" fill="url(#sp)" stroke="#555" stroke-width="2"/>
-</g>
-<g id="filterSheetGroup" style="display:none">
-  <rect x="642" y="250" width="12" height="340" fill="url(#filterHatch)" stroke="#555" stroke-width="2"/>
-</g>
+
+
+
 <line x1="510" y1="90" x2="510" y2="135" class="dimline"/><line x1="640" y1="90" x2="640" y2="135" class="dimline"/><text x="575" y="52" text-anchor="middle" class="dimText dim-w1">W1</text>
 <line x1="360" y1="815" x2="640" y2="815" class="dimline"/><line x1="360" y1="770" x2="360" y2="815" class="dimline"/><line x1="640" y1="770" x2="640" y2="815" class="dimline"/><text x="500" y="860" text-anchor="middle" class="dimText dim-w2">W2</text>
 <line x1="270" y1="925" x2="730" y2="925" class="dimline"/><line x1="270" y1="835" x2="270" y2="925" class="dimline"/><line x1="730" y1="835" x2="730" y2="925" class="dimline"/><text x="500" y="975" text-anchor="middle" class="dimText dim-w3">W3</text>
@@ -448,7 +466,24 @@ section.card:nth-of-type(2) #profit{
 </g>
 </svg></div>
 <div class="estimate-panel"><div class="save-line"><label>工事名</label><input id="projectName" placeholder="例：○○造成工事"></div>
-<div class="control-block estimate-block"><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：北側 重力式擁壁 H1.5m L20m"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="save-btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div><div class="note">工事名ごとに保存済み一覧を分けて表示します。</div></div>
+<div class="control-block estimate-block"><div class="sectionTitle">積算データ保存</div><div class="save-line"><label>積算名称</label><input id="estimateName" placeholder="例：北側 重力式擁壁 H1.5m L20m"></div><div class="save-line"><label>保存済み</label><select id="savedEstimateList"><option value="">保存データなし</option></select></div><div class="save-btns"><button class="primary" id="saveEstimateBtn">保存</button><button class="ghost" id="loadEstimateBtn">呼出</button><button class="danger" id="deleteEstimateBtn">削除</button></div><div class="note">工事名ごとに保存済み一覧を分けて表示します。</div>
+<div class="other-project-copy-actions"><button id="openOtherProjectCopyBtn" type="button">過去積算を呼出</button></div></div>
+<div class="control-block estimate-master-block">
+  <div class="sectionTitle">積算テンプレート</div>
+  <div class="note template-master-note" style="margin-top:0">寸法・単価・付帯工など、現在の積算内容をまとめて登録します。</div>
+  <div class="estimate-master-actions">
+    <button class="primary" id="registerEstimateMasterBtn" type="button">現積算テンプレート登録</button>
+    <button class="ghost" id="openEstimateMasterBtn" type="button">テンプレート呼出</button>
+  </div>
+  <div id="selectedEstimateTemplateBox" class="selected-template-box" data-mode="none">
+    <div class="selected-template-head">
+      <span class="selected-template-dot"></span>
+      <span>選択中の積算テンプレート</span>
+      <span id="selectedEstimateTemplateMode" class="selected-template-mode"></span>
+    </div>
+    <div id="selectedEstimateTemplateContent" class="selected-template-content selected-template-empty">積算テンプレートは選択されていません。</div>
+  </div>
+</div>
 <div class="control-block price-block">
 <div class="sectionTitle">今回の積算で使用する単価</div>
 <div class="save-line"><label>共通単価マスター</label><select id="gwCommonPriceList"></select></div>
@@ -1709,6 +1744,216 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
     });
   }
 })();
+</script>
+
+
+<div id="estimateMasterRegisterModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog em-dialog-small">
+    <div class="em-head"><div><h3>積算テンプレートに登録</h3><div class="em-head-sub">現在の重力式擁壁の積算内容をまとめて保存します。</div></div><button id="closeEstimateMasterRegisterBtn" type="button">閉じる</button></div>
+    <div class="em-body">
+      <div class="em-form">
+        <label>工種</label><input type="text" value="重力式擁壁" readonly>
+        <label>マスター名</label><input id="estimateMasterName" type="text" placeholder="例：H1500 標準">
+        <label>検索メモ</label><textarea id="estimateMasterMemo" placeholder="任意"></textarea>
+      </div>
+      <div id="estimateMasterRegisterSummary" class="em-summary"></div>
+      <div class="em-buttons"><button id="cancelEstimateMasterBtn" class="ghost" type="button">キャンセル</button><button id="saveEstimateMasterBtn" class="primary" type="button">登録</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="estimateMasterListModal" class="em-modal" aria-hidden="true">
+  <div class="em-dialog">
+    <div class="em-head"><div><h3>重力式擁壁　積算テンプレート</h3><div class="em-head-sub">登録内容は「すべて」呼び出します。</div></div><button id="closeEstimateMasterListBtn" type="button">閉じる</button></div>
+    <div class="em-search"><input id="estimateMasterSearch" type="search" placeholder="マスター名・検索メモから検索"><button id="clearEstimateMasterSearchBtn" type="button">クリア</button></div>
+    <div id="estimateMasterList" class="em-list"></div>
+  </div>
+</div>
+
+<div id="otherProjectCopyModal" class="opc-modal" aria-hidden="true">
+  <div class="opc-dialog">
+    <div class="opc-head"><div><h3>過去積算を呼出</h3><div style="font-size:12px;margin-top:3px;opacity:.92">過去の重力式擁壁積算を、積算名称または工事名から検索して呼び出します。</div></div><button id="closeOtherProjectCopyBtn" class="opc-close" type="button">閉じる</button></div>
+    <div class="opc-tools"><input id="otherProjectCopySearch" type="search" placeholder="積算名称・工事名から検索"></div>
+    <div id="otherProjectCopyList" class="opc-list"></div>
+  </div>
+</div>
+
+<style id="gravity-template-v160-style">
+.estimate-master-block{border-color:#d8c9f2!important;background:#fdfbff!important}
+.estimate-master-block .sectionTitle{color:#5a35a3!important}.estimate-master-block .sectionTitle:before{background:#8b5cc7!important}
+.estimate-master-actions{display:grid;grid-template-columns:1.25fr 1fr;gap:7px;margin-top:8px}
+.estimate-master-actions button{min-width:0!important;width:100%!important;padding:8px 5px!important;font-size:11px!important;white-space:nowrap}
+.estimate-master-actions .primary{background:#7c4cc4!important;color:#fff!important}.estimate-master-actions .ghost{background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}
+.selected-template-box{margin-top:8px;border:1px solid #d8c9f2;border-radius:10px;background:#fff;overflow:hidden}
+.selected-template-head{display:flex;align-items:center;gap:6px;padding:7px 9px;background:#f3edff;border-bottom:1px solid #e2d7f5;color:#5a35a3;font-size:10.5px;font-weight:900}
+.selected-template-dot{width:7px;height:7px;border-radius:50%;background:#8b5cc7}.selected-template-mode{margin-left:auto;padding:1px 7px;border:1px solid #d8c9f2;border-radius:999px;background:#fff;font-size:9.5px}
+.selected-template-content{padding:8px 9px;color:#4d3a67;font-size:10.5px;line-height:1.55}.selected-template-empty{color:#8a7a9d}.selected-template-name{font-size:12px;font-weight:950;color:#5a35a3;margin-bottom:5px}.selected-template-row{border-bottom:1px dotted #eadff8;padding:2px 0}.selected-template-row:last-child{border-bottom:none}
+
+.em-modal{display:none;position:fixed;inset:0;background:rgba(31,18,55,.46);z-index:1150;align-items:center;justify-content:center;padding:18px}.em-modal.show{display:flex}
+.em-dialog{width:min(860px,100%);max-height:88vh;background:#fff;border:1px solid #d8c9f2;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}.em-dialog-small{width:min(640px,100%)}
+.em-head{padding:15px 18px;background:linear-gradient(135deg,#6f48b5,#563493);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px}.em-head h3{margin:0;font-size:20px}.em-head-sub{font-size:11px;opacity:.9;margin-top:3px}.em-head button{width:auto!important;min-width:70px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.45)}
+.em-body{padding:14px 18px;overflow:auto}.em-form{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}.em-form label{margin:0;font-weight:800}.em-form textarea{height:76px}.em-summary{margin-top:12px;border:1px solid #e2d7f5;border-radius:10px;background:#fdfcff;padding:10px;font-size:12px;line-height:1.6;color:#4d3a67}
+.em-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.em-buttons button{width:auto;min-width:90px}.em-search{padding:11px 18px;border-bottom:1px solid #eadff8;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fbf9ff}.em-search input{height:36px}.em-search button{width:auto;min-width:72px;background:#f3edff;color:#5a35a3;border:1px solid #d8c9f2}
+.em-list{padding:12px 18px;overflow:auto;display:grid;gap:8px}.em-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #dfe5ee;border-radius:12px;padding:10px;background:#fff}.em-item:hover{background:#f8fbff;border-color:#b9c7d9}
+.em-item-name{font-weight:950;color:#334155}.em-item-meta,.em-item-memo,.em-date{font-size:11px;color:#60758d;line-height:1.5;margin-top:2px}.em-item-detail{font-size:11.5px;color:#52637a;line-height:1.65;margin-top:5px;padding:6px 8px;background:#f8fafc;border-radius:8px;border:1px solid #edf1f6}
+.em-item-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;width:260px}.em-item-actions button{min-width:0!important;width:100%!important;height:30px!important;padding:0 4px!important;font-size:10px!important;border-radius:7px!important}.em-load{grid-column:1/-1;background:#6d3fb3!important;color:#fff!important}.em-copy{grid-column:span 2;background:#f3edff!important;color:#5a35a3!important;border:1px solid #d8c9f2!important}.em-delete{grid-column:span 1;background:#fff1f2!important;color:#b42318!important;border:1px solid #f1c9cd!important}
+.em-empty{padding:18px;text-align:center;color:#6f6280;border:1px dashed #d8c9f2;border-radius:12px}
+
+.template-content-edit-banner,.em-duplicate-edit-banner{display:none;max-width:1500px;margin:0 auto 12px;border-radius:12px;padding:10px 14px}.template-content-edit-banner.show{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f3edff;border:1px solid #cdbcf2;color:#4d3568}.template-content-edit-banner button{width:auto!important;min-width:180px!important;background:#6d3fb3!important;color:#fff!important}.em-duplicate-edit-banner.show{display:block;background:#fff8e7;border:1px solid #e8cc75;color:#765d13;font-size:12px;font-weight:800}
+
+.other-project-copy-actions{margin-top:8px}.other-project-copy-actions button{width:100%!important;height:34px!important;border:1px solid #cfe3f7!important;background:#eef6ff!important;color:#0647a5!important;border-radius:9px!important;font-size:12px!important;font-weight:900!important}
+.opc-modal{display:none;position:fixed;inset:0;z-index:1200;background:rgba(8,24,48,.48);align-items:center;justify-content:center;padding:18px}.opc-modal.show{display:flex}.opc-dialog{width:min(900px,100%);max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;display:flex;flex-direction:column}
+.opc-head{padding:15px 17px;background:linear-gradient(135deg,#0647a5,#1673d1);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}.opc-head h3{margin:0;font-size:19px}.opc-close{width:auto!important;min-width:72px!important;background:#fff!important;color:#0647a5!important}.opc-tools{padding:10px 14px;border-bottom:1px solid #dbeafe}.opc-tools input{width:100%;height:36px;border:1px solid #cfe3f7;border-radius:9px;padding:7px 10px}.opc-list{padding:12px 14px;overflow:auto;display:grid;gap:7px}.opc-empty{padding:16px;text-align:center;color:#64748b;border:1px dashed #cfe3f7;border-radius:10px}
+.opc-flat-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;padding:0 10px 4px;color:#60758d;font-size:10.5px;font-weight:900}.opc-flat-head span:nth-child(3){text-align:right}.opc-estimate-flat{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 150px auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid #d7e7f7;border-radius:10px;background:#fff}.opc-estimate-flat:hover{background:#f8fbff;border-color:#9fc7ed}.opc-flat-name{font-size:13px;font-weight:950;color:#122033;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-project{font-size:12px;color:#52637a;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opc-flat-date{font-size:10.5px;color:#7b8da3;white-space:nowrap;text-align:right}.opc-flat-copy{width:auto!important;min-width:76px!important;background:#0647a5!important;color:#fff!important}
+
+#pastEstimateCopyBanner.past-estimate-copy-banner{position:relative!important;display:none;max-width:1500px!important;margin:0 auto 12px!important;padding:25px 16px 12px 50px!important;border:1px solid #f0c36a!important;border-left:7px solid #f59e0b!important;border-radius:12px!important;background:linear-gradient(90deg,#fff7df 0%,#fffaf0 100%)!important;color:#7a4a05!important;font-size:12.5px!important;font-weight:800!important;line-height:1.6!important;box-shadow:0 5px 14px rgba(180,110,0,.12)!important}
+#pastEstimateCopyBanner.past-estimate-copy-banner.show{display:block!important}#pastEstimateCopyBanner.past-estimate-copy-banner::before{content:"📋"!important;position:absolute!important;left:15px!important;top:50%!important;transform:translateY(-50%)!important;font-size:22px!important}#pastEstimateCopyBanner.past-estimate-copy-banner::after{content:"過去積算からコピー中"!important;display:block!important;position:absolute!important;left:49px!important;top:8px!important;color:#b45f06!important;font-size:10.5px!important;font-weight:950!important;letter-spacing:.04em!important}
+@media(max-width:700px){.em-form{grid-template-columns:1fr}.em-item{grid-template-columns:1fr}.em-item-actions{width:100%}.opc-flat-head{display:none}.opc-estimate-flat{grid-template-columns:1fr auto}.opc-flat-project,.opc-flat-date{grid-column:1/-1}.opc-flat-date{text-align:left}.opc-flat-copy{grid-column:2;grid-row:1}}
+</style>
+
+<script id="gravity-template-v160-script">
+(function(window,document){
+"use strict";
+const APP_TYPE="gravity_wall",APP_LABEL="重力式擁壁";
+const EXCLUDE=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","gwCommonPriceList","e"]);
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const val=id=>String($(id)?.value||"").trim();
+const num=v=>{const n=Number(String(v==null?"":v).replace(/,/g,""));return Number.isFinite(n)?n:0};
+const dim=v=>num(v).toFixed(2);
+async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テンプレート共通機能を読み込めません。ms_common.jsをVer.1.6.0対応版にしてください。");await MS.init();}
+function collect(){const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(e=>{if(!e.id||EXCLUDE.has(e.id)||e.closest(".em-modal")||e.closest(".opc-modal"))return;if(["button","submit","file","hidden"].includes(e.type))return;o[e.id]=(e.type==="checkbox"||e.type==="radio")?!!e.checked:e.value;});return o;}
+function applyValue(id,v){const e=$(id);if(!e)return;if(e.type==="checkbox"||e.type==="radio")e.checked=!!v;else e.value=v;try{e.dispatchEvent(new Event("input",{bubbles:true}));e.dispatchEvent(new Event("change",{bubbles:true}));}catch(x){}}
+function priceName(){const s=$("gwCommonPriceList");if(s&&s.selectedIndex>=0)return String(s.options[s.selectedIndex]?.textContent||"").trim()||"手入力単価";return"手入力単価";}
+function meta(){return {H1:val("H1"),H2:val("H2"),H3:val("H3"),H4:val("H4"),W1:val("W1"),W2:val("W2"),W3:val("W3"),L:val("L"),priceName:priceName()};}
+function clearSelected(){const c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(m)m.textContent="";if(c){c.className="selected-template-content selected-template-empty";c.textContent="積算テンプレートは選択されていません。";}}
+function renderSelected(item,mode){const v=item.values||{},c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(!c)return;if(m)m.textContent=mode==="edit"?"編集中":"すべて";c.className="selected-template-content";c.innerHTML='<div class="selected-template-name">'+esc(item.name||"名称未設定")+'</div><div class="selected-template-row"><b>断面寸法</b> W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / W3 '+dim(v.W3)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / H4 '+dim(v.H4)+' m</div><div class="selected-template-row"><b>施工</b> n '+dim(v.n)+' / L '+dim(v.L)+' m</div><div class="selected-template-row">単価：'+esc((item.meta||{}).priceName||"手入力単価")+'</div>';}
+function suggested(){return val("estimateName")||("重力式擁壁 H"+(val("H1")||"-"));}
+function openRegister(){let dn="",dm="";try{dn=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname)||"";dm=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname)||"";}catch(e){}$("estimateMasterName").value=dn||suggested();$("estimateMasterMemo").value=dm||"";const v=collect();$("estimateMasterRegisterSummary").innerHTML='<b>断面：</b>W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / W3 '+dim(v.W3)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / H4 '+dim(v.H4)+' m<br><b>施工：</b>n '+dim(v.n)+' / L '+dim(v.L)+' m';$("estimateMasterRegisterModal").classList.add("show");}
+function closeRegister(){$("estimateMasterRegisterModal")?.classList.remove("show");}
+async function saveMaster(){await ensure();const name=val("estimateMasterName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("estimateMasterMemo"),meta:meta(),values:collect()});try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname);sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname);}catch(e){}$("estimateMasterDuplicateBanner")?.classList.remove("show");closeRegister();alert("積算テンプレートに登録しました。");}
+function formatDate(v){if(!v)return"登録日不明";const d=new Date(v);return Number.isNaN(d.getTime())?"登録日不明":d.toLocaleString("ja-JP");}
+async function render(){await ensure();const rows=await MS.EstimateMaster.search(val("estimateMasterSearch"),APP_TYPE),all=await MS.EstimateMaster.list(APP_TYPE),box=$("estimateMasterList");if(!rows.length){box.innerHTML='<div class="em-empty">'+(all.length?"検索条件に一致するテンプレートがありません。":"まだ積算テンプレートが登録されていません。")+'</div>';return;}box.innerHTML=rows.map(item=>{const v=item.values||{},m=item.meta||{};return '<div class="em-item"><div><div class="em-item-name">'+esc(item.name||"名称未設定")+'</div><div class="em-item-meta">'+esc(m.priceName||"単価情報なし")+'</div><div class="em-item-detail"><b>断面</b> W1 '+dim(v.W1)+'　W2 '+dim(v.W2)+'　W3 '+dim(v.W3)+'　H1 '+dim(v.H1)+'　H2 '+dim(v.H2)+'　H3 '+dim(v.H3)+'　H4 '+dim(v.H4)+' m<br><b>施工</b> n '+dim(v.n)+'　L '+dim(v.L)+' m</div>'+(item.memo?'<div class="em-item-memo">検索メモ：'+esc(item.memo)+'</div>':'')+'<div class="em-date">登録日：'+esc(formatDate(item.createdAt))+'</div></div><div class="em-item-actions"><button class="em-load" data-load="'+esc(item.id)+'">すべて呼出</button><button class="em-copy" data-copy="'+esc(item.id)+'">複製</button><button class="em-delete" data-del="'+esc(item.id)+'">削除</button></div></div>';}).join("");}
+async function openList(){await render();$("estimateMasterListModal")?.classList.add("show");}
+function closeList(){$("estimateMasterListModal")?.classList.remove("show");}
+async function loadMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=item.name||"重力式擁壁 積算";try{if(typeof window.MSGWCommaDisplayChange==="function")window.MSGWCommaDisplayChange();if(typeof calc==="function")calc();}catch(e){}renderSelected(item,"all");if(typeof window.MSGWSetTemplateSource==="function")window.MSGWSetTemplateSource(item.values||{});closeList();alert("積算テンプレートを呼び出しました。");}
+async function duplicateMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}try{calc();}catch(e){}closeList();$("estimateMasterDuplicateBanner")?.classList.add("show");}
+async function removeMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;if(!confirm("「"+(item.name||"このテンプレート")+"」を削除しますか？"))return;await MS.EstimateMaster.remove(id);await render();}
+async function loadContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&fid!=="e")applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;try{calc();}catch(e){}renderSelected(item,"edit");$("estimateTemplateContentEditBanner")?.classList.add("show");if($("estimateTemplateContentEditName"))$("estimateTemplateContentEditName").textContent=item.name||"名称未設定";}
+async function overwriteContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;item.values=collect();item.meta=meta();await MS.EstimateMaster.save(item);try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");alert("積算テンプレートを上書き保存しました。");let ret=false;try{ret=sessionStorage.getItem("MS_RETURN_TO_ESTIMATE_MASTER_ADMIN")==="1";}catch(e){}if(ret){try{sessionStorage.setItem("MS_REOPEN_ESTIMATE_MASTER_ADMIN","1");}catch(e){}location.href="index.html";return;}await openList();}
+function applyIndexDuplicate(){let raw="";try{raw=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD")||"";}catch(e){}if(!raw)return;let item=null;try{item=JSON.parse(raw);}catch(e){}if(!item||item.appType!==APP_TYPE)return;try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD");}catch(e){}const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}$("estimateMasterDuplicateBanner")?.classList.add("show");}
+document.addEventListener("DOMContentLoaded",()=>{clearSelected();$("registerEstimateMasterBtn")?.addEventListener("click",openRegister);$("openEstimateMasterBtn")?.addEventListener("click",()=>openList().catch(console.error));$("closeEstimateMasterRegisterBtn")?.addEventListener("click",closeRegister);$("cancelEstimateMasterBtn")?.addEventListener("click",closeRegister);$("saveEstimateMasterBtn")?.addEventListener("click",()=>saveMaster().catch(e=>alert(e.message||e)));$("closeEstimateMasterListBtn")?.addEventListener("click",closeList);$("estimateMasterSearch")?.addEventListener("input",()=>render().catch(console.error));$("clearEstimateMasterSearchBtn")?.addEventListener("click",()=>{$("estimateMasterSearch").value="";render().catch(console.error)});$("estimateMasterList")?.addEventListener("click",e=>{let b=e.target.closest("[data-load]");if(b)return loadMaster(b.dataset.load).catch(console.error);b=e.target.closest("[data-copy]");if(b)return duplicateMaster(b.dataset.copy).catch(console.error);b=e.target.closest("[data-del]");if(b)return removeMaster(b.dataset.del).catch(console.error)});$("saveTemplateContentOverwriteBtn")?.addEventListener("click",()=>overwriteContentEdit().catch(console.error));$("newInputBtn")?.addEventListener("click",()=>{clearSelected();try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");$("estimateMasterDuplicateBanner")?.classList.remove("show");},true);setTimeout(()=>loadContentEdit().catch(console.error),700);setTimeout(applyIndexDuplicate,800);});
+})(window,document);
+</script>
+
+<script id="gravity-past-estimate-v160-script">
+(function(window,document){
+"use strict";
+const APP_TYPE="gravity_wall",APP_LABEL="重力式擁壁",$=id=>document.getElementById(id);
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function ready(){if(!window.MS)throw new Error("ms_common.jsを読み込めません。");if(MS.init)await MS.init();}
+async function projects(){if(MS.Project&&typeof MS.Project.listActive==="function")return await MS.Project.listActive();if(typeof MS.listProjects==="function")return await MS.listProjects();return[];}
+async function estimates(pid){if(MS.Estimate?.listByProjectAndApp)return MS.Estimate.listByProjectAndApp(pid,APP_TYPE);if(MS.listEstimates)return MS.listEstimates(pid,APP_TYPE);return[];}
+async function getEstimate(id){if(MS.Estimate?.get)return MS.Estimate.get(id);if(MS.getEstimate)return MS.getEstimate(id);return null;}
+const pn=p=>p?.name||p?.projectName||"名称未設定",en=e=>e?.name||e?.estimateName||"名称未設定";
+function dateText(v){if(!v)return"日付不明";const d=new Date(v);return Number.isNaN(d.getTime())?"日付不明":d.toLocaleString("ja-JP");}
+let cached=[];
+async function load(){await ready();const cur=MS.getCurrentProjectId?MS.getCurrentProjectId():"",ps=await projects(),rows=[];for(const p of ps){if(cur&&p.id===cur)continue;const es=await estimates(p.id);for(const e of(es||[]))rows.push({project:p,estimate:e,projectName:pn(p),estimateName:en(e),updatedAt:e.updatedAt||e.createdAt||""});}rows.sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")));cached=rows;render();}
+function render(){const q=String($("otherProjectCopySearch")?.value||"").toLowerCase().trim(),ws=q.split(/\s+/).filter(Boolean),box=$("otherProjectCopyList"),rows=cached.filter(r=>{const h=(r.estimateName+" "+r.projectName).toLowerCase();return ws.every(w=>h.includes(w));});if(!rows.length){box.innerHTML='<div class="opc-empty">コピーできる過去の重力式擁壁積算がありません。</div>';return;}box.innerHTML='<div class="opc-flat-head"><span>積算名称</span><span>工事名</span><span>更新日</span><span></span></div>'+rows.map(r=>'<div class="opc-estimate-flat"><div class="opc-flat-name">'+esc(r.estimateName)+'</div><div class="opc-flat-project">'+esc(r.projectName)+'</div><div class="opc-flat-date">'+esc(dateText(r.updatedAt))+'</div><button class="opc-flat-copy" data-id="'+esc(r.estimate.id)+'" data-project="'+esc(r.projectName)+'">コピー</button></div>').join("");}
+function close(){$("otherProjectCopyModal")?.classList.remove("show");}
+async function open(){$("otherProjectCopyModal")?.classList.add("show");$("otherProjectCopySearch").value="";$("otherProjectCopyList").innerHTML='<div class="opc-empty">読込中...</div>';try{await load();setTimeout(()=>$("otherProjectCopySearch")?.focus(),0);}catch(e){$("otherProjectCopyList").innerHTML='<div class="opc-empty">保存データを読み込めませんでした。</div>';}}
+function applyVals(vals){Object.entries(vals||{}).forEach(([fid,v])=>{if(fid==="projectName")return;const el=$(fid);if(!el)return;if(el.type==="checkbox"||el.type==="radio")el.checked=!!v;else el.value=v;try{el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}catch(e){}});}
+async function copy(id,sourceName){const item=await getEstimate(id);if(!item)return alert("コピー元が見つかりません。");if(!confirm("現在入力中の内容を、過去物件「"+sourceName+"」の「"+en(item)+"」で置き換えますか？"))return;const kp=$("projectName")?.value||"";applyVals(item.values||(item.data&&item.data.values)||{});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=en(item);try{if(typeof window.MSGWCommaDisplayChange==="function")window.MSGWCommaDisplayChange();calc();}catch(e){}const b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+sourceName+'」の「'+en(item)+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}try{sessionStorage.setItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE,JSON.stringify({sourceProjectName:sourceName,estimateName:en(item)}));}catch(e){}close();}
+function restore(){try{const raw=sessionStorage.getItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE);if(!raw)return;const d=JSON.parse(raw),b=$("pastEstimateCopyBanner");if(b){b.textContent='過去物件「'+(d.sourceProjectName||"過去物件")+'」の「'+(d.estimateName||APP_LABEL)+'」からコピーした積算を編集中です。内容を確認・修正してから、通常の「積算データ保存」で保存してください。';b.classList.add("show");}}catch(e){}}
+window.MSClearPastEstimateCopyEditing=function(){try{sessionStorage.removeItem("MS_PAST_ESTIMATE_COPY_EDITING_"+APP_TYPE);}catch(e){}$("pastEstimateCopyBanner")?.classList.remove("show");};
+document.addEventListener("DOMContentLoaded",()=>{$("openOtherProjectCopyBtn")?.addEventListener("click",()=>open());$("closeOtherProjectCopyBtn")?.addEventListener("click",close);$("otherProjectCopySearch")?.addEventListener("input",render);$("otherProjectCopyList")?.addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(!b)return;copy(b.dataset.id,b.dataset.project||"過去物件").catch(console.error);});$("newInputBtn")?.addEventListener("click",window.MSClearPastEstimateCopyEditing,true);restore();});
+})(window,document);
+</script>
+
+<script id="gravity-save-alert-copy-banner-clear-v160">
+(function(window){
+"use strict";
+if(window.__gravitySaveAlertHookInstalled)return;
+window.__gravitySaveAlertHookInstalled=true;
+const originalAlert=window.alert.bind(window);
+window.alert=function(message){
+  const msg=String(message==null?"":message);
+  originalAlert(message);
+  if(msg.includes("積算データを保存しました")){
+    if(typeof window.MSClearPastEstimateCopyEditing==="function")window.MSClearPastEstimateCopyEditing();
+  }
+};
+})(window);
+</script>
+
+
+<script id="gravity-template-source-standard-script-v160">
+(function(window,document){
+"use strict";
+const SOURCE_KEY="MS_GRAVITY_TEMPLATE_DIM_SOURCE_V160";
+const DIM_IDS=["W1","W2","W3","H1","H2","H3","H4"];
+
+function $(id){return document.getElementById(id);}
+function n(v){
+  const x=Number(String(v==null?"":v).replace(/,/g,""));
+  return Number.isFinite(x)?x:0;
+}
+function same(a,b){return Math.abs(n(a)-n(b))<0.000001;}
+
+function clearSource(){
+  DIM_IDS.forEach(function(id){
+    const el=$(id);
+    if(!el)return;
+    el.classList.remove("template-source","template-source-edited");
+    delete el.dataset.templateSourceValue;
+    el.title="";
+  });
+  try{sessionStorage.removeItem(SOURCE_KEY);}catch(e){}
+}
+
+function setSource(values){
+  const saved={};
+  DIM_IDS.forEach(function(id){
+    const el=$(id);
+    if(!el)return;
+    if(!values || !Object.prototype.hasOwnProperty.call(values,id))return;
+    const v=values[id];
+    el.dataset.templateSourceValue=String(v==null?"":v);
+    el.classList.remove("template-source-edited");
+    el.classList.add("template-source");
+    el.title="積算テンプレートから反映された寸法です";
+    saved[id]=String(v==null?"":v);
+  });
+  try{sessionStorage.setItem(SOURCE_KEY,JSON.stringify(saved));}catch(e){}
+}
+
+document.addEventListener("input",function(ev){
+  const el=ev.target;
+  if(!el || !DIM_IDS.includes(el.id))return;
+  const base=el.dataset.templateSourceValue;
+  if(base===undefined)return;
+  const edited=!same(el.value,base);
+  el.classList.toggle("template-source",!edited);
+  el.classList.toggle("template-source-edited",edited);
+  el.title=edited
+    ?"積算テンプレートから反映後に手入力で変更した寸法です"
+    :"積算テンプレートから反映された寸法です";
+},true);
+
+window.MSGWSetTemplateSource=setSource;
+window.MSGWClearTemplateSource=clearSource;
+window.addEventListener("pagehide",clearSource);
+})(window,document);
+</script>
+
+
+<script id="gravity-template-source-reset-hook-v160">
+document.addEventListener("DOMContentLoaded",function(){
+  var b=document.getElementById("newInputBtn");
+  if(b)b.addEventListener("click",function(){
+    if(typeof window.MSGWClearTemplateSource==="function")window.MSGWClearTemplateSource();
+  },true);
+});
 </script>
 
 </body></html>
