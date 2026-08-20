@@ -1248,7 +1248,10 @@ function makePrint(){
     return '<tr><td>'+x[0]+'</td><td>'+x[1]+'</td><td>'+value+'</td></tr>';
   }).join('');
 
-  $('printProductSpec').textContent=[$('ProductManufacturer').value,$('ProductName').value,$('ProductSpecification').value].filter(Boolean).join(' ／ ')||'－';
+  // 現行版では旧 ProductManufacturer / ProductName / ProductSpecification 欄は廃止済み。
+  // 印刷時に旧IDを参照するとここでJavaScriptエラーとなり window.print() まで到達しないため、
+  // 現行仕様の積算名称を製品表示に使用する。
+  $('printProductSpec').textContent=(($('estimateName')?.value||'').trim())||'－';
   $('printLength').textContent=fmt(num('L'));
   $('printExcMargin').textContent=fmt(num('E'));
   $('printSlope').textContent=num('N').toFixed(2);
