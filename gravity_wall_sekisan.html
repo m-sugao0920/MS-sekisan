@@ -401,6 +401,7 @@ section.card:nth-of-type(2) select.template-source-edited{
 }
 </style>
 
+
 </head>
 <body>
 <header><div class="wrap"><div><h1 id="gravityDefaultsTrigger" title="重力式擁壁積算">重力式擁壁 積算アプリ Ver.1.6.0</h1><div class="sub">土工／地業／擁壁／止水・水抜き・裏込め工を自動算出</div></div><a class="home-link" href="index.html">🏠 メイン画面に戻る</a></div></header>
@@ -470,7 +471,7 @@ section.card:nth-of-type(2) select.template-source-edited{
 <div class="other-project-copy-actions"><button id="openOtherProjectCopyBtn" type="button">過去積算を呼出</button></div></div>
 <div class="control-block estimate-master-block">
   <div class="sectionTitle">積算テンプレート</div>
-  <div class="note template-master-note" style="margin-top:0">寸法・単価・付帯工など、現在の積算内容をまとめて登録します。</div>
+  <div class="note template-master-note" style="margin-top:0">寸法・施工条件・付帯工をまとめて登録します。共通単価は登録せず、「今回の積算で使用する単価」を維持します。</div>
   <div class="estimate-master-actions">
     <button class="primary" id="registerEstimateMasterBtn" type="button">現積算テンプレート登録</button>
     <button class="ghost" id="openEstimateMasterBtn" type="button">テンプレート呼出</button>
@@ -1815,7 +1816,9 @@ window.addEventListener('load',()=>{if(!(window.__gwOpenMode&&window.__gwOpenMod
 (function(window,document){
 "use strict";
 const APP_TYPE="gravity_wall",APP_LABEL="重力式擁壁";
-const EXCLUDE=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","gwCommonPriceList","e"]);
+const EXCLUDE=new Set(["projectName","estimateMasterName","estimateMasterMemo","estimateMasterSearch","savedEstimateList","gwCommonPriceList","Pexc","Pspoil","Pback","Pbed","Pstone","Plean","PleanForm","Pconc","Pform","Pdrain","Pfilter"]);
+const TEMPLATE_COMMON_PRICE_IDS=new Set(["Pexc","Pspoil","Pback","Pbed","Pstone","Plean","PleanForm","Pconc","Pform","Pdrain","Pfilter"]);
+function isTemplateCommonPriceId(id){return TEMPLATE_COMMON_PRICE_IDS.has(id);}
 const $=id=>document.getElementById(id);
 const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const val=id=>String($(id)?.value||"").trim();
@@ -1825,24 +1828,104 @@ async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テ
 function collect(){const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(e=>{if(!e.id||EXCLUDE.has(e.id)||e.closest(".em-modal")||e.closest(".opc-modal"))return;if(["button","submit","file","hidden"].includes(e.type))return;o[e.id]=(e.type==="checkbox"||e.type==="radio")?!!e.checked:e.value;});return o;}
 function applyValue(id,v){const e=$(id);if(!e)return;if(e.type==="checkbox"||e.type==="radio")e.checked=!!v;else e.value=v;try{e.dispatchEvent(new Event("input",{bubbles:true}));e.dispatchEvent(new Event("change",{bubbles:true}));}catch(x){}}
 function priceName(){const s=$("gwCommonPriceList");if(s&&s.selectedIndex>=0)return String(s.options[s.selectedIndex]?.textContent||"").trim()||"手入力単価";return"手入力単価";}
-function meta(){return {H1:val("H1"),H2:val("H2"),H3:val("H3"),H4:val("H4"),W1:val("W1"),W2:val("W2"),W3:val("W3"),L:val("L"),priceName:priceName()};}
+function meta(){return {H1:val("H1"),H2:val("H2"),H3:val("H3"),H4:val("H4"),W1:val("W1"),W2:val("W2"),W3:val("W3"),L:val("L")};}
 function clearSelected(){const c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(m)m.textContent="";if(c){c.className="selected-template-content selected-template-empty";c.textContent="積算テンプレートは選択されていません。";}}
-function renderSelected(item,mode){const v=item.values||{},c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");if(!c)return;if(m)m.textContent=mode==="edit"?"編集中":"すべて";c.className="selected-template-content";c.innerHTML='<div class="selected-template-name">'+esc(item.name||"名称未設定")+'</div><div class="selected-template-row"><b>断面寸法</b> W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / W3 '+dim(v.W3)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / H4 '+dim(v.H4)+' m</div><div class="selected-template-row"><b>施工</b> n '+dim(v.n)+' / L '+dim(v.L)+' m</div><div class="selected-template-row">単価：'+esc((item.meta||{}).priceName||"手入力単価")+'</div>';}
+function renderSelected(item,mode){
+  const v=item.values||{},mi=item.meta||{},c=$("selectedEstimateTemplateContent"),m=$("selectedEstimateTemplateMode");
+  if(!c)return;
+  if(m)m.textContent=mode==="edit"?"編集中":"すべて";
+  c.className="selected-template-content";
+  c.innerHTML=
+    '<div class="selected-template-name">'+esc(item.name||"名称未設定")+'</div>'+
+    '<div class="selected-template-row"><b>断面寸法</b> W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / W3 '+dim(v.W3)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / H4 '+dim(v.H4)+' m</div>'+
+    '<div class="selected-template-row"><b>施工</b> e '+dim(v.e)+' / n '+dim(v.n)+' / L '+dim(v.L)+' m</div>'+
+    '';
+}
 function suggested(){return val("estimateName")||("重力式擁壁 H"+(val("H1")||"-"));}
-function openRegister(){let dn="",dm="";try{dn=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname)||"";dm=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname)||"";}catch(e){}$("estimateMasterName").value=dn||suggested();$("estimateMasterMemo").value=dm||"";const v=collect();$("estimateMasterRegisterSummary").innerHTML='<b>断面：</b>W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / W3 '+dim(v.W3)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / H4 '+dim(v.H4)+' m<br><b>施工：</b>n '+dim(v.n)+' / L '+dim(v.L)+' m';$("estimateMasterRegisterModal").classList.add("show");}
+function openRegister(){
+  let dn="",dm="";
+  try{
+    dn=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname)||"";
+    dm=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname)||"";
+  }catch(e){}
+  $("estimateMasterName").value=dn||suggested();
+  $("estimateMasterMemo").value=dm||"";
+  const v=collect();
+  $("estimateMasterRegisterSummary").innerHTML='<b>断面：</b>W1 '+dim(v.W1)+' / W2 '+dim(v.W2)+' / W3 '+dim(v.W3)+' / H1 '+dim(v.H1)+' / H2 '+dim(v.H2)+' / H3 '+dim(v.H3)+' / H4 '+dim(v.H4)+' m<br><b>施工：</b>e '+dim(v.e)+' / n '+dim(v.n)+' / L '+dim(v.L)+' m';
+  $("estimateMasterRegisterModal").classList.add("show");
+}
 function closeRegister(){$("estimateMasterRegisterModal")?.classList.remove("show");}
-async function saveMaster(){await ensure();const name=val("estimateMasterName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("estimateMasterMemo"),meta:meta(),values:collect()});try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname);sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname);}catch(e){}$("estimateMasterDuplicateBanner")?.classList.remove("show");closeRegister();alert("積算テンプレートに登録しました。");}
+async function saveMaster(){
+  await ensure();
+  const name=val("estimateMasterName");
+  if(!name)return alert("マスター名を入力してください。");
+  await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("estimateMasterMemo"),meta:meta(),values:collect()});
+  try{
+    sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname);
+    sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname);
+  }catch(e){}
+  $("estimateMasterDuplicateBanner")?.classList.remove("show");
+  closeRegister();
+  alert("積算テンプレートに登録しました。");
+}
 function formatDate(v){if(!v)return"登録日不明";const d=new Date(v);return Number.isNaN(d.getTime())?"登録日不明":d.toLocaleString("ja-JP");}
-async function render(){await ensure();const rows=await MS.EstimateMaster.search(val("estimateMasterSearch"),APP_TYPE),all=await MS.EstimateMaster.list(APP_TYPE),box=$("estimateMasterList");if(!rows.length){box.innerHTML='<div class="em-empty">'+(all.length?"検索条件に一致するテンプレートがありません。":"まだ積算テンプレートが登録されていません。")+'</div>';return;}box.innerHTML=rows.map(item=>{const v=item.values||{},m=item.meta||{};return '<div class="em-item"><div><div class="em-item-name">'+esc(item.name||"名称未設定")+'</div><div class="em-item-meta">'+esc(m.priceName||"単価情報なし")+'</div><div class="em-item-detail"><b>断面</b> W1 '+dim(v.W1)+'　W2 '+dim(v.W2)+'　W3 '+dim(v.W3)+'　H1 '+dim(v.H1)+'　H2 '+dim(v.H2)+'　H3 '+dim(v.H3)+'　H4 '+dim(v.H4)+' m<br><b>施工</b> n '+dim(v.n)+'　L '+dim(v.L)+' m</div>'+(item.memo?'<div class="em-item-memo">検索メモ：'+esc(item.memo)+'</div>':'')+'<div class="em-date">登録日：'+esc(formatDate(item.createdAt))+'</div></div><div class="em-item-actions"><button class="em-load" data-load="'+esc(item.id)+'">すべて呼出</button><button class="em-copy" data-copy="'+esc(item.id)+'">複製</button><button class="em-delete" data-del="'+esc(item.id)+'">削除</button></div></div>';}).join("");}
+async function render(){
+  await ensure();
+  const rows=await MS.EstimateMaster.search(val("estimateMasterSearch"),APP_TYPE),all=await MS.EstimateMaster.list(APP_TYPE),box=$("estimateMasterList");
+  if(!rows.length){
+    box.innerHTML='<div class="em-empty">'+(all.length?"検索条件に一致するテンプレートがありません。":"まだ積算テンプレートが登録されていません。")+'</div>';
+    return;
+  }
+  box.innerHTML=rows.map(item=>{
+    const v=item.values||{},m=item.meta||{};
+    return '<div class="em-item"><div>'+
+      '<div class="em-item-name">'+esc(item.name||"名称未設定")+'</div>'+
+
+      '<div class="em-item-detail"><b>断面</b> W1 '+dim(v.W1)+'　W2 '+dim(v.W2)+'　W3 '+dim(v.W3)+'　H1 '+dim(v.H1)+'　H2 '+dim(v.H2)+'　H3 '+dim(v.H3)+'　H4 '+dim(v.H4)+' m<br><b>施工</b> e '+dim(v.e)+'　n '+dim(v.n)+'　L '+dim(v.L)+' m</div>'+
+      (item.memo?'<div class="em-item-memo">検索メモ：'+esc(item.memo)+'</div>':'')+
+      '<div class="em-date">登録日：'+esc(formatDate(item.createdAt))+'</div></div>'+
+      '<div class="em-item-actions"><button class="em-load" data-load="'+esc(item.id)+'">すべて</button><button class="em-copy" data-copy="'+esc(item.id)+'">複製</button><button class="em-delete" data-del="'+esc(item.id)+'">削除</button></div></div>';
+  }).join("");
+}
 async function openList(){await render();$("estimateMasterListModal")?.classList.add("show");}
 function closeList(){$("estimateMasterListModal")?.classList.remove("show");}
-async function loadMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=item.name||"重力式擁壁 積算";try{if(typeof window.MSGWCommaDisplayChange==="function")window.MSGWCommaDisplayChange();if(typeof calc==="function")calc();}catch(e){}renderSelected(item,"all");if(typeof window.MSGWSetTemplateSource==="function")window.MSGWSetTemplateSource(item.values||{});closeList();alert("積算テンプレートを呼び出しました。");}
-async function duplicateMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}try{calc();}catch(e){}closeList();$("estimateMasterDuplicateBanner")?.classList.add("show");}
+async function loadMaster(id){
+  await ensure();
+  const item=await MS.EstimateMaster.get(id);
+  if(!item)return;
+  const kp=val("projectName");
+  Object.entries(item.values||{}).forEach(([fid,v])=>{
+    if(fid==="projectName"||fid==="estimateName"||isTemplateCommonPriceId(fid))return;
+    applyValue(fid,v);
+  });
+  if($("projectName"))$("projectName").value=kp;
+  if($("estimateName"))$("estimateName").value=item.name||"重力式擁壁 積算";
+  try{
+    if(typeof window.MSGWCommaDisplayChange==="function")window.MSGWCommaDisplayChange();
+    if(typeof calc==="function")calc();
+  }catch(e){}
+  renderSelected(item,"all");
+  if(typeof window.MSGWSetTemplateSource==="function"){
+    window.MSGWSetTemplateSource(item.values||{});
+  }
+  closeList();
+  alert("積算テンプレートを呼び出しました。");
+}
+async function duplicateMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||isTemplateCommonPriceId(fid))return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{
+  sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");
+  sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}try{calc();}catch(e){}closeList();$("estimateMasterDuplicateBanner")?.classList.add("show");}
 async function removeMaster(id){await ensure();const item=await MS.EstimateMaster.get(id);if(!item)return;if(!confirm("「"+(item.name||"このテンプレート")+"」を削除しますか？"))return;await MS.EstimateMaster.remove(id);await render();}
-async function loadContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&fid!=="e")applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;try{calc();}catch(e){}renderSelected(item,"edit");$("estimateTemplateContentEditBanner")?.classList.add("show");if($("estimateTemplateContentEditName"))$("estimateTemplateContentEditName").textContent=item.name||"名称未設定";}
+async function loadContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;const kp=val("projectName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid!=="projectName"&&!isTemplateCommonPriceId(fid))applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;try{calc();}catch(e){}renderSelected(item,"edit");$("estimateTemplateContentEditBanner")?.classList.add("show");if($("estimateTemplateContentEditName"))$("estimateTemplateContentEditName").textContent=item.name||"名称未設定";}
 async function overwriteContentEdit(){let req=null;try{req=JSON.parse(sessionStorage.getItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD")||"null");}catch(e){}if(!req||req.appType!==APP_TYPE||!req.id)return;await ensure();const item=await MS.EstimateMaster.get(req.id);if(!item)return;item.values=collect();item.meta=meta();await MS.EstimateMaster.save(item);try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");alert("積算テンプレートを上書き保存しました。");let ret=false;try{ret=sessionStorage.getItem("MS_RETURN_TO_ESTIMATE_MASTER_ADMIN")==="1";}catch(e){}if(ret){try{sessionStorage.setItem("MS_REOPEN_ESTIMATE_MASTER_ADMIN","1");}catch(e){}location.href="index.html";return;}await openList();}
-function applyIndexDuplicate(){let raw="";try{raw=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD")||"";}catch(e){}if(!raw)return;let item=null;try{item=JSON.parse(raw);}catch(e){}if(!item||item.appType!==APP_TYPE)return;try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD");}catch(e){}const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||fid==="e")return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}$("estimateMasterDuplicateBanner")?.classList.add("show");}
-document.addEventListener("DOMContentLoaded",()=>{clearSelected();$("registerEstimateMasterBtn")?.addEventListener("click",openRegister);$("openEstimateMasterBtn")?.addEventListener("click",()=>openList().catch(console.error));$("closeEstimateMasterRegisterBtn")?.addEventListener("click",closeRegister);$("cancelEstimateMasterBtn")?.addEventListener("click",closeRegister);$("saveEstimateMasterBtn")?.addEventListener("click",()=>saveMaster().catch(e=>alert(e.message||e)));$("closeEstimateMasterListBtn")?.addEventListener("click",closeList);$("estimateMasterSearch")?.addEventListener("input",()=>render().catch(console.error));$("clearEstimateMasterSearchBtn")?.addEventListener("click",()=>{$("estimateMasterSearch").value="";render().catch(console.error)});$("estimateMasterList")?.addEventListener("click",e=>{let b=e.target.closest("[data-load]");if(b)return loadMaster(b.dataset.load).catch(console.error);b=e.target.closest("[data-copy]");if(b)return duplicateMaster(b.dataset.copy).catch(console.error);b=e.target.closest("[data-del]");if(b)return removeMaster(b.dataset.del).catch(console.error)});$("saveTemplateContentOverwriteBtn")?.addEventListener("click",()=>overwriteContentEdit().catch(console.error));$("newInputBtn")?.addEventListener("click",()=>{clearSelected();try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");$("estimateMasterDuplicateBanner")?.classList.remove("show");},true);setTimeout(()=>loadContentEdit().catch(console.error),700);setTimeout(applyIndexDuplicate,800);});
+function applyIndexDuplicate(){let raw="";try{raw=sessionStorage.getItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD")||"";}catch(e){}if(!raw)return;let item=null;try{item=JSON.parse(raw);}catch(e){}if(!item||item.appType!==APP_TYPE)return;try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_DUPLICATE_PAYLOAD");}catch(e){}const kp=val("projectName"),ke=val("estimateName");Object.entries(item.values||{}).forEach(([fid,v])=>{if(fid==="projectName"||fid==="estimateName"||isTemplateCommonPriceId(fid))return;applyValue(fid,v);});if($("projectName"))$("projectName").value=kp;if($("estimateName"))$("estimateName").value=ke;try{sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_NAME_"+location.pathname,(item.name||"名称未設定")+" コピー");sessionStorage.setItem("MS_ESTIMATE_MASTER_DUP_MEMO_"+location.pathname,item.memo||"");}catch(e){}$("estimateMasterDuplicateBanner")?.classList.add("show");}
+document.addEventListener("DOMContentLoaded",()=>{clearSelected();$("registerEstimateMasterBtn")?.addEventListener("click",openRegister);$("openEstimateMasterBtn")?.addEventListener("click",()=>openList().catch(console.error));$("closeEstimateMasterRegisterBtn")?.addEventListener("click",closeRegister);$("cancelEstimateMasterBtn")?.addEventListener("click",closeRegister);$("saveEstimateMasterBtn")?.addEventListener("click",()=>saveMaster().catch(e=>alert(e.message||e)));$("closeEstimateMasterListBtn")?.addEventListener("click",closeList);$("estimateMasterSearch")?.addEventListener("input",()=>render().catch(console.error));$("clearEstimateMasterSearchBtn")?.addEventListener("click",()=>{$("estimateMasterSearch").value="";render().catch(console.error)});$("estimateMasterList")?.addEventListener("click",e=>{
+  let b=e.target.closest("[data-load]");
+  if(b)return loadMaster(b.dataset.load).catch(console.error);
+  b=e.target.closest("[data-copy]");
+  if(b)return duplicateMaster(b.dataset.copy).catch(console.error);
+  b=e.target.closest("[data-del]");
+  if(b)return removeMaster(b.dataset.del).catch(console.error);
+});$("saveTemplateContentOverwriteBtn")?.addEventListener("click",()=>overwriteContentEdit().catch(console.error));$("newInputBtn")?.addEventListener("click",()=>{clearSelected();try{sessionStorage.removeItem("MS_ESTIMATE_MASTER_CONTENT_EDIT_PAYLOAD");}catch(e){}$("estimateTemplateContentEditBanner")?.classList.remove("show");$("estimateMasterDuplicateBanner")?.classList.remove("show");},true);setTimeout(()=>loadContentEdit().catch(console.error),700);setTimeout(applyIndexDuplicate,800);});
 })(window,document);
 </script>
 
@@ -1891,7 +1974,7 @@ window.alert=function(message){
 (function(window,document){
 "use strict";
 const SOURCE_KEY="MS_GRAVITY_TEMPLATE_DIM_SOURCE_V160";
-const DIM_IDS=["W1","W2","W3","H1","H2","H3","H4"];
+const DIM_IDS=["W1","W2","W3","H1","H2","H3","H4","e","n","L","profit","WaterstopW","WaterstopH","Pexc","Pspoil","Pback","Pbed","Pstone","Plean","PleanForm","Pconc","Pform","Pdrain","Pfilter"];
 
 function $(id){return document.getElementById(id);}
 function n(v){
@@ -1911,9 +1994,11 @@ function clearSource(){
   try{sessionStorage.removeItem(SOURCE_KEY);}catch(e){}
 }
 
-function setSource(values){
+function setSource(values,targetIds){
+  clearSource();
+  const targets=Array.isArray(targetIds)?targetIds:DIM_IDS;
   const saved={};
-  DIM_IDS.forEach(function(id){
+  targets.forEach(function(id){
     const el=$(id);
     if(!el)return;
     if(!values || !Object.prototype.hasOwnProperty.call(values,id))return;
@@ -1921,7 +2006,7 @@ function setSource(values){
     el.dataset.templateSourceValue=String(v==null?"":v);
     el.classList.remove("template-source-edited");
     el.classList.add("template-source");
-    el.title="積算テンプレートから反映された寸法です";
+    el.title="積算テンプレートから反映された項目です";
     saved[id]=String(v==null?"":v);
   });
   try{sessionStorage.setItem(SOURCE_KEY,JSON.stringify(saved));}catch(e){}

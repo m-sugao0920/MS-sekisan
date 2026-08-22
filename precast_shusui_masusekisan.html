@@ -862,6 +862,14 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 }
 </style>
 
+<style id="precast-basin-template-maker-spec-standard-v170">
+.em-item-meta{font-size:11px;color:#746384;line-height:1.5;margin-top:4px}
+.em-item-meta b,.selected-template-content b{color:#5a35a3!important}
+</style>
+
+<style id="precast-basin-h1-total-height-note">
+#sectionSvg .h1-total-note{font-size:20px;font-weight:800;fill:#475569}
+</style>
 </head><body>
 <header><div class="wrap"><div><h1 id="precastBasinDefaultsTrigger" title="プレキャスト集水桝積算">プレキャスト集水桝 積算アプリ Ver.1.6.0</h1><div class="sub">内寸法・外寸法・基数から、土工／地業／製品代／据付け費／蓋を自動算出</div></div><a class="home" href="index.html">🏠 メイン画面に戻る</a></div></header>
 <main>
@@ -1006,18 +1014,21 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
   <text x="770" y="96" text-anchor="middle"
     class="dimText dim-w4">W4</text>
 
-  <!-- H1 -->
-  <line x1="220" y1="220" x2="220" y2="650" class="dim"/>
-  <line x1="220" y1="220" x2="340" y2="220" class="ext"/>
-  <line x1="220" y1="650" x2="500" y2="650" class="ext"/>
-  <text x="160" y="450" text-anchor="middle"
+  <!-- H1：製品全高（製品上端～製品底端） -->
+  <line x1="180" y1="220" x2="180" y2="720" class="dim"/>
+  <line x1="180" y1="220" x2="340" y2="220" class="ext"/>
+  <line x1="180" y1="720" x2="500" y2="720" class="ext"/>
+  <text x="118" y="455" text-anchor="middle"
     class="dimText dim-h1">H1</text>
+  <text x="118" y="490" text-anchor="middle"
+    class="small" style="font-size:22px;font-weight:800">製品全高</text>
 
-  <!-- H2 -->
-  <line x1="220" y1="650" x2="220" y2="720" class="dim"/>
-  <line x1="220" y1="720" x2="500" y2="720" class="ext"/>
-  <text x="160" y="695" text-anchor="middle"
-    class="dimText dim-h2">H2</text>
+  <!-- H2：インバート厚 -->
+  <line x1="245" y1="650" x2="245" y2="720" class="dim"/>
+  <line x1="245" y1="650" x2="500" y2="650" class="ext"/>
+  <line x1="245" y1="720" x2="500" y2="720" class="ext"/>
+  <text x="285" y="695" text-anchor="middle"
+    class="dimText dim-h2" style="font-size:28px">H2</text>
 
   <!-- H3（敷モルタル厚） -->
   <line x1="220" y1="720" x2="220" y2="740" class="dim"/>
@@ -1084,7 +1095,7 @@ table{width:100%;border-collapse:collapse;border:1px solid var(--border);table-l
 <div class="row"><div><label>W1（左・前壁厚）</label><input id="W1" type="text" inputmode="decimal" value="0.150" data-dim="dim-w1"></div><div><label>W4（右・後壁厚）</label><input id="W4" type="text" inputmode="decimal" value="0.150" data-dim="dim-w4"></div></div>
 <div class="row"><div><label>W2（内幅）</label><input id="W2" type="text" inputmode="decimal" value="0.600" data-dim="dim-w2"></div><div><label>W3（内奥行）</label><input id="W3" type="text" inputmode="decimal" value="0.600" data-dim="dim-w3"></div></div>
 <div class="row"><div><label>W5（地業外幅）</label><input id="W5" type="text" inputmode="decimal" value="1.000" data-dim="dim-w5"></div><div><label>W6（地業外奥行）</label><input id="W6" type="text" inputmode="decimal" value="1.000" data-dim="dim-w6"></div></div>
-<div class="row"><div><label>H1（内空高さ）</label><input id="H1" type="text" inputmode="decimal" value="0.800" data-dim="dim-h1"></div><div><label>H2（インバート厚）</label><input id="H2" type="text" inputmode="decimal" value="0.150" data-dim="dim-h2"></div></div>
+<div class="row"><div><label>H1（製品全高）</label><input id="H1" type="text" inputmode="decimal" value="0.950" data-dim="dim-h1"></div><div><label>H2（インバート厚）</label><input id="H2" type="text" inputmode="decimal" value="0.150" data-dim="dim-h2"></div></div>
 <div class="row"><div><label>H3（敷モルタル厚）</label><input id="H3" type="text" inputmode="decimal" value="0.020" data-dim="dim-h3"></div><div><label>H4（均しコン厚）</label><input id="H4" type="text" inputmode="decimal" value="0.050" data-dim="dim-h4"></div></div>
 <div class="row"><div><label>H5（砕石厚）</label><input id="H5" type="text" inputmode="decimal" value="0.100" data-dim="dim-h5"></div><div><label>e（掘削余裕・四周 m）</label><input id="E" type="text" inputmode="decimal" value="0.100"></div></div>
 <div class="hr"></div><div class="sectionTitle">共通条件</div><div class="row"><div><label>基数（基）</label><input id="N" type="text" inputmode="numeric" value="1"></div><div><label>利益率（%）</label><input id="ProfitRate" type="text" inputmode="decimal" value="20"></div></div>
@@ -1193,7 +1204,7 @@ const items=[['exc','掘削','m³'],['back','埋戻し','m³'],['spoil','残土�
 let last={};
 function calc(){
  const W1=num('W1'),W2=num('W2'),W3=num('W3'),W4=num('W4'),W5=num('W5'),W6=num('W6'),H1=num('H1'),H2=num('H2'),H3=num('H3'),H4=num('H4'),H5=num('H5'),N=Math.max(0,num('N')),E=num('E');
- const ow=W1+W2+W4, od=W1+W3+W4, productDepth=H1+H2, depth=productDepth+H3+H4+H5;
+ const ow=W1+W2+W4, od=W1+W3+W4, productDepth=H1, innerHeight=Math.max(0,H1-H2), depth=productDepth+H3+H4+H5;
  const exc=(W5+2*E)*(W6+2*E)*depth*N;
  const productVolume=ow*od*productDepth*N;
  const stone=W5*W6*H5*N, lean=W5*W6*H4*N, mortar=W5*W6*H3*N, invert=W2*W3*H2*N, spoil=stone+lean+mortar+productVolume, back=Math.max(0,exc-spoil), bed=W5*W6*N, nform=2*(W5+W6)*H4*N;
@@ -1213,7 +1224,7 @@ function buildPrint(){if(!last.qty)return;$('printProject').textContent='現場�
  printClone.id='printSectionSvg';printClone.setAttribute('viewBox','80 45 1040 900');printClone.setAttribute('preserveAspectRatio','xMidYMid meet');printClone.style.width='100%';printClone.style.height='100%';printClone.style.overflow='visible';
  const idMap={pcConcrete:'printPcConcrete',pcLean:'printPcLean',pcStone:'printPcStone',pcShadow:'printPcShadow'};Object.entries(idMap).forEach(([oldId,newId])=>{const node=printClone.querySelector('#'+oldId);if(node)node.id=newId});
  printClone.querySelectorAll('[fill]').forEach(el=>{const v=el.getAttribute('fill');if(v&&v.includes('url(#pcConcrete)'))el.setAttribute('fill','url(#printPcConcrete)');if(v&&v.includes('url(#pcLean)'))el.setAttribute('fill','url(#printPcLean)');if(v&&v.includes('url(#pcStone)'))el.setAttribute('fill','url(#printPcStone)')});printClone.querySelectorAll('[filter]').forEach(el=>el.removeAttribute('filter'));$('printSvg').replaceChildren(printClone);
- const dims=[['W1','左・前壁厚'],['W2','内幅'],['W3','内奥行'],['W4','右・後壁厚'],['W5','地業外幅'],['W6','地業外奥行'],['H1','内空高さ'],['H2','インバート厚'],['H3','敷モルタル厚'],['H4','均しコンクリート厚'],['H5','砕石厚'],['E','掘削余裕 e']];$('dimRows').innerHTML=dims.map(([id,n])=>`<tr><td>${id}</td><td>${n}</td><td>${yen(num(id)*1000)}</td></tr>`).join('')}
+ const dims=[['W1','左・前壁厚'],['W2','内幅'],['W3','内奥行'],['W4','右・後壁厚'],['W5','地業外幅'],['W6','地業外奥行'],['H1','製品全高'],['H2','インバート厚'],['H3','敷モルタル厚'],['H4','均しコンクリート厚'],['H5','砕石厚'],['E','掘削余裕 e']];$('dimRows').innerHTML=dims.map(([id,n])=>`<tr><td>${id}</td><td>${n}</td><td>${yen(num(id)*1000)}</td></tr>`).join('')}
 function closePreview(){document.body.classList.remove('preview')}window.closePreview=closePreview;window.addEventListener('afterprint',closePreview);
 $('printBtn').onclick=()=>{calc();window.print()};
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));document.querySelectorAll('[data-dim]').forEach(el=>{const cls=el.dataset.dim;el.addEventListener('focus',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.add('active')));el.addEventListener('blur',()=>document.querySelectorAll('.'+cls).forEach(x=>x.classList.remove('active')))});
@@ -1890,7 +1901,7 @@ document.addEventListener('DOMContentLoaded',function(){
     <div class="em-head">
       <div class="em-head-title-wrap">
         <h3>積算テンプレートに登録</h3>
-        <div class="em-dialog-sub">現在のプレキャスト集水桝の入力内容をテンプレートとして保存します。</div>
+        <div class="em-dialog-sub">寸法・施工条件・製品情報をテンプレートとして保存します。共通単価は保存しません。</div>
       </div>
       <button id="emRegClose" type="button">閉じる</button>
     </div>
@@ -1898,6 +1909,8 @@ document.addEventListener('DOMContentLoaded',function(){
       <div class="em-grid">
         <label>工種</label><input type="text" value="プレキャスト集水桝" readonly>
         <label>マスター名</label><input id="emName" type="text" placeholder="積算名称を入力">
+        <label>メーカー名</label><input id="emManufacturer" type="text" placeholder="例：○○コンクリート">
+        <label>規格</label><input id="emSpecification" type="text" placeholder="例：600×600×900">
         <label>検索メモ</label><textarea id="emMemo" placeholder="任意"></textarea>
       </div>
       <div id="emSummary"></div>
@@ -1938,14 +1951,16 @@ document.addEventListener('DOMContentLoaded',function(){
 (function(window,document){
 "use strict";
 const APP_TYPE="precast_drainage_basin",APP_LABEL="プレキャスト集水桝",$=id=>document.getElementById(id);
-const PRODUCT_IDS=new Set(["Pproduct","Pinstall","Pgrating","Ngrating","Pconcllid","Nconcllid","Plidwork","ProductMasterId","ProductName","ProductManufacturer","ProductSpecification"]);
+const PRODUCT_IDS=new Set(["Pproduct","Pinstall","Pgrating","Ngrating","Pconcllid","Nconcllid","Plidwork","ProductMasterId","ProductName","ProductManufacturer","ProductSpecification","W1","W2","W3","W4","W5","W6","H1","H2"]);
 const DIM_IDS=["W1","W2","W3","W4","W5","W6","H1","H2","H3","H4","H5","N","Pproduct","Pinstall","Pgrating","Ngrating","Pconcllid","Nconcllid","Plidwork"];
+const TEMPLATE_COMMON_PRICE_IDS=new Set(["Pexc","Pback","Pspoil","Pbed","Pstone","Pnform","Plean","Pmortar","Pinvert"]);
+function isTemplateCommonPriceId(id){return TEMPLATE_COMMON_PRICE_IDS.has(id);}
 const SOURCE_KEY="MS_PRECAST_BASIN_TEMPLATE_SOURCE_V160";
 let pendingDuplicate=null,editingId="";
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const val=id=>String($(id)?.value||"").trim();
 async function ensure(){if(!window.MS?.EstimateMaster)throw new Error("積算テンプレート共通機能を読み込めません。");await MS.init();}
-function collect(){const ex=new Set(["projectName","emName","emMemo","emSearch","opcSearch","savedEstimateList","commonPriceList","E"]);const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{if(!el.id||ex.has(el.id)||el.closest(".em-modal")||el.closest(".opc-modal"))return;if(["button","submit","file"].includes(el.type))return;o[el.id]=el.type==="checkbox"?!!el.checked:el.value;});return o;}
+function collect(){const ex=new Set(["projectName","emName","emManufacturer","emSpecification","emMemo","emSearch","opcSearch","savedEstimateList","commonPriceList","E","Pexc","Pback","Pspoil","Pbed","Pstone","Pnform","Plean","Pmortar","Pinvert"]);const o={};document.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{if(!el.id||ex.has(el.id)||el.closest(".em-modal")||el.closest(".opc-modal"))return;if(["button","submit","file"].includes(el.type))return;o[el.id]=el.type==="checkbox"?!!el.checked:el.value;});return o;}
 function apply(id,v){const e=$(id);if(!e)return;if(e.type==="checkbox")e.checked=!!v;else e.value=v;try{e.dispatchEvent(new Event("input",{bubbles:true}));e.dispatchEvent(new Event("change",{bubbles:true}));}catch(x){}}
 function num(v){const n=Number(String(v??"").replace(/,/g,""));return Number.isFinite(n)?n:0}
 function same(a,b){return Math.abs(num(a)-num(b))<1e-6}
@@ -1974,11 +1989,11 @@ function showSelected(r,mode){
   const v=r.values||{};
   $("selectedEstimateTemplateMode").textContent=mode==="product"?"製品のみ":mode==="edit"?"編集中":"すべて";
   $("selectedEstimateTemplateContent").className="selected-template-content";
-  let html='<div class="selected-template-name">'+esc(r.name||"名称未設定")+'</div>';
+  let html='<div class="selected-template-name">'+esc(r.name||"名称未設定")+'</div><div><b>メーカー：</b>'+esc((r.meta&&r.meta.manufacturer)||"－")+'　<b>規格：</b>'+esc((r.meta&&r.meta.specification)||"－")+'</div>';
   html+='<div><b>製品：</b>製品代 '+esc(v.Pproduct||0)+'円 ／ 据付 '+esc(v.Pinstall||0)+'円</div>';
   html+='<div><b>蓋：</b>グレーチング '+esc(v.Pgrating||0)+'円 × '+esc(v.Ngrating||0)+'枚 ／ コンクリート '+esc(v.Pconcllid||0)+'円 × '+esc(v.Nconcllid||0)+'枚 ／ 設置 '+esc(v.Plidwork||0)+'円/枚</div>';
   if(mode!=="product"){
-    html+='<div><b>寸法：</b>W1 '+esc(v.W1||"-")+' / W2 '+esc(v.W2||"-")+' / W3 '+esc(v.W3||"-")+' / W4 '+esc(v.W4||"-")+' / W5 '+esc(v.W5||"-")+' / W6 '+esc(v.W6||"-")+' / H1 '+esc(v.H1||"-")+' / H2 '+esc(v.H2||"-")+' / H3 '+esc(v.H3||"-")+' / H4 '+esc(v.H4||"-")+' / H5 '+esc(v.H5||"-")+'</div>';
+    html+='<div><b>寸法：</b>（H1＝製品全高） W1 '+esc(v.W1||"-")+' / W2 '+esc(v.W2||"-")+' / W3 '+esc(v.W3||"-")+' / W4 '+esc(v.W4||"-")+' / W5 '+esc(v.W5||"-")+' / W6 '+esc(v.W6||"-")+' / H1 '+esc(v.H1||"-")+' / H2 '+esc(v.H2||"-")+' / H3 '+esc(v.H3||"-")+' / H4 '+esc(v.H4||"-")+' / H5 '+esc(v.H5||"-")+'</div>';
   }
   $("selectedEstimateTemplateContent").innerHTML=html;
 }
@@ -1991,7 +2006,7 @@ function openReg(name,memo){
     "<br><b>蓋：</b>グレーチング "+esc(val("Pgrating")||0)+"円 × "+esc(val("Ngrating")||0)+"枚 ／ コンクリート "+esc(val("Pconcllid")||0)+"円 × "+esc(val("Nconcllid")||0)+"枚 ／ 設置 "+esc(val("Plidwork")||0)+"円/枚";
   $("estimateMasterRegisterModal").classList.add("show");
 }
-async function saveReg(){await ensure();const name=val("emName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("emMemo"),values:collect(),meta:{source:"estimate-template"}});pendingDuplicate=null;$("estimateMasterDuplicateBanner")?.classList.remove("show");$("estimateMasterRegisterModal").classList.remove("show");alert("積算テンプレートに登録しました。")}
+async function saveReg(){await ensure();const name=val("emName");if(!name)return alert("マスター名を入力してください。");await MS.EstimateMaster.save({appType:APP_TYPE,appLabel:APP_LABEL,name,memo:val("emMemo"),values:collect(),meta:{source:"estimate-template",manufacturer:val("emManufacturer"),specification:val("emSpecification")}});pendingDuplicate=null;$("estimateMasterDuplicateBanner")?.classList.remove("show");$("estimateMasterRegisterModal").classList.remove("show");alert("積算テンプレートに登録しました。")}
 async function render(){
   await ensure();
   const rows=await MS.EstimateMaster.search(val("emSearch"),APP_TYPE),box=$("emList");
@@ -2003,7 +2018,7 @@ async function render(){
     const v=r.values||{};
     return '<div class="em-item">'+
       '<div>'+
-        '<div class="em-item-name">'+esc(r.name||"名称未設定")+'</div>'+
+        '<div class="em-item-name">'+esc(r.name||"名称未設定")+'</div><div class="em-item-meta"><b>メーカー：</b>'+esc((r.meta&&r.meta.manufacturer)||"－")+'　<b>規格：</b>'+esc((r.meta&&r.meta.specification)||"－")+'</div>'+
         '<div class="em-item-detail">'+
           '<b>寸法</b> W1 '+esc(v.W1||"-")+' / W2 '+esc(v.W2||"-")+' / W3 '+esc(v.W3||"-")+' / W4 '+esc(v.W4||"-")+' / W5 '+esc(v.W5||"-")+' / W6 '+esc(v.W6||"-")+' / H1 '+esc(v.H1||"-")+' / H2 '+esc(v.H2||"-")+' / H3 '+esc(v.H3||"-")+' / H4 '+esc(v.H4||"-")+' / H5 '+esc(v.H5||"-")+
           '<br><b>製品</b> 製品代 '+esc(v.Pproduct||0)+'円 ／ 据付 '+esc(v.Pinstall||0)+'円'+

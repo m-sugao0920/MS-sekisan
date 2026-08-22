@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>MS積算システム Ver.1.6.0 積算テンプレート統合版</title><style>
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>MS積算システム Ver.1.7.0 積算テンプレート標準仕様対応版</title><style>
 :root{--blue:#0057c8;--text:#122033;--shadow:0 10px 24px rgba(0,64,128,.13)}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Meiryo",sans-serif;color:var(--text);background:linear-gradient(180deg,#fff 0%,#eef7ff 34%,#e9f5ff 100%);min-height:100vh}.top{position:relative;overflow:hidden;background:linear-gradient(105deg,#fff 0%,#fff 58%,#d8efff 58%,#f7fbff 100%);border-bottom:1px solid #c7def2;padding:34px}.top:after{content:"";position:absolute;right:-120px;top:-160px;width:520px;height:340px;background:rgba(0,112,192,.12);border-radius:50%}.top-inner{position:relative;z-index:1;max-width:1480px;margin:auto;display:grid;grid-template-columns:320px 1fr 470px;gap:28px;align-items:center}.ms-logo{width:280px;max-width:100%;display:block;margin:auto}.title h1{margin:0;color:#0647a5;font-size:58px;line-height:1;font-weight:950;letter-spacing:.04em}.en{display:flex;align-items:center;gap:18px;margin-top:16px;color:#68829f;font-weight:800;letter-spacing:.36em;font-size:19px}.en:before,.en:after{content:"";height:2px;background:#abc4dd;flex:1;max-width:90px}.catch{font-size:20px;letter-spacing:.08em;margin-top:14px}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.quick button{border:1px solid #d5e6f7;background:white;color:#0647a5;border-radius:14px;height:118px;font-weight:900;font-size:15px;box-shadow:0 8px 18px rgba(0,70,140,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.quick svg{width:42px;height:42px;stroke:#0647a5;fill:none;stroke-width:2.4}main{max-width:1480px;margin:auto;padding:20px 28px 14px}.select-title{display:flex;align-items:center;justify-content:center;gap:24px;margin:0 0 20px;color:#0647a5;font-size:28px;font-weight:950;letter-spacing:.08em}.select-title:before,.select-title:after{content:"";height:2px;background:#1b66bc;width:220px}.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.app-card{border:0;text-align:left;font:inherit;position:relative;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid #d1e4f6;border-radius:16px;box-shadow:var(--shadow);padding:20px 18px 16px;min-height:275px;overflow:hidden;text-decoration:none;color:inherit;transition:.15s;cursor:pointer}.app-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,64,128,.18)}.app-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}.badge{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:950;box-shadow:inset 0 2px 10px rgba(255,255,255,.35),0 6px 14px rgba(0,0,0,.14)}.app-card h2{font-size:25px;line-height:1.1;margin:0;font-weight:950;white-space:nowrap}.blue h2{color:#004fb6}.green h2{color:#138317}.orange h2{color:#e34800}.brown h2{color:#5d371b}.teal h2{color:#008b98}.purple h2{color:#5a35a3}.yellow h2{color:#cf9400}.gray h2{color:#33414f}.blue .badge,.blue .start{background:linear-gradient(180deg,#0064d6,#0049af)}.green .badge,.green .start{background:linear-gradient(180deg,#22a42a,#087d10)}.orange .badge,.orange .start{background:linear-gradient(180deg,#ff7500,#e44700)}.brown .badge,.brown .start{background:linear-gradient(180deg,#87552b,#5c361c)}.teal .badge,.teal .start{background:linear-gradient(180deg,#0fb0bc,#00838e)}.purple .badge,.purple .start{background:linear-gradient(180deg,#8054ce,#5831a0)}.yellow .badge,.yellow .start{background:linear-gradient(180deg,#f2b400,#d99800)}.gray .badge,.gray .start{background:linear-gradient(180deg,#667381,#3f4a55)}.desc{font-size:17px;line-height:1.55;font-weight:800;margin:6px 0 0;color:#101820}.illustration{position:absolute;right:4px;bottom:58px;width:205px;height:135px}.illustration svg{width:100%;height:100%}.illustration img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 10px 10px rgba(0,0,0,.16))}.start{position:absolute;left:18px;right:18px;bottom:16px;height:42px;border-radius:8px;color:white;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:950;letter-spacing:.05em}.start span{position:absolute;right:20px;font-size:30px}.disabled:before{content:"準備中";position:absolute;right:16px;top:14px;background:#eef3f8;color:#647384;border:1px solid #d6e1ec;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:900}.info-row{margin:16px 0 14px;display:grid;grid-template-columns:1fr 300px;gap:18px}.info{background:rgba(255,255,255,.82);border:1px solid #d4e8f8;border-radius:14px;box-shadow:0 6px 14px rgba(0,70,140,.07);padding:14px 18px;display:flex;align-items:center;gap:18px;color:#071b45;font-weight:800;line-height:1.6}.info-icon{width:50px;height:50px;border-radius:50%;background:linear-gradient(180deg,#0a75df,#004fb6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:950}.guide{background:#fff;border:1px solid #d4e8f8;border-radius:14px;box-shadow:0 6px 14px rgba(0,70,140,.08);display:flex;align-items:center;justify-content:center;gap:18px;color:#0647a5;font-size:22px;font-weight:950;cursor:pointer}.guide svg{width:42px;height:42px;stroke:#0647a5;fill:none;stroke-width:2.2}footer{background:linear-gradient(180deg,#075dbb,#00449d);color:#fff;padding:14px 34px}.foot-inner{max-width:1480px;margin:auto;display:flex;justify-content:space-between;gap:20px;font-weight:700}.leaf{display:inline-block;width:18px;height:18px;background:#63b53b;border-radius:90% 0 90% 0;transform:rotate(-22deg);margin-right:8px;vertical-align:-3px}.modal{display:none;position:fixed;inset:0;background:rgba(8,24,48,.38);z-index:10;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modal-box{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.28);max-width:640px;width:100%;padding:24px;border:1px solid #d7e7f7}.modal-box h3{margin:0 0 12px;color:#0647a5;font-size:24px}.modal-box p{font-size:16px;line-height:1.7}.close{margin-top:12px;background:#0647a5;color:#fff;border:none;border-radius:999px;padding:10px 18px;font-weight:900;cursor:pointer}@media(max-width:1200px){.top-inner{grid-template-columns:260px 1fr}.quick{grid-column:1/-1}.apps{grid-template-columns:repeat(2,1fr)}.title h1{font-size:46px}}@media(max-width:700px){.top{padding:24px 16px}.top-inner{display:block}.title h1{font-size:36px;margin-top:18px}.quick{grid-template-columns:1fr;margin-top:18px}.apps{grid-template-columns:1fr}.info-row{grid-template-columns:1fr}.select-title{font-size:22px}.select-title:before,.select-title:after{width:40px}.foot-inner{display:block;text-align:center}}
 
 
@@ -628,7 +628,7 @@
         このシステムが、建設会社で働く皆さまの仕事を少しでも早く終える助けとなり、ご家族の待つ家へ一日でも多く、少しでも早く帰れることを心から願っています。<br><br>
         <strong>MSランドスケープ</strong>
       </div>
-      <div class="ms-terms-version">Version 1.5.0<br>© 2026 MSランドスケープ</div>
+      <div class="ms-terms-version">Version 1.7.0<br>© 2026 MSランドスケープ</div>
     </div>
     <div class="ms-terms-foot">
       <div id="msTermsFirstTimeActions">
@@ -726,10 +726,47 @@
       <div class="ms-notice-sub">現在のバージョンと、これまでの主な更新内容をご確認いただけます。</div>
     </div>
     <div class="ms-notice-body">
-      <div class="ms-notice-current"><b>Ver.1.6.0</b><span>積算テンプレートを全アプリへ統合しました</span></div>
+      <div class="ms-notice-current"><b>Ver.1.7.0</b><span>積算テンプレート標準仕様を全アプリへ統一しました</span></div>
 
 
 <details class="ms-notice-version" open>
+  <summary>Ver.1.7.0　積算テンプレート標準仕様対応版</summary>
+  <div class="ms-notice-content">
+    <h4>積算テンプレートを標準仕様へ統一しました</h4>
+    <ul>
+      <li>各積算アプリのテンプレート登録・呼出・検索・編集・複製・削除の操作を、同じ流れになるよう統一しました。</li>
+      <li>製品があるアプリでは「すべて」「製品のみ」を使い分け、製品がないアプリでは必要な呼出方法だけを表示するよう整理しました。</li>
+      <li>製品固有の寸法・価格・据付費・蓋情報などを、各アプリの内容に合わせて「製品のみ」の対象として整理しました。</li>
+    </ul>
+
+    <h4>メーカー名・規格をテンプレート情報へ追加しました</h4>
+    <ul>
+      <li>製品ありアプリのテンプレート登録画面に「メーカー名」「規格」を追加しました。</li>
+      <li>テンプレート呼出一覧・選択中表示・検索でもメーカー名と規格を確認できるようにしました。</li>
+      <li>排水管工など、アプリ固有の施工条件は標準仕様を崩さず、必要な情報だけ分かりやすく表示するよう整理しました。</li>
+    </ul>
+
+    <h4>テンプレートと単価の役割を整理しました</h4>
+    <ul>
+      <li>積算テンプレートでは、掘削・埋戻し・砕石・コンクリートなどの共通施工単価を保存・呼出ししない仕様へ統一しました。</li>
+      <li>共通施工単価は「今回の積算で使用する単価」を維持し、テンプレート呼出によって上書きされないようにしました。</li>
+      <li>過去の積算呼出は従来どおり、その積算で使用した単価も含めて再現できる運用としています。</li>
+    </ul>
+
+    <h4>テンプレート参照表示を標準化しました</h4>
+    <ul>
+      <li>テンプレートから反映された寸法・条件は紫色で表示し、参照元が分かるようにしました。</li>
+      <li>参照後に手入力で変更した項目は参照状態を解除し、現在値との違いが分かるようにしました。</li>
+      <li>再読み込み時に参照色だけが残らないよう、参照状態の扱いも整理しました。</li>
+    </ul>
+
+    <div class="ms-notice-plan">
+      Ver.1.7.0では、積算テンプレートを「どのアプリでも同じ考え方で使えること」を重視し、登録・呼出・製品情報・共通単価・参照表示を標準仕様として整理しました。
+    </div>
+  </div>
+</details>
+
+<details class="ms-notice-version">
   <summary>Ver.1.6.0　積算テンプレート統合版</summary>
   <div class="ms-notice-content">
     <h4>積算テンプレートを全アプリへ統合しました</h4>
